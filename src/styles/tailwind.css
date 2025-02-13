@@ -1,0 +1,24 @@
+@import "tailwindcss/preflight";
+@tailwind utilities;
+
+@layer components {
+  .item-middle {
+    @apply flex items-center justify-center;
+  }
+
+  .item-left {
+    @apply flex items-center justify-start;
+  }
+
+  .item-around {
+    @apply flex items-center justify-around;
+  }
+
+  .item-between {
+    @apply flex items-center justify-between;
+  }
+
+  .item-row {
+    @apply flex flex-col items-center justify-between;
+  }
+}
