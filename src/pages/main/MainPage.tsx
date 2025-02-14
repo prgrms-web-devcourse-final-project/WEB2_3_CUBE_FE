@@ -1,9 +1,12 @@
-import React from 'react'
+import EditList from '@components/EditList';
 
 const MainPage = () => {
   return (
-    <div>MainPage</div>
-  )
-}
+    <>
+      <div>MainPage</div>
+      <EditList />
+    </>
+  );
+};
 
-export default MainPage
+export default MainPage;
