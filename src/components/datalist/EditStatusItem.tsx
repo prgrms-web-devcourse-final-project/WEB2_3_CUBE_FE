@@ -24,11 +24,11 @@ export default function EditStatusItem({
           {/* 체크 박스 */}
           <input
             type='checkbox'
+            style={isChecked ? { backgroundColor: mainColor } : {}}
             checked={isChecked}
             onChange={() => setIsChecked(!isChecked)}
             className={classNames(
               'appearance-none w-4 h-4 rounded-full bg-no-repeat bg-center border',
-              `checked:bg-[${mainColor}]`,
             )}
           />
           {isChecked && (

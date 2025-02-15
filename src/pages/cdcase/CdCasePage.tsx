@@ -47,7 +47,7 @@ export default function CdCasePage() {
       <button onClick={() => setIsSidebarOpen(true)}>사이드바 열기</button>
       {isSidebarOpen && (
         <DataList
-          type='cd'
+          type='book'
           datas={dummyData}
         />
       )}
