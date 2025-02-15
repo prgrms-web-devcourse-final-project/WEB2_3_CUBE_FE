@@ -18,6 +18,6 @@
   }
 
   .item-row {
-    @apply flex flex-col items-center justify-between;
+    @apply flex flex-col items-center justify-center;
   }
 }
