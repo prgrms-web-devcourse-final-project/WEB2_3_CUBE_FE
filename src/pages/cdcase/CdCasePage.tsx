@@ -20,6 +20,26 @@ export default function CdCasePage() {
       singer: '권지용',
       released_year: '2019',
     },
+    {
+      title: '삐딱하게',
+      singer: '권지용',
+      released_year: '2019',
+    },
+    {
+      title: '삐딱하게',
+      singer: '권지용',
+      released_year: '2019',
+    },
+    {
+      title: '삐딱하게',
+      singer: '권지용',
+      released_year: '2019',
+    },
+    {
+      title: '삐딱하게',
+      singer: '권지용',
+      released_year: '2019',
+    },
   ];
   return (
     <>

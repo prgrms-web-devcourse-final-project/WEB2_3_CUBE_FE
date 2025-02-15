@@ -1,8 +1,9 @@
-import search from '@/assets/search-icon.svg';
+import search_icon from '@assets/search-icon.svg';
 
 import { useEffect, useRef, useState } from 'react';
 import NoEditStatusItem from './NoEditStatusItem';
 import EditStatusItem from './EditStatusItem';
+import classNames from 'classnames';
 
 export default function DataList({
   datas,
@@ -56,10 +57,13 @@ export default function DataList({
   }, [currentInput]);
 
   return (
-    <div className=' w-[444px] min-h-screen bg-[#FFFAFA] rounded-tl-3xl rounded-bl-3xl '>
+    <div className='absolute top-0 right-0  w-[444px] min-h-screen bg-[#FFFAFA] rounded-tl-3xl rounded-bl-3xl '>
       <div className='pl-11 pt-15 pr-10 '>
         <span
-          className={` text-center text-4xl  font-bold leading-normal  text-[${mainColor}]`}>
+          className={classNames(
+            `text-center text-4xl  font-bold leading-normal`,
+            isBook ? `text-[#2656CD]` : `text-[#7838AF]`,
+          )}>
           PlayList
         </span>
 
@@ -115,7 +119,7 @@ export default function DataList({
             />
             <button>
               <img
-                src={search}
+                src={search_icon}
                 alt='검색창 로고'
               />
             </button>
