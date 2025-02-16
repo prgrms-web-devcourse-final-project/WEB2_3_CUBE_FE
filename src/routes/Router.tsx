@@ -1,9 +1,11 @@
 import BookPage from '@pages/book/BookPage';
 import BookCasePage from '@pages/bookcase/BookCasePage';
-import LoginPage from '@pages/LoginPage';
-import MainPage from '@pages/main/MainPage';
 import NotFoundPage from '@pages/NotFoundPage';
 import TestPage from '@pages/TestPage';
+import CdPage from '@pages/cd/CdPage';
+import CdCasePage from '@pages/cdcase/CdCasePage';
+import LoginPage from '@pages/LoginPage';
+import MainPage from '@pages/main/MainPage';
 import { Routes, Route } from 'react-router-dom';
 
 const Router = () => {
@@ -32,6 +34,14 @@ const Router = () => {
       <Route
         path='*'
         element={<NotFoundPage />}
+     />
+      <Route
+        path='/cd'
+        element={<CdPage />}
+      />
+      <Route
+        path='/cdcase'
+        element={<CdCasePage />}
       />
     </Routes>
   );
