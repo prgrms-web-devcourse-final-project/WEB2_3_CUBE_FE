@@ -1,5 +1,7 @@
 import BookPage from '@pages/book/BookPage';
 import BookCasePage from '@pages/bookcase/BookCasePage';
+import NotFoundPage from '@pages/NotFoundPage';
+import TestPage from '@pages/TestPage';
 import CdPage from '@pages/cd/CdPage';
 import CdCasePage from '@pages/cdcase/CdCasePage';
 import LoginPage from '@pages/LoginPage';
@@ -22,16 +24,24 @@ const Router = () => {
         element={<BookCasePage />}
       />
       <Route
+        path='/login'
+        element={<LoginPage />}
+      />
+      <Route
+        path='/test'
+        element={<TestPage />}
+      />
+      <Route
+        path='*'
+        element={<NotFoundPage />}
+     />
+      <Route
         path='/cd'
         element={<CdPage />}
       />
       <Route
         path='/cdcase'
         element={<CdCasePage />}
-      />
-      <Route
-        path='/login'
-        element={<LoginPage />}
       />
     </Routes>
   );
