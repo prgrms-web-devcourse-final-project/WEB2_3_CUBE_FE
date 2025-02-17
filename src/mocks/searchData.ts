@@ -15,7 +15,7 @@ export const mockBooks = [
     publishedDate: '2024.01.05',
     genres: ['역사', '인문'],
     imageURL:
-      'https://image.aladin.co.kr/product/19359/16/cover500/s152835852_1.jpg',
+      'https://image.aladin.co.kr/product/31629/43/cover500/8934942460_1.jpg',
   },
   {
     id: '3',
@@ -34,6 +34,15 @@ export const mockBooks = [
     genres: ['이얍', '인문'],
     imageURL:
       'https://image.aladin.co.kr/product/19359/16/cover500/s152835852_1.jpg',
+  },
+  {
+    id: '5',
+    title:
+      '사랑하긴 했었나요 스쳐가는 인연이었나요 짧지않은 우리 함께했던 시간들이 자꾸 내 마음을 가둬두네',
+    author: '잔나비',
+    publishedDate: '2024.01.05',
+    genres: ['예압', '인문'],
+    imageURL: null,
   },
 ];
 

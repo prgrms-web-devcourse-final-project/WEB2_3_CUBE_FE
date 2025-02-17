@@ -8,14 +8,14 @@
     'Malgun Gothic';
 
   /* 배경 이미지 */
-  --bg-book-gradient: linear-gradient(180deg, #73a1f7 0%, #4983ef 100%);
+  --gradient-book-gradient: linear-gradient(180deg, #73a1f7 0%, #4983ef 100%);
   --bg-modal: inset 0px 0px 40px 10px rgba(152, 200, 228, 0.3),
     drop-shadow(0px 10px 20px rgba(62, 80, 125, 0.2));
 
   /* 그림자 */
-  --shadow-book: drop-shadow(10px 4px 10px rgba(78, 122, 207, 0.15));
-  --shadow-logo: drop-shadow(0px 4px 4px rgba(78, 122, 207, 0.15));
-  --shadow-modal: drop-shadow(0px 10px 10px rgba(38, 86, 205, 0.3));
+  --drop-shadow-book: 10px 4px 10px rgba(78, 122, 207, 0.15);
+  --drop-shadow-logo: 0px 4px 4px rgba(78, 122, 207, 0.15);
+  --drop-shadow-modal: 0px 10px 10px rgba(38, 86, 205, 0.3);
 }
 
 @layer components {
@@ -38,6 +38,17 @@
   .item-row {
     @apply flex flex-col items-center justify-center;
   }
+
+  .book-gradient {
+    @apply bg-gradient-to-b from-[#73a1f7] to-[#4983ef];
+  }
+}
+
+@layer utilities {
+  .writing-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+
   .transition-200 {
     @apply transition-all duration-200 ease-in-out;
   }
