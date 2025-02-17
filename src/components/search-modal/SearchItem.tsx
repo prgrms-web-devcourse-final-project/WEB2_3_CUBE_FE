@@ -1,4 +1,5 @@
 import type { SearchItemType } from '@/types/search';
+import { SEARCH_THEME } from '@/constants/searchTheme';
 
 interface SearchItemProps {
   item: SearchItemType;
@@ -7,16 +8,18 @@ interface SearchItemProps {
 }
 
 export const SearchItem = ({ item, type, onClick }: SearchItemProps) => {
+  const theme = SEARCH_THEME[type];
   return (
-    <div 
-      className='flex items-center p-3 bg-gray-50 mb-1 rounded-lg cursor-pointer'
-      onClick={onClick}
-    >
+    <div
+      className={`flex items-center p-3 mb-3 rounded-lg cursor-pointer ${theme.searchItemBg}`}
+      onClick={onClick}>
       <div>
-        <h3 className='font-medium'>{item.title}</h3>
-        <p className='text-sm text-gray-500'>{item.author}</p>
+        <h3 className={`text-lg font-bold ${theme.searchItemText}`}>
+          {item.title}
+        </h3>
+        <p className={`text-sm ${theme.searchItemName}`}>{item.author}</p>
       </div>
-      <span className='ml-auto text-sm text-gray-400'>{item.date}</span>
+      <span className={`ml-auto text-sm ${theme.searchItemText}`}>{item.date}</span>
     </div>
   );
 };

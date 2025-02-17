@@ -4,6 +4,8 @@ import { SearchList } from './SearchList';
 import { SearchResult } from './SearchResult';
 import { useSearch } from '@/hooks/useSearch';
 import type { SearchItemType } from '@/types/search';
+import ModalBackground from '@/components/ModalBackground';
+import { SEARCH_THEME } from '@/constants/searchTheme';
 
 interface SearchModalProps {
   title: string;
@@ -18,6 +20,7 @@ export const SearchModal = ({ title, onClose, type }: SearchModalProps) => {
   const [selectedItem, setSelectedItem] = React.useState<SearchItemType | null>(
     null,
   );
+  const theme = SEARCH_THEME[type];
 
   const handleSearch = async (value: string) => {
     setQuery(value);
@@ -30,14 +33,12 @@ export const SearchModal = ({ title, onClose, type }: SearchModalProps) => {
   };
 
   return (
-    <div
-      role='dialog'
-      className='fixed inset-0 bg-opacity-50 flex items-center justify-center'>
+    <ModalBackground onClose={onClose}>
       <div className='p-4 border-2 border-white bg-white/30 filter-blur rounded-3xl w-[1000px]'>
-        <div className='bg-white rounded-2xl p-6 w-full h-full item-between gap-2'>
+        <div className='w-full h-full gap-2 p-10 bg-white rounded-2xl item-between'>
           {/* 제목 + 검색 바 + 아이템 리스트 */}
           <div className='w-1/2'>
-            <h2 className='text-xl font-bold mb-4'>{title}</h2>
+            <h2 className={`mb-4 text-xl font-bold ${theme.title}`}>{title}</h2>
             <SearchInput
               value={query}
               onChange={handleSearch}
@@ -60,6 +61,6 @@ export const SearchModal = ({ title, onClose, type }: SearchModalProps) => {
           </div>
         </div>
       </div>
-    </div>
+    </ModalBackground>
   );
 };
