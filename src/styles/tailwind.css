@@ -48,5 +48,8 @@
   .writing-vertical {
     writing-mode: vertical-rl;
     text-orientation: upright;
+
+  .transition-200 {
+    @apply transition-all duration-200 ease-in-out;
   }
 }
