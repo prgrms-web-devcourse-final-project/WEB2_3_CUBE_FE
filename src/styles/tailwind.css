@@ -38,4 +38,7 @@
   .item-row {
     @apply flex flex-col items-center justify-center;
   }
+  .transition-200 {
+    @apply transition-all duration-200 ease-in-out;
+  }
 }
