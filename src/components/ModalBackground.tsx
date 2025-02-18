@@ -15,7 +15,7 @@ export default function ModalBackground({
   };
   return (
     <div
-      className='fixed inset-0 z-5 w-full h-full flex justify-center items-center bg-[#1E3675CC] backdrop-blur-xs '
+      className='fixed inset-0 z-[99] w-full h-full flex justify-center items-center bg-[#1E3675CC] backdrop-blur-xs'
       onClick={handlecloseModal}>
       <div onClick={(e) => e.stopPropagation()}>
         {/* children:  들어갈 모달 */}
