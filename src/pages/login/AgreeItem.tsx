@@ -18,7 +18,7 @@ export default function AgreeItem({
               type='checkbox'
               className={classNames(
                 ' cursor-pointer appearance-none w-7 h-7 rounded-full bg-no-repeat bg-center border-2 border-[#2656CD] checked:bg-[#2656CD]',
-                'checked:border-none hover:bg-[#2656CD] transition-all duration-200 ease-in-out',
+                'checked:border-none hover:bg-[#2656CD]  transition-all duration-200 ease-in-out',
               )}
               onChange={onToggleCheck}
             />
@@ -47,15 +47,18 @@ export default function AgreeItem({
         </button>
       </div>
       {/* 토글시 보이는 부분 */}
-      {agreementInfo.isExpanded && (
-        <li
-          className='absolute z-[-1]  top-0 left-0 w-full h-54  pt-[82px]  rounded-2xl bg-[#FFFFFF] 
-      shadow-[0px_4px_4px_0px_rgba(78,122,207,0.15)] px-10 '>
-          <p className='w-full h-full scrollbar text-[#162C63] pt-6 pr-4 pb-12 whitespace-pre-line '>
-            {agreementInfo.content}
-          </p>
-        </li>
-      )}
+
+      <li
+        className={` ${
+          agreementInfo.isExpanded ? 'h-54  opacity-100' : 'h-0 opacity-0'
+        }
+        absolute z-[-1]  top-0 left-0 w-full  pt-[82px]  rounded-2xl bg-[#FFFFFF] 
+      shadow-[0px_4px_4px_0px_rgba(78,122,207,0.15)] px-10 transition-200
+      `}>
+        <p className='w-full h-full scrollbar text-[#162C63] pt-6 pr-4 pb-12 whitespace-pre-line '>
+          {agreementInfo.content}
+        </p>
+      </li>
     </ul>
   );
 }
