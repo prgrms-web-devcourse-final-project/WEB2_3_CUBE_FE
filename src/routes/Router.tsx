@@ -4,9 +4,9 @@ import NotFoundPage from '@pages/NotFoundPage';
 import TestPage from '@pages/TestPage';
 import CdPage from '@pages/cd/CdPage';
 import CdCasePage from '@pages/cdcase/CdCasePage';
-import LoginPage from '@pages/LoginPage';
 import MainPage from '@pages/main/MainPage';
 import { Routes, Route } from 'react-router-dom';
+import LoginPage from '@pages/login/LoginPage';
 
 const Router = () => {
   return (
@@ -24,6 +24,14 @@ const Router = () => {
         element={<BookCasePage />}
       />
       <Route
+        path='/cd'
+        element={<CdPage />}
+      />
+      <Route
+        path='/cdcase'
+        element={<CdCasePage />}
+      />
+      <Route
         path='/login'
         element={<LoginPage />}
       />
@@ -34,14 +42,6 @@ const Router = () => {
       <Route
         path='*'
         element={<NotFoundPage />}
-     />
-      <Route
-        path='/cd'
-        element={<CdPage />}
-      />
-      <Route
-        path='/cdcase'
-        element={<CdCasePage />}
       />
     </Routes>
   );
