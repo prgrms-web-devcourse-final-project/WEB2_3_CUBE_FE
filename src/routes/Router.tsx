@@ -7,39 +7,49 @@ import CdCasePage from '@pages/cdcase/CdCasePage';
 import MainPage from '@pages/main/MainPage';
 import { Routes, Route } from 'react-router-dom';
 import LoginPage from '@pages/login/LoginPage';
-import RoomPage from '../pages/room/RoomPage';
+import BaseLayout from '@routes/layout/BaseLayout';
+import RoomPage from '@pages/room/RoomPage';
 
 const Router = () => {
   return (
     <Routes>
-      <Route
-        path='/'
-        element={<MainPage />}
-      />
-      <Route
-        path='/book'
-        element={<BookPage />}
-      />
-      <Route
-        path='/bookcase'
-        element={<BookCasePage />}
-      />
-      <Route
-        path='/cd'
-        element={<CdPage />}
-      />
+      {/* 헤더가 필요한 페이지 */}
+      <Route element={<BaseLayout hasHeader={true} />}>
+        <Route
+          path='/'
+          element={<MainPage />}
+        />
+        <Route
+          path='/bookcase'
+          element={<BookCasePage />}
+        />
+      </Route>
       <Route
         path='/cdcase'
         element={<CdCasePage />}
       />
       <Route
-        path='/login'
-        element={<LoginPage />}
-      />
-      <Route
         path='/test'
         element={<TestPage />}
       />
+
+      {/* 헤더가 필요없는 페이지 */}
+      <Route element={<BaseLayout hasHeader={false} />}>
+        <Route
+          path='/login'
+          element={<LoginPage />}
+        />
+      </Route>
+
+      <Route
+        path='/book'
+        element={<BookPage />}
+      />
+      <Route
+        path='/cd'
+        element={<CdPage />}
+      />
+
       <Route
         path='/room'
         element={<RoomPage />}
