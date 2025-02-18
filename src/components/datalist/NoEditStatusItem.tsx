@@ -2,6 +2,13 @@ import cd_play_btn from '@/assets/datalist/cd-play-btn.svg';
 import book_go_btn from '@/assets/datalist/book-go-btn.svg';
 import { Link } from 'react-router-dom';
 
+const truncateTitle = (title: string, maxLength: number = 13) => {
+  if (title.length > maxLength) {
+    return title.slice(0, maxLength) + '...';
+  }
+  return title;
+};
+
 export default function NoEditStatusItem({
   data,
   isBook,
@@ -20,7 +27,9 @@ export default function NoEditStatusItem({
             className={`flex items-center gap-2  ${
               isBook ? 'text-[#3E507D]' : 'text-[#60308C]'
             } `}>
-            <span className='text-[18px]'>{data.title}</span>
+            <h4 className='text-[18px] font-semibold truncate'>
+              {truncateTitle(data.title)}
+            </h4>
             <span className='text-[14px]'>{data.singer || data.author}</span>
           </div>
 
@@ -30,6 +39,7 @@ export default function NoEditStatusItem({
                 isBook ? 'text-[#3E507DB2]' : 'text-[#5F3E7DB2]/70'
               } `}>
               {data.released_year}
+              { isBook ? ` | ${data.publisher}` : ''}
             </span>
           </div>
         </div>
