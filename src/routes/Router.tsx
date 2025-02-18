@@ -7,6 +7,7 @@ import CdCasePage from '@pages/cdcase/CdCasePage';
 import MainPage from '@pages/main/MainPage';
 import { Routes, Route } from 'react-router-dom';
 import LoginPage from '@pages/login/LoginPage';
+import RoomPage from '../pages/room/RoomPage';
 
 const Router = () => {
   return (
@@ -38,6 +39,10 @@ const Router = () => {
       <Route
         path='/test'
         element={<TestPage />}
+      />
+      <Route
+        path='/room'
+        element={<RoomPage />}
       />
       <Route
         path='*'
