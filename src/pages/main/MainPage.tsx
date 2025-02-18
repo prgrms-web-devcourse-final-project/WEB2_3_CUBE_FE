@@ -1,19 +1,11 @@
-import DockMenu from './components/DockMenu';
+import MyRoom from './components/\bMyRoom';
 import RankMenu from './components/RankMenu';
 
-const MainPage = () => {
-  // const { showToast } = useToastStore();
-  // useEffect(() => {
-  //   showToast('메인 페이지입니다.', 'error');
-  // }, [showToast]);
-
-  // const [isClicked, setIsClicked] = useState(false);
+export default function MainPage() {
   return (
-    <main className='main-background w-full min-h-screen'>
-      <DockMenu />
+    <main className='main-background w-full min-h-screen relative overflow-hidden'>
       <RankMenu />
+      <MyRoom />
     </main>
   );
-};
-
-export default MainPage;
+}
