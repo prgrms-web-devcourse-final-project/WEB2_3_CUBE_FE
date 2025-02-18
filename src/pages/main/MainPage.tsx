@@ -1,4 +1,4 @@
-import MyRoom from './components/\bMyRoom';
+import MyRoom from './components/MyRoom';
 import RankMenu from './components/RankMenu';
 
 export default function MainPage() {
