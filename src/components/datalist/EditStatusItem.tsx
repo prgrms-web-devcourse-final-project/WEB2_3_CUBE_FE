@@ -11,6 +11,14 @@ export default function EditStatusItem({
 }) {
   const mainColor = isBook ? '#2656CD' : '#7838AF';
   const [isChecked, setIsChecked] = useState(false);
+
+  const truncateTitle = (title: string, maxLength: number = 13) => {
+    if (title.length > maxLength) {
+      return title.slice(0, maxLength) + '...';
+    }
+    return title;
+  };
+
   return (
     <>
       <li
@@ -44,7 +52,9 @@ export default function EditStatusItem({
             className={`flex items-center gap-2  ${
               isBook ? 'text-[#3E507D]' : 'text-[#60308C]'
             } `}>
-            <span className='text-[18px]'>{data.title}</span>
+            <h4 className='text-[18px] font-semibold truncate'>
+              {truncateTitle(data.title)}
+            </h4>
             <span className='text-[14px]'>{data.singer || data.author}</span>
           </div>
 
@@ -54,6 +64,7 @@ export default function EditStatusItem({
                 isBook ? 'text-[#3E507DB2]' : 'text-[#5F3E7DB2]/70'
               } `}>
               {data.released_year}
+              { isBook ? ` | ${data.publisher}` : ''}
             </span>
           </div>
         </div>
