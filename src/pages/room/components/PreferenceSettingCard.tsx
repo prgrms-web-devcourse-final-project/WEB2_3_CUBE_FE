@@ -37,7 +37,7 @@ export default function PreferenceSettingCard({title, thumbnail}) {
                 {isMusic ? '현재 저장한 음악' : '현재 저장한 도서'} <strong>3</strong>{isMusic ? '곡' : '권'}
               </li>
               <li className='ml-3 2xl:ml-4'>
-                {isMusic ? '현재 기록한 댓글' : '현재 기록한 서평'} <strong>15</strong>개
+                {isMusic ? '현재 기록한 감상' : '현재 기록한 서평'} <strong>15</strong>개
               </li>
             </ul>
 
