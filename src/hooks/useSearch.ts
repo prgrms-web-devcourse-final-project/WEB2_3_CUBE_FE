@@ -6,6 +6,28 @@ import {
 import { mockBooks, mockMusics } from '@/mocks/searchData';
 import { useState } from 'react';
 import axiosInstance from '@apis/axiosInstance';
+import axios from 'axios';
+
+// SPOTIFY accesstoken 얻는 로직
+const CLIENT_ID = import.meta.env.VITE_SPOTIFY_ID;
+const CLIENT_SECRET = import.meta.env.VITE_SPOTIFY_SECRET_KEY;
+
+const getSpotifyToken = async () => {
+  const auth = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`); // Base64 인코딩
+
+  const res = await axios.post(
+    'https://accounts.spotify.com/api/token',
+    'grant_type=client_credentials',
+    {
+      headers: {
+        Authorization: `Basic ${auth}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    },
+  );
+
+  return res.data.access_token; // 액세스 토큰 반환
+};
 
 export const useSearch = (type: 'CD' | 'BOOK') => {
   const [isLoading, setIsLoading] = useState(false);
@@ -70,38 +92,30 @@ export const useSearch = (type: 'CD' | 'BOOK') => {
       setIsLoading(true);
       setError(null);
 
-      const searchMusics = async (query: string): Promise<SearchItemType[]> => {
-        try {
-          setIsLoading(true);
-          setError(null);
+      const token = await getSpotifyToken(); // 토큰 받아오기
+      const encodedQuery = encodeURIComponent(query);
+      const url = `https://api.spotify.com/v1/search?q=${encodedQuery}&type=track&market=KR&limit=10`;
+      const { data } = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-          return new Promise((resolve) => {
-            setTimeout(() => {
-              const filteredMusics = mockMusics
-                .filter(
-                  (music) =>
-                    music.title.toLowerCase().includes(query.toLowerCase()) ||
-                    music.artist.toLowerCase().includes(query.toLowerCase()),
-                )
-                .map((music) => ({
-                  id: music.id,
-                  title: music.title,
-                  author: music.artist, // artist -> author
-                  date: music.releaseDate, // releaseDate -> date
-                  imageUrl: music.imageURL, // imageURL -> imageUrl
-                  type: 'CD' as const, // type 추가
-                  genres: music.genres,
-                }));
-
-              setIsLoading(false);
-              resolve(filteredMusics);
-            }, 500);
-          });
-        } catch (error: any) {
-          setError('음악 검색 중 오류가 발생했습니다');
-          return [];
-        }
-      };
+      return data.tracks.items.map((music: CDSearch) => {
+        return {
+          id: music.id,
+          title: music.name,
+          artist: music.artists[0].name,
+          album_title: music.album.name,
+          date: music.album.release_date,
+          imageUrl: music.album.images[1].url,
+          type: 'CD' as const,
+          genres: [],
+          // duration: music.duration_ms,
+          // album: music.album.name,
+          // youtube: music.youtube.url,
+        };
+      });
 
       // 실제 호출 로직 -> 삭제 금지!!
       // const { data } = await axiosInstance.get(
