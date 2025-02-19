@@ -33,3 +33,14 @@
 .setting-gradient {
   background: linear-gradient(180deg, rgba(22, 44, 99, 0.00) 37.37%, rgba(22, 44, 99, 0.15) 68.68%, rgba(22, 44, 99, 0.4) 100%);
 }
+
+/* 테마 설정 컴포넌트 */
+.theme-card {
+  width: 100%;
+  max-width: calc(100vw * 0.13125);
+  height: 100%;
+  max-height: calc(100vw * 0.143);
+  min-width: 200px;
+  min-height: 222px;
+  display: flex;
+}
