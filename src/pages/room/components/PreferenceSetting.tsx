@@ -1,6 +1,6 @@
 import PreferenceSettingCard from './PreferenceSettingCard';
 import cdImg from "../../../assets/cd/cd.png";
-import bookImg from "../../../assets/main/book.png";
+import bookImg from "../../../assets/room/book.png";
 
 export default function PreferenceSetting() {
   return (
