@@ -1,7 +1,7 @@
-import ExImg from '../../../assets/main/exRoomtheme.png';
-import checkIcon from '../../../assets/room/checkIcon.svg';
-import lock from '../../../assets/room/lock.png';
-import point from '../../../assets/room/point.png';
+import ExImg from '@assets/main/exRoomtheme.png';
+import checkIcon from '@assets/room/checkIcon.svg';
+import lock from '@assets/room/lock.png';
+import point from '@assets/room/point.png';
 
 const themeData = {
   basic: {
