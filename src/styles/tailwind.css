@@ -38,19 +38,10 @@
   .item-row {
     @apply flex flex-col items-center justify-center;
   }
-
+  .all-200-eio {
+    @apply transition-all duration-200 ease-in-out;
+  }
   .book-gradient {
     @apply bg-gradient-to-b from-[#73a1f7] to-[#4983ef];
   }
-}
-
-@layer utilities {
-  .writing-vertical {
-    writing-mode: vertical-rl;
-    text-orientation: upright;
-
-  .transition-200 {
-    @apply transition-all duration-200 ease-in-out;
-  }
-}
 }

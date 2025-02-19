@@ -1,6 +1,7 @@
 @import './tailwind.css';
 @import './main.css';
 @import './scroll.css';
+@import './swiper.css';
 
 * {
   font-family: 'Pretendard Variable', Pretendard, -apple-system,
