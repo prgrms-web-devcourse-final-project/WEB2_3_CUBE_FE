@@ -111,10 +111,12 @@ const BookReviewDisplay = ({
             <span className='text-[#162C63]/70 text-sm'>
               {displayData.publishedDate}
             </span>
-            <h2 className='text-3xl font-semibold text-[#162C63]'>
-              {displayData.bookTitle}
-            </h2>
-            <span className='text-[#162C63]'>{displayData.author}</span>
+            <div className='flex items-end w-full gap-4'>
+              <h2 className='text-3xl font-semibold text-[#162C63]'>
+                {displayData.bookTitle}
+              </h2>
+              <span className='text-[#162C63]'>{displayData.author}</span>
+            </div>
           </div>
           <div className='flex gap-2 mt-2'>
             {displayData.genres.map((genre) => (
@@ -128,7 +130,7 @@ const BookReviewDisplay = ({
         </div>
 
         {/* 리뷰 작성일자 */}
-        <div className='text-sm text-[#162C63]/70 -mt-2'>
+        <div className='text-sm text-[#162C63]/70 mt-20'>
           {displayData.reviewDate}
         </div>
 
