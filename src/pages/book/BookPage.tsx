@@ -1,10 +1,13 @@
+import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import BookReviewEditor from './components/BookReviewEditor';
+import BookReviewViewer from './components/BookReviewViewer';
+
 const BookPage = () => {
-  return (
-    <section className='w-full h-screen item-between overflow-auto'>
-      <figure className='w-1/2 h-full bg-red-100'></figure>
-      <article className='w-1/2 h-full bg-blue-100'></article>
-    </section>
-  );
+  const { bookId, userId } = useParams();
+  const [hasReview, setHasReview] = useState(false);
+
+  return <>{hasReview ? <BookReviewViewer /> : <BookReviewEditor />}</>;
 };
 
 export default BookPage;
