@@ -8,6 +8,7 @@ import ReviewTextField from './components/ReviewTextField';
 import FreeformEditor from './components/FreeformEditor';
 import BookReviewDisplay from '@pages/book-viewer/components/BookReviewDisplay';
 import { mockBooks } from '@/mocks/searchData';
+import { BOOK_THEME, BookThemeType } from '@/constants/bookTheme';
 
 interface ReviewFields {
   // 도서 정보 (API로 받아올 정보)
@@ -18,7 +19,7 @@ interface ReviewFields {
   // 리뷰 정보 (사용자 입력)
   title: string;
   reviewDate: string;
-  theme?: string;
+  theme: BookThemeType;
   quote: string;
   emotion: string;
   reason: string;
@@ -36,7 +37,7 @@ const BookEditorPage = () => {
     // 리뷰 정보
     title: '',
     reviewDate: new Date().toISOString().split('T')[0],
-    theme: '',
+    theme: 'BLUE',
     quote: '',
     emotion: '',
     reason: '',
@@ -44,12 +45,13 @@ const BookEditorPage = () => {
     freeform: '',
   });
 
-  const handleFieldChange = (field: keyof ReviewFields) => (value: string) => {
-    setReviewFields((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
+  const handleFieldChange =
+    (field: keyof ReviewFields) => (value: string | BookThemeType) => {
+      setReviewFields((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    };
 
   const isValidReview = () => {
     // 최소 1개 이상의 필드가 입력되었는지 확인
@@ -90,14 +92,45 @@ const BookEditorPage = () => {
             placeholder='제목을 입력해주세요...'
             value={reviewFields.title}
             onChange={(e) => handleFieldChange('title')(e.target.value)}
-            className='w-full text-4xl font-semibold focus:outline-none border-b-2 border-[#3E507D]/20 p-4 placeholder:text-[#162C63]/60 text-[#162C63]'
+            className={`w-full p-4 text-4xl font-semibold focus:outline-none placeholder:text-opacity-40`}
+            style={{
+              borderBottomWidth: '2px',
+              borderBottomColor: `${
+                BOOK_THEME[reviewFields.theme].secondary
+              }33`,
+              color: BOOK_THEME[reviewFields.theme].primary,
+            }}
           />
 
           {/* 테마 선택 영역 */}
-          <div className='flex gap-2'>
-            <button className='w-8 h-8 bg-blue-100 rounded-full cursor-pointer'></button>
-            <button className='w-8 h-8 bg-red-100 rounded-full cursor-pointer'></button>
-            <button className='w-8 h-8 bg-green-100 rounded-full cursor-pointer'></button>
+          <div className='flex gap-4'>
+            <button
+              onClick={() => handleFieldChange('theme')('BLUE')}
+              className={`w-8 h-8 rounded-full cursor-pointer transition-all ${
+                reviewFields.theme === 'BLUE'
+                  ? 'ring-2 ring-offset-2 ring-[#3E507D]/70'
+                  : ''
+              }`}
+              style={{ backgroundColor: BOOK_THEME.BLUE.surface }}
+            />
+            <button
+              onClick={() => handleFieldChange('theme')('RED')}
+              className={`w-8 h-8 rounded-full cursor-pointer transition-all ${
+                reviewFields.theme === 'RED'
+                  ? 'ring-2 ring-offset-2 ring-[#7D3E59]/70'
+                  : ''
+              }`}
+              style={{ backgroundColor: BOOK_THEME.RED.surface }}
+            />
+            <button
+              onClick={() => handleFieldChange('theme')('GREEN')}
+              className={`w-8 h-8 rounded-full cursor-pointer transition-all ${
+                reviewFields.theme === 'GREEN'
+                  ? 'ring-2 ring-offset-2 ring-[#567D3E]/70'
+                  : ''
+              }`}
+              style={{ backgroundColor: BOOK_THEME.GREEN.surface }}
+            />
           </div>
 
           <div className='space-y-6'>
@@ -106,6 +139,7 @@ const BookEditorPage = () => {
               value={reviewFields.quote}
               onChange={handleFieldChange('quote')}
               placeholder='인상 깊은 구절을 남겨주세요.'
+              theme={reviewFields.theme}
             />
 
             <ReviewTextField
@@ -113,6 +147,7 @@ const BookEditorPage = () => {
               value={reviewFields.emotion}
               onChange={handleFieldChange('emotion')}
               placeholder='그 때 나의 감정을 입력해주세요.'
+              theme={reviewFields.theme}
             />
 
             <ReviewTextField
@@ -120,6 +155,7 @@ const BookEditorPage = () => {
               value={reviewFields.reason}
               onChange={handleFieldChange('reason')}
               placeholder='책을 선택하게 된 계기를 입력해주세요.'
+              theme={reviewFields.theme}
             />
 
             <ReviewTextField
@@ -127,11 +163,13 @@ const BookEditorPage = () => {
               value={reviewFields.discussion}
               onChange={handleFieldChange('discussion')}
               placeholder='다른 사람과 나누고 싶은 대화 주제를 입력해주세요.'
+              theme={reviewFields.theme}
             />
 
             <FreeformEditor
               value={reviewFields.freeform}
               onChange={handleFieldChange('freeform')}
+              theme={reviewFields.theme}
             />
 
             <div className='flex justify-end gap-2'>

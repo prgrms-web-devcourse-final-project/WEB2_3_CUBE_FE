@@ -13,7 +13,7 @@ const Header = () => {
   };
 
   return (
-    <header className='fixed top-0 w-full z-50 item-between p-6 items-start pointer-events-none'>
+    <header className='fixed top-0 z-50 items-start w-full p-6 pointer-events-none item-between'>
       {/* 로고 */}
       <h1 className='pointer-events-auto'>
         <Link to='/'>
@@ -24,7 +24,7 @@ const Header = () => {
         </Link>
       </h1>
       {/* 네비게이션 */}
-      <nav className='item-row gap-4 pointer-events-auto'>
+      <nav className='gap-4 pointer-events-auto item-row'>
         <button
           type='button'
           aria-label='알림'
@@ -52,7 +52,7 @@ const Header = () => {
             aria-haspopup='true'
             aria-expanded={isMenuOpen}
             onClick={toggleMenu}
-            className='item-middle cursor-pointer'>
+            className='cursor-pointer item-middle'>
             <img
               src={humburgerIcon}
               alt='메뉴'
@@ -64,7 +64,7 @@ const Header = () => {
                 isMenuOpen ? 'block' : 'hidden'
               }`}>
             <ul
-              className=' bg-white shadow-lg rounded-lg overflow-hidden px-4 py-2'>
+              className='px-4 py-2 overflow-hidden bg-white rounded-lg shadow-lg '>
               <li>
                 <Link
                   to='/'

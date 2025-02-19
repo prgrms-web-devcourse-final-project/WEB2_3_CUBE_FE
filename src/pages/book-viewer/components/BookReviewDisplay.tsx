@@ -1,5 +1,6 @@
 import { bookAPI } from '@apis/book';
 import React, { useState, useEffect } from 'react';
+import { BOOK_THEME, BookThemeType } from '@/constants/bookTheme';
 
 interface ReviewData {
   // 도서 정보
@@ -10,7 +11,7 @@ interface ReviewData {
   // 리뷰 정보
   title: string;
   reviewDate: string; // 리뷰 작성일자
-  theme?: string;
+  theme: BookThemeType;
   quote?: string; // 인상 깊은 구절
   emotion?: string; // 그 때 나의 감정
   reason?: string; // 책을 선택하게 된 계기
@@ -45,13 +46,19 @@ const REVIEW_FIELDS: ReviewField[] = [
 const ReviewSection = ({
   title,
   content,
+  colors,
 }: {
   title: string;
   content: string;
+  colors: (typeof BOOK_THEME)[BookThemeType];
 }) => (
   <div className='mb-6'>
-    <h2 className='text-lg font-semibold text-[#162C63] mb-2'>{title}</h2>
-    <p>{content}</p>
+    <h2
+      className='mb-2 text-lg font-semibold'
+      style={{ color: colors.primary }}>
+      {title}
+    </h2>
+    <p style={{ color: colors.secondary }}>{content}</p>
   </div>
 );
 
@@ -74,6 +81,8 @@ const BookReviewDisplay = ({
   const displayData = mode === 'preview' ? previewData : reviewData;
 
   if (!displayData) return null;
+
+  const colors = BOOK_THEME[(displayData.theme as BookThemeType) || 'BLUE'];
 
   return (
     <div className='relative h-full overflow-auto '>
@@ -135,6 +144,7 @@ const BookReviewDisplay = ({
                     ? displayData[key].join(', ')
                     : displayData[key]!
                 }
+                colors={colors}
               />
             ),
         )}
