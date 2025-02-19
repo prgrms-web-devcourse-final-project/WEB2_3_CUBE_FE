@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import MyRoomIcon from '../../../assets/main/myroom-icon.svg';
+import MyRoomIcon from '@assets/main/myroom-icon.svg';
 
 export default function MyRoom() {
   const navigate = useNavigate();

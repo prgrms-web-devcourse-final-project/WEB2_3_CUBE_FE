@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import dockMenuIcon from '../../../assets/room/dockmenu-icon.svg';
-import dockMenuNoselectIcon from '../../../assets/room/dockmenu-noSelect-icon.svg';
-import preferenceNoselectIcon from '../../../assets/room/preference-noselect-Icon.svg';
-import preferenceIcon from '../../../assets/room/preferenceIcon.svg';
-import themeNoselectIcon from '../../../assets/room/theme-noselect-Icon.svg';
-import themeIcon from '../../../assets/room/themeIcon.svg';
+import dockMenuIcon from '@assets/room/dockmenu-icon.svg';
+import dockMenuNoselectIcon from '@assets/room/dockmenu-noSelect-icon.svg';
+import preferenceNoselectIcon from '@assets/room/preference-noselect-Icon.svg';
+import preferenceIcon from '@assets/room/preferenceIcon.svg';
+import themeNoselectIcon from '@assets/room/theme-noselect-Icon.svg';
+import themeIcon from '@assets/room/themeIcon.svg';
 
 export default function DockMenu({ activeSettings, onSettingsChange }) {
   const [isOpen, setIsOpen] = useState(false);
