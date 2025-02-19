@@ -9,6 +9,7 @@ import FreeformEditor from './components/FreeformEditor';
 import BookReviewDisplay from '@pages/book-viewer/components/BookReviewDisplay';
 import { mockBooks } from '@/mocks/searchData';
 import { BOOK_THEME, BookThemeType } from '@/constants/bookTheme';
+import CheckIcon from './components/CheckIcon';
 
 interface ReviewFields {
   // 도서 정보 (API로 받아올 정보)
@@ -106,31 +107,37 @@ const BookEditorPage = () => {
           <div className='flex gap-4'>
             <button
               onClick={() => handleFieldChange('theme')('BLUE')}
-              className={`w-8 h-8 rounded-full cursor-pointer transition-all ${
-                reviewFields.theme === 'BLUE'
-                  ? 'ring-2 ring-offset-2 ring-[#3E507D]/70'
-                  : ''
-              }`}
-              style={{ backgroundColor: BOOK_THEME.BLUE.surface }}
-            />
+              className='w-8 h-8 rounded-full cursor-pointer transition-all relative'
+              style={{ backgroundColor: BOOK_THEME.BLUE.surface }}>
+              {reviewFields.theme === 'BLUE' && (
+                <CheckIcon
+                  color={BOOK_THEME.BLUE.primary}
+                  className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
+                />
+              )}
+            </button>
             <button
               onClick={() => handleFieldChange('theme')('RED')}
-              className={`w-8 h-8 rounded-full cursor-pointer transition-all ${
-                reviewFields.theme === 'RED'
-                  ? 'ring-2 ring-offset-2 ring-[#7D3E59]/70'
-                  : ''
-              }`}
-              style={{ backgroundColor: BOOK_THEME.RED.surface }}
-            />
+              className='w-8 h-8 rounded-full cursor-pointer transition-all relative'
+              style={{ backgroundColor: BOOK_THEME.RED.surface }}>
+              {reviewFields.theme === 'RED' && (
+                <CheckIcon
+                  color={BOOK_THEME.RED.primary}
+                  className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
+                />
+              )}
+            </button>
             <button
               onClick={() => handleFieldChange('theme')('GREEN')}
-              className={`w-8 h-8 rounded-full cursor-pointer transition-all ${
-                reviewFields.theme === 'GREEN'
-                  ? 'ring-2 ring-offset-2 ring-[#567D3E]/70'
-                  : ''
-              }`}
-              style={{ backgroundColor: BOOK_THEME.GREEN.surface }}
-            />
+              className='w-8 h-8 rounded-full cursor-pointer transition-all relative'
+              style={{ backgroundColor: BOOK_THEME.GREEN.surface }}>
+              {reviewFields.theme === 'GREEN' && (
+                <CheckIcon
+                  color={BOOK_THEME.GREEN.primary}
+                  className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
+                />
+              )}
+            </button>
           </div>
 
           <div className='space-y-6'>
