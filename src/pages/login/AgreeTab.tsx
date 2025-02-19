@@ -54,7 +54,7 @@ export default function AgreeTab({ agreement, onChangeAgreement }) {
       <button
         onClick={handleCheckAll}
         className='item-middle gap-2 absolute bottom-18 left-1/2 transform -translate-x-1/2 rounded-[80px] bg-[#162C63]  cursor-pointer
-shadow-[0px_4px_4px_0px_rgba(78,122,207,0.15)] py-4 px-21  hover:opacity-80 transition-200'>
+shadow-[0px_4px_4px_0px_rgba(78,122,207,0.15)] py-4 px-21  hover:opacity-80 all-200-eio'>
         <img
           className='w-7 h-7'
           src={check_logo}

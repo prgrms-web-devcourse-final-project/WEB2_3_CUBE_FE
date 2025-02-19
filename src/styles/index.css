@@ -1,7 +1,7 @@
 @import './tailwind.css';
 @import './scroll.css';
 @import './main.css';
-
+@import './swiper.css';
 * {
   font-family: 'Pretendard Variable', Pretendard, -apple-system,
     BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI',

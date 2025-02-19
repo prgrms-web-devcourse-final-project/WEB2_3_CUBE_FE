@@ -40,7 +40,7 @@ export default function SocialTab() {
           onMouseLeave={() => setKakaoImage(kakao)}
           className='item-middle gap-3.5 bg-[#FAE100] rounded-[40px] p-3 w-[360px]
          shadow-logo cursor-pointer
-        transition-200 hover:bg-[#261C07] hover:text-[#FAD400]'>
+        all-200-eio hover:bg-[#261C07] hover:text-[#FAD400]'>
           <img
             src={kakaoImage}
             alt='카카오로 로그인'
@@ -52,7 +52,7 @@ export default function SocialTab() {
           onMouseLeave={() => setNaverImage(naver)}
           className='item-middle gap-[14px] bg-[#06BE34] rounded-[40px] p-3 w-[360px]
         shadow-logo cursor-pointer
-        transition-200 hover:bg-white hover:text-[#06BE34] '>
+        all-200-eio hover:bg-white hover:text-[#06BE34] '>
           <img
             src={naverImage}
             alt='네이버로 로그인'
@@ -63,7 +63,7 @@ export default function SocialTab() {
           style={{ boxShadow: 'var(--shadow-logo)' }}
           className='item-middle gap-[14px] bg-[#FFFFFF] rounded-[40px] p-3 w-[360px]
         shadow-logo cursor-pointer
-        transition-200 hover:bg-[#2A3A5E] hover:text-white'>
+        all-200-eio hover:bg-[#2A3A5E] hover:text-white'>
           <img
             src={google}
             alt='구글로 로그인'
