@@ -6,8 +6,10 @@ interface ReviewData {
   bookTitle: string;
   author: string;
   genres: string[];
+  publishedDate: string; // 출판일자
   // 리뷰 정보
   title: string;
+  reviewDate: string; // 리뷰 작성일자
   theme?: string;
   quote?: string; // 인상 깊은 구절
   emotion?: string; // 그 때 나의 감정
@@ -96,7 +98,10 @@ const BookReviewDisplay = ({
       <article className='absolute flex flex-col w-full gap-4 bg-[#D1E5F1] rounded-tl-[80px] top-[70%] min-h-[30%] px-24 py-16'>
         {/* 도서 정보 */}
         <div className='flex flex-col gap-2'>
-          <div className='flex items-baseline gap-4'>
+          <div className='flex flex-col gap-4'>
+            <span className='text-[#162C63]/70 text-sm'>
+              {displayData.publishedDate}
+            </span>
             <h2 className='text-3xl font-semibold text-[#162C63]'>
               {displayData.bookTitle}
             </h2>
@@ -111,6 +116,11 @@ const BookReviewDisplay = ({
               </span>
             ))}
           </div>
+        </div>
+
+        {/* 리뷰 작성일자 */}
+        <div className='text-sm text-[#162C63]/70 -mt-2'>
+          {displayData.reviewDate}
         </div>
 
         {/* 서평 내용 */}

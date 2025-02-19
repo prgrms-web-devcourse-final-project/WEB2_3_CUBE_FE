@@ -14,8 +14,10 @@ interface ReviewFields {
   bookTitle: string;
   author: string;
   genres: string[];
+  publishedDate: string;
   // 리뷰 정보 (사용자 입력)
   title: string;
+  reviewDate: string;
   theme?: string;
   quote: string;
   emotion: string;
@@ -30,8 +32,10 @@ const BookEditorPage = () => {
     bookTitle: mockBooks[0].title,
     author: mockBooks[0].author,
     genres: mockBooks[0].genres,
+    publishedDate: mockBooks[0].publishedDate,
     // 리뷰 정보
     title: '',
+    reviewDate: new Date().toISOString().split('T')[0],
     theme: '',
     quote: '',
     emotion: '',
