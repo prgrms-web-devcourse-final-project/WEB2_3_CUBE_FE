@@ -7,6 +7,7 @@ import CdCasePage from '@pages/cdcase/CdCasePage';
 import MainPage from '@pages/main/MainPage';
 import { Routes, Route } from 'react-router-dom';
 import LoginPage from '@pages/login/LoginPage';
+import RoomPage from '../pages/room/RoomPage';
 import BaseLayout from '@routes/layout/BaseLayout';
 
 const Router = () => {
@@ -49,6 +50,10 @@ const Router = () => {
         element={<CdPage />}
       />
 
+      <Route
+        path='/room'
+        element={<RoomPage />}
+      />
       <Route
         path='*'
         element={<NotFoundPage />}
