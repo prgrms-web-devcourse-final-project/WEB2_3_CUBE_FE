@@ -17,9 +17,13 @@ export const SearchItem = ({ item, type, onClick }: SearchItemProps) => {
         <h3 className={`text-lg font-bold ${theme.searchItemText}`}>
           {item.title}
         </h3>
-        <p className={`text-sm ${theme.searchItemName}`}>{item.author}</p>
+        <p className={`text-sm ${theme.searchItemName} line-clamp-1 `}>
+          {item.author || item.artist} | {item.publisher || item.album_title}
+        </p>
       </div>
-      <span className={`ml-auto text-sm ${theme.searchItemText}`}>{item.date}</span>
+      <span className={`ml-auto text-sm ${theme.searchItemText}`}>
+        {item.date}
+      </span>
     </div>
   );
 };
