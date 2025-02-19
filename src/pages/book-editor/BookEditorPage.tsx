@@ -93,7 +93,7 @@ const BookEditorPage = () => {
             placeholder='제목을 입력해주세요...'
             value={reviewFields.title}
             onChange={(e) => handleFieldChange('title')(e.target.value)}
-            className={`w-full p-4 text-4xl font-semibold focus:outline-none placeholder:text-opacity-40`}
+            className={`w-full py-4 text-4xl font-semibold focus:outline-none placeholder:text-opacity-40`}
             style={{
               borderBottomWidth: '2px',
               borderBottomColor: `${
