@@ -4,19 +4,35 @@ import StarterKit from '@tiptap/starter-kit';
 import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
 import Heading from '@tiptap/extension-heading';
-import ReviewTextField from './ReviewTextField';
-import FreeformEditor from './FreeformEditor';
+import ReviewTextField from './components/ReviewTextField';
+import FreeformEditor from './components/FreeformEditor';
+import BookReviewDisplay from '@pages/book-viewer/components/BookReviewDisplay';
+import { mockBooks } from '@/mocks/searchData';
 
 interface ReviewFields {
+  // 도서 정보 (API로 받아올 정보)
+  bookTitle: string;
+  author: string;
+  genres: string[];
+  // 리뷰 정보 (사용자 입력)
+  title: string;
+  theme?: string;
   quote: string;
   emotion: string;
   reason: string;
   discussion: string;
-  freeform: string; // 자유 형식
+  freeform: string;
 }
 
-const BookReviewEditor = () => {
+const BookEditorPage = () => {
   const [reviewFields, setReviewFields] = useState<ReviewFields>({
+    // 도서 정보 -> 임시로 mock 데이터 사용, 나중에 수정하기!
+    bookTitle: mockBooks[0].title,
+    author: mockBooks[0].author,
+    genres: mockBooks[0].genres,
+    // 리뷰 정보
+    title: '',
+    theme: '',
     quote: '',
     emotion: '',
     reason: '',
@@ -62,20 +78,22 @@ const BookReviewEditor = () => {
   return (
     <section className='w-full h-screen item-between'>
       {/* 에디터 영역 */}
-      <article className='w-1/2 flex flex-col h-screen bg-white'>
-        <div className='overflow-auto flex flex-col gap-8 py-12 px-14'>
+      <article className='flex flex-col w-1/2 h-screen bg-white'>
+        <div className='flex flex-col gap-8 py-12 overflow-auto px-14 '>
           {/* 제목 입력 영역 */}
           <input
             type='text'
             placeholder='제목을 입력해주세요...'
+            value={reviewFields.title}
+            onChange={(e) => handleFieldChange('title')(e.target.value)}
             className='w-full text-4xl font-semibold focus:outline-none border-b-2 border-[#3E507D]/20 p-4 placeholder:text-[#162C63]/60 text-[#162C63]'
           />
 
           {/* 테마 선택 영역 */}
           <div className='flex gap-2'>
-            <button className='w-8 h-8 rounded-full bg-blue-100 cursor-pointer'></button>
-            <button className='w-8 h-8 rounded-full bg-red-100 cursor-pointer'></button>
-            <button className='w-8 h-8 rounded-full bg-green-100 cursor-pointer'></button>
+            <button className='w-8 h-8 bg-blue-100 rounded-full cursor-pointer'></button>
+            <button className='w-8 h-8 bg-red-100 rounded-full cursor-pointer'></button>
+            <button className='w-8 h-8 bg-green-100 rounded-full cursor-pointer'></button>
           </div>
 
           <div className='space-y-6'>
@@ -112,14 +130,14 @@ const BookReviewEditor = () => {
               onChange={handleFieldChange('freeform')}
             />
 
-            <div className='flex gap-2 justify-end'>
-              <button className='px-4 py-2 bg-gray-200 text-gray-600 rounded-md'>
+            <div className='flex justify-end gap-2'>
+              <button className='px-4 py-2 text-gray-600 bg-gray-200 rounded-md'>
                 임시저장
               </button>
               <button
                 disabled={!isValidReview()}
                 onClick={handleSave}
-                className='px-4 py-2 bg-blue-600 text-white rounded-md disabled:bg-gray-400'>
+                className='px-4 py-2 text-white bg-blue-600 rounded-md disabled:bg-gray-400'>
                 저장하기
               </button>
             </div>
@@ -132,9 +150,14 @@ const BookReviewEditor = () => {
         </div>
       </article>
       {/* 실시간 뷰어 영역 */}
-      <article className='w-1/2 h-full bg-blue-100 overflow-auto'></article>
+      <article className='w-1/2 h-full overflow-auto'>
+        <BookReviewDisplay
+          mode='preview'
+          previewData={reviewFields}
+        />
+      </article>
     </section>
   );
 };
 
-export default BookReviewEditor;
+export default BookEditorPage;
