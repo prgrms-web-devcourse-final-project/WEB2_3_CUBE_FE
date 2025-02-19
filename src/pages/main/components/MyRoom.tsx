@@ -10,7 +10,7 @@ export default function MyRoom() {
   return (
     <button
       onClick={handleClick}
-      className='group w-16 h-16 bg-white/20 rounded-full border border-white flex items-center justify-center fixed bottom-20 right-21 -shadow-logo cursor-pointer'
+      className='group w-16 h-16 bg-white/20 rounded-full border border-white flex items-center justify-center fixed bottom-20 right-21 -shadow-logo cursor-pointer hover:scale-105 transition-all duration-200'
       aria-label='도구 메뉴 열기'>
       <span className='bottom-menu-icon bg-white relative'>
         <img
