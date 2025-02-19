@@ -1,14 +1,8 @@
-import { useState } from 'react';
 import cd from '@assets/cd/cd.png';
 import cd_add_icon from '@assets/cd/cd-add-icon.svg';
 import Dock from './Dock';
 
 export default function EmptyStatus() {
-  const [showDock, setShowDock] = useState(false);
-
-  const handleToggleDock = () => {
-    setShowDock((prev) => !prev);
-  };
   return (
     <div className='w-full h-screen'>
       {/* 제목 & cd 이미지 */}
@@ -34,11 +28,7 @@ export default function EmptyStatus() {
       </div>
 
       {/* CD 목록 독(하단바) */}
-      <Dock
-        showDock={showDock}
-        onToggleDock={handleToggleDock}
-        isEmpty={true}
-      />
+      <Dock isEmpty={true} />
     </div>
   );
 }

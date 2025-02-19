@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import backgroundIMG from '@/assets/roome-background-img.png';
-import { mockCD } from '@/mocks/mockCD';
 import NotEmptyStatus from './components/NotEmptyStatus';
 import EmptyStatus from './components/EmptyStatus';
+import { mockCD } from '@/mocks/mockCd';
 
 export default function CdRackPage() {
   const [cdDatas, setCDdatas] = useState([]);
