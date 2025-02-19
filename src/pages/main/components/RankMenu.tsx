@@ -1,15 +1,16 @@
-import RankMenuIcon from '../../../assets/RankMenu-icon.svg';
+import RankMenuIcon from '@assets/RankMenu-icon.svg';
 
-export default function RankMenu() {
+export default function RankMenu({onOpen}) {
   return (
     <button
-      className='group w-16 h-16 bg-white/20 rounded-full border border-white flex items-center justify-center fixed bottom-20 left-21 --drop-shadow-logo cursor-pointer'
-      aria-label='도구 메뉴 열기'>
+      onClick={onOpen}
+      className='group w-16 h-16 bg-white/20 rounded-full border border-white flex items-center justify-center fixed bottom-20 left-21 --drop-shadow-logo cursor-pointer hover:scale-105 transition-all duration-200'
+      aria-label='랭킹 보기'>
       <span className='bottom-menu-icon bg-white relative'>
         <img
           className='bottom-menu-img'
           src={RankMenuIcon}
-          alt='도구 메뉴'
+          alt='랭킹 보기'
         />
       </span>
       {/* tooltip */}
