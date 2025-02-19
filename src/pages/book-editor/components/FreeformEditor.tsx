@@ -86,7 +86,7 @@ const FreeformEditor = ({
         style={{
           borderWidth: '2px',
           borderColor: `${colors.secondary}33`,
-          backgroundColor: colors.background,
+          backgroundColor: `${colors.background}60`,
         }}>
         {headingLevels.map((level) => (
           <button
@@ -152,12 +152,13 @@ const FreeformEditor = ({
       </div>
       {/* 에디터 본문 */}
       <div
-        className='rounded-b-md'
+        className='rounded-b-md p-4'
         style={{
           borderWidth: '2px',
           borderTopWidth: 0,
           borderColor: `${colors.secondary}30`,
-          backgroundColor: colors.background,
+          backgroundColor: `${colors.background}60`,
+          color: colors.secondary
         }}>
         <EditorContent editor={editor} />
       </div>

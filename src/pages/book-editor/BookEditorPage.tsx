@@ -180,13 +180,22 @@ const BookEditorPage = () => {
             />
 
             <div className='flex justify-end gap-2'>
-              <button className='px-4 py-2 text-gray-600 bg-gray-200 rounded-md'>
+              <button className='px-4 py-2 text-gray-600 bg-gray-200 rounded-md drop-shadow-logo'>
                 임시저장
               </button>
               <button
                 disabled={!isValidReview()}
                 onClick={handleSave}
-                className='px-4 py-2 text-white bg-blue-600 rounded-md disabled:bg-gray-400'>
+                className='px-4 py-2 text-white rounded-md transition-colors disabled:bg-gray-400 hover:opacity-80 active:bg-white drop-shadow-logo'
+                style={{
+                  backgroundColor: !isValidReview()
+                    ? undefined
+                    : BOOK_THEME[reviewFields.theme].primary,
+                  color:
+                    document.activeElement === document.querySelector(':active')
+                      ? BOOK_THEME[reviewFields.theme].primary
+                      : 'white',
+                }}>
                 저장하기
               </button>
             </div>
