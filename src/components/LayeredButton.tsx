@@ -2,23 +2,23 @@ import { useState } from 'react';
 
 const BUTTON_THEMES = {
   red: {
-    background: '#DF4F92',
-    border: '#A51C5C',
+    backgroundColor: '#DF4F92',
+    borderColor: '#A51C5C',
     shadow: '#CE317A',
   },
   gray: {
-    background: '#B2B2B2',
-    border: '#575757',
+    backgroundColor: '#B2B2B2',
+    borderColor: '#575757',
     shadow: '#838383',
   },
   blue: {
-    background: '#73A1F7',
-    border: '#2656CD',
+    backgroundColor: '#73A1F7',
+    borderColor: '#2656CD',
     shadow: '#477DE1',
   },
   purple: {
-    background: '#C46BE2',
-    border: '#6C1B87',
+    backgroundColor: '#C46BE2',
+    borderColor: '#6C1B87',
     shadow: '#A84CC7',
   },
 };
@@ -34,18 +34,10 @@ const LayeredButton = ({
 
   return (
     <button
-      className={`
-        relative 
-        px-6 py-3 
-        rounded-lg 
-        transition-all 
-        duration-100 
-        font-bold text-white
-        ${className}
-      `}
+      className={`relative px-6 py-3 font-bold text-white rounded-lg transition-all duration-100 ${className}`}
       style={{
-        backgroundColor: colorTheme.background,
-        border: `1px solid ${colorTheme.border}`,
+        backgroundColor: colorTheme.backgroundColor,
+        border: `1px solid ${colorTheme.borderColor}`,
         boxShadow: isPressed
           ? `0 4px 0 ${colorTheme.shadow}`
           : `0 8px 0 ${colorTheme.shadow}`,

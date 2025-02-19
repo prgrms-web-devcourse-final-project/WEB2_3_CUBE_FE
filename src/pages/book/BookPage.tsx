@@ -1,5 +1,13 @@
+import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import BookReviewEditor from '../book-editor/BookEditorPage';
+import BookReviewViewer from '../book-viewer/BookViewerPage';
+
 const BookPage = () => {
-  return <div>BookPage</div>;
+  const { bookId, userId } = useParams();
+  const [hasReview, setHasReview] = useState(false);
+
+  return <>{hasReview ? <BookReviewViewer /> : <BookReviewEditor />}</>;
 };
 
 export default BookPage;

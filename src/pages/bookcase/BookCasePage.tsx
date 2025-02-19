@@ -7,7 +7,7 @@ const BookCasePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className='w-full h-screen bg-white'>
+    <div className='w-full h-screen bg-white overflow-auto'>
       {/* 책장 리스트 -> 아이템이 15개 이상일 때마다 추가하기 */}
       <BookCaseList />
       <BookCaseList />
