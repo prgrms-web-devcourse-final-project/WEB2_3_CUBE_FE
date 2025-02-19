@@ -19,7 +19,7 @@ const Router = () => {
           element={<MainPage />}
         />
         <Route
-          path='/bookcase'
+          path='/bookcase/:userId'
           element={<BookCasePage />}
         />
       </Route>
@@ -41,7 +41,7 @@ const Router = () => {
       </Route>
 
       <Route
-        path='/book'
+        path='/book/:bookId/:userId'
         element={<BookPage />}
       />
       <Route

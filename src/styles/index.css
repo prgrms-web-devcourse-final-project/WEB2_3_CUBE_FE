@@ -5,3 +5,9 @@
     BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI',
     sans-serif;
 }
+
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
