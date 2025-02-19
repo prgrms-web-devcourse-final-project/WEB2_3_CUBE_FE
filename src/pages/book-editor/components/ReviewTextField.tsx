@@ -19,6 +19,13 @@ const ReviewTextField = ({
 
   return (
     <div>
+      <style>
+        {`
+          .themed-textarea::placeholder {
+            color: ${colors.secondary}60;
+          }
+        `}
+      </style>
       <h2
         className='mb-2 text-lg font-semibold'
         style={{ color: colors.primary }}>
@@ -28,9 +35,9 @@ const ReviewTextField = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className='w-full h-24 p-4 rounded-lg resize-none focus:outline-none'
+        className='w-full h-24 p-4 rounded-lg resize-none focus:outline-none themed-textarea'
         style={{
-          backgroundColor: colors.background,
+          backgroundColor: `${colors.background}60`,
           borderWidth: '2px',
           borderColor: `${colors.secondary}30`,
           color: colors.secondary,
