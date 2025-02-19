@@ -1,4 +1,5 @@
 import { mockBooks } from '@/mocks/searchData';
+import { useNavigate } from 'react-router-dom';
 
 const truncateText = (text: string, maxLength: number) => {
   if (text.length > maxLength) {
@@ -8,8 +9,15 @@ const truncateText = (text: string, maxLength: number) => {
 };
 
 const BookCaseList = () => {
+  const navigate = useNavigate();
+
+  const handleBookClick = (bookId: string) => {
+    // ** 추후 수정할 부분 : store에서 userId 가져오기 or URL에서 userId 가져오기
+    navigate(`/book/${bookId}/userId`);
+  };
+
   return (
-    <ul className='w-[5300px] h-[420px] bg-[#D1E5F1] shadow-[inset_0px_4px_20px_5px_rgba(30,146,215,0.20)] flex items-end gap-10'>
+    <ul className='w-[5300px] h-[420px] bg-[#D1E5F1] shadow-[inset_0px_4px_20px_5px_rgba(30,146,215,0.20)] flex items-end gap-14 px-20'>
       {mockBooks.length === 0 ? (
         // 책장이 비어있을 때
         <div className='item-row relative'>
@@ -28,6 +36,7 @@ const BookCaseList = () => {
             // 이미지가 있는 경우
             <li
               key={book.id}
+              onClick={() => handleBookClick(book.id)}
               className='w-50 h-70 rounded-2xl text-white book-gradient drop-shadow-book relative cursor-pointer
                          transform transition-transform duration-300 hover:-rotate-6 hover:scale-105 hover:-translate-y-4'>
               <img
@@ -46,6 +55,7 @@ const BookCaseList = () => {
             // 이미지가 없는 경우 - 세로 텍스트 레이아웃
             <li
               key={book.id}
+              onClick={() => handleBookClick(book.id)}
               className='w-18 h-70 rounded-2xl text-white bg-white drop-shadow-book relative cursor-pointer
                          transform transition-transform duration-300 hover:-rotate-6 hover:scale-105 hover:-translate-y-4'>
               <div className='h-full w-full text-center flex flex-col justify-between items-center pt-4 pb-14'>
