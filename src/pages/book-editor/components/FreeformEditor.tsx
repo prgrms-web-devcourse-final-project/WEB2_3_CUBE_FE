@@ -6,15 +6,23 @@ import Heading from '@tiptap/extension-heading';
 import Strike from '@tiptap/extension-strike';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
+import { BookThemeType, BOOK_THEME } from '@/constants/bookTheme';
 
 type Level = 2 | 3 | 4 | 5; // 2-5 레벨 허용
 
 interface FreeformEditorProps {
   value: string;
   onChange: (value: string) => void;
+  theme?: BookThemeType;
 }
 
-const FreeformEditor = ({ value, onChange }: FreeformEditorProps) => {
+const FreeformEditor = ({
+  value,
+  onChange,
+  theme = 'BLUE',
+}: FreeformEditorProps) => {
+  const colors = BOOK_THEME[theme];
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -67,9 +75,19 @@ const FreeformEditor = ({ value, onChange }: FreeformEditorProps) => {
 
   return (
     <div>
-      <h3 className='text-lg font-semibold mb-2 text-[#162C63]'>자유 형식</h3>
+      <h3
+        className='mb-2 text-lg font-semibold'
+        style={{ color: colors.primary }}>
+        자유 형식
+      </h3>
       {/* 메뉴 바 */}
-      <div className='flex items-center gap-2 p-2 border rounded-t-md bg-gray-50'>
+      <div
+        className='flex items-center gap-2 p-2 rounded-t-lg'
+        style={{
+          borderWidth: '2px',
+          borderColor: `${colors.secondary}33`,
+          backgroundColor: colors.background,
+        }}>
         {headingLevels.map((level) => (
           <button
             key={level}
@@ -82,7 +100,7 @@ const FreeformEditor = ({ value, onChange }: FreeformEditorProps) => {
             <span className='font-bold'>H{level}</span>
           </button>
         ))}
-        <div className='w-px h-6 bg-gray-300 mx-2' /> {/* 구분선 */}
+        <div className='w-px h-6 mx-2 bg-gray-300' /> {/* 구분선 */}
         <button
           onClick={() => editor?.chain().focus().toggleBold().run()}
           className={`p-2 hover:bg-gray-100 rounded ${
@@ -111,7 +129,7 @@ const FreeformEditor = ({ value, onChange }: FreeformEditorProps) => {
           }`}>
           <span className='line-through'>S</span>
         </button>
-        <div className='w-px h-6 bg-gray-300 mx-2' />
+        <div className='w-px h-6 mx-2 bg-gray-300' />
         <button
           onClick={() => editor?.chain().focus().toggleBlockquote().run()}
           className={`p-2 hover:bg-gray-100 rounded ${
@@ -128,12 +146,19 @@ const FreeformEditor = ({ value, onChange }: FreeformEditorProps) => {
         </button>
         <button
           onClick={addImage}
-          className='p-2 hover:bg-gray-100 rounded'>
+          className='p-2 rounded hover:bg-gray-100'>
           <span>🖼️</span>
         </button>
       </div>
       {/* 에디터 본문 */}
-      <div className='border rounded-b-md'>
+      <div
+        className='rounded-b-md'
+        style={{
+          borderWidth: '2px',
+          borderTopWidth: 0,
+          borderColor: `${colors.secondary}30`,
+          backgroundColor: colors.background,
+        }}>
         <EditorContent editor={editor} />
       </div>
     </div>
