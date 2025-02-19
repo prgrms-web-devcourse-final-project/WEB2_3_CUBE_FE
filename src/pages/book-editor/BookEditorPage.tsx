@@ -107,7 +107,7 @@ const BookEditorPage = () => {
           <div className='flex gap-4'>
             <button
               onClick={() => handleFieldChange('theme')('BLUE')}
-              className='w-8 h-8 rounded-full cursor-pointer transition-all relative'
+              className='w-8 h-8 rounded-full cursor-pointer transition-all relative ring-2 ring-[#3E507D]/70'
               style={{ backgroundColor: BOOK_THEME.BLUE.surface }}>
               {reviewFields.theme === 'BLUE' && (
                 <CheckIcon
@@ -118,7 +118,7 @@ const BookEditorPage = () => {
             </button>
             <button
               onClick={() => handleFieldChange('theme')('RED')}
-              className='w-8 h-8 rounded-full cursor-pointer transition-all relative'
+              className='w-8 h-8 rounded-full cursor-pointer transition-all relative ring-2 ring-[#7D3E59]/70'
               style={{ backgroundColor: BOOK_THEME.RED.surface }}>
               {reviewFields.theme === 'RED' && (
                 <CheckIcon
@@ -129,7 +129,7 @@ const BookEditorPage = () => {
             </button>
             <button
               onClick={() => handleFieldChange('theme')('GREEN')}
-              className='w-8 h-8 rounded-full cursor-pointer transition-all relative'
+              className='w-8 h-8 rounded-full cursor-pointer transition-all relative ring-2 ring-[#567D3E]/70'
               style={{ backgroundColor: BOOK_THEME.GREEN.surface }}>
               {reviewFields.theme === 'GREEN' && (
                 <CheckIcon
