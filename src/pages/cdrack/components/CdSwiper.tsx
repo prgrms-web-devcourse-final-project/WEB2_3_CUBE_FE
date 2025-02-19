@@ -1,14 +1,21 @@
-import React from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { forwardRef } from 'react';
+import { Swiper, SwiperRef, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import { Mousewheel, EffectCoverflow, Virtual } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
-export default function CdSwiper({ datas, onActiveTrackId }) {
-  return (
-    <>
+
+interface CdSwiperProps {
+  datas: CDInfo[];
+  onActiveTrackId: (index: number) => void;
+}
+
+const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
+  ({ datas, onActiveTrackId }, ref) => {
+    return (
       <Swiper
+        ref={ref}
         effect={'coverflow'}
         grabCursor={true}
         centeredSlides={true}
@@ -51,6 +58,8 @@ export default function CdSwiper({ datas, onActiveTrackId }) {
           </SwiperSlide>
         ))}
       </Swiper>
-    </>
-  );
-}
+    );
+  },
+);
+
+export default CdSwiper;

@@ -16,6 +16,45 @@
   --drop-shadow-book: 10px 4px 10px rgba(78, 122, 207, 0.15);
   --drop-shadow-logo: 0px 4px 4px rgba(78, 122, 207, 0.15);
   --drop-shadow-modal: 0px 10px 10px rgba(38, 86, 205, 0.3);
+
+  /* 에니메이션 */
+  --animate-slideTitle: slideTitle linear infinite;
+
+  @keyframes slideTitle {
+    0% {
+      transform: translateX(100%); /* 화면 오른쪽에서 시작 */
+    }
+    100% {
+      transform: translateX(-100%); /* 화면 왼쪽으로 완전히 사라짐 */
+    }
+  }
+
+  /* @keyframes slideTitle {
+    0% {
+      transform: translateX(100%);
+      opacity: 1;
+    }
+    45% {
+      transform: translateX(-100%);
+      opacity: 1;
+    }
+    46% {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+    47% {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    48% {
+      transform: translateX(100%);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(-100%);
+      opacity: 1;
+    }
+  } */
 }
 
 @layer components {
