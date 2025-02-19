@@ -5,6 +5,7 @@ export const mockBooks = [
     author: '김초엽',
     publishedDate: '2024.01.02',
     genres: ['소설', '에세이', '희곡'],
+    publisher: '민음사',
     imageURL:
       'https://image.aladin.co.kr/product/19359/16/cover500/s152835852_1.jpg',
   },
@@ -14,6 +15,7 @@ export const mockBooks = [
     author: '재레드 다이아몬드',
     publishedDate: '2024.01.05',
     genres: ['역사', '인문'],
+    publisher: '민음사',  
     imageURL:
       'https://image.aladin.co.kr/product/31629/43/cover500/8934942460_1.jpg',
   },
@@ -23,6 +25,7 @@ export const mockBooks = [
     author: '재레드 다이아몬드',
     publishedDate: '2024.01.05',
     genres: ['역사', '인문'],
+    publisher: '민음사',
     imageURL:
       'https://image.aladin.co.kr/product/19359/16/cover500/s152835852_1.jpg',
   },
@@ -32,6 +35,7 @@ export const mockBooks = [
     author: '재레드 다이아몬드',
     publishedDate: '2024.01.05',
     genres: ['이얍', '인문'],
+    publisher: '민음사',
     imageURL:
       'https://image.aladin.co.kr/product/19359/16/cover500/s152835852_1.jpg',
   },
@@ -42,6 +46,7 @@ export const mockBooks = [
     author: '잔나비',
     publishedDate: '2024.01.05',
     genres: ['예압', '인문'],
+    publisher: '민음사',
     imageURL: null,
   },
 ];

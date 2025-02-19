@@ -57,7 +57,7 @@ export default function DataList({
   }, [currentInput]);
 
   return (
-    <div className='absolute top-0 right-0  w-[444px] min-h-screen bg-[#FFFAFA] rounded-tl-3xl rounded-bl-3xl '>
+    <div className='absolute top-0 right-0  w-[444px] min-h-screen bg-[#FFFAFA] rounded-tl-3xl rounded-bl-3xl z-100'>
       <div className='pl-11 pt-15 pr-10 '>
         <span
           className={classNames(
