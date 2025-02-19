@@ -23,6 +23,7 @@
     "@types/three": "^0.173.0",
     "axios": "^1.7.9",
     "classnames": "^2.5.1",
+    "framer-motion": "^12.4.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.5",
