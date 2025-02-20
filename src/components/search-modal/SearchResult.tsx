@@ -1,4 +1,5 @@
 import { SearchItemType } from '@/types/search';
+import { bookAPI } from '@/apis/book';
 import addIcon from '@/assets/add-icon.svg';
 import { SEARCH_THEME } from '@/constants/searchTheme';
 
@@ -19,6 +20,28 @@ export const SearchResult = ({
   onSelect,
 }: SearchResultProps) => {
   const theme = SEARCH_THEME[type];
+
+  const handleAddBook = async (item: SearchItemType) => {
+    if (type === 'BOOK') {
+      try {
+        const bookData: BookType = {
+          isbn: item.id,
+          title: item.title,
+          author: item.author,
+          publisher: item.publisher,
+          publishedDate: item.date,
+          imageUrl: item.imageUrl,
+          category: item.genres,
+        };
+        await bookAPI.addBookToMyBook(bookData);
+        onSelect(item);
+      } catch (error) {
+        console.error('책 추가 실패:', error);
+      }
+    } else {
+      onSelect(item);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -49,7 +72,8 @@ export const SearchResult = ({
       {/* 출판일 / 발매일 */}
       <div className='flex flex-col items-center justify-center gap-1'>
         <p className={theme.searchResultDate}>{item.date}</p>
-        <h3 className={`text-xl font-bold text-center ${theme.searchResultText}`}>
+        <h3
+          className={`text-xl font-bold text-center ${theme.searchResultText}`}>
           {item.title}
         </h3>
       </div>
@@ -59,8 +83,9 @@ export const SearchResult = ({
           src={item.imageUrl}
           className='object-contain w-full h-full rounded-lg shadow-lg'
         />
+        {/* 내 책장에 담기 버튼 */}
         <button
-          onClick={() => onSelect(item)}
+          onClick={() => handleAddBook(item)}
           className={`absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 p-2 ${theme.searchResultAddBtn} rounded-full cursor-pointer`}>
           <img
             src={addIcon}

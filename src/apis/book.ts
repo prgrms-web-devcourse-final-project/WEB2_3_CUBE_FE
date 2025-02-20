@@ -61,6 +61,28 @@ export const bookAPI = {
     return response.data;
   },
 
+  // /api/mybooks?userId=1
+  // req.body
+  // {
+  //     "isbn": "1329056789134", -> nullable
+  //     "title": "title",
+  //     "author": "author",
+  //     "publisher": "publisher",
+  //     "publishedDate": "2025-02-18",
+  //     "imageUrl": "imageUrl",
+  //     "category": "category", -> genre ( String[] )
+  //     "page": "1000" -> nullable
+  // }
+
+  /** 내 책장에 도서 추가하기
+   * @param book 도서 정보
+   * @returns
+   */
+  addBookToMyBook: async (book: BookType) => {
+    const response = await axiosInstance.post('/api/mybooks', book);
+    return response.data;
+  },
+
   /**
    * 서평 조회
    * @param myBookId 내 책 ID
