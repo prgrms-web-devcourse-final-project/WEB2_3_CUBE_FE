@@ -81,8 +81,8 @@ const BookReviewDisplay = ({
     }
   }, [mode, userId, bookId]);
 
-  // 실제 표시할 데이터 (preview 모드면 previewData, view 모드면 reviewData 사용)
-  const displayData = mode === 'preview' ? previewData : reviewData;
+  // 실제 표시할 데이터 (preview 모드면 previewData 사용)
+  const displayData = previewData; // mode와 상관없이 previewData 사용
 
   if (!displayData) return null;
 
