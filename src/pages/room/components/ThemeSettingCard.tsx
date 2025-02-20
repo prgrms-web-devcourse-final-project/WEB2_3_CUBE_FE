@@ -70,6 +70,7 @@ export default function ThemeSettingCard({
         )}
         {/* 이미지 썸네일 */}
         <img
+          className='2xl:w-28'
           src={ExImg}
           alt={themeData[theme].title}
         />
@@ -78,7 +79,7 @@ export default function ThemeSettingCard({
           <h2 className='font-bold text-base 2xl:text-lg text-[#162C63]'>
             {themeData[theme].title}
           </h2>
-          <p className='font-medium text-[10px] 2xl:text-xs text-[#3E507D]/70'>
+          <p className='font-medium 2xl:font-semibold text-[10px] 2xl:text-sm text-[#3E507D]/70'>
             {themeData[theme].description}
           </p>
         </div>

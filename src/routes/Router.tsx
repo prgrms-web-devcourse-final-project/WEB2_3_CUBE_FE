@@ -1,14 +1,14 @@
 import BookPage from '@pages/book/BookPage';
 import BookCasePage from '@pages/bookcase/BookCasePage';
-import NotFoundPage from '@pages/NotFoundPage';
-import TestPage from '@pages/TestPage';
 import CdPage from '@pages/cd/CdPage';
-import MainPage from '@pages/main/MainPage';
 import { Routes, Route } from 'react-router-dom';
 import LoginPage from '@pages/login/LoginPage';
-import RoomPage from '../pages/room/RoomPage';
+import MainPage from '@pages/main/MainPage';
+import NotFoundPage from '@pages/NotFoundPage';
+import TestPage from '@pages/TestPage';
 import BaseLayout from '@routes/layout/BaseLayout';
 import CdRackPage from '@pages/cdrack/CdRackPage';
+import RoomPage from '../pages/room/RoomPage';
 
 const Router = () => {
   return (
@@ -22,6 +22,10 @@ const Router = () => {
         <Route
           path='/bookcase/:userId'
           element={<BookCasePage />}
+        />
+        <Route
+          path='/room'
+          element={<RoomPage />}
         />
       </Route>
       <Route
@@ -48,11 +52,6 @@ const Router = () => {
       <Route
         path='/cd'
         element={<CdPage />}
-      />
-
-      <Route
-        path='/room'
-        element={<RoomPage />}
       />
       <Route
         path='*'

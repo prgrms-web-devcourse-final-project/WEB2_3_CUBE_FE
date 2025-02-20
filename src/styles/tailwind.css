@@ -29,6 +29,7 @@
   }
 }
 
+
 @layer components {
   .item-middle {
     @apply flex items-center justify-center;
@@ -54,6 +55,45 @@
   }
   .book-gradient {
     @apply bg-gradient-to-b from-[#73a1f7] to-[#4983ef];
+  }
+
+  .spring-left-first {
+    @apply absolute -top-[30px] z-20 left-[calc(50%-200px-28px)] 2xl:left-[calc(50%-270px-32px)];
+  }
+
+  .spring-left-second {
+    @apply absolute -top-[30px] z-20 left-[calc(50%-200px+12px)] 2xl:left-[calc(50%-270px+12px)];
+  }
+
+  .spring-right-first {
+    @apply absolute -top-[30px] z-20 right-[calc(50%-200px-28px)] 2xl:right-[calc(50%-270px-32px)];
+  }
+
+  .spring-right-second {
+    @apply absolute -top-[30px] z-20 right-[calc(50%-200px+12px)] 2xl:right-[calc(50%-270px+12px)];
+  }
+
+  .spring-element {
+    @apply w-7 h-16 bg-[#73A1F7] rounded-full border-2 border-[#2656CD] 2xl:h-20 2xl:w-8;
+  }
+}
+
+@layer utilities {
+  .writing-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+
+    .transition-200 {
+      @apply transition-all duration-200 ease-in-out;
+    }
+  }
+}
+
+@layer utilities {
+  .vertical-text {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    letter-spacing: 0.1em;
   }
 }
 
