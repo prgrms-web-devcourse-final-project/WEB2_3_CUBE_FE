@@ -1,6 +1,31 @@
-import axiosInstance from './axiosInstance';
+import axiosInstance, { aladinInstance } from './axiosInstance';
+
+const ALADIN_KEY = import.meta.env.VITE_ALADIN_KEY;
 
 export const bookAPI = {
+  /**
+   * 알라딘 도서 검색
+   * @param keyword 검색 키워드
+   * @returns 알라딘 도서 검색 결과
+   */
+  searchAladinBooks: async (keyword: string) => {
+    const params = {
+      ttbkey: ALADIN_KEY,
+      Query: keyword,
+      QueryType: 'Keyword',
+      MaxResults: 10,
+      start: 1,
+      SearchTarget: 'Book',
+      output: 'JS',
+      Version: '20131101',
+    };
+
+    const response = await aladinInstance.get('/ttb/api/ItemSearch.aspx', {
+      params,
+    });
+    return response.data;
+  },
+
   /**
    * 도서 상세 조회
    * @param myBookId 내 책 ID
