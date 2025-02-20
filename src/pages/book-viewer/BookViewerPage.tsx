@@ -9,7 +9,7 @@ import { mockBooks } from '@/mocks/searchData'; // mock 데이터 import
 const BookViewerPage = () => {
   const { userId, bookId } = useParams();
   const [reviewData, setReviewData] = useState<ReviewData | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // 임시로 mock 데이터 사용
