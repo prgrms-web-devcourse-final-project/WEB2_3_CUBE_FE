@@ -17,6 +17,7 @@ export const bookAPI = {
       MaxResults: 10,
       start: 1,
       SearchTarget: 'Book',
+      Cover: 'Big',
       output: 'JS',
       Version: '20131101',
     };

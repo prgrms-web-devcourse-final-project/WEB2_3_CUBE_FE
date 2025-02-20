@@ -11,25 +11,23 @@ interface SearchModalProps {
   title: string;
   onClose: () => void;
   type: 'CD' | 'BOOK';
+  onSelect: (item: SearchItemType) => void;
 }
 
-export const SearchModal = ({ title, onClose, type }: SearchModalProps) => {
-  const { search, isLoading, error } = useSearch(type);
-  const [query, setQuery] = React.useState('');
-  const [results, setResults] = React.useState<SearchItemType[]>([]);
+export const SearchModal = ({
+  title,
+  onClose,
+  type,
+  onSelect,
+}: SearchModalProps) => {
+  const { query, setQuery, results, isLoading, error } = useSearch(type);
   const [selectedItem, setSelectedItem] = React.useState<SearchItemType | null>(
     null,
   );
   const theme = SEARCH_THEME[type];
 
-  const handleSearch = async (value: string) => {
+  const handleSearch = (value: string) => {
     setQuery(value);
-    if (value.trim()) {
-      const searchResults = await search(value);
-      setResults(searchResults);
-    } else {
-      setResults([]);
-    }
   };
 
   return (
@@ -57,6 +55,10 @@ export const SearchModal = ({ title, onClose, type }: SearchModalProps) => {
             <SearchResult
               item={selectedItem}
               type={type}
+              isLoading={isLoading}
+              error={error}
+              items={results}
+              onSelect={onSelect}
             />
           </div>
         </div>
