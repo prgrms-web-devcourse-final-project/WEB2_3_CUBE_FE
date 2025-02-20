@@ -59,6 +59,7 @@ export const SearchModal = ({
               error={error}
               items={results}
               onSelect={onSelect}
+              onClose={onClose}
             />
           </div>
         </div>

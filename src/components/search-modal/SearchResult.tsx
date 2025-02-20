@@ -10,6 +10,7 @@ interface SearchResultProps {
   isLoading: boolean;
   error: string | null;
   onSelect: (item: SearchItemType) => void;
+  onClose: () => void;
 }
 
 export const SearchResult = ({
@@ -18,6 +19,7 @@ export const SearchResult = ({
   isLoading,
   error,
   onSelect,
+  onClose,
 }: SearchResultProps) => {
   const theme = SEARCH_THEME[type];
 
@@ -35,11 +37,13 @@ export const SearchResult = ({
         };
         await bookAPI.addBookToMyBook(bookData);
         onSelect(item);
+        onClose();
       } catch (error) {
         console.error('책 추가 실패:', error);
       }
     } else {
       onSelect(item);
+      onClose();
     }
   };
 
