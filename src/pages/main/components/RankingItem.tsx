@@ -2,7 +2,7 @@ import blueFoot from "@assets/rank/blue-footprint.svg";
 
 export default function RankingItem({ rank, nickname, visits }) {
   return (
-    <div className="bg-[#73A1F7]/5 w-full 2xl:py-3 px-8 py-1.5 rounded-lg 2xl:rounded-xl">
+    <div className="bg-[#73A1F7]/5 w-full 2xl:py-3 px-8 py-2 rounded-lg 2xl:rounded-xl">
       <div className="grid grid-cols-[30px_1fr_auto] gap-x-8 items-center text-[#4B6BBA]">
         {/* 랭킹 번호 */}
         <p className="font-black text-base 2xl:text-xl text-center">{rank}</p>
