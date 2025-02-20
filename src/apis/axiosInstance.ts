@@ -8,14 +8,6 @@ const axiosInstance = axios.create({
   },
 });
 
-// 알라딘 API 호출용 인스턴스
-export const aladinInstance = axios.create({
-  baseURL: 'http://www.aladin.co.kr',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
 // 요청 인터셉터
 axiosInstance.interceptors.request.use(
   (config) => {

@@ -1,4 +1,5 @@
-import axiosInstance, { aladinInstance } from './axiosInstance';
+import axios from 'axios';
+import axiosInstance from './axiosInstance';
 
 const ALADIN_KEY = import.meta.env.VITE_ALADIN_KEY;
 
@@ -20,10 +21,23 @@ export const bookAPI = {
       Version: '20131101',
     };
 
-    const response = await aladinInstance.get('/ttb/api/ItemSearch.aspx', {
-      params,
-    });
-    return response.data;
+    try {
+      const response = await axios.get('/api/aladin/ttb/api/ItemSearch.aspx', {
+        params,
+        headers: {
+          Accept: 'application/json, text/plain, */*',
+          'Content-Type': 'application/json;charset=utf-8',
+        },
+      });
+
+      if (response.data && typeof response.data === 'string') {
+        return JSON.parse(response.data);
+      }
+      return response.data;
+    } catch (error) {
+      console.error('알라딘 API 호출 오류:', error);
+      throw error;
+    }
   },
 
   /**

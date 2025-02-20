@@ -6,6 +6,7 @@ import {
 import { mockBooks, mockMusics } from '@/mocks/searchData';
 import { useState } from 'react';
 import axiosInstance from '@apis/axiosInstance';
+import { bookAPI } from '@apis/book';
 
 import axios from 'axios';
 
@@ -40,44 +41,18 @@ export const useSearch = (type: 'CD' | 'BOOK') => {
       setIsLoading(true);
       setError(null);
 
-      // API 호출 시뮬레이션
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          const filteredBooks = mockBooks
-            .filter(
-              (book) =>
-                book.title.toLowerCase().includes(query.toLowerCase()) ||
-                book.author.toLowerCase().includes(query.toLowerCase()),
-            )
-            .map((book) => ({
-              id: book.id,
-              title: book.title,
-              author: book.author,
-              date: book.publishedDate, // publishedDate -> date로 매핑
-              imageUrl: book.imageURL, // imageURL -> imageUrl로 매핑
-              type: 'BOOK' as const, // type 필드 추가
-              genres: book.genres,
-            }));
+      const data = await bookAPI.searchAladinBooks(query);
 
-          setIsLoading(false);
-          resolve(filteredBooks);
-        }, 500);
-      });
-
-      // 실제 호출 로직 -> 삭제 금지!!
-      // const { data } = await axiosInstance.get(
-      //   `/api/books?keyword=?${query}`,
-      // );
-
-      // return data.data.books.map((book) => ({
-      //   id: book.id,
-      //   title: book.title,
-      //   author: book.author,
-      //   date: book.publishedDate,
-      //   imageUrl: book.imageUrl,
-      //   type: 'BOOK' as const,
-      //   genres: book.genres || [],
-      // }));
+      return data.item.map((book) => ({
+        id: book.isbn,
+        title: book.title,
+        author: book.author,
+        publisher: book.publisher,
+        date: book.pubDate,
+        imageUrl: book.cover,
+        type: 'BOOK' as const,
+        genres: [],
+      }));
     } catch (error: any) {
       console.error(error);
       setError(`검색 중 오류가 발생했습니다`);
