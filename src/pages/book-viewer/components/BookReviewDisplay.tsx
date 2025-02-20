@@ -44,15 +44,19 @@ const REVIEW_FIELDS: ReviewField[] = [
 ];
 
 const ReviewSection = ({
+  id,
   title,
   content,
   colors,
 }: {
+  id: string;
   title: string;
   content: string;
   colors: (typeof BOOK_THEME)[BookThemeType];
 }) => (
-  <div className='mb-6'>
+  <div
+    id={id}
+    className='mb-6'>
     <h2
       className='mb-2 text-lg font-semibold'
       style={{ color: colors.primary }}>
@@ -77,52 +81,108 @@ const BookReviewDisplay = ({
     }
   }, [mode, userId, bookId]);
 
-  // 실제 표시할 데이터 (preview 모드면 previewData, view 모드면 reviewData 사용)
-  const displayData = mode === 'preview' ? previewData : reviewData;
+  // 실제 표시할 데이터 (preview 모드면 previewData 사용)
+  const displayData = previewData; // mode와 상관없이 previewData 사용
 
   if (!displayData) return null;
 
   const colors = BOOK_THEME[(displayData.theme as BookThemeType) || 'BLUE'];
 
+  // 자유 형식 내용에서 헤딩 추출
+  const extractHeadings = (content: string) => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, 'text/html');
+    const headings = doc.querySelectorAll('h2, h3, h4, h5');
+
+    return Array.from(headings).map((heading, index) => {
+      const id = `heading-${index}`;
+      heading.id = id; // 헤딩에 id 부여
+      return {
+        id,
+        level: parseInt(heading.tagName.substring(1)),
+        text: heading.textContent || '',
+      };
+    });
+  };
+
+  const headings = displayData.freeform
+    ? extractHeadings(displayData.freeform)
+    : [];
+
   return (
-    <div className='relative h-full overflow-auto '>
+    <div className='relative h-full overflow-auto'>
       {/* 제목 + 목차 */}
       <div className='py-12 item-between px-14'>
-        <h1 className='text-6xl font-semibold text-[#162C63] mb-8'>
+        <h1
+          className='text-6xl font-semibold mb-8'
+          style={{ color: colors.primary }}>
           {displayData.title}
         </h1>
         <ul className='flex flex-col items-end justify-start gap-2 shrink-0'>
-          <li className='text-xl font-semibold text-[#162C63]'>목차</li>
-          {REVIEW_FIELDS.map(({ key, title }) => (
-            <li
-              key={key}
-              className='text-sm text-[#162C63]'>
-              {title}
-            </li>
-          ))}
+          <li
+            className='text-xl font-semibold'
+            style={{ color: colors.primary }}>
+            목차
+          </li>
+          {REVIEW_FIELDS.map(
+            ({ key, title }) =>
+              displayData[key] && ( // 값이 있는 경우에만 목차에 표시
+                <li
+                  key={key}
+                  className='text-sm'
+                  style={{ color: colors.primary }}>
+                  <a href={`#section-${key}`}>{title}</a>
+                </li>
+              ),
+          )}
+          {/* 자유 형식의 헤딩들도 존재할 때만 목차에 추가 */}
+          {headings.length > 0 &&
+            headings.map(({ id, level, text }) => (
+              <li
+                key={id}
+                className='text-sm'
+                style={{
+                  color: colors.primary,
+                  paddingLeft: `${(level - 2) * 1}rem`,
+                }}>
+                <a href={`#${id}`}>{text}</a>
+              </li>
+            ))}
         </ul>
       </div>
 
       {/* 도서 정보 + 서평 내용 영역 */}
-      <article className='absolute flex flex-col w-full gap-4 bg-[#D1E5F1] rounded-tl-[80px] top-[70%] min-h-[30%] px-24 py-16'>
+      <article
+        className='absolute flex flex-col w-full gap-4 rounded-tl-[80px] top-[70%] min-h-[30%] px-24 py-16'
+        style={{ backgroundColor: `${colors.surface}` }}>
         {/* 도서 정보 */}
         <div className='flex flex-col gap-2'>
           <div className='flex flex-col gap-4'>
-            <span className='text-[#162C63]/70 text-sm'>
+            <span
+              className='text-sm'
+              style={{ color: `${colors.primary}70` }}>
               {displayData.publishedDate}
             </span>
             <div className='flex items-end w-full gap-4'>
-              <h2 className='text-3xl font-semibold text-[#162C63]'>
+              <h2
+                className='text-3xl font-semibold'
+                style={{ color: colors.primary }}>
                 {displayData.bookTitle}
               </h2>
-              <span className='text-[#162C63]'>{displayData.author}</span>
+              <span style={{ color: colors.primary }}>
+                {displayData.author}
+              </span>
             </div>
           </div>
           <div className='flex gap-2 mt-2'>
             {displayData.genres.map((genre) => (
               <span
                 key={genre}
-                className='px-4 py-1 bg-[#3E507D]/20 rounded-full text-sm text-[#162C63]'>
+                className='px-4 py-1 rounded-full text-sm'
+                style={{
+                  backgroundColor: `${colors.secondary}20`,
+                  color: colors.primary,
+                }}>
                 {genre}
               </span>
             ))}
@@ -130,7 +190,9 @@ const BookReviewDisplay = ({
         </div>
 
         {/* 리뷰 작성일자 */}
-        <div className='text-sm text-[#162C63]/70 mt-20'>
+        <div
+          className='text-sm mt-20'
+          style={{ color: `${colors.primary}70` }}>
           {displayData.reviewDate}
         </div>
 
@@ -140,6 +202,7 @@ const BookReviewDisplay = ({
             displayData[key] && (
               <ReviewSection
                 key={key}
+                id={`section-${key}`}
                 title={title}
                 content={
                   Array.isArray(displayData[key])
@@ -154,8 +217,42 @@ const BookReviewDisplay = ({
         {displayData.freeform && (
           <div
             className='mt-8 prose-sm prose'
-            dangerouslySetInnerHTML={{ __html: displayData.freeform }}
+            style={{ color: colors.secondary }}
+            dangerouslySetInnerHTML={{
+              __html: displayData.freeform.replace(
+                /<(h[2-5])>/g,
+                (_, tag) => `<${tag} id="heading-$1">`,
+              ),
+            }}
           />
+        )}
+
+        {/* 수정/삭제 버튼 (view 모드일 때만 표시) */}
+        {mode === 'view' && (
+          <div className='item-middle gap-3 mt-8'>
+            <button
+              onClick={() => {
+                /* 수정 로직 */
+              }}
+              className='px-4 py-2 rounded-full transition-colors hover:opacity-80 text-sm'
+              style={{
+                backgroundColor: `${colors.secondary}10`,
+                color: colors.secondary,
+              }}>
+              수정
+            </button>
+            <button
+              onClick={() => {
+                /* 삭제 로직 */
+              }}
+              className='px-4 py-2 rounded-full transition-colors hover:opacity-80 text-sm'
+              style={{
+                backgroundColor: `${colors.secondary}10`,
+                color: colors.secondary,
+              }}>
+              삭제
+            </button>
+          </div>
         )}
       </article>
     </div>
