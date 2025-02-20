@@ -39,7 +39,7 @@ const ReviewTextField = ({
         style={{
           backgroundColor: `${colors.background}60`,
           borderWidth: '2px',
-          borderColor: `${colors.secondary}30`,
+          borderColor: `${colors.secondary}50`,
           color: colors.secondary,
         }}
       />
