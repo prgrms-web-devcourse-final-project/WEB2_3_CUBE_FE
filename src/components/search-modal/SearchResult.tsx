@@ -24,8 +24,8 @@ export const SearchResult = ({
   const theme = SEARCH_THEME[type];
 
   const handleAddBook = async (item: SearchItemType) => {
-    if (type === 'BOOK') {
-      try {
+    try {
+      if (type === 'BOOK') {
         const bookData: BookType = {
           isbn: item.id,
           title: item.title,
@@ -36,14 +36,21 @@ export const SearchResult = ({
           category: item.genres,
         };
         await bookAPI.addBookToMyBook(bookData);
-        onSelect(item);
-        onClose();
-      } catch (error) {
-        console.error('책 추가 실패:', error);
+      } else if (type === 'CD') {
+        // CD 추가 요청 로직
+        // const cdData = {
+        //   id: item.id,
+        //   title: item.title,
+        //   artist: item.artist,
+        //   albumTitle: item.album_title,
+        //   releaseDate: item.date,
+        //   imageUrl: item.imageUrl,
+        // };
       }
-    } else {
       onSelect(item);
       onClose();
+    } catch (error) {
+      console.error(`${type} 추가 실패:`, error);
     }
   };
 
