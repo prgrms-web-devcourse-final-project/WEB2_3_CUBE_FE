@@ -184,11 +184,6 @@ const BookEditorPage = () => {
               </button>
             </div>
           </div>
-
-          {/* 에디터 본문 */}
-          <div className='flex-1 overflow-auto'>
-            <EditorContent editor={editor} />
-          </div>
         </div>
       </article>
 
