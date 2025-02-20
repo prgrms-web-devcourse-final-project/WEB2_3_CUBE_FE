@@ -10,13 +10,15 @@ export default function MainPage() {
   const [isGuestBookOpen, setisGuestBookOpen] = useState(false);
 
   return (
-    <main className='main-background w-full min-h-screen relative overflow-hidden'>
+    <main className='@container main-background w-full min-h-screen relative overflow-hidden'>
       <RankMenu onOpen={() => setIsRankingOpen(true)} />
       <MyRoom />
 
-      <AnimatePresence>
+      <AnimatePresence >
         {isRankingOpen && (
-          <RankingModal onClose={() => setIsRankingOpen(false)} />
+          <div className='@container w-full h-full'>
+            <RankingModal onClose={() => setIsRankingOpen(false)} />
+          </div>
         )}
       </AnimatePresence>
 

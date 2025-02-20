@@ -36,13 +36,43 @@
 
 /* 테마 설정 컴포넌트 */
 .theme-card {
-  width: 100%;
-  max-width: calc(100vw * 0.13125);
-  height: 100%;
-  max-height: calc(100vw * 0.143);
+  width: calc(100vw * 0.13125);
+  height: calc(100vw * 0.143);
+  max-width: 252px;
+  max-height: 274px;
   min-width: 200px;
   min-height: 222px;
+  background-color: #FCF7FD/20;
   display: flex;
+  border: 2px solid #FCF7FD;
+}
+
+
+/* 테마 설정 컴포넌트 */
+.prefer-card {
+  width: calc(100vw*0.265);
+  height: calc(100vw*0.143);
+  max-width: 509px;
+  max-height: 275px;
+  min-width: 384px;
+  min-height: 212px;
+  background-color: #FCF7FD/20;
+  display: flex;
+  border: 2px solid #FCF7FD;
+}
+
+/* 랭킹 */
+.rank-modal {
+  width: calc(100vh*0.343);
+  height: calc(100vh*0.6755);
+  max-width: 410px;
+  max-height: 780px;
+  min-width: 340px;
+  min-height: 600px;
+  background-color: #FCF7FD/20;
+  display: flex;
+  border: 2px solid #FCF7FD;
+  z-index: 5;
 }
 
 /* 방명록 */

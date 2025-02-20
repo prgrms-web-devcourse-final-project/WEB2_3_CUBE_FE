@@ -14,16 +14,16 @@ export default function TopRankingItem({ rank, nickname, visits, profileImg }) {
   return (
     <div
       className={`
-        ${rank === 1 ? 'order-2 w-[80px] h-[110px] 2xl:w-[100px] 2xl:h-32' : ''}
-        ${rank === 2 ? 'order-1 w-[70px] h-[96px] 2xl:w-[85px] 2xl:h-28' : ''}
-        ${rank === 3 ? 'order-3 w-[70px] h-[96px] 2xl:w-[85px] 2xl:h-28' : ''}
-        drop-shadow-logo rounded-b-xl bg-white flex justify-center items-center relative 
+        ${rank === 1 ? 'order-2 w-[80px] h-[110px] @2xl:w-[100px] @2xl:h-32' : ''}
+        ${rank === 2 ? 'order-1 w-[70px] h-[96px] @2xl:w-[85px] @2xl:h-28' : ''}
+        ${rank === 3 ? 'order-3 w-[70px] h-[96px] @2xl:w-[85px] @2xl:h-28' : ''}
+        drop-shadow-logo rounded-b-xl bg-white flex justify-center items-center relative @container
     `}>
       {/* 메달 이미지 */}
       <img
         className={`
-          ${rank === 1 ? 'w-8 2xl:w-9' : 'w-7 2xl:w-8'}
-          absolute top-[-8px] right-[-9px] 2xl:top-[-12px] 2xl:right-[-12px]
+          ${rank === 1 ? 'w-8 @2xl:w-9' : 'w-7 @2xl:w-8'}
+          absolute top-[-8px] right-[-9px] @2xl:top-[-12px] @2xl:right-[-12px]
           `}
         src={medalImages[rank]}
         alt={`${rank}위`}
@@ -33,12 +33,12 @@ export default function TopRankingItem({ rank, nickname, visits, profileImg }) {
       <div className='flex flex-col items-center gap-1'>
         <img
           className={`
-            ${rank === 1 ? 'w-9 2xl:w-12' : 'w-7.5 2xl:w-10'} rounded-full`}
+            ${rank === 1 ? 'w-9 @2xl:w-12' : 'w-7.5 @2xl:w-10'} rounded-full`}
           src={profileImg}
           alt={nickname}
         />
-        <p className={`font-semibold text-xs 2xl:text-sm text-[#162C63] mt-1 max-w-[60px] truncate
-          ${nickname.length > 5 ? 'text-[10px] 2xl:text-xs' : 'text-xs 2xl:text-sm'}
+        <p className={`font-semibold text-xs @2xl:text-sm text-[#162C63] mt-1 max-w-[60px] truncate
+          ${nickname.length > 5 ? 'text-[10px] @2xl:text-xs' : 'text-xs @2xl:text-sm'}
           `}>
           {nickname}
         </p>
@@ -46,11 +46,11 @@ export default function TopRankingItem({ rank, nickname, visits, profileImg }) {
         {/* 방문자 수 */}
         <div className='flex flex-row items-center gap-0.5'>
           <img 
-          className={`${rank === 1 ? 'w-2.5 2xl:w-3' : 'w-2 2xl:w-2.5'}`} 
+          className={`${rank === 1 ? 'w-2.5 @2xl:w-3' : 'w-2 @2xl:w-2.5'}`} 
           src={rank === 1 ? pinkFoot : blueFoot} />
           <p
             className={`
-              ${rank === 1 ? 'font-semibold text-xs 2xl:text-sm text-[#BA4B87]' : 'font-medium text-[10px] 2xl:text-xs text-[#4B6BBA]'}
+              ${rank === 1 ? 'font-semibold text-xs @2xl:text-sm text-[#BA4B87]' : 'font-medium text-[10px] @2xl:text-xs text-[#4B6BBA]'}
             `}
             >
             {visits}
