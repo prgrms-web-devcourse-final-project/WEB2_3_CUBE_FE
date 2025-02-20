@@ -1,7 +1,6 @@
 import BookPage from '@pages/book/BookPage';
 import BookCasePage from '@pages/bookcase/BookCasePage';
 import CdPage from '@pages/cd/CdPage';
-import MainPage from '@pages/main/MainPage';
 import { Routes, Route } from 'react-router-dom';
 import LoginPage from '@pages/login/LoginPage';
 import MainPage from '@pages/main/MainPage';
@@ -9,6 +8,7 @@ import NotFoundPage from '@pages/NotFoundPage';
 import TestPage from '@pages/TestPage';
 import BaseLayout from '@routes/layout/BaseLayout';
 import CdRackPage from '@pages/cdrack/CdRackPage';
+import RoomPage from '../pages/room/RoomPage';
 
 const Router = () => {
   return (

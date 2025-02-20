@@ -44,3 +44,24 @@
   min-height: 222px;
   display: flex;
 }
+
+/* 방명록 */
+.guest-book {
+  width: calc(100vw * 0.4266);
+  height: calc(100vw * 0.3911);
+  max-width: 819px;
+  max-height: 822px;
+  min-width: 600px;
+  min-height: 550px;
+  background-color: #FCF7FD;
+  display: flex;
+  border-radius: 60px;
+  border: 2px solid #2656CD;
+  position: relative;
+  z-index: 10;
+}
+
+.inputBase {
+  @apply placeholder:font-medium placeholder:text-xs 2xl:placeholder:text-sm placeholder:text-[#A2A2A2]/70 ;
+  @apply bg-[#EDE6EE]/25 border-2 border-[#A2A2A2]/30 rounded-[10px] 2xl:rounded-xl;
+}
