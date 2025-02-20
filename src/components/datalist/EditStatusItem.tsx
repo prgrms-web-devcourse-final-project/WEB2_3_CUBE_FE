@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import { useState } from 'react';
 import check_logo from '@assets/datalist/check-logo.svg';
+import { truncateTitle } from '@utils/truncate';
 
 export default function EditStatusItem({
   data,
@@ -11,13 +12,7 @@ export default function EditStatusItem({
 }) {
   const mainColor = isBook ? '#2656CD' : '#7838AF';
   const [isChecked, setIsChecked] = useState(false);
-
-  const truncateTitle = (title: string, maxLength: number = 13) => {
-    if (title.length > maxLength) {
-      return title.slice(0, maxLength) + '...';
-    }
-    return title;
-  };
+  const TITLE_MAX_LENGTH = 13;
 
   return (
     <>
@@ -28,7 +23,7 @@ export default function EditStatusItem({
             isBook ? 'bg-[#F1F3FA80]' : 'bg-[#f7f1fa]/50 '
           }`,
         )}>
-        <label className='relative flex items-center justify-center  w-4 h-4'>
+        <label className='relative flex items-center justify-center w-4 h-4'>
           {/* 체크 박스 */}
           <input
             type='checkbox'
@@ -53,7 +48,7 @@ export default function EditStatusItem({
               isBook ? 'text-[#3E507D]' : 'text-[#60308C]'
             } `}>
             <h4 className='text-[18px] font-semibold truncate'>
-              {truncateTitle(data.title)}
+              {truncateTitle(data.title, TITLE_MAX_LENGTH)}
             </h4>
             <span className='text-[14px]'>{data.singer || data.author}</span>
           </div>
@@ -64,7 +59,7 @@ export default function EditStatusItem({
                 isBook ? 'text-[#3E507DB2]' : 'text-[#5F3E7DB2]/70'
               } `}>
               {data.released_year}
-              { isBook ? ` | ${data.publisher}` : ''}
+              {isBook ? ` | ${data.publisher}` : ''}
             </span>
           </div>
         </div>
