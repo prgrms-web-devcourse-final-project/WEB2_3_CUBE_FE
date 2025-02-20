@@ -57,8 +57,8 @@ export default function DataList({
   }, [currentInput]);
 
   return (
-    <div className='absolute top-0 right-0  w-[444px] min-h-screen bg-[#FFFAFA] rounded-tl-3xl rounded-bl-3xl z-100'>
-      <div className='pl-11 pt-15 pr-10 '>
+    <div className='absolute top-0 right-0  w-[444px] h-screen bg-[#FFFAFA] overflow-hidden rounded-tl-3xl rounded-bl-3xl z-10'>
+      <div className='pl-11 pt-15 pr-10 rounded-tl-3xl rounded-bl-3xl h-full   '>
         <span
           className={classNames(
             `text-center text-4xl  font-bold leading-normal`,
@@ -125,7 +125,7 @@ export default function DataList({
             </button>
           </div>
         </div>
-        <ul className='flex flex-col justify-center  gap-6 pb-17 '>
+        <ul className='flex flex-col gap-6  h-full  overflow-auto  scrollbar pr-2 '>
           {filteredDatas.map((data, index) => {
             return isEdit ? (
               <EditStatusItem
