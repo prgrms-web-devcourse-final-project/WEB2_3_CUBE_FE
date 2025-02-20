@@ -46,11 +46,13 @@ export const useSearch = (type: 'CD' | 'BOOK') => {
       const data = await bookAPI.searchAladinBooks(searchQuery);
 
       return data.item
-        .filter((book) => book.categoryId !== 0)
+        .filter(
+          (book) => book.categoryId !== 0 && !book.title.startsWith('[세트]'), // 상품 제외 (categoryId : 0) ,세트 제외
+        )
         .map((book) => ({
           id: book.isbn,
           title: book.title,
-          author: book.author,
+          author: book.author.split('(')[0].trim(),
           publisher: book.publisher,
           date: book.pubDate,
           imageUrl: book.cover,
