@@ -82,7 +82,7 @@ const FreeformEditor = ({
       </h3>
       {/* 메뉴 바 */}
       <div
-        className='flex items-center gap-2 p-2 rounded-t-lg'
+        className='flex items-center gap-2 p-2 rounded-t-lg text-gray-500'
         style={{
           borderWidth: '2px',
           borderColor: `${colors.secondary}33`,
@@ -94,8 +94,8 @@ const FreeformEditor = ({
             onClick={() =>
               editor?.chain().focus().toggleHeading({ level }).run()
             }
-            className={`p-2 hover:bg-gray-100 rounded ${
-              editor?.isActive('heading', { level }) ? 'bg-gray-200' : ''
+            className={`w-10 h-10 hover:bg-gray-100/50 rounded ${
+              editor?.isActive('heading', { level }) ? 'bg-gray-200/50' : ''
             }`}>
             <span className='font-bold'>H{level}</span>
           </button>
@@ -103,50 +103,50 @@ const FreeformEditor = ({
         <div className='w-px h-6 mx-2 bg-gray-300' /> {/* 구분선 */}
         <button
           onClick={() => editor?.chain().focus().toggleBold().run()}
-          className={`p-2 hover:bg-gray-100 rounded ${
-            editor?.isActive('bold') ? 'bg-gray-200' : ''
+          className={`w-10 h-10 hover:bg-gray-100/50 rounded ${
+            editor?.isActive('bold') ? 'bg-gray-200/50' : ''
           }`}>
           <span className='font-bold'>B</span>
         </button>
         <button
           onClick={() => editor?.chain().focus().toggleItalic().run()}
-          className={`p-2 hover:bg-gray-100 rounded ${
-            editor?.isActive('italic') ? 'bg-gray-200' : ''
+          className={`w-10 h-10 hover:bg-gray-100/50 rounded ${
+            editor?.isActive('italic') ? 'bg-gray-200/50' : ''
           }`}>
           <span className='italic'>I</span>
         </button>
         <button
           onClick={() => editor?.chain().focus().toggleUnderline().run()}
-          className={`p-2 hover:bg-gray-100 rounded ${
-            editor?.isActive('underline') ? 'bg-gray-200' : ''
+          className={`w-10 h-10 hover:bg-gray-100/50 rounded ${
+            editor?.isActive('underline') ? 'bg-gray-200/50' : ''
           }`}>
           <span className='underline'>U</span>
         </button>
         <button
           onClick={() => editor?.chain().focus().toggleStrike().run()}
-          className={`p-2 hover:bg-gray-100 rounded ${
-            editor?.isActive('strike') ? 'bg-gray-200' : ''
+          className={`w-10 h-10 hover:bg-gray-100/50 rounded ${
+            editor?.isActive('strike') ? 'bg-gray-200/50' : ''
           }`}>
           <span className='line-through'>S</span>
         </button>
         <div className='w-px h-6 mx-2 bg-gray-300' />
         <button
           onClick={() => editor?.chain().focus().toggleBlockquote().run()}
-          className={`p-2 hover:bg-gray-100 rounded ${
-            editor?.isActive('blockquote') ? 'bg-gray-200' : ''
+          className={`w-10 h-10 hover:bg-gray-100/50 rounded ${
+            editor?.isActive('blockquote') ? 'bg-gray-200/50' : ''
           }`}>
           <span className='font-serif'>"</span>
         </button>
         <button
           onClick={addLink}
-          className={`p-2 hover:bg-gray-100 rounded ${
-            editor?.isActive('link') ? 'bg-gray-200' : ''
+          className={`w-10 h-10 hover:bg-gray-100/50 rounded ${
+            editor?.isActive('link') ? 'bg-gray-200/50' : ''
           }`}>
           <span>🔗</span>
         </button>
         <button
           onClick={addImage}
-          className='p-2 rounded hover:bg-gray-100'>
+          className='w-10 h-10 hover:bg-gray-100/50 rounded'>
           <span>🖼️</span>
         </button>
       </div>
@@ -158,7 +158,7 @@ const FreeformEditor = ({
           borderTopWidth: 0,
           borderColor: `${colors.secondary}30`,
           backgroundColor: `${colors.background}60`,
-          color: colors.secondary
+          color: colors.secondary,
         }}>
         <EditorContent editor={editor} />
       </div>
