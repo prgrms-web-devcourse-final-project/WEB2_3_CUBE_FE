@@ -226,6 +226,34 @@ const BookReviewDisplay = ({
             }}
           />
         )}
+
+        {/* 수정/삭제 버튼 (view 모드일 때만 표시) */}
+        {mode === 'view' && (
+          <div className='item-middle gap-3 mt-8'>
+            <button
+              onClick={() => {
+                /* 수정 로직 */
+              }}
+              className='px-4 py-2 rounded-full transition-colors hover:opacity-80 text-sm'
+              style={{
+                backgroundColor: `${colors.secondary}10`,
+                color: colors.secondary,
+              }}>
+              수정
+            </button>
+            <button
+              onClick={() => {
+                /* 삭제 로직 */
+              }}
+              className='px-4 py-2 rounded-full transition-colors hover:opacity-80 text-sm'
+              style={{
+                backgroundColor: `${colors.secondary}10`,
+                color: colors.secondary,
+              }}>
+              삭제
+            </button>
+          </div>
+        )}
       </article>
     </div>
   );
