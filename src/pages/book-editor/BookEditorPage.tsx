@@ -179,7 +179,7 @@ const BookEditorPage = () => {
               theme={reviewFields.theme}
             />
 
-            <div className='flex justify-end gap-2'>
+            <div className='flex justify-end gap-4'>
               <button className='px-4 py-2 text-gray-600 bg-gray-200 rounded-md drop-shadow-logo'>
                 임시저장
               </button>
