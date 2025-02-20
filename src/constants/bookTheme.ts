@@ -12,10 +12,10 @@ export const BOOK_THEME = {
     surface: '#FFE5E5',
   },
   GREEN: {
-    primary: '#375612',
-    secondary: '#45A972',
-    background: '#FBFCF7',
-    surface: '#E5FFE9',
+    primary: '#375612', // title-color
+    secondary: '#567D3E', // border, placeholder
+    background: '#FBFCF7', // background-color
+    surface: '#E8F1D1', // textarea-background
   },
 } as const;
 

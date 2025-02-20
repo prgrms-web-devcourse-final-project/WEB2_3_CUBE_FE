@@ -1,11 +1,14 @@
 export interface SearchItemType {
   id: string;
   title: string;
-  author: string; // 작가 or 가수
+  author?: string; // 작가
+  artist?: string; //가수
   date: string; // 출판일자 or 발매일자
   imageUrl: string; // 책 표지 or 앨범 커버
   type: 'CD' | 'BOOK';
   genres: string[];
+  publisher?: string;
+  album_title?: string;
 }
 
 // API 응답 타입 --------------------------
