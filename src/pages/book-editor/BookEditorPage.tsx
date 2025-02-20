@@ -10,26 +10,10 @@ import BookReviewDisplay from '@pages/book-viewer/components/BookReviewDisplay';
 import { mockBooks } from '@/mocks/searchData';
 import { BOOK_THEME, BookThemeType } from '@/constants/bookTheme';
 import CheckIcon from './components/CheckIcon';
-
-interface ReviewFields {
-  // 도서 정보 (API로 받아올 정보)
-  bookTitle: string;
-  author: string;
-  genres: string[];
-  publishedDate: string;
-  // 리뷰 정보 (사용자 입력)
-  title: string;
-  reviewDate: string;
-  theme: BookThemeType;
-  quote: string;
-  emotion: string;
-  reason: string;
-  discussion: string;
-  freeform: string;
-}
+import { ReviewData } from '@/types/review';
 
 const BookEditorPage = () => {
-  const [reviewFields, setReviewFields] = useState<ReviewFields>({
+  const [reviewFields, setReviewFields] = useState<ReviewData>({
     // 도서 정보 -> 임시로 mock 데이터 사용, 나중에 수정하기!
     bookTitle: mockBooks[0].title,
     author: mockBooks[0].author,
@@ -47,7 +31,7 @@ const BookEditorPage = () => {
   });
 
   const handleFieldChange =
-    (field: keyof ReviewFields) => (value: string | BookThemeType) => {
+    (field: keyof ReviewData) => (value: string | BookThemeType) => {
       setReviewFields((prev) => ({
         ...prev,
         [field]: value,
@@ -83,9 +67,9 @@ const BookEditorPage = () => {
   });
 
   return (
-    <section className='w-full h-screen item-between'>
+    <section className='flex w-full h-screen'>
       {/* 에디터 영역 */}
-      <article className='flex flex-col w-1/2 h-screen bg-white'>
+      <article className='w-1/2 h-full p-8 overflow-auto'>
         <div className='flex flex-col gap-8 py-12 overflow-auto px-14 '>
           {/* 제목 입력 영역 */}
           <input
@@ -207,6 +191,7 @@ const BookEditorPage = () => {
           </div>
         </div>
       </article>
+
       {/* 실시간 뷰어 영역 */}
       <article className='w-1/2 h-full overflow-auto'>
         <BookReviewDisplay
