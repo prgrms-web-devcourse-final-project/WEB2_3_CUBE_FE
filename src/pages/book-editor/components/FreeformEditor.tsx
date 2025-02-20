@@ -5,6 +5,7 @@ import Underline from '@tiptap/extension-underline';
 import Strike from '@tiptap/extension-strike';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
+import { useEffect } from 'react';
 import { BookThemeType, BOOK_THEME } from '@/constants/bookTheme';
 
 type Level = 2 | 3 | 4 | 5; // 2-5 레벨 허용
@@ -53,7 +54,13 @@ const FreeformEditor = ({
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
     },
-  });
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      editor?.destroy();
+    };
+  }, [editor]);
 
   const headingLevels: Level[] = [2, 3, 4, 5]; // 2-5 레벨 배열
 
