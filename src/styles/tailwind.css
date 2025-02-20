@@ -17,6 +17,13 @@
   --drop-shadow-logo: 0px 4px 4px rgba(78, 122, 207, 0.15);
   --drop-shadow-modal: 0px 10px 10px rgba(38, 86, 205, 0.3);
 
+  --shadow-box: inset 0px 0px 40px 10px rgba(255, 255, 255, 0.1),
+    0px 10px 20px 0px rgba(62, 80, 125, 0.2);
+
+  /* 각도 */
+  --radius-comment: 14px 14px 0px 14px;
+
+  /* 에니메이션 */
   --animate-slideTitle: slideTitle linear infinite;
 
   @keyframes slideTitle {

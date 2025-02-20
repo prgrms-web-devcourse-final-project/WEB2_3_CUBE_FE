@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import backgroundIMG from '@/assets/roome-background-img.png';
 import NotEmptyStatus from './components/NotEmptyStatus';
 import EmptyStatus from './components/EmptyStatus';
-import { mockCD } from '@/mocks/mockCd';
+import { mockCD } from '@/mocks/mockCD';
 
 export default function CdRackPage() {
   const [cdDatas, setCDdatas] = useState([]);
