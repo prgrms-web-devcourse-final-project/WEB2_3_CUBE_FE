@@ -9,8 +9,6 @@ import LoginPage from '@pages/login/LoginPage';
 import RoomPage from '../pages/room/RoomPage';
 import BaseLayout from '@routes/layout/BaseLayout';
 import CdRackPage from '@pages/cdrack/CdRackPage';
-import BookEditorPage from '@pages/book-editor/BookEditorPage';
-import BookViewerPage from '@pages/book-viewer/BookViewerPage';
 
 const Router = () => {
   return (
@@ -55,14 +53,6 @@ const Router = () => {
       <Route
         path='/room'
         element={<RoomPage />}
-      />
-      <Route
-        path='/book/editor/:userId'
-        element={<BookEditorPage />}
-      />
-      <Route
-        path='/book/viewer/:userId'
-        element={<BookViewerPage />}
       />
       <Route
         path='*'
