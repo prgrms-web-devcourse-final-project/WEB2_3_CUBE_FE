@@ -2,7 +2,6 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
-import Heading from '@tiptap/extension-heading';
 import Strike from '@tiptap/extension-strike';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
@@ -25,14 +24,13 @@ const FreeformEditor = ({
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        heading: false,
+      }),
       TextAlign.configure({
-        types: ['heading', 'paragraph'],
+        types: ['paragraph'],
       }),
       Underline,
-      Heading.configure({
-        levels: [2, 3, 4, 5] as Level[],
-      }),
       Strike,
       Link.configure({
         openOnClick: true,
@@ -88,19 +86,6 @@ const FreeformEditor = ({
           borderColor: `${colors.secondary}33`,
           backgroundColor: `${colors.background}60`,
         }}>
-        {headingLevels.map((level) => (
-          <button
-            key={level}
-            onClick={() =>
-              editor?.chain().focus().toggleHeading({ level }).run()
-            }
-            className={`w-10 h-10 hover:bg-gray-100/50 rounded ${
-              editor?.isActive('heading', { level }) ? 'bg-gray-200/50' : ''
-            }`}>
-            <span className='font-bold'>H{level}</span>
-          </button>
-        ))}
-        <div className='w-px h-6 mx-2 bg-gray-300' /> {/* 구분선 */}
         <button
           onClick={() => editor?.chain().focus().toggleBold().run()}
           className={`w-10 h-10 hover:bg-gray-100/50 rounded ${
@@ -129,7 +114,6 @@ const FreeformEditor = ({
           }`}>
           <span className='line-through'>S</span>
         </button>
-        <div className='w-px h-6 mx-2 bg-gray-300' />
         <button
           onClick={() => editor?.chain().focus().toggleBlockquote().run()}
           className={`w-10 h-10 hover:bg-gray-100/50 rounded ${
