@@ -1,6 +1,46 @@
+import axios from 'axios';
 import axiosInstance from './axiosInstance';
 
+const ALADIN_KEY = import.meta.env.VITE_ALADIN_KEY;
+
 export const bookAPI = {
+  /**
+   * 알라딘 도서 검색
+   * @param keyword 검색 키워드
+   * @returns 알라딘 도서 검색 결과
+   */
+  searchAladinBooks: async (keyword: string) => {
+    const params = {
+      ttbkey: ALADIN_KEY,
+      Query: keyword,
+      QueryType: 'Keyword',
+      MaxResults: 10,
+      start: 1,
+      SearchTarget: 'Book',
+      Cover: 'Big',
+      output: 'JS',
+      Version: '20131101',
+    };
+
+    try {
+      const response = await axios.get('/api/aladin/ttb/api/ItemSearch.aspx', {
+        params,
+        headers: {
+          Accept: 'application/json, text/plain, */*',
+          'Content-Type': 'application/json;charset=utf-8',
+        },
+      });
+
+      if (response.data && typeof response.data === 'string') {
+        return JSON.parse(response.data);
+      }
+      return response.data;
+    } catch (error) {
+      console.error('알라딘 API 호출 오류:', error);
+      throw error;
+    }
+  },
+
   /**
    * 도서 상세 조회
    * @param myBookId 내 책 ID
@@ -18,6 +58,28 @@ export const bookAPI = {
    */
   getBookDetail: async (myBookId: string) => {
     const response = await axiosInstance.get(`/api/mybooks/${myBookId}`);
+    return response.data;
+  },
+
+  // /api/mybooks?userId=1
+  // req.body
+  // {
+  //     "isbn": "1329056789134", -> nullable
+  //     "title": "title",
+  //     "author": "author",
+  //     "publisher": "publisher",
+  //     "publishedDate": "2025-02-18",
+  //     "imageUrl": "imageUrl",
+  //     "category": "category", -> genre ( String[] )
+  //     "page": "1000" -> nullable
+  // }
+
+  /** 내 책장에 도서 추가하기
+   * @param book 도서 정보
+   * @returns
+   */
+  addBookToMyBook: async (book: BookType) => {
+    const response = await axiosInstance.post('/api/mybooks', book);
     return response.data;
   },
 

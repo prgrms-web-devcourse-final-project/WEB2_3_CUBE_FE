@@ -56,3 +56,11 @@
     @apply bg-gradient-to-b from-[#73a1f7] to-[#4983ef];
   }
 }
+
+@layer utilities {
+  .vertical-text {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    letter-spacing: 0.1em;
+  }
+}
