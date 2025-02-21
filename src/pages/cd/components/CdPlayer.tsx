@@ -18,9 +18,9 @@ export default function CdPlayer() {
   const formattedCds = mockCD.map((book) => ({
     id: book.trackId,
     title: book.title,
-    author: book.artist,
+    artist: book.artist,
     released_year: book.release_date.split('.')[0],
-    publisher: book.album_name,
+    album_name: book.album_name,
     imageURL: book.imgUrl,
   }));
 

@@ -58,6 +58,7 @@ export const mockMusics = [
     artist: '태연',
     releaseDate: '2024.01.02',
     genres: ['POP', 'R&B', 'KPOP'],
+    album_title: '아아아아아으',
     imageURL:
       'https://cdnimg.melon.co.kr/cm2/album/images/108/63/559/10863559_20220214160739_500.jpg?42c2b52a394ac94dad21d64aec2c577d/melon/resize/282/quality/80/optimize',
   },
@@ -67,6 +68,7 @@ export const mockMusics = [
     artist: '김윤종',
     releaseDate: '2024.01.12',
     genres: ['발라드', 'KPOP'],
+    album_title: '아아아아아으',
     imageURL:
       'https://cdnimg.melon.co.kr/cm2/album/images/108/63/559/10863559_20220214160739_500.jpg?42c2b52a394ac94dad21d64aec2c577d/melon/resize/282/quality/80/optimize',
   },
@@ -77,6 +79,7 @@ export const mockMusics = [
     author: '잔나비',
     publishedDate: '2024.01.05',
     genres: ['발라드', 'R&B'],
+    album_title: '아아아아아으',
     imageURL:
       'https://cdnimg.melon.co.kr/cm2/album/images/108/63/559/10863559_20220214160739_500.jpg?42c2b52a394ac94dad21d64aec2c577d/melon/resize/282/quality/80/optimize',
   },

@@ -60,7 +60,7 @@ export default function CommentList({ onClose }) {
                 key={comment.userId}
                 className={`flex justify-between items-center bg-[#F7F1FA80] rounded-[12px]  `}>
                 <div className='flex flex-col gap-1 py-4 pl-7'>
-                  <div className='flex items-end gap-2 '>
+                  <div className='flex items-baseline gap-2 '>
                     <span className='text-[#401D5F] text-[16px] font-bold line-clamp-1'>
                       {comment.nickname}
                     </span>
