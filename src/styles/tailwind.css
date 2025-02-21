@@ -17,6 +17,9 @@
   --drop-shadow-logo: 0px 4px 4px rgba(78, 122, 207, 0.15);
   --drop-shadow-modal: 0px 10px 10px rgba(38, 86, 205, 0.3);
 
+  /* border */
+  --radius-comment: 14px 14px 0px 14px;
+
   --animate-slideTitle: slideTitle linear infinite;
 
   @keyframes slideTitle {
@@ -28,7 +31,6 @@
     }
   }
 }
-
 
 @layer components {
   .item-middle {
