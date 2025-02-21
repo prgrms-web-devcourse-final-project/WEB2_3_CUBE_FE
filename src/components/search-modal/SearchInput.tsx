@@ -6,6 +6,7 @@ interface SearchInputProps {
   onChange: (value: string) => void;
   placeholder: string;
   mainColor?: string;
+  bgColor?: string;
 }
 
 export const SearchInput = ({
@@ -13,6 +14,7 @@ export const SearchInput = ({
   onChange,
   placeholder,
   mainColor,
+  bgColor = 'bg-gray-100',
 }: SearchInputProps) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -29,7 +31,7 @@ export const SearchInput = ({
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         placeholder={placeholder}
-        className='w-full p-3 rounded-lg bg-gray-100 placeholder-[#8B888A]/70 outline-none'
+        className={`w-full p-3 rounded-lg ${bgColor} placeholder-[#8B888A]/70 outline-none`}
       />
       <button className='absolute right-3 top-1/2 transform -translate-y-1/2'>
         <img

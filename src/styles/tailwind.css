@@ -48,7 +48,6 @@
   .item-between {
     @apply flex items-center justify-between;
   }
-
   .item-row {
     @apply flex flex-col items-center justify-center;
   }
@@ -77,32 +76,5 @@
 
   .spring-element {
     @apply w-7 h-16 bg-[#73A1F7] rounded-full border-2 border-[#2656CD] 2xl:h-20 2xl:w-8;
-  }
-}
-
-@layer utilities {
-  .writing-vertical {
-    writing-mode: vertical-rl;
-    text-orientation: upright;
-
-    .transition-200 {
-      @apply transition-all duration-200 ease-in-out;
-    }
-  }
-}
-
-@layer utilities {
-  .vertical-text {
-    writing-mode: vertical-rl;
-    text-orientation: upright;
-    letter-spacing: 0.1em;
-  }
-}
-
-@layer utilities {
-  .vertical-text {
-    writing-mode: vertical-rl;
-    text-orientation: upright;
-    letter-spacing: 0.1em;
   }
 }

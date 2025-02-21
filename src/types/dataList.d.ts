@@ -1,7 +1,8 @@
 interface DataListInfo {
   title: string;
-  singer?: string;
+  artist?: string;
   author?: string;
   publisher?: string;
+  album_name?: string;
   released_year: string;
 }

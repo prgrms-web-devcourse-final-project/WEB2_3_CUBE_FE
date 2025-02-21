@@ -17,9 +17,10 @@ export default function EditStatusItem({
   return (
     <>
       <li
+        onClick={() => setIsChecked(!isChecked)}
         style={isChecked ? { borderColor: `${mainColor}` } : {}}
         className={classNames(
-          `pl-7 pr-9 py-4.5 flex items-center gap-7  rounded-xl border-2 border-transparent ${
+          `pl-7 pr-9 py-4.5 flex items-center gap-7  cursor-pointer rounded-xl border-2 border-transparent ${
             isBook ? 'bg-[#F1F3FA80]' : 'bg-[#f7f1fa]/50 '
           }`,
         )}>
@@ -31,7 +32,7 @@ export default function EditStatusItem({
             checked={isChecked}
             onChange={() => setIsChecked(!isChecked)}
             className={classNames(
-              'appearance-none w-4 h-4 rounded-full bg-no-repeat bg-center border',
+              'appearance-none w-4 h-4 rounded-full bg-no-repeat bg-center border cursor-pointer',
             )}
           />
           {isChecked && (
@@ -50,7 +51,7 @@ export default function EditStatusItem({
             <h4 className='text-[18px] font-semibold truncate'>
               {truncateTitle(data.title, TITLE_MAX_LENGTH)}
             </h4>
-            <span className='text-[14px]'>{data.singer || data.author}</span>
+            <span className='text-[14px]'>{data.artist || data.author}</span>
           </div>
 
           <div>
