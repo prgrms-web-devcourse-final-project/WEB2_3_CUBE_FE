@@ -1,5 +1,6 @@
 import { mockBooks } from '@/mocks/searchData';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { tokenService } from '@/utils/token';
 
 const truncateText = (text: string, maxLength: number) => {
   if (text.length > maxLength) {
@@ -10,10 +11,17 @@ const truncateText = (text: string, maxLength: number) => {
 
 const BookCaseList = () => {
   const navigate = useNavigate();
+  const { userId: pageUserId } = useParams<{ userId: string }>();
+  const myUserId = tokenService.getUser()?.id;
 
   const handleBookClick = (bookId: string) => {
-    // ** 추후 수정할 부분 : store에서 userId 가져오기 or URL에서 userId 가져오기
-    navigate(`/book/${bookId}/userId`);
+    // 현재 페이지의 userId와 로그인한 사용자의 userId가 같으면 내 서평으로 이동
+    if (pageUserId === myUserId) {
+      navigate(`/book/${bookId}`);
+    } else {
+      // 다른 사용자의 서평이면 user/:userId 포함하여 이동
+      navigate(`/book/${bookId}/user/${pageUserId}`);
+    }
   };
 
   return (

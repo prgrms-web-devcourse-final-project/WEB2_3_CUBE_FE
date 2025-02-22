@@ -13,7 +13,7 @@ export default function CdRackPage() {
   return (
     // 뒷 배경
     <div
-      className='bg-cover bg-center bg-no-repeat    w-full h-screen'
+      className='w-full h-screen bg-center bg-no-repeat bg-cover'
       style={{ backgroundImage: `url(${backgroundIMG})` }}>
       <div className=' w-full h-screen bg-[#3E507DCC] backdrop-blur-[35px] '>
         {cdDatas.length > 0 ? (

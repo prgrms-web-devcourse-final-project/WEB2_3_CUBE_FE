@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import NoEditStatusItem from './NoEditStatusItem';
 import EditStatusItem from './EditStatusItem';
 import classNames from 'classnames';
 import { SearchInput } from '@components/search-modal/SearchInput';
 import { useDebounce } from '@hooks/useDebounce';
 import SkeletonItem from '@components/SkeletonItem';
+import { bookAPI } from '@/apis/book';
+import search_icon from '@assets/search-icon.svg';
 
 export default function DataList({
   datas,
@@ -21,12 +23,68 @@ export default function DataList({
 
   const [isEdit, setIsEdit] = useState(false);
   const [currentInput, setCurrentInput] = useState('');
-  const [filteredDatas, setFilteredDatas] = useState<DataListInfo[]>([]);
+  const [filteredDatas, setFilteredDatas] = useState<DataListInfo[]>(datas);
   const [isSearching, setIsSearching] = useState(false);
   const debouncedQuery = useDebounce(currentInput, 1000);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isFocused, setIsFocused] = useState(false);
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  const handleDelete = () => {
-    console.log('deleted!');
+  // datas가 변경될 때마다 filteredDatas 업데이트
+  useEffect(() => {
+    setFilteredDatas(datas);
+  }, [datas]);
+
+  // 검색어가 변경될 때마다 필터링
+  useEffect(() => {
+    const filteredResults = datas.filter((data) => {
+      const searchTerm = currentInput.toLowerCase();
+      return (
+        data.author?.toLowerCase().includes(searchTerm) ||
+        data.publisher?.toLowerCase().includes(searchTerm) ||
+        data.released_year?.toLowerCase().includes(searchTerm) ||
+        data.artist?.toLowerCase().includes(searchTerm) ||
+        data.title?.toLowerCase().includes(searchTerm)
+      );
+    });
+
+    if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
+    debounceTimeout.current = setTimeout(() => {
+      setFilteredDatas(filteredResults);
+    }, 500);
+
+    return () => {
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+    };
+  }, [currentInput, datas]);
+
+  const handleDelete = async () => {
+    try {
+      if (isBook && selectedIds.length > 0) {
+        const myBookIds = selectedIds.join(',');
+        await bookAPI.deleteBookFromMyBook('1', myBookIds);
+
+        const updatedDatas = filteredDatas.filter(
+          (data) => !selectedIds.includes(data.id),
+        );
+        setFilteredDatas(updatedDatas);
+        setSelectedIds([]);
+      }
+    } catch (error) {
+      console.error('삭제 중 오류가 발생했습니다:', error);
+    }
+  };
+
+  const handleItemSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((selectedId) => selectedId !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
   };
 
   const handleEdit = () => {
@@ -70,7 +128,7 @@ export default function DataList({
 
   return (
     <div className='absolute top-0 right-0  w-[444px] h-screen bg-[#FFFAFA] overflow-hidden rounded-tl-3xl rounded-bl-3xl z-10'>
-      <div className='pl-11 pt-15 pr-10 rounded-tl-3xl rounded-bl-3xl h-full '>
+      <div className='h-full pr-10 pl-11 pt-15 rounded-tl-3xl rounded-bl-3xl '>
         <span
           className={classNames(
             `text-center text-4xl  font-bold leading-normal`,
@@ -122,8 +180,7 @@ export default function DataList({
           mainColor={mainColor}
           bgColor={inputBgColor}
         />
-
-        <ul className='flex flex-col gap-6 h-screen pb-15 overflow-auto scrollbar-hide '>
+        <ul className='flex flex-col h-full gap-6 pr-2 overflow-auto scrollbar'>
           {isSearching ? (
             Array(5)
               .fill(0)
@@ -140,6 +197,8 @@ export default function DataList({
                   key={index}
                   data={data}
                   isBook={isBook}
+                  isSelected={selectedIds.includes(data.id)}
+                  onSelect={() => handleItemSelect(data.id)}
                 />
               ) : (
                 <NoEditStatusItem

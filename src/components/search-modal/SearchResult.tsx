@@ -33,7 +33,8 @@ export const SearchResult = ({
           publisher: item.publisher,
           publishedDate: item.date,
           imageUrl: item.imageUrl,
-          category: item.genres,
+          genreNames: item.genres,
+          page: '0', // 기본값 설정
         };
         await bookAPI.addBookToMyBook(bookData);
       } else if (type === 'CD') {

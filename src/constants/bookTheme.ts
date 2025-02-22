@@ -9,7 +9,7 @@ export const BOOK_THEME = {
     primary: '#521630',
     secondary: '#7D3E59',
     background: '#FFF7F7',
-    surface: '#FFE5E5',
+    surface: '#F1D1D1',
   },
   GREEN: {
     primary: '#375612', // title-color
