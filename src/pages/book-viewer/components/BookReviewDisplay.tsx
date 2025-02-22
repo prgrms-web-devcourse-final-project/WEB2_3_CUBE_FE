@@ -124,7 +124,7 @@ const BookReviewDisplay = ({
     try {
       await bookAPI.deleteReview(urlBookId);
       showToast('서평이 삭제되었습니다.', 'success');
-      navigate(`/book/${urlBookId}`);
+      navigate(`/bookCase/${userId}`);
     } catch (error) {
       console.error('서평 삭제 중 오류 발생:', error);
       showToast('서평 삭제에 실패했습니다.', 'error');
