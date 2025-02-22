@@ -54,7 +54,7 @@ export default function EditStatusItem({
             <h4 className='text-[18px] font-semibold truncate'>
               {truncateTitle(data.title, TITLE_MAX_LENGTH)}
             </h4>
-            <span className='text-[14px]'>{data.singer || data.author}</span>
+            <span className='text-[14px]'>{data.artist || data.author}</span>
           </div>
 
           <div>
