@@ -69,8 +69,6 @@ const BookPage = () => {
   return (
     <>
       {hasReview ? (
-        <BookReviewViewer reviewData={reviewData} />
-      ) : (
         <BookReviewEditor
           bookTitle={bookInfo.title}
           author={bookInfo.author}
@@ -78,6 +76,8 @@ const BookPage = () => {
           publishedDate={bookInfo.publishedDate}
           imageUrl={bookInfo.imageUrl}
         />
+      ) : (
+        <BookReviewViewer reviewData={reviewData} />
       )}
     </>
   );

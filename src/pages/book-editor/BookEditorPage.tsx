@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import TextAlign from '@tiptap/extension-text-align';
@@ -10,6 +11,8 @@ import BookReviewDisplay from '@pages/book-viewer/components/BookReviewDisplay';
 import { BOOK_THEME, BookThemeType } from '@/constants/bookTheme';
 import CheckIcon from './components/CheckIcon';
 import { ReviewData } from '@/types/review';
+import { useToastStore } from '@/store/useToastStore';
+import { bookAPI } from '@/apis/book';
 
 interface BookEditorPageProps {
   bookTitle: string;
@@ -26,23 +29,56 @@ const BookEditorPage = ({
   publishedDate,
   imageUrl,
 }: BookEditorPageProps) => {
-  const [reviewFields, setReviewFields] = useState<ReviewData>({
-    // 도서 정보
-    bookTitle,
-    author,
-    genres,
-    publishedDate,
-    imageUrl,
-    // 리뷰 정보
-    title: '',
-    reviewDate: new Date().toISOString().split('T')[0],
-    theme: 'BLUE',
-    quote: '',
-    emotion: '',
-    reason: '',
-    discussion: '',
-    freeform: '',
+  const { bookId } = useParams();
+  const navigate = useNavigate();
+  const showToast = useToastStore((state) => state.showToast);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [reviewFields, setReviewFields] = useState<ReviewData>(() => {
+    // localStorage에서 임시저장 데이터 불러오기
+    const savedData = localStorage.getItem(`draft-review-${bookId}`);
+    if (savedData) {
+      return JSON.parse(savedData);
+    }
+
+    return {
+      // 도서 정보
+      bookTitle,
+      author,
+      genres,
+      publishedDate,
+      imageUrl,
+      // 리뷰 정보
+      title: '',
+      reviewDate: new Date().toISOString().split('T')[0],
+      theme: 'BLUE',
+      quote: '',
+      emotion: '',
+      reason: '',
+      discussion: '',
+      freeform: '',
+    };
   });
+
+  // 자동 저장 함수
+  const autoSave = useCallback(() => {
+    if (!bookId) return;
+    localStorage.setItem(
+      `draft-review-${bookId}`,
+      JSON.stringify(reviewFields),
+    );
+  }, [bookId, reviewFields]);
+
+  // 수동 임시저장
+  const handleTempSave = () => {
+    autoSave();
+    showToast('임시저장되었습니다.', 'success');
+  };
+
+  // 5초마다 자동저장
+  useEffect(() => {
+    const timer = setInterval(autoSave, 5000);
+    return () => clearInterval(timer);
+  }, [autoSave]);
 
   const handleFieldChange =
     (field: keyof ReviewData) => (value: string | BookThemeType) => {
@@ -57,8 +93,36 @@ const BookEditorPage = ({
     return Object.values(reviewFields).some((value) => value.trim() !== '');
   };
 
-  const handleSave = () => {
-    // 저장 로직 구현
+  const handleSave = async () => {
+    if (!bookId || isSubmitting) return;
+
+    try {
+      setIsSubmitting(true);
+
+      const reviewData = {
+        title: reviewFields.title,
+        quote: reviewFields.quote,
+        takeaway: reviewFields.emotion,
+        motive: reviewFields.reason,
+        topic: reviewFields.discussion,
+        freeFormText: reviewFields.freeform,
+        coverColor: reviewFields.theme,
+      };
+
+      await bookAPI.addReview(bookId, reviewData);
+
+      // 성공 시 임시저장 데이터 삭제
+      localStorage.removeItem(`draft-review-${bookId}`);
+      showToast('서평이 등록되었습니다.', 'success');
+
+      // 서평 상세 페이지로 이동
+      navigate(`/book/${bookId}/userId`);
+    } catch (error) {
+      console.error('서평 등록 중 오류 발생:', error);
+      showToast('서평 등록에 실패했습니다.', 'error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const editor = useEditor({
@@ -178,23 +242,26 @@ const BookEditorPage = ({
             />
 
             <div className='flex justify-end gap-4'>
-              <button className='px-4 py-2 text-gray-600 bg-gray-200 rounded-md drop-shadow-logo'>
+              <button
+                onClick={handleTempSave}
+                className='px-4 py-2 text-gray-600 bg-gray-200 rounded-md drop-shadow-logo'>
                 임시저장
               </button>
               <button
-                disabled={!isValidReview()}
+                disabled={!isValidReview() || isSubmitting}
                 onClick={handleSave}
                 className='px-4 py-2 text-white transition-colors rounded-md disabled:bg-gray-400 hover:opacity-80 active:bg-white drop-shadow-logo'
                 style={{
-                  backgroundColor: !isValidReview()
-                    ? undefined
-                    : BOOK_THEME[reviewFields.theme].primary,
+                  backgroundColor:
+                    !isValidReview() || isSubmitting
+                      ? undefined
+                      : BOOK_THEME[reviewFields.theme].primary,
                   color:
                     document.activeElement === document.querySelector(':active')
                       ? BOOK_THEME[reviewFields.theme].primary
                       : 'white',
                 }}>
-                저장하기
+                {isSubmitting ? '저장 중...' : '저장하기'}
               </button>
             </div>
           </div>
