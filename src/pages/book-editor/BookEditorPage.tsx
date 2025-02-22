@@ -7,18 +7,32 @@ import Heading from '@tiptap/extension-heading';
 import ReviewTextField from './components/ReviewTextField';
 import FreeformEditor from './components/FreeformEditor';
 import BookReviewDisplay from '@pages/book-viewer/components/BookReviewDisplay';
-import { mockBooks } from '@/mocks/searchData';
 import { BOOK_THEME, BookThemeType } from '@/constants/bookTheme';
 import CheckIcon from './components/CheckIcon';
 import { ReviewData } from '@/types/review';
 
-const BookEditorPage = () => {
+interface BookEditorPageProps {
+  bookTitle: string;
+  author: string;
+  genres: string[];
+  publishedDate: string;
+  imageUrl: string;
+}
+
+const BookEditorPage = ({
+  bookTitle,
+  author,
+  genres,
+  publishedDate,
+  imageUrl,
+}: BookEditorPageProps) => {
   const [reviewFields, setReviewFields] = useState<ReviewData>({
-    // 도서 정보 -> 임시로 mock 데이터 사용, 나중에 수정하기!
-    bookTitle: mockBooks[0].title,
-    author: mockBooks[0].author,
-    genres: mockBooks[0].genres,
-    publishedDate: mockBooks[0].publishedDate,
+    // 도서 정보
+    bookTitle,
+    author,
+    genres,
+    publishedDate,
+    imageUrl,
     // 리뷰 정보
     title: '',
     reviewDate: new Date().toISOString().split('T')[0],
@@ -96,7 +110,7 @@ const BookEditorPage = () => {
               {reviewFields.theme === 'BLUE' && (
                 <CheckIcon
                   color={BOOK_THEME.BLUE.primary}
-                  className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
+                  className='absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2'
                 />
               )}
             </button>
@@ -107,7 +121,7 @@ const BookEditorPage = () => {
               {reviewFields.theme === 'RED' && (
                 <CheckIcon
                   color={BOOK_THEME.RED.primary}
-                  className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
+                  className='absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2'
                 />
               )}
             </button>
@@ -118,7 +132,7 @@ const BookEditorPage = () => {
               {reviewFields.theme === 'GREEN' && (
                 <CheckIcon
                   color={BOOK_THEME.GREEN.primary}
-                  className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
+                  className='absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2'
                 />
               )}
             </button>
@@ -170,7 +184,7 @@ const BookEditorPage = () => {
               <button
                 disabled={!isValidReview()}
                 onClick={handleSave}
-                className='px-4 py-2 text-white rounded-md transition-colors disabled:bg-gray-400 hover:opacity-80 active:bg-white drop-shadow-logo'
+                className='px-4 py-2 text-white transition-colors rounded-md disabled:bg-gray-400 hover:opacity-80 active:bg-white drop-shadow-logo'
                 style={{
                   backgroundColor: !isValidReview()
                     ? undefined

@@ -9,16 +9,30 @@ const BookPage = () => {
   const { bookId } = useParams();
   const [hasReview, setHasReview] = useState(false);
   const [reviewData, setReviewData] = useState<ReviewData | null>(null);
+  const [bookInfo, setBookInfo] = useState<{
+    title: string;
+    author: string;
+    genreNames: string[];
+    publishedDate: string;
+    imageUrl: string;
+  } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchReview = async () => {
+    const fetchData = async () => {
       try {
         if (!bookId) return;
 
-        const review = await bookAPI.getReview(bookId);
         const bookDetail = await bookAPI.getBookDetail(bookId);
+        setBookInfo({
+          title: bookDetail.title,
+          author: bookDetail.author,
+          genreNames: bookDetail.genreNames,
+          publishedDate: bookDetail.publishedDate,
+          imageUrl: bookDetail.imageUrl,
+        });
 
+        const review = await bookAPI.getReview(bookId);
         if (review) {
           setReviewData({
             bookTitle: bookDetail.title,
@@ -40,24 +54,30 @@ const BookPage = () => {
           setHasReview(false);
         }
       } catch (error) {
-        console.error('서평 조회 중 오류 발생:', error);
+        console.error('데이터 조회 중 오류 발생:', error);
         setHasReview(false);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchReview();
+    fetchData();
   }, [bookId]);
 
-  if (isLoading) return <div>로딩 중...</div>;
+  if (isLoading || !bookInfo) return <div>로딩 중...</div>;
 
   return (
     <>
       {hasReview ? (
         <BookReviewViewer reviewData={reviewData} />
       ) : (
-        <BookReviewEditor />
+        <BookReviewEditor
+          bookTitle={bookInfo.title}
+          author={bookInfo.author}
+          genres={bookInfo.genreNames}
+          publishedDate={bookInfo.publishedDate}
+          imageUrl={bookInfo.imageUrl}
+        />
       )}
     </>
   );
