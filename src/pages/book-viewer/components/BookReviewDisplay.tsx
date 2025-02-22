@@ -1,6 +1,8 @@
 import { bookAPI } from '@apis/book';
 import React, { useState, useEffect } from 'react';
 import { BOOK_THEME, BookThemeType } from '@/constants/bookTheme';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useToastStore } from '@/store/useToastStore';
 
 interface ReviewData {
   // 도서 정보
@@ -72,6 +74,9 @@ const BookReviewDisplay = ({
   userId,
   bookId,
 }: BookReviewDisplayProps) => {
+  const navigate = useNavigate();
+  const { bookId: urlBookId } = useParams();
+  const showToast = useToastStore((state) => state.showToast);
   // view 모드일 때 사용할 데이터 fetch 로직
   const [reviewData, setReviewData] = useState<ReviewData | null>(null);
 
@@ -109,12 +114,29 @@ const BookReviewDisplay = ({
     ? extractHeadings(displayData.freeform)
     : [];
 
+  const handleEdit = () => {
+    navigate(`/book/${urlBookId}?mode=edit`);
+  };
+
+  const handleDelete = async () => {
+    if (!bookId || !window.confirm('서평을 삭제하시겠습니까?')) return;
+
+    try {
+      await bookAPI.deleteReview(bookId);
+      showToast('서평이 삭제되었습니다.', 'success');
+      navigate(`/book/${bookId}`);
+    } catch (error) {
+      console.error('서평 삭제 중 오류 발생:', error);
+      showToast('서평 삭제에 실패했습니다.', 'error');
+    }
+  };
+
   return (
     <div className='relative h-full overflow-auto'>
       {/* 제목 + 목차 */}
       <div className='py-12 item-between px-14'>
         <h1
-          className='text-6xl font-semibold mb-8'
+          className='mb-8 text-6xl font-semibold'
           style={{ color: colors.primary }}>
           {displayData.title}
         </h1>
@@ -178,7 +200,7 @@ const BookReviewDisplay = ({
             {displayData.genres.map((genre) => (
               <span
                 key={genre}
-                className='px-4 py-1 rounded-full text-sm'
+                className='px-4 py-1 text-sm rounded-full'
                 style={{
                   backgroundColor: `${colors.secondary}20`,
                   color: colors.primary,
@@ -191,7 +213,7 @@ const BookReviewDisplay = ({
 
         {/* 리뷰 작성일자 */}
         <div
-          className='text-sm mt-20'
+          className='mt-20 text-sm'
           style={{ color: `${colors.primary}70` }}>
           {displayData.reviewDate}
         </div>
@@ -229,12 +251,10 @@ const BookReviewDisplay = ({
 
         {/* 수정/삭제 버튼 (view 모드일 때만 표시) */}
         {mode === 'view' && (
-          <div className='item-middle gap-3 mt-8'>
+          <div className='gap-3 mt-8 item-middle'>
             <button
-              onClick={() => {
-                /* 수정 로직 */
-              }}
-              className='px-4 py-2 rounded-full transition-colors hover:opacity-80 text-sm'
+              onClick={handleEdit}
+              className='px-4 py-2 text-sm transition-colors rounded-full hover:opacity-80'
               style={{
                 backgroundColor: `${colors.secondary}10`,
                 color: colors.secondary,
@@ -242,10 +262,8 @@ const BookReviewDisplay = ({
               수정
             </button>
             <button
-              onClick={() => {
-                /* 삭제 로직 */
-              }}
-              className='px-4 py-2 rounded-full transition-colors hover:opacity-80 text-sm'
+              onClick={handleDelete}
+              className='px-4 py-2 text-sm transition-colors rounded-full hover:opacity-80'
               style={{
                 backgroundColor: `${colors.secondary}10`,
                 color: colors.secondary,

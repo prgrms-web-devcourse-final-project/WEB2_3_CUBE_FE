@@ -19,19 +19,53 @@ export default function DataList({
 
   const [isEdit, setIsEdit] = useState(false);
   const [currentInput, setCurrentInput] = useState('');
-  const [filteredDatas, setFilteredDatas] = useState<DataListInfo[]>([]);
+  const [filteredDatas, setFilteredDatas] = useState<DataListInfo[]>(datas);
   // 입력창에 focus 여부
   const [isFocused, setIsFocused] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  // datas가 변경될 때마다 filteredDatas 업데이트
+  useEffect(() => {
+    setFilteredDatas(datas);
+  }, [datas]);
+
+  // 검색어가 변경될 때마다 필터링
+  useEffect(() => {
+    const filteredResults = datas.filter((data) => {
+      const searchTerm = currentInput.toLowerCase();
+      return (
+        data.author?.toLowerCase().includes(searchTerm) ||
+        data.publisher?.toLowerCase().includes(searchTerm) ||
+        data.released_year?.toLowerCase().includes(searchTerm) ||
+        data.singer?.toLowerCase().includes(searchTerm) ||
+        data.title?.toLowerCase().includes(searchTerm)
+      );
+    });
+
+    if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
+    debounceTimeout.current = setTimeout(() => {
+      setFilteredDatas(filteredResults);
+    }, 500);
+
+    return () => {
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+    };
+  }, [currentInput, datas]);
 
   const handleDelete = async () => {
     try {
       if (isBook && selectedIds.length > 0) {
         const myBookIds = selectedIds.join(',');
         await bookAPI.deleteBookFromMyBook('1', myBookIds);
+
+        // 삭제 후 목록에서 제거
+        const updatedDatas = filteredDatas.filter(
+          (data) => !selectedIds.includes(data.id),
+        );
+        setFilteredDatas(updatedDatas);
         setSelectedIds([]);
-        // TODO: 목록 새로고침 로직 추가
-        console.log('선택된 항목이 삭제되었습니다.');
       }
     } catch (error) {
       console.error('삭제 중 오류가 발생했습니다:', error);
@@ -60,23 +94,6 @@ export default function DataList({
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentInput(event.target.value);
   };
-
-  useEffect(() => {
-    const filteredDatas = datas.filter((data) => {
-      return (
-        data.author?.includes(currentInput) ||
-        data.publisher?.includes(currentInput) ||
-        data.released_year?.includes(currentInput) ||
-        data.singer?.includes(currentInput) ||
-        data.title?.includes(currentInput)
-      );
-    });
-    // 입력 결과 디바운싱 적용
-    if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
-    debounceTimeout.current = setTimeout(() => {
-      setFilteredDatas(filteredDatas);
-    }, 500);
-  }, [currentInput]);
 
   return (
     <div className='absolute top-0 right-0  w-[444px] h-screen bg-[#FFFAFA] overflow-hidden rounded-tl-3xl rounded-bl-3xl z-10'>

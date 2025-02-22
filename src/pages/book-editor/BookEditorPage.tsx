@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import TextAlign from '@tiptap/extension-text-align';
@@ -31,8 +31,12 @@ const BookEditorPage = ({
 }: BookEditorPageProps) => {
   const { bookId } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const showToast = useToastStore((state) => state.showToast);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(
+    searchParams.get('mode') === 'edit',
+  );
   const [reviewFields, setReviewFields] = useState<ReviewData>(() => {
     // localStorage에서 임시저장 데이터 불러오기
     const savedData = localStorage.getItem(`draft-review-${bookId}`);
@@ -80,6 +84,40 @@ const BookEditorPage = ({
     return () => clearInterval(timer);
   }, [autoSave]);
 
+  // 수정 모드일 때 기존 서평 데이터 불러오기
+  useEffect(() => {
+    const fetchReview = async () => {
+      if (!bookId) return;
+
+      try {
+        const review = await bookAPI.getReview(bookId);
+        if (review) {
+          setIsEditMode(true);
+          setReviewFields({
+            bookTitle,
+            author,
+            genres,
+            publishedDate,
+            imageUrl,
+            title: review.title,
+            reviewDate: new Date().toLocaleDateString('ko-KR'),
+            theme: review.coverColor,
+            quote: review.quote,
+            emotion: review.takeaway,
+            reason: review.motive,
+            discussion: review.topic,
+            freeform: review.freeFormText,
+          });
+        }
+      } catch (error) {
+        console.error('서평 조회 중 오류 발생:', error);
+        showToast('서평 조회에 실패했습니다.', 'error');
+      }
+    };
+
+    fetchReview();
+  }, [bookId, bookTitle, author, genres, publishedDate, imageUrl]);
+
   const handleFieldChange =
     (field: keyof ReviewData) => (value: string | BookThemeType) => {
       setReviewFields((prev) => ({
@@ -109,17 +147,22 @@ const BookEditorPage = ({
         coverColor: reviewFields.theme,
       };
 
-      await bookAPI.addReview(bookId, reviewData);
+      if (isEditMode) {
+        await bookAPI.updateReview(bookId, reviewData);
+        showToast('서평이 수정되었습니다.', 'success');
+      } else {
+        await bookAPI.addReview(bookId, reviewData);
+        showToast('서평이 등록되었습니다.', 'success');
+      }
 
       // 성공 시 임시저장 데이터 삭제
       localStorage.removeItem(`draft-review-${bookId}`);
-      showToast('서평이 등록되었습니다.', 'success');
 
       // 서평 상세 페이지로 이동
-      navigate(`/book/${bookId}/userId`);
+      navigate(`/book/${bookId}`);
     } catch (error) {
-      console.error('서평 등록 중 오류 발생:', error);
-      showToast('서평 등록에 실패했습니다.', 'error');
+      console.error('서평 저장 중 오류 발생:', error);
+      showToast('서평 저장에 실패했습니다.', 'error');
     } finally {
       setIsSubmitting(false);
     }
