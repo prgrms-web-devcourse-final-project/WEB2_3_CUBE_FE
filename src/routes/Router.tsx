@@ -27,11 +27,12 @@ const Router = () => {
           path='/room'
           element={<RoomPage />}
         />
+        <Route
+          path='/cdrack'
+          element={<CdRackPage />}
+        />
       </Route>
-      <Route
-        path='/cdrack'
-        element={<CdRackPage />}
-      />
+
       <Route
         path='/test'
         element={<TestPage />}

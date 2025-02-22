@@ -8,3 +8,13 @@ interface BookType {
   category: string[];
   page?: string;
 }
+
+interface ReviewType {
+  title: string;
+  quote: string;
+  takeaway: string;
+  freeFormText: string;
+  motive: string;
+  topic: string;
+  coverColor: string;
+}

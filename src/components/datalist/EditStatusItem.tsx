@@ -6,20 +6,24 @@ import { truncateTitle } from '@utils/truncate';
 export default function EditStatusItem({
   data,
   isBook,
+  isSelected,
+  onSelect,
 }: {
   data: DataListInfo;
   isBook: boolean;
+  isSelected: boolean;
+  onSelect: () => void;
 }) {
   const mainColor = isBook ? '#2656CD' : '#7838AF';
-  const [isChecked, setIsChecked] = useState(false);
   const TITLE_MAX_LENGTH = 13;
 
   return (
     <>
       <li
-        style={isChecked ? { borderColor: `${mainColor}` } : {}}
+        onClick={onSelect}
+        style={isSelected ? { borderColor: `${mainColor}` } : {}}
         className={classNames(
-          `pl-7 pr-9 py-4.5 flex items-center gap-7  rounded-xl border-2 border-transparent ${
+          `pl-7 pr-9 py-4.5 flex items-center gap-7 cursor-pointer rounded-xl border-2 border-transparent ${
             isBook ? 'bg-[#F1F3FA80]' : 'bg-[#f7f1fa]/50 '
           }`,
         )}>
@@ -27,14 +31,14 @@ export default function EditStatusItem({
           {/* 체크 박스 */}
           <input
             type='checkbox'
-            style={isChecked ? { backgroundColor: mainColor } : {}}
-            checked={isChecked}
-            onChange={() => setIsChecked(!isChecked)}
+            style={isSelected ? { backgroundColor: mainColor } : {}}
+            checked={isSelected}
+            onChange={onSelect}
             className={classNames(
-              'appearance-none w-4 h-4 rounded-full bg-no-repeat bg-center border',
+              'appearance-none w-4 h-4 rounded-full bg-no-repeat bg-center border cursor-pointer',
             )}
           />
-          {isChecked && (
+          {isSelected && (
             <img
               className='absolute  w-2.5 h-2.5  '
               src={check_logo}

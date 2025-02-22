@@ -5,7 +5,7 @@ import BookReviewViewer from '../book-viewer/BookViewerPage';
 
 const BookPage = () => {
   const { bookId, userId } = useParams();
-  const [hasReview, setHasReview] = useState(false);
+  const [hasReview, setHasReview] = useState(true);
 
   return <>{hasReview ? <BookReviewViewer /> : <BookReviewEditor />}</>;
 };

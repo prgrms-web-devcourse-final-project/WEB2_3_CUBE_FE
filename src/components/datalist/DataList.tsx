@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import NoEditStatusItem from './NoEditStatusItem';
 import EditStatusItem from './EditStatusItem';
 import classNames from 'classnames';
+import { bookAPI } from '@/apis/book';
 
 export default function DataList({
   datas,
@@ -21,9 +22,30 @@ export default function DataList({
   const [filteredDatas, setFilteredDatas] = useState<DataListInfo[]>([]);
   // 입력창에 focus 여부
   const [isFocused, setIsFocused] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  const handleDelete = () => {
-    console.log('deleted!');
+  const handleDelete = async () => {
+    try {
+      if (isBook && selectedIds.length > 0) {
+        const myBookIds = selectedIds.join(',');
+        await bookAPI.deleteBookFromMyBook('1', myBookIds);
+        setSelectedIds([]);
+        // TODO: 목록 새로고침 로직 추가
+        console.log('선택된 항목이 삭제되었습니다.');
+      }
+    } catch (error) {
+      console.error('삭제 중 오류가 발생했습니다:', error);
+    }
+  };
+
+  const handleItemSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((selectedId) => selectedId !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
   };
 
   const handleEdit = () => {
@@ -58,7 +80,7 @@ export default function DataList({
 
   return (
     <div className='absolute top-0 right-0  w-[444px] h-screen bg-[#FFFAFA] overflow-hidden rounded-tl-3xl rounded-bl-3xl z-10'>
-      <div className='pl-11 pt-15 pr-10 rounded-tl-3xl rounded-bl-3xl h-full   '>
+      <div className='h-full pr-10 pl-11 pt-15 rounded-tl-3xl rounded-bl-3xl '>
         <span
           className={classNames(
             `text-center text-4xl  font-bold leading-normal`,
@@ -125,13 +147,15 @@ export default function DataList({
             </button>
           </div>
         </div>
-        <ul className='flex flex-col gap-6  h-full  overflow-auto  scrollbar pr-2 '>
+        <ul className='flex flex-col h-full gap-6 pr-2 overflow-auto scrollbar '>
           {filteredDatas.map((data, index) => {
             return isEdit ? (
               <EditStatusItem
                 key={index}
                 data={data}
                 isBook={isBook}
+                isSelected={selectedIds.includes(data.id)}
+                onSelect={() => handleItemSelect(data.id)}
               />
             ) : (
               <NoEditStatusItem

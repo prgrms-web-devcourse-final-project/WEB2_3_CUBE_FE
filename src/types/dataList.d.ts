@@ -1,4 +1,5 @@
 interface DataListInfo {
+  id: string;
   title: string;
   singer?: string;
   author?: string;
