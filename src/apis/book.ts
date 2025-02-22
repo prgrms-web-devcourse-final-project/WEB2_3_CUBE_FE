@@ -19,22 +19,19 @@ export const bookAPI = {
       MaxResults: 10,
       start: 1,
       SearchTarget: 'Book',
-      Cover: 'Big',
       output: 'JS',
       Version: '20131101',
+      Cover: 'Big',
     };
 
     try {
-      const response = await axios.get(
-        `/${API_URL}/aladin/ttb/api/ItemSearch.aspx`,
-        {
-          params,
-          headers: {
-            Accept: 'application/json, text/plain, */*',
-            'Content-Type': 'application/json;charset=utf-8',
-          },
+      const response = await axios.get('/api/aladin/ttb/api/ItemSearch.aspx', {
+        params,
+        headers: {
+          Accept: 'application/json, text/plain, */*',
+          'Content-Type': 'application/json;charset=utf-8',
         },
-      );
+      });
 
       if (response.data && typeof response.data === 'string') {
         return JSON.parse(response.data);
