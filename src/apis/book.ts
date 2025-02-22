@@ -229,7 +229,7 @@ export const bookAPI = {
    */
   deleteReview: async (myBookId: string) => {
     const response = await axiosInstance.delete(
-      `/${API_URL}/mybooks-review?myBookId=${myBookId}`,
+      `/${API_URL}/mybooks-review/${myBookId}`,
     );
     return response.data;
   },

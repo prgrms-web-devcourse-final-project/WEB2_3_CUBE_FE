@@ -119,12 +119,12 @@ const BookReviewDisplay = ({
   };
 
   const handleDelete = async () => {
-    if (!bookId || !window.confirm('서평을 삭제하시겠습니까?')) return;
+    if (!urlBookId || !window.confirm('서평을 삭제하시겠습니까?')) return;
 
     try {
-      await bookAPI.deleteReview(bookId);
+      await bookAPI.deleteReview(urlBookId);
       showToast('서평이 삭제되었습니다.', 'success');
-      navigate(`/book/${bookId}`);
+      navigate(`/book/${urlBookId}`);
     } catch (error) {
       console.error('서평 삭제 중 오류 발생:', error);
       showToast('서평 삭제에 실패했습니다.', 'error');

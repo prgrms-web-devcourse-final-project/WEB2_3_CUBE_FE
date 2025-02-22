@@ -92,7 +92,12 @@ const BookPage = () => {
   }
 
   // 그 외의 경우 뷰어 표시
-  return <BookReviewViewer reviewData={reviewData} />;
+  return (
+    <BookReviewViewer
+      reviewData={reviewData}
+      bookId={bookId}
+    />
+  );
 };
 
 export default BookPage;

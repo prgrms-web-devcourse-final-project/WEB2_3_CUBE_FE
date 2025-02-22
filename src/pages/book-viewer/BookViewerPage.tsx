@@ -5,9 +5,10 @@ import tempIMG from '@assets/book/temp.jpg';
 
 interface BookViewerPageProps {
   reviewData: ReviewData | null;
+  bookId?: string;
 }
 
-const BookViewerPage = ({ reviewData }: BookViewerPageProps) => {
+const BookViewerPage = ({ reviewData, bookId }: BookViewerPageProps) => {
   if (!reviewData) return <NotFoundPage />;
 
   return (
@@ -23,6 +24,7 @@ const BookViewerPage = ({ reviewData }: BookViewerPageProps) => {
         <BookReviewDisplay
           mode='view'
           previewData={reviewData}
+          bookId={bookId}
         />
       </article>
     </section>
