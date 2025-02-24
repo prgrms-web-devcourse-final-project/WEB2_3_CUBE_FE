@@ -9,7 +9,7 @@ interface SearchListProps {
 
 export const SearchList = ({ items, type, onItemClick }: SearchListProps) => {
   return (
-    <div className='mb-4 h-70 overflow-y-auto'>
+    <div className='overflow-y-auto mb-4 h-102'>
       {items.map((item) => (
         <SearchItem
           key={item.id}

@@ -34,22 +34,22 @@
 
 @layer components {
   .item-middle {
-    @apply flex items-center justify-center;
+    @apply flex justify-center items-center;
   }
 
   .item-left {
-    @apply flex items-center justify-start;
+    @apply flex justify-start items-center;
   }
 
   .item-around {
-    @apply flex items-center justify-around;
+    @apply flex justify-around items-center;
   }
 
   .item-between {
-    @apply flex items-center justify-between;
+    @apply flex justify-between items-center;
   }
   .item-row {
-    @apply flex flex-col items-center justify-center;
+    @apply flex flex-col justify-center items-center;
   }
   .all-200-eio {
     @apply transition-all duration-200 ease-in-out;
@@ -76,5 +76,9 @@
 
   .spring-element {
     @apply w-7 h-16 bg-[#73A1F7] rounded-full border-2 border-[#2656CD] 2xl:h-20 2xl:w-8;
+  }
+
+  .book-shadow {
+    @apply drop-shadow-[10px_4px_10px_rgba(78,122,207,0.15)];
   }
 }

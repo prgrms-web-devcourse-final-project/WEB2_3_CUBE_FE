@@ -19,7 +19,7 @@ export const SearchInput = ({
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <div className='relative mb-4'>
+    <div className='relative mb-5'>
       <input
         style={{
           borderColor: isFocused ? mainColor : 'transparent',
@@ -31,7 +31,7 @@ export const SearchInput = ({
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         placeholder={placeholder}
-        className={`w-full p-3 rounded-lg ${bgColor} placeholder-[#8B888A]/70 outline-none`}
+        className={`w-full px-5 py-2.5 rounded-lg ${bgColor} placeholder-[#8B888A]/70 outline-none`}
       />
       <button className='absolute right-3 top-1/2 transform -translate-y-1/2'>
         <img
