@@ -45,7 +45,7 @@ export const bookAPI = {
   // ------------------------------ 책장 ------------------------------
   /**
    * 내 책장 조회
-   * @param roomId 방 ID
+   * @param userId 사용자 ID
    * @param pageSize 페이지 크기
    * @param lastBookId 마지막으로 조회한 책 ID (첫 페이지 조회 시 제외)
    * @returns 책장 목록
@@ -81,13 +81,13 @@ export const bookAPI = {
    * const nextPage = await bookAPI.getBookCaseList('1', 10, 2);
    */
   getBookCaseList: async (
-    roomId: string,
+    userId: string,
     pageSize: number,
     lastBookId?: number,
   ) => {
     const url = lastBookId
-      ? `/${API_URL}/mybooks?roomId=${roomId}&pageSize=${pageSize}&lastBookId=${lastBookId}`
-      : `/${API_URL}/mybooks?roomId=${roomId}&pageSize=${pageSize}`;
+      ? `/${API_URL}/mybooks?userId=${userId}&pageSize=${pageSize}&lastBookId=${lastBookId}`
+      : `/${API_URL}/mybooks?userId=${userId}&pageSize=${pageSize}`;
 
     const response = await axiosInstance.get(url);
     return response.data;

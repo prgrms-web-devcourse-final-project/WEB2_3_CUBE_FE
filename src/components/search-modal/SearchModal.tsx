@@ -32,11 +32,11 @@ export const SearchModal = ({
 
   return (
     <ModalBackground onClose={onClose}>
-      <div className='p-4 border-2 border-white bg-white/30 filter-blur rounded-3xl w-[1000px]'>
-        <div className='w-full h-full gap-2 p-10 bg-white rounded-2xl item-between'>
+      <div className='p-4 border-2 border-white bg-white/30 filter-blur rounded-3xl w-[1000px] h-[657px]'>
+        <div className='gap-2 p-10 w-full h-full bg-[#FCF7FD] rounded-2xl item-between'>
           {/* 제목 + 검색 바 + 아이템 리스트 */}
-          <div className='w-1/2'>
-            <h2 className={`mb-4 text-xl font-bold ${theme.title}`}>{title}</h2>
+          <div className='w-1/2 h-full'>
+            <h2 className={`mb-7 text-3xl font-bold ${theme.title}`}>{title}</h2>
             <SearchInput
               value={query}
               onChange={handleSearch}
@@ -51,7 +51,7 @@ export const SearchModal = ({
             />
           </div>
           {/* 검색 결과 */}
-          <div className='w-1/2 pl-8'>
+          <div className='pl-8 w-1/2'>
             <SearchResult
               item={selectedItem}
               type={type}

@@ -1,19 +1,20 @@
 import axios from 'axios';
-import { tokenService } from '@/utils/token';
+import { logoutAPI } from './login';
 
 const axiosInstance = axios.create({
   baseURL: 'http://3.39.182.150',
   headers: {
     'Content-Type': 'application/json',
   },
+  // withCredentials: true,
 });
 
 // 요청 인터셉터
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = tokenService.getToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    const accessToken = sessionStorage.getItem('accessToken');
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
   },
@@ -27,10 +28,11 @@ axiosInstance.interceptors.response.use(
   (response) => {
     return response;
   },
-  (error) => {
+  async (error) => {
     if (error.response?.status === 401) {
       console.error('네트워크 오류 또는 서버 응답 없음:', error.message);
-      tokenService.clearAll();
+      // 로그아웃
+      await logoutAPI();
     }
     return Promise.reject(error);
   },

@@ -31,11 +31,13 @@ export default function SlidingTitle({ text }: { text: string }) {
   return (
     <div
       ref={containerRef}
-      className='overflow-hidden whitespace-nowrap w-[427px]'>
+      className='truncate w-[470px] h-[60px] relative  '>
       <h1
         ref={titleRef}
-        className={`text-white text-[40px] font-bold inline-block ${
-          isAnimating ? 'animate-slideTitle' : ''
+        className={` text-white text-[40px] font-bold inline-block  ${
+          isAnimating
+            ? ' animate-slideTitle absolute top-0 right-0 z-[5] '
+            : 'relative '
         }`}>
         {text}
       </h1>

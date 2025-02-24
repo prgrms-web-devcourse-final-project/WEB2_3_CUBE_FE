@@ -1,11 +1,12 @@
 .swiper {
   width: 100%;
-  padding-bottom: 200px;
+  height: 100%;
 }
 
 .swiper-slide {
   background-position: center;
   background-size: cover;
+  /* 너비와 높이는 slidesPerView에 따라 맞는 크기 너비로 수정 */
   width: 427px;
   height: 427px;
 }

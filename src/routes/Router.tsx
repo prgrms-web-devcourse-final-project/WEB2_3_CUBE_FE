@@ -5,14 +5,18 @@ import { Routes, Route } from 'react-router-dom';
 import LoginPage from '@pages/login/LoginPage';
 import MainPage from '@pages/main/MainPage';
 import NotFoundPage from '@pages/NotFoundPage';
-import TestPage from '@pages/TestPage';
 import BaseLayout from '@routes/layout/BaseLayout';
 import CdRackPage from '@pages/cdrack/CdRackPage';
 import RoomPage from '../pages/room/RoomPage';
+// import RequireAuth from './layout/RequireAuth';
+import RedirectionKakao from '@pages/login/components/RedirectionKakao';
+import RedirectionNaver from '@pages/login/components/RedirectionNaver';
+import RedirectionGoogle from '@pages/login/components/RedirectionGoogle';
 
 const Router = () => {
   return (
     <Routes>
+      {/* <Route element={<RequireAuth />}> */}
       {/* 헤더가 필요한 페이지 */}
       <Route element={<BaseLayout hasHeader={true} />}>
         <Route
@@ -24,25 +28,12 @@ const Router = () => {
           element={<BookCasePage />}
         />
         <Route
-          path='/room'
-          element={<RoomPage />}
-        />
-        <Route
           path='/cdrack'
           element={<CdRackPage />}
         />
-      </Route>
-
-      <Route
-        path='/test'
-        element={<TestPage />}
-      />
-
-      {/* 헤더가 필요없는 페이지 */}
-      <Route element={<BaseLayout hasHeader={false} />}>
         <Route
-          path='/login'
-          element={<LoginPage />}
+          path='/room'
+          element={<RoomPage />}
         />
       </Route>
 
@@ -60,10 +51,32 @@ const Router = () => {
         path='/cd'
         element={<CdPage />}
       />
+
       <Route
         path='*'
         element={<NotFoundPage />}
       />
+
+      {/* 헤더가 필요없는 페이지 */}
+      <Route element={<BaseLayout hasHeader={false} />}>
+        <Route
+          path='/login'
+          element={<LoginPage />}
+        />
+        <Route
+          path='/login/oauth2/code/kakao'
+          element={<RedirectionKakao />}
+        />
+        <Route
+          path='/login/oauth2/code/naver'
+          element={<RedirectionNaver />}
+        />
+        <Route
+          path='/login/oauth2/code/google'
+          element={<RedirectionGoogle />}
+        />
+      </Route>
+      {/* </Route> */}
     </Routes>
   );
 };

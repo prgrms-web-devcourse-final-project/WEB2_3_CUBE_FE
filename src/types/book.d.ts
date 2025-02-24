@@ -18,3 +18,15 @@ interface ReviewType {
   topic: string;
   coverColor: string;
 }
+
+interface BookCaseListType {
+  id: number;
+  title: string;
+  author: string;
+  publisher: string;
+  publishedDate: string;
+  imageURL: string;
+  category: string;
+  page: number;
+};
+
