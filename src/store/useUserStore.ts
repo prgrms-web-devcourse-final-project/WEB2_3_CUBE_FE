@@ -13,7 +13,7 @@ interface UserStore {
 }
 
 export const useUserStore = create(
-  persist(
+  persist<UserStore>(
     (set) => ({
       user: null,
       setUser: (user) => set({ user: user }),

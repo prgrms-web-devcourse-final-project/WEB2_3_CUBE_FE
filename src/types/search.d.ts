@@ -5,10 +5,12 @@ export interface SearchItemType {
   artist?: string; //가수
   date: string; // 출판일자 or 발매일자
   imageUrl: string; // 책 표지 or 앨범 커버
+  youtubeUrl?: string;
   type: 'CD' | 'BOOK';
-  genres: string[];
+  genres?: string[];
   publisher?: string;
   album_title?: string;
+  duration?: number;
 }
 
 // API 응답 타입 --------------------------

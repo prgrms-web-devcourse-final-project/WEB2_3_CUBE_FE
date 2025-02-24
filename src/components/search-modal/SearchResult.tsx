@@ -47,10 +47,10 @@ export const SearchResult = ({
           title: item.title,
           artist: item.artist,
           album: item.album_title,
-          genres: ['발라드', 'R&B'],
+          genres: item.genres,
           coverUrl: item.imageUrl,
-          youtubeUrl: 'https://youtu.be/5g4KsIizYhQ?si=dPsnu1-rsvW8NekG',
-          duration: 100000,
+          youtubeUrl: item.youtubeUrl,
+          duration: item.duration,
         };
         await addCdToMyRack(user.userId, cdData);
       }
@@ -114,7 +114,7 @@ export const SearchResult = ({
         </button>
       </div>
       <p className={`${theme.searchItemName} font-semibold text-lg`}>
-        {item.author}
+        {item.author || item.artist}
       </p>
       {/* 장르 */}
       <div className='flex flex-wrap gap-2'>
