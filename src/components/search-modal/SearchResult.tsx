@@ -2,6 +2,7 @@ import { SearchItemType } from '@/types/search';
 import { bookAPI } from '@/apis/book';
 import addIcon from '@/assets/add-icon.svg';
 import { SEARCH_THEME } from '@/constants/searchTheme';
+import { toKoreanDate } from '@utils/dateFormat';
 
 interface SearchResultProps {
   item: SearchItemType | null;
@@ -57,7 +58,7 @@ export const SearchResult = ({
 
   if (isLoading) {
     return (
-      <div className='flex items-center justify-center h-full text-gray-400'>
+      <div className='flex justify-center items-center h-full text-gray-400'>
         검색 중...
       </div>
     );
@@ -65,7 +66,7 @@ export const SearchResult = ({
 
   if (error) {
     return (
-      <div className='flex items-center justify-center h-full text-gray-400'>
+      <div className='flex justify-center items-center h-full text-gray-400'>
         {error}
       </div>
     );
@@ -73,39 +74,41 @@ export const SearchResult = ({
 
   if (!item) {
     return (
-      <div className='flex items-center justify-center h-full text-gray-400'>
+      <div className='flex justify-center items-center h-full text-gray-400'>
         검색 결과를 선택해주세요
       </div>
     );
   }
 
   return (
-    <div className='flex flex-col items-center justify-center gap-4'>
+    <div className='flex flex-col gap-4 justify-center items-center'>
       {/* 출판일 / 발매일 */}
-      <div className='flex flex-col items-center justify-center gap-1'>
-        <p className={theme.searchResultDate}>{item.date}</p>
+      <div className='flex flex-col gap-1 justify-center items-center'>
+        <p className={`${theme.searchResultDate} font-mono tabular-nums`}>
+          {toKoreanDate(item.date)}
+        </p>
         <h3
           className={`text-xl font-bold text-center ${theme.searchResultText}`}>
           {item.title}
         </h3>
       </div>
       {/* 표지 / 앨범 커버 */}
-      <div className='relative w-auto mb-4 h-70'>
+      <div className='relative mb-4 w-auto h-70'>
         <img
           src={item.imageUrl}
-          className='object-contain w-full h-full rounded-lg shadow-lg'
+          className='object-contain w-full h-full rounded-lg book-shadow'
         />
         {/* 내 책장에 담기 버튼 */}
         <button
           onClick={() => handleAddBook(item)}
-          className={`absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 p-2 ${theme.searchResultAddBtn} rounded-full cursor-pointer`}>
+          className={`absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 p-2 ${theme.searchResultAddBtn} rounded-full cursor-pointer backdrop-blur-xs`}>
           <img
             src={addIcon}
             alt='add'
           />
         </button>
       </div>
-      <p className={`${theme.searchItemName} font-semibold`}>{item.author}</p>
+      <p className={`${theme.searchItemName} font-semibold text-lg`}>{item.author}</p>
       {/* 장르 */}
       <div className='flex flex-wrap gap-2'>
         {item.genres?.map((genre) => (

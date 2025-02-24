@@ -8,7 +8,7 @@ import NotFoundPage from '@pages/NotFoundPage';
 import BaseLayout from '@routes/layout/BaseLayout';
 import CdRackPage from '@pages/cdrack/CdRackPage';
 import RoomPage from '../pages/room/RoomPage';
-import RequireAuth from './layout/RequireAuth';
+// import RequireAuth from './layout/RequireAuth';
 import RedirectionKakao from '@pages/login/components/RedirectionKakao';
 import RedirectionNaver from '@pages/login/components/RedirectionNaver';
 import RedirectionGoogle from '@pages/login/components/RedirectionGoogle';
@@ -16,7 +16,7 @@ import RedirectionGoogle from '@pages/login/components/RedirectionGoogle';
 const Router = () => {
   return (
     <Routes>
-      <Route element={<RequireAuth />}>
+      {/* <Route element={<RequireAuth />}> */}
         {/* 헤더가 필요한 페이지 */}
         <Route element={<BaseLayout hasHeader={true} />}>
           <Route
@@ -76,7 +76,7 @@ const Router = () => {
             element={<RedirectionGoogle />}
           />
         </Route>
-      </Route>
+      {/* </Route> */}
     </Routes>
   );
 };
