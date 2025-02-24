@@ -7,12 +7,15 @@ import { Mousewheel, EffectCoverflow, Virtual } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
 
 interface CdSwiperProps {
-  datas: CDInfo[];
+  cdDatas: { data: CDInfo[]; cursor: number };
   onActiveTrackId: (index: number) => void;
 }
 
 const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
-  ({ datas, onActiveTrackId }, ref) => {
+  ({ cdDatas, onActiveTrackId }, ref) => {
+    const cdData = cdDatas.data;
+    console.log(cdData);
+
     return (
       <Swiper
         ref={ref}
@@ -35,12 +38,12 @@ const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
           onActiveTrackId(activeIndex);
         }}
         className='mySwiper'>
-        {datas.map((data: CDInfo) => (
-          <SwiperSlide key={data.trackId}>
+        {cdData.map((data: CDInfo) => (
+          <SwiperSlide key={data.myCdId}>
             <div className='relative'>
               <img
                 className='poster'
-                src={data.imgUrl}
+                src={data.coverUrl}
                 alt='앨범 이미지'
               />
               {/* 장르 */}
