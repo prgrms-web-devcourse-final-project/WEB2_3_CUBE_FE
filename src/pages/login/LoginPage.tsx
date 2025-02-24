@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import background_img from '@assets/roome-background-img.png';
-import SocialTab from './SocialTab';
-import AgreeTab from './AgreeTab';
+import SocialTab from './components/SocialTab';
+import AgreeTab from './components/AgreeTab';
 import { agreeItems } from '@constants/login';
 
 export default function LoginPage() {

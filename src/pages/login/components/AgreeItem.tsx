@@ -53,7 +53,7 @@ export default function AgreeItem({
           agreementInfo.isExpanded ? 'h-54  opacity-100' : 'h-0 opacity-0'
         }
         absolute z-[-1]  top-0 left-0 w-full  pt-[82px]  rounded-2xl bg-[#FFFFFF] 
-      shadow-[0px_4px_4px_0px_rgba(78,122,207,0.15)] px-10 transition-200
+      shadow-[0px_4px_4px_0px_rgba(78,122,207,0.15)] px-10 all-200-eio
       `}>
         <p className='w-full h-full scrollbar text-[#162C63] pt-6 pr-4 pb-12 whitespace-pre-line '>
           {agreementInfo.content}

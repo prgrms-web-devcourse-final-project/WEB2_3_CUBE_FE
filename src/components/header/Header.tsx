@@ -3,13 +3,19 @@ import logo from '@/assets/header/header-logo.svg';
 import humburgerIcon from '@/assets/header/hamburger-icon.svg';
 import notificationIcon from '@/assets/header/notification-icon.svg';
 import housemateIcon from '@/assets/header/housemate-list-icon.svg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { logoutAPI } from '@apis/login';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+  const handleLogout = async () => {
+    await logoutAPI();
+    navigate('/login');
   };
 
   return (
@@ -60,11 +66,11 @@ const Header = () => {
             />
           </button>
           {/* 숨김 메뉴 */}
-          <div className={`absolute w-38 right-[130%] top-0 p-2 border-2 border-white bg-white/30 backdrop-blur-lg rounded-xl font-semibold  ${
-                isMenuOpen ? 'block' : 'hidden'
-              }`}>
-            <ul
-              className='px-4 py-2 overflow-hidden bg-white rounded-lg shadow-lg '>
+          <div
+            className={`absolute w-38 right-[130%] top-0 p-2 border-2 border-white bg-white/30 backdrop-blur-lg rounded-xl font-semibold  ${
+              isMenuOpen ? 'block' : 'hidden'
+            }`}>
+            <ul className='px-4 py-2 overflow-hidden bg-white rounded-lg shadow-lg '>
               <li>
                 <Link
                   to='/'
@@ -81,6 +87,7 @@ const Header = () => {
               </li>
               <li>
                 <button
+                  onClick={handleLogout}
                   type='button'
                   className='w-full px-4 py-2 text-center text-[#2E4D99]/50 hover:text-[#2E4D99] transition-colors'>
                   로그아웃
