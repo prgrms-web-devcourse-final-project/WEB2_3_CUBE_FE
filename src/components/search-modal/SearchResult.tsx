@@ -3,6 +3,8 @@ import { bookAPI } from '@/apis/book';
 import addIcon from '@/assets/add-icon.svg';
 import { SEARCH_THEME } from '@/constants/searchTheme';
 import { toKoreanDate } from '@utils/dateFormat';
+import { addCdToMyRack } from '@apis/cd';
+import { useUserStore } from '@/store/useUserStore';
 
 interface SearchResultProps {
   item: SearchItemType | null;
@@ -23,6 +25,7 @@ export const SearchResult = ({
   onClose,
 }: SearchResultProps) => {
   const theme = SEARCH_THEME[type];
+  const user = useUserStore((state) => state.user);
 
   const handleAddBook = async (item: SearchItemType) => {
     try {
@@ -40,14 +43,16 @@ export const SearchResult = ({
         await bookAPI.addBookToMyBook(bookData);
       } else if (type === 'CD') {
         // CD 추가 요청 로직
-        // const cdData = {
-        //   id: item.id,
-        //   title: item.title,
-        //   artist: item.artist,
-        //   albumTitle: item.album_title,
-        //   releaseDate: item.date,
-        //   imageUrl: item.imageUrl,
-        // };
+        const cdData: PostCDInfo = {
+          title: item.title,
+          artist: item.artist,
+          album: item.album_title,
+          genres: ['발라드', 'R&B'],
+          coverUrl: item.imageUrl,
+          youtubeUrl: 'https://youtu.be/5g4KsIizYhQ?si=dPsnu1-rsvW8NekG',
+          duration: 100000,
+        };
+        await addCdToMyRack(user.userId, cdData);
       }
       onSelect(item);
       onClose();
@@ -108,7 +113,9 @@ export const SearchResult = ({
           />
         </button>
       </div>
-      <p className={`${theme.searchItemName} font-semibold text-lg`}>{item.author}</p>
+      <p className={`${theme.searchItemName} font-semibold text-lg`}>
+        {item.author}
+      </p>
       {/* 장르 */}
       <div className='flex flex-wrap gap-2'>
         {item.genres?.map((genre) => (

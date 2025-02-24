@@ -14,7 +14,7 @@ interface CdSwiperProps {
 const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
   ({ cdDatas, onActiveTrackId }, ref) => {
     const cdData = cdDatas.data;
-    console.log(cdData);
+    // console.log(cdData);
 
     return (
       <Swiper

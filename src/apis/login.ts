@@ -1,4 +1,4 @@
-import { useUserStore } from '@/store/useUser';
+import { useUserStore } from '@/store/useUserStore';
 import axiosInstance from './axiosInstance';
 
 const API_URL = 'mock';
@@ -22,8 +22,7 @@ export const loginAPI = async (provider: string, code: string) => {
       data.expiresIn + Math.floor(Date.now() / 1000),
     );
     // user 정보 저장
-    const setUser = useUserStore.getState().setUser;
-    setUser(data.user);
+    useUserStore.getState().setUser(data.user);
 
     return data;
   } catch (error) {

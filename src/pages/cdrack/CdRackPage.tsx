@@ -3,18 +3,20 @@ import backgroundIMG from '@/assets/roome-background-img.png';
 import NotEmptyStatus from './components/NotEmptyStatus';
 import EmptyStatus from './components/EmptyStatus';
 import { getCdRack } from '@apis/cd';
+import { useUserStore } from '@/store/useUserStore';
 
 export default function CdRackPage() {
   const [cdDatas, setCDdatas] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const user = useUserStore((state) => state.user);
+  // console.log(user);
 
   // 내 cd 목록 불러오기
   useEffect(() => {
     const fetchCds = async () => {
       try {
         setIsLoading(true);
-        const response = await getCdRack(1);
-        console.log(response);
+        const response = await getCdRack(user.userId);
         setCDdatas(response);
       } catch (error) {
         console.error('cd 목록을 가져오는데 실패했습니다:', error);
