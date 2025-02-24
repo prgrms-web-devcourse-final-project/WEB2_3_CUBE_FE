@@ -7,6 +7,7 @@ import { mockCD } from '@/mocks/mockCD';
 export default function CdRackPage() {
   const [cdDatas, setCDdatas] = useState([]);
 
+  // 내 cd 목록 불러오기
   useEffect(() => {
     setCDdatas(mockCD);
   }, []);

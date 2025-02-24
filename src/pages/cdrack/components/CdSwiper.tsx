@@ -23,7 +23,7 @@ const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
         virtual
         coverflowEffect={{
           rotate: 10,
-          stretch: 0,
+          stretch: 10,
           depth: 100,
           modifier: 2,
           slideShadows: true,
@@ -33,7 +33,6 @@ const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
         onSlideChange={(swiper) => {
           const activeIndex = swiper.realIndex;
           onActiveTrackId(activeIndex);
-          //   setActiveTrackId(datas[activeIndex]?.trackId || null);
         }}
         className='mySwiper'>
         {datas.map((data: CDInfo) => (

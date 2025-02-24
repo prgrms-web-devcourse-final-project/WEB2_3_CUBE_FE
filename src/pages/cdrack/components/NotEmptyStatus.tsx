@@ -5,12 +5,10 @@ import { SwiperRef } from 'swiper/react';
 import SlidingTitle from './SlidingTitle';
 
 export default function NotEmptyStatus({ datas }) {
-  const [activeTrackId, setActiveTrackId] = useState<string | null>(
-    datas[0]?.trackId || null,
-  );
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const activeTrack = datas.find(
-    (track: CDInfo) => track.trackId === activeTrackId,
+    (track: CDInfo) => track.trackId === datas[activeIndex]?.trackId,
   );
 
   const swiperRef = useRef<SwiperRef | null>(null);
@@ -20,7 +18,7 @@ export default function NotEmptyStatus({ datas }) {
       {/* 상단 정보 */}
       {activeTrack && (
         <div className='text-center mt-20'>
-          <span className='text-white text-2xl opacity-70'>
+          <span className='text-white text-xl opacity-70'>
             {activeTrack.artist} | {activeTrack.release_date.split('-')[0]}
           </span>
           <SlidingTitle text={activeTrack.title} />
@@ -30,9 +28,7 @@ export default function NotEmptyStatus({ datas }) {
       <CdSwiper
         ref={swiperRef}
         datas={datas}
-        onActiveTrackId={(activeIndex: number) =>
-          setActiveTrackId(datas[activeIndex]?.trackId || null)
-        }
+        onActiveTrackId={(activeIndex: number) => setActiveIndex(activeIndex)}
       />
 
       {/* Dock  */}
@@ -40,6 +36,7 @@ export default function NotEmptyStatus({ datas }) {
         ref={swiperRef}
         isEmpty={false}
         datas={datas}
+        activeIndex={activeIndex}
       />
     </div>
   );
