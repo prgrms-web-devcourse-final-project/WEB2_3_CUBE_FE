@@ -1,0 +1,97 @@
+.main-background {
+  background: radial-gradient(50% 50% at 50% 50%, #dfeaff 0%, #88b2ff 100%);
+}
+
+/* DockMenu style */
+.bottom-menu {
+  @apply w-16 bg-white/20 rounded-full border border-white flex flex-col items-center justify-center fixed;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 4px;
+  z-index: 50;
+}
+
+.bottom-menu-icon {
+  @apply w-[54px] h-[54px] rounded-full flex items-center justify-center;
+  transition: all 0.3s ease;
+}
+
+.bottom-menu-img {
+  @apply w-[22px] h-[22px];
+}
+
+.bottom-menu-content {
+  @apply flex flex-col gap-5 items-center justify-between top-0 w-full h-full;
+  transition: all 0.3s ease;
+}
+
+.bottom-menu-content button {
+  @apply w-[54px] h-[54px] rounded-full flex items-center justify-center;
+}
+
+/* 설정 컴포넌트 */
+.setting-gradient {
+  background: linear-gradient(180deg, rgba(22, 44, 99, 0.00) 37.37%, rgba(22, 44, 99, 0.15) 68.68%, rgba(22, 44, 99, 0.4) 100%);
+}
+
+/* 테마 설정 컴포넌트 */
+.theme-card {
+  width: calc(100vw * 0.13125);
+  height: calc(100vw * 0.143);
+  max-width: 252px;
+  max-height: 274px;
+  min-width: 200px;
+  min-height: 222px;
+  background-color: #FCF7FD/20;
+  display: flex;
+  border: 2px solid #FCF7FD;
+}
+
+
+/* 테마 설정 컴포넌트 */
+.prefer-card {
+  width: calc(100vw*0.265);
+  height: calc(100vw*0.143);
+  max-width: 509px;
+  max-height: 275px;
+  min-width: 384px;
+  min-height: 212px;
+  background-color: #FCF7FD/20;
+  display: flex;
+  border: 2px solid #FCF7FD;
+}
+
+/* 랭킹 */
+.rank-modal {
+  width: calc(100vh*0.343);
+  height: calc(100vh*0.6755);
+  max-width: 410px;
+  max-height: 780px;
+  min-width: 340px;
+  min-height: 600px;
+  background-color: #FCF7FD/20;
+  display: flex;
+  border: 2px solid #FCF7FD;
+  z-index: 5;
+}
+
+/* 방명록 */
+.guest-book {
+  width: calc(100vw * 0.4266);
+  height: calc(100vw * 0.3911);
+  max-width: 819px;
+  max-height: 822px;
+  min-width: 600px;
+  min-height: 550px;
+  background-color: #FCF7FD;
+  display: flex;
+  border-radius: 60px;
+  border: 2px solid #2656CD;
+  position: relative;
+  z-index: 10;
+}
+
+.inputBase {
+  @apply placeholder:font-medium placeholder:text-xs 2xl:placeholder:text-sm placeholder:text-[#A2A2A2]/70 ;
+  @apply bg-[#EDE6EE]/25 border-2 border-[#A2A2A2]/30 rounded-[10px] 2xl:rounded-xl;
+}

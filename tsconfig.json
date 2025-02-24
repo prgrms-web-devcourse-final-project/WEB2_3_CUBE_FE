@@ -20,7 +20,8 @@
       "@constants/*": ["./src/constants/*"],
       "@colors/*": ["./src/colors/*"],
       "@apis/*": ["./src/apis/*"],
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@routes/*": ["./src/routes/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]
