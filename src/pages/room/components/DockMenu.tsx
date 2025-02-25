@@ -74,7 +74,7 @@ export default function DockMenu({ activeSettings, onSettingsChange }) {
       className={`bottom-menu bottom-20 right-21 drop-shadow-logo relative ${
         isOpen ? 'h-[202px]' : 'h-16'
       }`}>
-      <div className='relative h-full w-full flex flex-col-reverse gap-5 items-center'>
+      <div className='relative flex flex-col-reverse items-center w-full h-full gap-5'>
         {/* 도구 메뉴 버튼 */}
         <button
           className={`bottom-menu-icon group absolute ${getMainButtonBackground()}`}

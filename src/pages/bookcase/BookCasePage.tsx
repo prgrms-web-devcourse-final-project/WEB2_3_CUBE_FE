@@ -26,12 +26,9 @@ const BookCasePage = () => {
           1,
         );
 
-        console.log('API 응답:', response); // response가 이미 data임
 
         if (response?.myBooks) {
-          // .data 제거
           const formattedBooks = response.myBooks.map((book: any) => ({
-            // .data 제거
             id: book.id,
             title: book.title,
             author: book.author,
@@ -41,7 +38,6 @@ const BookCasePage = () => {
             genreNames: book.genreNames,
           }));
 
-          console.log('변환된 books:', formattedBooks);
           setBooks(formattedBooks);
         }
       } catch (error) {
@@ -52,8 +48,6 @@ const BookCasePage = () => {
     };
     fetchBooks();
   }, []);
-
-  console.log('현재 books 상태:', books); // 렌더링 시 books 상태 확인
 
   const handleDragStart = (clientX: number, clientY: number) => {
     setIsDragging(true);
