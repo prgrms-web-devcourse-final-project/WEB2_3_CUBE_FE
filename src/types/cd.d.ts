@@ -1,7 +1,7 @@
 // cd response body type
 interface CDInfo {
-  cdId: number;
-  myCdId: number;
+  cdId?: string;
+  myCdId?: number;
   title: string;
   artist: string;
   releaseDate: string;
@@ -12,14 +12,14 @@ interface CDInfo {
   duration: number;
 }
 
-// cd 검색시 type
+// cd 검색시 spotify 반환 type
 interface CDSearch {
   id: string;
   name: string;
   artists: { name: string; id: string }[]; // 가수 정보가 배열로 옴
   album: {
     name: string;
-    releaseDate: string;
+    release_date: string;
     images: { url: string }[]; // 앨범 이미지도 배열
   };
   genres: string[];
@@ -39,7 +39,6 @@ interface CDSearchResult {
   type: 'CD';
   youtubeUrl: string;
   duration: number;
-  releaseDate?: string;
 }
 
 // cd 추가시 reqest body type

@@ -32,7 +32,7 @@ axiosInstance.interceptors.response.use(
     if (error.response?.status === 401) {
       console.error('네트워크 오류 또는 서버 응답 없음:', error.message);
       // 로그아웃
-      await logoutAPI();
+      // await logoutAPI();
     }
     return Promise.reject(error);
   },

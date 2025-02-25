@@ -1,7 +1,7 @@
 import { useUserStore } from '@/store/useUserStore';
 import axiosInstance from './axiosInstance';
 
-const API_URL = 'api11';
+const API_URL = 'mock';
 /**
  *
  * @param provider 소셜로그인 제공자
@@ -41,7 +41,6 @@ export const refreshAccessTokenAPI = async () => {
 
 export const logoutAPI = async () => {
   const response = await axiosInstance.post(`/${API_URL}/auth/logout`);
-  sessionStorage.removeItem('accessToken');
-  sessionStorage.removeItem('expiryTime');
+  sessionStorage.clear();
   return response.data;
 };

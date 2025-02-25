@@ -17,6 +17,8 @@ const Dock = forwardRef<SwiperRef, DockProps>(
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDockOpen, setIsDockOpen] = useState(false);
 
+    console.log(cdDatas);
+
     // 슬라이드 위치 변경
     const handleSlideChange = (index: number) => {
       const swiper = (ref as React.RefObject<SwiperRef>).current?.swiper;
@@ -43,13 +45,13 @@ const Dock = forwardRef<SwiperRef, DockProps>(
               <span className='text-white text-[30px]'>｡°(っ°´o`°ｃ)°｡</span>
             </div>
           ) : (
-            <div className=' w-[calc(100vw-300px)] h-full flex justify-center items-center  gap-2 '>
+            <div className='w-[calc(100vw-300px)]  h-full flex justify-center items-center  gap-2 '>
               {/* 이전 cd목록 버튼 */}
               <button
                 className='h-full overflow-hidden hover:opacity-50 all-200-eio'
                 disabled={true}>
                 <img
-                  className='w-11 h-11'
+                  className='w-13 h-13'
                   src={show_prev_cd}
                   alt='이전 cd 목록 보여주는 아이콘'
                 />
@@ -59,7 +61,7 @@ const Dock = forwardRef<SwiperRef, DockProps>(
                 {cdDatas.data.map((data: CDInfo, index: number) => (
                   <li
                     onClick={() => handleSlideChange(index)}
-                    key={data.cdId}
+                    key={index}
                     className={`shadow-md cursor-pointer ${
                       activeIndex === index &&
                       'border-2 border-red-600 rounded-[6.4px]'
@@ -77,7 +79,7 @@ const Dock = forwardRef<SwiperRef, DockProps>(
                 className='h-full overflow-hidden hover:opacity-50 all-200-eio'
                 disabled={true}>
                 <img
-                  className='w-11 h-11'
+                  className='w-13 h-13'
                   src={show_next_cd}
                   alt='이후 cd 목록 보여주는 아이콘'
                 />

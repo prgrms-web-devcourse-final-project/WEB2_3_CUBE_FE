@@ -20,8 +20,7 @@ export default function NotEmptyStatus({ cdDatas }) {
       {activeTrack && (
         <div className='text-center mt-20'>
           <span className='text-white text-xl opacity-70'>
-            {/* {activeTrack.release_date.split('-')[0] */}
-            {activeTrack.artist | 2025}
+            {activeTrack.artist} | {activeTrack.releaseDate.split('-')[0]}
           </span>
           <SlidingTitle text={activeTrack.title} />
         </div>
