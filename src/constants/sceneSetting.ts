@@ -9,7 +9,7 @@ export const CAMERA_CONFIG = {
 export const LIGHT_CONFIG = {
 
   mainLight: {
-    position: [8, 12, 6],
+    position: [3, 8, 8],
     intensity: 2.5,
     color: '#ffefd5',
     castShadow: true,
