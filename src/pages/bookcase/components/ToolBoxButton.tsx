@@ -14,7 +14,7 @@ const ToolBoxButton = ({ onAddBook }: ToolBoxButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isListOpen, setIsListOpen] = useState(false);
 
-  const formattedBooks = mockBooks.map(book => ({
+  const formattedBooks = mockBooks.map((book) => ({
     id: book.id,
     title: book.title,
     author: book.author,
@@ -36,10 +36,9 @@ const ToolBoxButton = ({ onAddBook }: ToolBoxButtonProps) => {
             style={{ height: isOpen ? '11.5rem' : '0' }}>
             <ul className='flex flex-col gap-2 mb-2 z-[1]'>
               <li className='relative group'>
-                <button 
+                <button
                   className='p-7 bg-white rounded-full shadow-md hover:bg-white/80'
-                  onClick={() => setIsListOpen(true)}
-                >
+                  onClick={() => setIsListOpen(true)}>
                   <img
                     src={bookListIcon}
                     alt='목록 보러가기'
@@ -76,7 +75,7 @@ const ToolBoxButton = ({ onAddBook }: ToolBoxButtonProps) => {
 
         {/* 메인 토글 버튼 */}
         <div className='relative group'>
-            <button
+          <button
             className='p-7 bg-white rounded-full shadow-lg hover:bg-white/80 relative z-[2]'
             aria-label='도구 메뉴 열기'
             onClick={() => setIsOpen(!isOpen)}>
@@ -97,7 +96,10 @@ const ToolBoxButton = ({ onAddBook }: ToolBoxButtonProps) => {
 
       {isListOpen && (
         <ModalBackground onClose={() => setIsListOpen(false)}>
-          <DataList datas={formattedBooks} type="book" />
+          <DataList
+            datas={formattedBooks}
+            type='book'
+          />
         </ModalBackground>
       )}
     </>
