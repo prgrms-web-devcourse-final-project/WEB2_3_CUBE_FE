@@ -76,12 +76,12 @@ export const bookAPI = {
    * }
    * @example
    * // 첫 페이지 조회
-   * const firstPage = await bookAPI.getBookCaseList('1', 10);
+   * const firstPage = await bookAPI.getBookCaseList(1, 10);
    * // 두 번째 페이지부터 조회
-   * const nextPage = await bookAPI.getBookCaseList('1', 10, 2);
+   * const nextPage = await bookAPI.getBookCaseList(1, 10, 2);
    */
   getBookCaseList: async (
-    userId: string,
+    userId: number,
     pageSize: number,
     lastBookId?: number,
   ) => {

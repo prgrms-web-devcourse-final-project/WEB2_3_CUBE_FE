@@ -22,9 +22,8 @@ const BookCasePage = () => {
       try {
         setIsLoading(true);
         const response = await bookAPI.getBookCaseList(
-          tokenService.getUser()?.id,
+          tokenService.getUser()?.userId || 1, // 임시 유저 아이디 (** ToDo : 나중에 || 1 지우기)
           1,
-          1000,
         );
         setBooks(response.data);
       } catch (error) {
@@ -73,7 +72,7 @@ const BookCasePage = () => {
   return (
     <div
       ref={containerRef}
-      className='overflow-auto w-full h-screen bg-white select-none cursor-grab active:cursor-grabbing'
+      className='w-full h-screen overflow-auto bg-white select-none cursor-grab active:cursor-grabbing'
       onMouseDown={(e) => handleDragStart(e.pageX, e.pageY)}
       onMouseMove={(e) => handleDragMove(e.pageX, e.pageY)}
       onMouseUp={handleDragEnd}
