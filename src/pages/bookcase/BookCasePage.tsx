@@ -22,10 +22,28 @@ const BookCasePage = () => {
       try {
         setIsLoading(true);
         const response = await bookAPI.getBookCaseList(
-          tokenService.getUser()?.userId || 1, // 임시 유저 아이디 (** ToDo : 나중에 || 1 지우기)
+          tokenService.getUser()?.userId || 1,
           1,
         );
-        setBooks(response.data);
+
+        console.log('API 응답:', response); // response가 이미 data임
+
+        if (response?.myBooks) {
+          // .data 제거
+          const formattedBooks = response.myBooks.map((book: any) => ({
+            // .data 제거
+            id: book.id,
+            title: book.title,
+            author: book.author,
+            publisher: book.publisher,
+            publishedDate: book.publishedDate,
+            imageURL: book.imageUrl,
+            genreNames: book.genreNames,
+          }));
+
+          console.log('변환된 books:', formattedBooks);
+          setBooks(formattedBooks);
+        }
       } catch (error) {
         console.error('책 목록을 가져오는데 실패했습니다:', error);
       } finally {
@@ -34,6 +52,8 @@ const BookCasePage = () => {
     };
     fetchBooks();
   }, []);
+
+  console.log('현재 books 상태:', books); // 렌더링 시 books 상태 확인
 
   const handleDragStart = (clientX: number, clientY: number) => {
     setIsDragging(true);
@@ -94,6 +114,7 @@ const BookCasePage = () => {
             key={index}
             page={index + 1}
             books={rowBooks}
+            showEmptyMessage={books.length === 0 && index === 1}
           />
         );
       })}
