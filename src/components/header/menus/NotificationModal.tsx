@@ -4,23 +4,23 @@ import rightIcon from '@/assets/housemate-right-icon.svg';
 import closeIcon from '@/assets/housemate-modal-close-icon.svg';
 import { motion, AnimatePresence } from 'framer-motion';
 
-type TabType = 'followers' | 'following';
+type TabType = 'pendingRead' | 'viewed';
 
-interface HousemateModalProps {
+interface NotificationModalProps {
   isOpen: boolean;
   onClose: () => void;
   buttonRef: React.RefObject<HTMLButtonElement>;
 }
 
-const HousemateModal = ({
+const NotificationModal = ({
   isOpen,
   onClose,
   buttonRef,
-}: HousemateModalProps) => {
+}: NotificationModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const [searchValue, setSearchValue] = useState('');
   const [modalPosition, setModalPosition] = useState('0px');
-  const [activeTab, setActiveTab] = useState<TabType>('followers');
+  const [activeTab, setActiveTab] = useState<TabType>('pendingRead');
 
   // 모달 위치 계산 함수
   const updateModalPosition = () => {
@@ -63,10 +63,10 @@ const HousemateModal = ({
 
   // 탭 변경 시 API 호출 등의 처리
   useEffect(() => {
-    if (activeTab === 'followers') {
-      // TODO: 팔로워 목록 API 호출
+    if (activeTab === 'pendingRead') {
+      // TODO: 읽지 않음 목록 API 호출
     } else {
-      // TODO: 팔로잉 목록 API 호출
+      // TODO: 읽음 목록 API 호출
     }
   }, [activeTab]);
 
@@ -88,7 +88,7 @@ const HousemateModal = ({
             width: '440px',
             height: '80vh',
             right: modalPosition,
-            top: '80px',
+            top: '40px',
           }}>
           <motion.div
             ref={modalRef}
@@ -109,17 +109,15 @@ const HousemateModal = ({
                 />
               </button>
 
-              <h2 className='text-2xl font-bold text-[#D8297B] mb-6'>
-                하우스 메이트
-              </h2>
+              <h2 className='text-2xl font-bold text-[#162C63] mb-6'>알림</h2>
 
               {/* 탭 메뉴 */}
-              <div className='flex bg-[#F9E9F0] rounded-lg mb-4 h-10 p-1 relative'>
+              <div className='flex bg-[#EBEFFB] rounded-lg mb-4 h-10 p-1 relative'>
                 {/* 배경 애니메이션 */}
                 <motion.div
-                  className='absolute w-1/2 h-8 bg-[#D8297B]/80 rounded-md'
+                  className='absolute w-1/2 h-8 bg-[#2C5FBD]/80 rounded-md'
                   animate={{
-                    x: activeTab === 'following' ? '100%' : '0',
+                    x: activeTab === 'viewed' ? '100%' : '0',
                   }}
                   transition={{
                     type: 'spring',
@@ -128,33 +126,22 @@ const HousemateModal = ({
                   }}
                 />
                 <button
-                  onClick={() => setActiveTab('followers')}
+                  onClick={() => setActiveTab('pendingRead')}
                   className={`flex-1 font-medium text-sm rounded-md relative z-10 transition-colors duration-300 ${
-                    activeTab === 'followers'
+                    activeTab === 'pendingRead'
                       ? 'text-white'
-                      : 'text-[#AC2463]/70'
+                      : 'text-[#3E507D]'
                   }`}>
-                  나를 추가한
+                  읽지 않음
                 </button>
                 <button
-                  onClick={() => setActiveTab('following')}
+                  onClick={() => setActiveTab('viewed')}
                   className={`flex-1 font-medium text-sm rounded-md relative z-10 transition-colors duration-300 ${
-                    activeTab === 'following'
-                      ? 'text-white'
-                      : 'text-[#AC2463]/70'
+                    activeTab === 'viewed' ? 'text-white' : 'text-[#3E507D]'
                   }`}>
-                  내가 추가한
+                  읽음
                 </button>
               </div>
-
-              {/* 검색창 */}
-              <SearchInput
-                value={searchValue}
-                onChange={setSearchValue}
-                placeholder='누구를 찾고 계신가요?'
-                mainColor='#E94C89'
-                bgColor='bg-[#F1F1F1]/50'
-              />
 
               {/* 메이트 리스트 */}
               <ul className='overflow-y-auto max-h-[calc(100vh-400px)] flex flex-col gap-6'>
@@ -171,36 +158,26 @@ const HousemateModal = ({
                         alt='profile'
                         className='object-cover w-10 h-10 rounded-full'
                       />
-                      <div aria-label='닉네임 및 상태'>
-                        <p className='flex items-center gap-2'>
-                          <span className='font-bold text-[#503A44] text-sm'>
+                      <div aria-label='알림 내용'>
+                        <p className='flex items-center'>
+                          <span
+                            aria-label='닉네임'
+                            className='font-bold text-[#162C63] text-sm'>
                             찰스엔터
                           </span>
-                          {index === 0 && (
-                            <i
-                              aria-label='온라인 상태'
-                              className='w-2 h-2 bg-[#61E509] rounded-full'></i>
-                          )}
-                          {index === 1 && (
-                            <i
-                              aria-label='오프라인 상태'
-                              className='w-2 h-2 bg-gray-300 rounded-full'></i>
-                          )}
+                          <span
+                            aria-label='알림 내용'
+                            className=' text-[#162C63] text-sm font-medium'>
+                            님이 하우스 메이트로 추가했어요!
+                          </span>
                         </p>
                         <span
                           aria-label='소개'
-                          className='text-xs text-[#503A44]/70 font-medium'>
-                          제일 좋아하는 건 까만 해바라기 씨
+                          className='text-xs text-[#3E507D]/70'>
+                          2024년 12월 12일
                         </span>
                       </div>
                     </div>
-                    <button className='flex items-center justify-center w-8 h-8'>
-                      <img
-                        src={rightIcon}
-                        alt='하우스메이트 페이지 바로가기'
-                        className='w-full h-full'
-                      />
-                    </button>
                   </li>
                 ))}
               </ul>
@@ -212,4 +189,4 @@ const HousemateModal = ({
   );
 };
 
-export default HousemateModal;
+export default NotificationModal;

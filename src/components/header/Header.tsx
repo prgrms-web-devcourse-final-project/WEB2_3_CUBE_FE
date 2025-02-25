@@ -6,12 +6,15 @@ import housemateIcon from '@/assets/header/housemate-list-icon.svg';
 import { Link } from 'react-router-dom';
 import HiddenMenu from './menus/HiddenMenu';
 import HousemateModal from './menus/HousemateModal';
+import NotificationModal from './menus/NotificationModal';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHousemateModalOpen, setIsHousemateModalOpen] = useState(false);
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const housemateButtonRef = useRef<HTMLButtonElement>(null);
+  const notificationButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -38,6 +41,10 @@ const Header = () => {
     setIsHousemateModalOpen(!isHousemateModalOpen);
   };
 
+  const toggleNotificationModal = () => {
+    setIsNotificationModalOpen(!isNotificationModalOpen);
+  };
+
   return (
     <>
       <header className='fixed top-0 z-50 items-start w-full py-10 pointer-events-none px-21 item-between'>
@@ -53,8 +60,10 @@ const Header = () => {
         {/* 네비게이션 */}
         <nav className='gap-4 pointer-events-auto item-row'>
           <button
+            ref={notificationButtonRef}
             type='button'
             aria-label='알림'
+            onClick={toggleNotificationModal}
             className='cursor-pointer'>
             <img
               src={notificationIcon}
@@ -100,6 +109,11 @@ const Header = () => {
         isOpen={isHousemateModalOpen}
         onClose={() => setIsHousemateModalOpen(false)}
         buttonRef={housemateButtonRef}
+      />
+      <NotificationModal
+        isOpen={isNotificationModalOpen}
+        onClose={() => setIsNotificationModalOpen(false)}
+        buttonRef={notificationButtonRef}
       />
     </>
   );
