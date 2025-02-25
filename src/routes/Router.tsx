@@ -16,6 +16,18 @@ import RedirectionGoogle from '@pages/login/components/RedirectionGoogle';
 const Router = () => {
   return (
     <Routes>
+      <Route
+        path='/login/oauth2/code/kakao'
+        element={<RedirectionKakao />}
+      />
+      <Route
+        path='/login/oauth2/code/naver'
+        element={<RedirectionNaver />}
+      />
+      <Route
+        path='/login/oauth2/code/google'
+        element={<RedirectionGoogle />}
+      />
       <Route element={<RequireAuth />}>
         {/* 헤더가 필요한 페이지 */}
         <Route element={<BaseLayout hasHeader={true} />}>
@@ -28,7 +40,7 @@ const Router = () => {
             element={<BookCasePage />}
           />
           <Route
-            path='/cdrack'
+            path='/cdrack/:userId'
             element={<CdRackPage />}
           />
           <Route
@@ -48,7 +60,7 @@ const Router = () => {
           element={<BookPage />}
         />
         <Route
-          path='/cd'
+          path='/cd/:cdId/user/:userId'
           element={<CdPage />}
         />
 
@@ -56,26 +68,10 @@ const Router = () => {
           path='*'
           element={<NotFoundPage />}
         />
-
-        {/* 헤더가 필요없는 페이지 */}
-        <Route element={<BaseLayout hasHeader={false} />}>
-          <Route
-            path='/login'
-            element={<LoginPage />}
-          />
-          <Route
-            path='/login/oauth2/code/kakao'
-            element={<RedirectionKakao />}
-          />
-          <Route
-            path='/login/oauth2/code/naver'
-            element={<RedirectionNaver />}
-          />
-          <Route
-            path='/login/oauth2/code/google'
-            element={<RedirectionGoogle />}
-          />
-        </Route>
+        <Route
+          path='/login'
+          element={<LoginPage />}
+        />
       </Route>
     </Routes>
   );
