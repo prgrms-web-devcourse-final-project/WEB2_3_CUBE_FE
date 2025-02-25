@@ -6,7 +6,7 @@ interface BookType {
   publishedDate: string;
   imageUrl: string;
   genreNames: string[];
-  page: string;
+  page: number;
 }
 
 interface ReviewType {
@@ -28,5 +28,4 @@ interface BookCaseListType {
   imageURL: string;
   category: string;
   page: number;
-};
-
+}

@@ -32,10 +32,10 @@ export const SearchResult = ({
           title: item.title,
           author: item.author,
           publisher: item.publisher,
-          publishedDate: item.date,
+          publishedDate: new Date(item.date).toISOString(),
           imageUrl: item.imageUrl,
           genreNames: item.genres,
-          page: '0', // 기본값 설정
+          page: 0,
         };
         await bookAPI.addBookToMyBook(bookData);
       } else if (type === 'CD') {
@@ -58,7 +58,7 @@ export const SearchResult = ({
 
   if (isLoading) {
     return (
-      <div className='flex justify-center items-center h-full text-gray-400'>
+      <div className='flex items-center justify-center h-full text-gray-400'>
         검색 중...
       </div>
     );
@@ -66,7 +66,7 @@ export const SearchResult = ({
 
   if (error) {
     return (
-      <div className='flex justify-center items-center h-full text-gray-400'>
+      <div className='flex items-center justify-center h-full text-gray-400'>
         {error}
       </div>
     );
@@ -74,16 +74,16 @@ export const SearchResult = ({
 
   if (!item) {
     return (
-      <div className='flex justify-center items-center h-full text-gray-400'>
+      <div className='flex items-center justify-center h-full text-gray-400'>
         검색 결과를 선택해주세요
       </div>
     );
   }
 
   return (
-    <div className='flex flex-col gap-4 justify-center items-center'>
+    <div className='flex flex-col items-center justify-center gap-4'>
       {/* 출판일 / 발매일 */}
-      <div className='flex flex-col gap-1 justify-center items-center'>
+      <div className='flex flex-col items-center justify-center gap-1'>
         <p className={`${theme.searchResultDate} font-mono tabular-nums`}>
           {toKoreanDate(item.date)}
         </p>
@@ -93,7 +93,7 @@ export const SearchResult = ({
         </h3>
       </div>
       {/* 표지 / 앨범 커버 */}
-      <div className='relative mb-4 w-auto h-70'>
+      <div className='relative w-auto mb-4 h-70'>
         <img
           src={item.imageUrl}
           className='object-contain w-full h-full rounded-lg book-shadow'
@@ -108,7 +108,9 @@ export const SearchResult = ({
           />
         </button>
       </div>
-      <p className={`${theme.searchItemName} font-semibold text-lg`}>{item.author}</p>
+      <p className={`${theme.searchItemName} font-semibold text-lg`}>
+        {item.author}
+      </p>
       {/* 장르 */}
       <div className='flex flex-wrap gap-2'>
         {item.genres?.map((genre) => (
