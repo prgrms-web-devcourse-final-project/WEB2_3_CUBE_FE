@@ -3,6 +3,28 @@ import { useState } from 'react';
 import DockMenu from './components/DockMenu';
 import PreferenceSetting from './components/PreferenceSetting';
 import ThemeSetting from './components/ThemeSetting';
+import Room from './Room';
+
+const themeData = {
+  basic: {
+    title: '베이직',
+    description: '심플하고 깔끔한 스타일',
+    modelPath: '/models/basicRoom.glb',
+    isLocked: false,
+  },
+  forest: {
+    title: '포레스트',
+    description: '자연 친화적인 스타일',
+    modelPath: '/models/forestRoom.glb',
+    isLocked: false,
+  },
+  marine: {
+    title: '마린',
+    description: '시원하고 깔끔한 스타일',
+    modelPath: '/models/marineRoom.glb',
+    isLocked: false,
+  },
+};
 
 const animationVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -19,9 +41,14 @@ const animationVariants = {
 
 export default function RoomPage() {
   const [activeSettings, setActiveSettings] = useState(null);
+  const [selectedTheme, setSelectedTheme] = useState('basic');
 
   const handleSettingsChange = (setting) => {
     setActiveSettings(activeSettings === setting ? null : setting);
+  };
+
+  const handleThemeChange = (newTheme) => {
+    setSelectedTheme(newTheme);
   };
 
   return (
@@ -36,7 +63,7 @@ export default function RoomPage() {
           animate='visible'
           variants={animationVariants}
           className='w-full'>
-          <ThemeSetting />
+          <ThemeSetting themeData={themeData} selectedTheme={selectedTheme} onThemeSelect={handleThemeChange} />
         </motion.div>
       )}
       {activeSettings === 'preference' && (
@@ -48,6 +75,7 @@ export default function RoomPage() {
           <PreferenceSetting />
         </motion.div>
       )}
+      <Room modelPath={themeData[selectedTheme].modelPath} />
     </main>
   );
 }
