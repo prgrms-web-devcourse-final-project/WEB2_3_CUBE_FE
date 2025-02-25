@@ -1,32 +1,17 @@
 import { Center, OrbitControls, useGLTF } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import { Suspense, useEffect, useRef } from 'react';
-import * as THREE from 'three';
+import { Suspense, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 import { CAMERA_CONFIG } from '../../constants/sceneSetting';
 import { RoomLighting } from './RoomLighting';
 
-export default function Room({ modelPath }) {
+export default function Room({ modelPath, activeSettings }) {
   const { scene } = useGLTF(modelPath) as GLTFResult;
-  const isFirstLoad = useRef(true);
-  const initialPosition = useRef(new THREE.Vector3());
 
   useEffect(() => {
     if (scene) {
-      const box = new THREE.Box3().setFromObject(scene);
-      const center = box.getCenter(new THREE.Vector3());
-      const size = box.getSize(new THREE.Vector3());
-
-      if (isFirstLoad.current) {
-        initialPosition.current.set(
-          -center.x,
-          -center.y + size.y / 2,
-          -center.z,
-        );
-        isFirstLoad.current = false;
-      }
-
-      scene.position.copy(initialPosition.current);
+      scene.position.set(0, 0, 0);
 
       scene.traverse((object) => {
         if (object.isMesh) {
@@ -38,7 +23,11 @@ export default function Room({ modelPath }) {
   }, [scene]);
 
   return (
-    <div className='w-full h-screen'>
+    <motion.div 
+    initial={{ y: 0 }}
+    animate={{ y: activeSettings ? -100 : 0 }}
+    transition={{ type: 'spring', stiffness: 130, damping: 18 }}
+      className='w-full h-screen'>
       <Canvas
         shadows
         camera={CAMERA_CONFIG}>
@@ -48,14 +37,16 @@ export default function Room({ modelPath }) {
             <Center>
               <primitive
                 object={scene}
-                scale={0.7}
+                scale={0.68}
                 rotation={[0, -Math.PI / 4, 0]}
               />
             </Center>
           </mesh>
         </Suspense>
-        <OrbitControls />
+        <OrbitControls
+          enableRotate={false}
+        />
       </Canvas>
-    </div>
+    </motion.div>
   );
 }

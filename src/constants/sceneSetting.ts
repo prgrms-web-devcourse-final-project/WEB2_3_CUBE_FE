@@ -1,10 +1,9 @@
 import { Vector3 } from "three";
 
 export const CAMERA_CONFIG = {
-  position: new Vector3(0, 5, 10),
+  position: new Vector3(0, 4, 10),
   fov: 30,
-  near: 0.1,
-  far: 100
+
 };
 
 export const LIGHT_CONFIG = {
@@ -25,7 +24,7 @@ export const LIGHT_CONFIG = {
   },
 
   ambient: {
-    intensity: 1.2,
+    intensity: 1.7,
     color: '#fff5f8'
   },
 
