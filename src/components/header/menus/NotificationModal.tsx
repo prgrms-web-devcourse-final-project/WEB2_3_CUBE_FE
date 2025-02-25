@@ -1,7 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-import { SearchInput } from '@/components/search-modal/SearchInput';
-import rightIcon from '@/assets/housemate-right-icon.svg';
-import closeIcon from '@/assets/housemate-modal-close-icon.svg';
+import closeIcon from '@/assets/notification-modal-close-icon.svg';
 import { motion, AnimatePresence } from 'framer-motion';
 
 type TabType = 'pendingRead' | 'viewed';
