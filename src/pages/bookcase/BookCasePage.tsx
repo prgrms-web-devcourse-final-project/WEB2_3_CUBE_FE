@@ -2,12 +2,17 @@ import { useState, useEffect, useRef } from 'react';
 import ToolBoxButton from './components/ToolBoxButton';
 import { SearchModal } from '@components/search-modal/SearchModal';
 import BookCaseList from './components/BookCaseList';
+import DataList from '@components/datalist/DataList';
 import { bookAPI } from '@apis/book';
 import { tokenService } from '@utils/token';
+import ModalBackground from '@components/ModalBackground';
 
 const BookCasePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isListOpen, setIsListOpen] = useState(false);
   const [books, setBooks] = useState<BookCaseListType[]>([]);
+  const [dataListItems, setDataListItems] = useState<DataListInfo[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const BOOKS_PER_ROW = 15;
   const [isDragging, setIsDragging] = useState(false);
@@ -21,11 +26,42 @@ const BookCasePage = () => {
     const fetchBooks = async () => {
       try {
         setIsLoading(true);
+        console.log('Fetching books...');
+
         const response = await bookAPI.getBookCaseList(
-          tokenService.getUser()?.userId || 1, // 임시 유저 아이디 (** ToDo : 나중에 || 1 지우기)
+          tokenService.getUser()?.userId || 1,
           1,
         );
-        setBooks(response.data);
+
+        console.log('API Response:', response);
+
+        if (response?.myBooks) {
+          const formattedBooks = response.myBooks.map((book: any) => ({
+            id: book.id,
+            title: book.title,
+            author: book.author,
+            publisher: book.publisher,
+            publishedDate: book.publishedDate,
+            imageURL: book.imageUrl,
+            genreNames: book.genreNames,
+          }));
+
+          // DataList 컴포넌트용 데이터 변환
+          const dataListFormat = response.myBooks.map((book: any) => ({
+            id: book.id.toString(),
+            title: book.title,
+            author: book.author,
+            publisher: book.publisher,
+            released_year: book.publishedDate,
+            imageUrl: book.imageUrl,
+          }));
+
+          console.log('Formatted DataList Items:', dataListFormat);
+
+          setBooks(formattedBooks);
+          setDataListItems(dataListFormat);
+          setTotalCount(response.count);
+        }
       } catch (error) {
         console.error('책 목록을 가져오는데 실패했습니다:', error);
       } finally {
@@ -63,6 +99,19 @@ const BookCasePage = () => {
     setIsDragging(false);
   };
 
+  const handleDeleteBooks = (deletedIds: string[]) => {
+    // books state 업데이트
+    setBooks((prevBooks) =>
+      prevBooks.filter((book) => !deletedIds.includes(book.id.toString())),
+    );
+    // dataListItems state 업데이트
+    setDataListItems((prevItems) =>
+      prevItems.filter((item) => !deletedIds.includes(item.id)),
+    );
+    // totalCount 감소
+    setTotalCount((prev) => prev - deletedIds.length);
+  };
+
   const bookCaseRows = Math.max(3, Math.ceil(books.length / BOOKS_PER_ROW));
 
   if (isLoading) {
@@ -94,10 +143,14 @@ const BookCasePage = () => {
             key={index}
             page={index + 1}
             books={rowBooks}
+            showEmptyMessage={books.length === 0 && index === 1}
           />
         );
       })}
-      <ToolBoxButton onAddBook={() => setIsModalOpen(true)} />
+      <ToolBoxButton
+        onAddBook={() => setIsModalOpen(true)}
+        onOpenList={() => setIsListOpen(true)}
+      />
 
       {isModalOpen && (
         <SearchModal
@@ -106,6 +159,16 @@ const BookCasePage = () => {
           onClose={() => setIsModalOpen(false)}
           onSelect={() => {}}
         />
+      )}
+
+      {isListOpen && (
+        <ModalBackground onClose={() => setIsListOpen(false)}>
+          <DataList
+            datas={dataListItems}
+            type='book'
+            onDelete={handleDeleteBooks}
+          />
+        </ModalBackground>
       )}
     </div>
   );
