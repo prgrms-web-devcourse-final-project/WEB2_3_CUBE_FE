@@ -5,6 +5,7 @@ import BookCaseList from './components/BookCaseList';
 import DataList from '@components/datalist/DataList';
 import { bookAPI } from '@apis/book';
 import { tokenService } from '@utils/token';
+import ModalBackground from '@components/ModalBackground';
 
 const BookCasePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -160,10 +161,15 @@ const BookCasePage = () => {
         />
       )}
 
-      <DataList
-        datas={dataListItems}
-        type='book'
-      />
+      {isListOpen && (
+        <ModalBackground onClose={() => setIsListOpen(false)}>
+          <DataList
+            datas={dataListItems}
+            type='book'
+            onDelete={handleDeleteBooks}
+          />
+        </ModalBackground>
+      )}
     </div>
   );
 };
