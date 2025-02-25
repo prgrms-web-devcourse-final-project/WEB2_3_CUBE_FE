@@ -3,8 +3,20 @@ import { SearchInput } from '@/components/search-modal/SearchInput';
 import rightIcon from '@/assets/housemate-right-icon.svg';
 import closeIcon from '@/assets/housemate-modal-close-icon.svg';
 import { motion, AnimatePresence } from 'framer-motion';
+import { housemateAPI } from '@/apis/housemate';
+import HousemateSkeletonItem from './HousemateSkeletonItem';
+import { useInView } from 'react-intersection-observer';
 
 type TabType = 'followers' | 'following';
+
+// 하우스메이트 정보 타입 정의
+interface Housemate {
+  userId: number;
+  nickname: string;
+  profileImage?: string;
+  bio?: string;
+  status: 'ONLINE' | 'OFFLINE';
+}
 
 interface HousemateModalProps {
   isOpen: boolean;
@@ -21,6 +33,85 @@ const HousemateModal = ({
   const [searchValue, setSearchValue] = useState('');
   const [modalPosition, setModalPosition] = useState('0px');
   const [activeTab, setActiveTab] = useState<TabType>('followers');
+
+  // 하우스메이트 목록 상태 추가
+  const [housemates, setHousemates] = useState<Housemate[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [hasNext, setHasNext] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const { ref: observerRef, inView } = useInView();
+
+  // API 호출 함수
+  const fetchHousemates = async (cursor?: string) => {
+    if (!cursor) {
+      setIsLoading(true);
+    } else {
+      setIsLoadingMore(true);
+    }
+    setError(null);
+
+    try {
+      const response = await (activeTab === 'followers'
+        ? housemateAPI.getFollowers(
+            cursor ? Number(cursor) : undefined,
+            20,
+            searchValue,
+          )
+        : housemateAPI.getFollowing(
+            cursor ? Number(cursor) : undefined,
+            20,
+            searchValue,
+          ));
+
+      if (!cursor) {
+        setHousemates(response.housemates || []);
+      } else {
+        setHousemates((prev) => [...prev, ...(response.housemates || [])]);
+      }
+
+      setNextCursor(response.nextCursor);
+      setHasNext(response.hasNext);
+    } catch (err) {
+      setError('하우스메이트 목록을 불러오는데 실패했습니다.');
+      console.error('하우스메이트 조회 에러:', err);
+    } finally {
+      setIsLoading(false);
+      setIsLoadingMore(false);
+    }
+  };
+
+  // 무한 스크롤 효과
+  useEffect(() => {
+    if (inView && hasNext && !isLoading && !isLoadingMore && nextCursor) {
+      fetchHousemates(nextCursor);
+    }
+  }, [inView, hasNext, isLoading, isLoadingMore, nextCursor]);
+
+  // 탭 변경 시 초기화
+  useEffect(() => {
+    if (isOpen) {
+      setHousemates([]);
+      setNextCursor(null);
+      setHasNext(true);
+      fetchHousemates();
+    }
+  }, [activeTab, isOpen]);
+
+  // 검색어 변경 시 초기화 및 API 호출
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (isOpen) {
+        setHousemates([]);
+        setNextCursor(null);
+        setHasNext(true);
+        fetchHousemates();
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchValue, isOpen]);
 
   // 모달 위치 계산 함수
   const updateModalPosition = () => {
@@ -61,15 +152,6 @@ const HousemateModal = ({
     };
   }, [isOpen, onClose, buttonRef]);
 
-  // 탭 변경 시 API 호출 등의 처리
-  useEffect(() => {
-    if (activeTab === 'followers') {
-      // TODO: 팔로워 목록 API 호출
-    } else {
-      // TODO: 팔로잉 목록 API 호출
-    }
-  }, [activeTab]);
-
   if (!isOpen) return null;
 
   return (
@@ -96,7 +178,7 @@ const HousemateModal = ({
             initial={{ backdropFilter: 'blur(0px)' }}
             animate={{ backdropFilter: 'blur(8px)' }}
             transition={{ duration: 0.3 }}>
-            <div className='w-full h-full bg-[#FCF7FD] p-11 rounded-2xl'>
+            <div className='w-full h-full bg-[#FCF7FD] p-11 rounded-2xl flex flex-col'>
               {/* 닫기 버튼 */}
               <button
                 onClick={onClose}
@@ -157,52 +239,95 @@ const HousemateModal = ({
               />
 
               {/* 메이트 리스트 */}
-              <ul className='overflow-y-auto max-h-[calc(100vh-400px)] flex flex-col gap-6'>
-                {[1, 2, 3, 4].map((_, index) => (
-                  <li
-                    key={index}
-                    className='gap-3 item-between'>
-                    {/* 프로필 이미지 + 이름 + 온라인 상태 */}
-                    <div
-                      aria-label='프로필 정보'
-                      className='gap-2 item-middle'>
-                      <img
-                        src='https://i.pinimg.com/736x/cc/5d/07/cc5d07daf1f1872eeebbfc1998b3adad.jpg'
-                        alt='profile'
-                        className='object-cover w-10 h-10 rounded-full'
-                      />
-                      <div aria-label='닉네임 및 상태'>
-                        <p className='flex items-center gap-2'>
-                          <span className='font-bold text-[#503A44] text-sm'>
-                            찰스엔터
-                          </span>
-                          {index === 0 && (
-                            <i
-                              aria-label='온라인 상태'
-                              className='w-2 h-2 bg-[#61E509] rounded-full'></i>
-                          )}
-                          {index === 1 && (
-                            <i
-                              aria-label='오프라인 상태'
-                              className='w-2 h-2 bg-gray-300 rounded-full'></i>
-                          )}
-                        </p>
-                        <span
-                          aria-label='소개'
-                          className='text-xs text-[#503A44]/70 font-medium'>
-                          제일 좋아하는 건 까만 해바라기 씨
-                        </span>
+              <ul className='flex flex-col flex-1 gap-6 overflow-y-auto mt-4'>
+                {isLoading ? (
+                  // 초기 로딩 시 스켈레톤 UI
+                  Array.from({ length: 5 }).map((_, index) => (
+                    <HousemateSkeletonItem key={index} />
+                  ))
+                ) : error ? (
+                  <div className='flex items-center justify-center flex-1'>
+                    <p className='text-[#503A44]/50'>{error}</p>
+                  </div>
+                ) : housemates.length === 0 ? (
+                  <div className='flex items-center justify-center flex-1'>
+                    <p className='text-[#503A44]/50'>
+                      {activeTab === 'followers'
+                        ? '나를 추가한 메이트'
+                        : '내가 추가한 메이트'}
+                      가 없습니다.
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    {housemates.map((housemate) => (
+                      <li
+                        key={housemate.userId}
+                        className='gap-3 item-between'>
+                        <div
+                          aria-label='프로필 정보'
+                          className='gap-2 item-middle'>
+                          <img
+                            src={
+                              housemate.profileImage ||
+                              'https://i.pinimg.com/736x/cc/5d/07/cc5d07daf1f1872eeebbfc1998b3adad.jpg'
+                            }
+                            alt='profile'
+                            className='object-cover w-10 h-10 rounded-full'
+                          />
+                          <div aria-label='닉네임 및 상태'>
+                            <p className='flex items-center gap-2'>
+                              <span className='font-bold text-[#503A44] text-sm'>
+                                {housemate.nickname}
+                              </span>
+                              <i
+                                aria-label={`${
+                                  housemate.status === 'ONLINE'
+                                    ? '온라인'
+                                    : '오프라인'
+                                } 상태`}
+                                className={`w-2 h-2 rounded-full ${
+                                  housemate.status === 'ONLINE'
+                                    ? 'bg-[#61E509]'
+                                    : 'bg-gray-300'
+                                }`}
+                              />
+                            </p>
+                            {housemate.bio && (
+                              <span
+                                aria-label='소개'
+                                className='text-xs text-[#503A44]/70 font-medium'>
+                                {housemate.bio}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <button className='flex items-center justify-center w-8 h-8'>
+                          <img
+                            src={rightIcon}
+                            alt='하우스메이트 페이지 바로가기'
+                            className='w-full h-full'
+                          />
+                        </button>
+                      </li>
+                    ))}
+
+                    {/* 무한 스크롤 옵저버 */}
+                    {hasNext && (
+                      <div
+                        ref={observerRef}
+                        className='py-2'>
+                        {isLoadingMore && (
+                          <div className='flex flex-col gap-6'>
+                            {Array.from({ length: 3 }).map((_, index) => (
+                              <HousemateSkeletonItem key={index} />
+                            ))}
+                          </div>
+                        )}
                       </div>
-                    </div>
-                    <button className='flex items-center justify-center w-8 h-8'>
-                      <img
-                        src={rightIcon}
-                        alt='하우스메이트 페이지 바로가기'
-                        className='w-full h-full'
-                      />
-                    </button>
-                  </li>
-                ))}
+                    )}
+                  </>
+                )}
               </ul>
             </div>
           </motion.div>
