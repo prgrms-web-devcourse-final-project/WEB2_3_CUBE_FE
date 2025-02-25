@@ -14,7 +14,7 @@ export default function MainPage() {
       <RankMenu onOpen={() => setIsRankingOpen(true)} />
       <MyRoom />
 
-      <AnimatePresence >
+      <AnimatePresence>
         {isRankingOpen && (
           <div className='@container w-full h-full'>
             <RankingModal onClose={() => setIsRankingOpen(false)} />
@@ -23,14 +23,15 @@ export default function MainPage() {
       </AnimatePresence>
 
       <button
-      onClick={() => setisGuestBookOpen(true)} 
-      className='absolute top-50 right-50'>임시 방명록</button>
+        onClick={() => setisGuestBookOpen(true)}
+        className='absolute top-50 right-50'>
+        임시 방명록
+      </button>
       <AnimatePresence>
         {isGuestBookOpen && (
           <Guestbook onClose={() => setisGuestBookOpen(false)} />
         )}
       </AnimatePresence>
-
     </main>
   );
 }

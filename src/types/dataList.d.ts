@@ -4,6 +4,6 @@ interface DataListInfo {
   artist?: string;
   author?: string;
   publisher?: string;
-  album_name?: string;
-  released_year: string;
+  album?: string;
+  releasedYear: string;
 }

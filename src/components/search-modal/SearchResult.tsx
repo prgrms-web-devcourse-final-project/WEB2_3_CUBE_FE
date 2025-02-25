@@ -3,6 +3,10 @@ import { bookAPI } from '@/apis/book';
 import addIcon from '@/assets/add-icon.svg';
 import { SEARCH_THEME } from '@/constants/searchTheme';
 import { toKoreanDate } from '@utils/dateFormat';
+import { addCdToMyRack } from '@apis/cd';
+import { useUserStore } from '@/store/useUserStore';
+import AlertModal from '@components/AlertModal';
+import { useState } from 'react';
 
 interface SearchResultProps {
   item: SearchItemType | null;
@@ -22,8 +26,9 @@ export const SearchResult = ({
   onSelect,
   onClose,
 }: SearchResultProps) => {
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const theme = SEARCH_THEME[type];
-
+  const user = useUserStore((state) => state.user);
   const handleAddBook = async (item: SearchItemType) => {
     try {
       if (type === 'BOOK') {
@@ -40,14 +45,22 @@ export const SearchResult = ({
         await bookAPI.addBookToMyBook(bookData);
       } else if (type === 'CD') {
         // CD 추가 요청 로직
-        // const cdData = {
-        //   id: item.id,
-        //   title: item.title,
-        //   artist: item.artist,
-        //   albumTitle: item.album_title,
-        //   releaseDate: item.date,
-        //   imageUrl: item.imageUrl,
-        // };
+        const cdData: PostCDInfo = {
+          title: item.title,
+          artist: item.artist,
+          album: item.album_title,
+          genres: item.genres,
+          coverUrl: item.imageUrl,
+          youtubeUrl: item.youtubeUrl,
+          duration: item.duration,
+          releaseDate: item.date,
+        };
+
+        if (!cdData.youtubeUrl || !cdData.duration) {
+          setIsAlertModalOpen(true);
+          return;
+        }
+        await addCdToMyRack(1, cdData);
       }
       onSelect(item);
       onClose();
@@ -109,7 +122,7 @@ export const SearchResult = ({
         </button>
       </div>
       <p className={`${theme.searchItemName} font-semibold text-lg`}>
-        {item.author}
+        {item.author || item.artist}
       </p>
       {/* 장르 */}
       <div className='flex flex-wrap gap-2'>
@@ -121,6 +134,13 @@ export const SearchResult = ({
           </span>
         ))}
       </div>
+      {isAlertModalOpen && (
+        <AlertModal
+          onConfirm={() => setIsAlertModalOpen(false)}
+          title='추가할 수 없는 CD에요!'
+          subTitle='다른 CD를 선택해주세요.'
+        />
+      )}
     </div>
   );
 };
