@@ -104,7 +104,7 @@ const BookEditorPage = ({
             theme: review.coverColor,
             quote: review.quote,
             emotion: review.takeaway,
-            reason: review.motive,
+            reason: review.motivate,
             discussion: review.topic,
             freeform: review.freeFormText,
           });
@@ -141,7 +141,7 @@ const BookEditorPage = ({
         title: reviewFields.title,
         quote: reviewFields.quote,
         takeaway: reviewFields.emotion,
-        motive: reviewFields.reason,
+        motivate: reviewFields.reason,
         topic: reviewFields.discussion,
         freeFormText: reviewFields.freeform,
         coverColor: reviewFields.theme,

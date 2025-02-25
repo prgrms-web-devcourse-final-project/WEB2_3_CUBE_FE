@@ -51,7 +51,7 @@ const BookPage = () => {
             theme: review.coverColor,
             quote: review.quote,
             emotion: review.takeaway,
-            reason: review.motive,
+            reason: review.motivate,
             discussion: review.topic,
             freeform: review.freeFormText,
           });
