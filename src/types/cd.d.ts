@@ -4,7 +4,7 @@ interface CDInfo {
   myCdId: number;
   title: string;
   artist: string;
-  release_date: string;
+  releaseDate: string;
   genres: string[];
   coverUrl: string;
   youtubeUrl: string;
@@ -19,7 +19,7 @@ interface CDSearch {
   artists: { name: string; id: string }[]; // 가수 정보가 배열로 옴
   album: {
     name: string;
-    release_date: string;
+    releaseDate: string;
     images: { url: string }[]; // 앨범 이미지도 배열
   };
   genres: string[];
@@ -27,7 +27,7 @@ interface CDSearch {
   duration: number;
 }
 
-// CD 검색후 response type
+// cd 검색후 response type
 interface CDSearchResult {
   id: string;
   title: string;
@@ -39,6 +39,7 @@ interface CDSearchResult {
   type: 'CD';
   youtubeUrl: string;
   duration: number;
+  releaseDate?: string;
 }
 
 // cd 추가시 reqest body type
@@ -50,4 +51,5 @@ interface PostCDInfo {
   coverUrl: string;
   youtubeUrl: string;
   duration: number;
+  releaseDate?: string;
 }

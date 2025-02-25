@@ -69,6 +69,7 @@ export const useSearch = (type: 'CD' | 'BOOK') => {
         type: 'CD' as const,
         genres: cd.genres,
         youtubeUrl: cd.youtubeUrl,
+        duration: cd.duration,
       }));
     } catch (error: any) {
       console.error(error);

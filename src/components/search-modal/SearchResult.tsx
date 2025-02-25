@@ -5,6 +5,8 @@ import { SEARCH_THEME } from '@/constants/searchTheme';
 import { toKoreanDate } from '@utils/dateFormat';
 import { addCdToMyRack } from '@apis/cd';
 import { useUserStore } from '@/store/useUserStore';
+import AlertModal from '@components/AlertModal';
+import { useState } from 'react';
 
 interface SearchResultProps {
   item: SearchItemType | null;
@@ -24,9 +26,9 @@ export const SearchResult = ({
   onSelect,
   onClose,
 }: SearchResultProps) => {
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const theme = SEARCH_THEME[type];
   const user = useUserStore((state) => state.user);
-
   const handleAddBook = async (item: SearchItemType) => {
     try {
       if (type === 'BOOK') {
@@ -51,8 +53,14 @@ export const SearchResult = ({
           coverUrl: item.imageUrl,
           youtubeUrl: item.youtubeUrl,
           duration: item.duration,
+          releaseDate: item.date,
         };
-        await addCdToMyRack(user.userId, cdData);
+
+        if (!cdData.youtubeUrl || !cdData.duration) {
+          setIsAlertModalOpen(true);
+          return;
+        }
+        await addCdToMyRack(1, cdData);
       }
       onSelect(item);
       onClose();
@@ -126,6 +134,13 @@ export const SearchResult = ({
           </span>
         ))}
       </div>
+      {isAlertModalOpen && (
+        <AlertModal
+          onConfirm={() => setIsAlertModalOpen(false)}
+          title='추가할 수 없는 CD에요!'
+          subTitle='다른 CD를 선택해주세요.'
+        />
+      )}
     </div>
   );
 };

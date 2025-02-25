@@ -7,7 +7,7 @@ export interface SearchItemType {
   imageUrl: string; // 책 표지 or 앨범 커버
   youtubeUrl?: string;
   type: 'CD' | 'BOOK';
-  genres?: string[];
+  genres: string[];
   publisher?: string;
   album_title?: string;
   duration?: number;
