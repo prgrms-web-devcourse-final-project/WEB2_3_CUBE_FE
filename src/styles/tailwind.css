@@ -34,22 +34,22 @@
 
 @layer components {
   .item-middle {
-    @apply flex justify-center items-center;
+    @apply flex items-center justify-center;
   }
 
   .item-left {
-    @apply flex justify-start items-center;
+    @apply flex items-center justify-start;
   }
 
   .item-around {
-    @apply flex justify-around items-center;
+    @apply flex items-center justify-around;
   }
 
   .item-between {
-    @apply flex justify-between items-center;
+    @apply flex items-center justify-between;
   }
   .item-row {
-    @apply flex flex-col justify-center items-center;
+    @apply flex flex-col items-center justify-center;
   }
   .all-200-eio {
     @apply transition-all duration-200 ease-in-out;
