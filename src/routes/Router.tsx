@@ -28,51 +28,51 @@ const Router = () => {
         path='/login/oauth2/code/google'
         element={<RedirectionGoogle />}
       />
-      <Route element={<RequireAuth />}>
-        {/* 헤더가 필요한 페이지 */}
-        <Route element={<BaseLayout hasHeader={true} />}>
-          <Route
-            path='/'
-            element={<MainPage />}
-          />
-          <Route
-            path='/bookcase/:userId'
-            element={<BookCasePage />}
-          />
-          <Route
-            path='/cdrack/:userId'
-            element={<CdRackPage />}
-          />
-          <Route
-            path='/room'
-            element={<RoomPage />}
-          />
-        </Route>
-
-        {/* 내 서평 보기/수정 */}
+      {/* <Route element={<RequireAuth />}> */}
+      {/* 헤더가 필요한 페이지 */}
+      <Route element={<BaseLayout hasHeader={true} />}>
         <Route
-          path='/book/:bookId'
-          element={<BookPage />}
-        />
-        {/* 다른 유저의 서평 보기 */}
-        <Route
-          path='/book/:bookId/user/:userId'
-          element={<BookPage />}
+          path='/'
+          element={<MainPage />}
         />
         <Route
-          path='/cd/:cdId/user/:userId'
-          element={<CdPage />}
-        />
-
-        <Route
-          path='*'
-          element={<NotFoundPage />}
+          path='/bookcase/:userId'
+          element={<BookCasePage />}
         />
         <Route
-          path='/login'
-          element={<LoginPage />}
+          path='/cdrack/:userId'
+          element={<CdRackPage />}
+        />
+        <Route
+          path='/room'
+          element={<RoomPage />}
         />
       </Route>
+
+      {/* 내 서평 보기/수정 */}
+      <Route
+        path='/book/:bookId'
+        element={<BookPage />}
+      />
+      {/* 다른 유저의 서평 보기 */}
+      <Route
+        path='/book/:bookId/user/:userId'
+        element={<BookPage />}
+      />
+      <Route
+        path='/cd/:cdId/user/:userId'
+        element={<CdPage />}
+      />
+
+      <Route
+        path='*'
+        element={<NotFoundPage />}
+      />
+      <Route
+        path='/login'
+        element={<LoginPage />}
+      />
+      {/* </Route> */}
     </Routes>
   );
 };

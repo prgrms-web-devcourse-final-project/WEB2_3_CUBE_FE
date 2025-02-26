@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import { useState } from 'react';
 import check_logo from '@assets/datalist/check-logo.svg';
 import { truncateTitle } from '@utils/truncate';
 
@@ -62,8 +61,10 @@ export default function EditStatusItem({
               className={` ${
                 isBook ? 'text-[#3E507DB2]' : 'text-[#5F3E7DB2]/70'
               } `}>
-              {data.released_year}
-              {isBook ? ` | ${data.publisher}` : ''}
+              {data.released_year.split('-')[0]}
+              {isBook
+                ? ` | ${data.publisher}`
+                : ` | ${truncateTitle(data.album, 22)}`}
             </span>
           </div>
         </div>
