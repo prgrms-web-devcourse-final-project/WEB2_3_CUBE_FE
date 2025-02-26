@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import copyIcon from '@assets/profile-card/copy-icon.svg';
 import shareIcon from '@assets/profile-card/share-icon.svg';
 import pointIcon from '@assets/toast/coin.png';
 import UserProfileSection from './components/UserProfileSection';
