@@ -9,10 +9,11 @@ import BaseLayout from '@routes/layout/BaseLayout';
 import CdRackPage from '@pages/cdrack/CdRackPage';
 import RoomPage from '../pages/room/RoomPage';
 import RequireAuth from './layout/RequireAuth';
-import RedirectionKakao from '@pages/main/login/components/RedirectionKakao';
+import RedirectionKakao from '@pages/login/components/RedirectionKakao';
 import RedirectionNaver from '@pages/login/components/RedirectionNaver';
 import RedirectionGoogle from '@pages/login/components/RedirectionGoogle';
-import ProfileCard from '@pages/profile-card/ProfileCard';
+import ProfileCardPage from '@pages/profile-card/ProfileCardPage';
+import ProfileCardEditPage from '@pages/profile-card/ProfileCardEditPage';
 
 const Router = () => {
   return (
@@ -50,7 +51,11 @@ const Router = () => {
         />
         <Route
           path='/profile/:userId'
-          element={<ProfileCard />}
+          element={<ProfileCardPage />}
+        />
+        <Route
+          path='/profile/:userId/edit'
+          element={<ProfileCardEditPage />}
         />
       </Route>
 

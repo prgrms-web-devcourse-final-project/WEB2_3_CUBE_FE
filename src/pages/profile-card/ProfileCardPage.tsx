@@ -63,7 +63,7 @@ const defaultRecommendedUsers: RecommendedUser[] = [
   },
 ];
 
-const ProfileCard = ({
+const ProfileCardPage = ({
   userProfile = defaultProfile,
   recommendedUsers = defaultRecommendedUsers,
 }: ProfileCardProps) => {
@@ -81,6 +81,14 @@ const ProfileCard = ({
 
   const handleRoomButtonClick = () => {
     // TODO: 방 구경하기 로직 구현
+  };
+
+  const handleShareButtonClick = () => {
+    //  TODO: 공유 로직 구현
+  };
+
+  const handlePointButtonClick = () => {
+    navigate('/profile/:userId/edit');
   };
 
   return (
@@ -101,17 +109,21 @@ const ProfileCard = ({
           {/* 메인 배경 */}
           <section className='relative flex flex-col gap-4 items-center justify-around w-[660px] h-[660px] bg-[#FCF7FD] rounded-[60px] border-2 border-[#2656CD] p-13'>
             {/* 포인트 */}
-            <div className='flex items-center gap-2 bg-[#B5B5B5]/10 rounded-full px-3 py-1.5 absolute top-10 left-10'>
+            <button
+              onClick={handlePointButtonClick}
+              className='flex items-center gap-2 bg-[#B5B5B5]/10 rounded-full px-3 py-1.5 absolute top-10 left-10'>
               <img
                 src={pointIcon}
                 alt='사용자 현재 포인트'
                 className='w-4 h-4'
               />
               <span className='text-[#162C63] text-xs'>100P</span>
-            </div>
+            </button>
 
             {/* 공유 버튼 */}
-            <button className='flex items-center gap-2 hover:bg-[#B5B5B5]/10 rounded-full px-1.5 py-1.5 transition-all absolute top-10 right-10'>
+            <button
+              onClick={handleShareButtonClick}
+             className='flex items-center gap-2 hover:bg-[#B5B5B5]/10 rounded-full px-1.5 py-1.5 transition-all absolute top-10 right-10'>
               <img
                 src={shareIcon}
                 alt='공유 버튼'
@@ -158,4 +170,4 @@ const ProfileCard = ({
   );
 };
 
-export default ProfileCard;
+export default ProfileCardPage;
