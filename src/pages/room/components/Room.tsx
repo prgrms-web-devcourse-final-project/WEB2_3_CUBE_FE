@@ -57,7 +57,10 @@ export default function Room({ modelPath, activeSettings }) {
           ))}
         </Suspense>
         <OrbitControls 
-        // enableRotate={false} 
+        enableRotate={false}
+        enablePan={false} 
+        minDistance={5}
+        maxDistance={12}
         />
 
       </Canvas>

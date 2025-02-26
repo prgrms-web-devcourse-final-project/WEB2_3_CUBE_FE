@@ -24,7 +24,7 @@ export const LIGHT_CONFIG = {
   },
 
   ambient: {
-    intensity: 1.7,
+    intensity: 1.5,
     color: '#fff5f8'
   },
 
