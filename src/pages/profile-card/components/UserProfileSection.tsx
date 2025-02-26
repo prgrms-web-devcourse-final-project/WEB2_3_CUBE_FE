@@ -1,5 +1,3 @@
-import { UserProfile } from './types';
-
 interface UserProfileSectionProps {
   profile: Pick<UserProfile, 'nickname' | 'profileImage' | 'bio'>;
 }

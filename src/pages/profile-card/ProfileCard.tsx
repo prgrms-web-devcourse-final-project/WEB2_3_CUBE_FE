@@ -7,7 +7,6 @@ import UserProfileSection from './components/UserProfileSection';
 import GenreCard from './components/GenreCard';
 import RecommendedUserList from './components/RecommendedUserList';
 import ProfileButtons from './components/ProfileButtons';
-import { UserProfile, RecommendedUser } from './components/types';
 
 interface ProfileCardProps {
   userProfile?: UserProfile;

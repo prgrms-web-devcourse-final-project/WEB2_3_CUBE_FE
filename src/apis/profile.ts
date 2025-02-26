@@ -2,22 +2,6 @@ import axiosInstance from './axiosInstance';
 
 const API_URL = 'mock';
 
-export interface UserProfileResponse {
-  id: string;
-  nickname: string;
-  profileImage: string;
-  bio: string;
-  musicGenres: string[];
-  bookGenres: string[];
-  myProfile: boolean;
-}
-
-export interface RecommendedUserResponse {
-  userId: string;
-  nickname: string;
-  profileImage: string;
-}
-
 export const profileAPI = {
   /**
    * 음악 장르 목록 조회

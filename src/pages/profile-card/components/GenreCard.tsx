@@ -1,5 +1,3 @@
-import { GenreCardProps } from './types';
-
 const GenreCard = ({ title, genres }: GenreCardProps) => {
   return (
     <div className='item-row gap-2 bg-[#B5B5B5]/10 rounded-2xl px-8 py-4 w-full'>

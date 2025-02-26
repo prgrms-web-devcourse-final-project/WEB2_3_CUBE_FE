@@ -1,6 +1,5 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
-import { RecommendedUser } from './types';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import '@styles/RecommendedUserList.css';
@@ -26,7 +25,7 @@ const RecommendedUserList = ({ users }: RecommendedUserListProps) => {
           className='w-full'>
           {users.map((user) => (
             <SwiperSlide key={user.userId}>
-              <div className='flex flex-col items-center w-[80px] h-[100px] py-4 bg-white shadow-md rounded-[10px] mb-1'>
+              <div className='flex flex-col items-center w-[80px] h-[100px] py-4 bg-white shadow-md rounded-[10px] mb-1 cursor-pointer'>
                 <div className='w-10 h-10 mb-2 shrink-0'>
                   <img
                     src={user.profileImage}

@@ -1,5 +1,4 @@
 import LayeredButton from '@components/LayeredButton';
-import { ProfileButtonsProps } from './types';
 
 const ProfileButtons = ({
   isMyProfile,
