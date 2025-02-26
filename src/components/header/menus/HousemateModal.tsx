@@ -199,14 +199,14 @@ const HousemateModal = ({
               <div className='flex bg-[#F9E9F0] rounded-lg mb-4 h-10 p-1 relative'>
                 {/* 배경 애니메이션 */}
                 <motion.div
-                  className='absolute w-1/2 h-8 bg-[#D8297B]/80 rounded-md'
+                  className='absolute w-[48%] h-8 bg-[#D8297B]/80 rounded-md'
                   animate={{
-                    x: activeTab === 'following' ? '100%' : '0',
+                    x: activeTab === 'following' ? '103%' : '0',
                   }}
                   transition={{
                     type: 'spring',
                     stiffness: 300,
-                    damping: 25,
+                    damping: 26,
                   }}
                 />
                 <button
@@ -239,7 +239,7 @@ const HousemateModal = ({
               />
 
               {/* 메이트 리스트 */}
-              <ul className='flex flex-col flex-1 gap-6 overflow-y-auto mt-4'>
+              <ul className='flex flex-col flex-1 gap-6 px-4 mt-4 overflow-y-auto'>
                 {isLoading ? (
                   // 초기 로딩 시 스켈레톤 UI
                   Array.from({ length: 5 }).map((_, index) => (

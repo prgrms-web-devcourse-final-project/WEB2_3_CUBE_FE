@@ -113,14 +113,14 @@ const NotificationModal = ({
               <div className='flex bg-[#EBEFFB] rounded-lg mb-4 h-10 p-1 relative'>
                 {/* 배경 애니메이션 */}
                 <motion.div
-                  className='absolute w-1/2 h-8 bg-[#2C5FBD]/80 rounded-md'
+                  className='absolute w-[48%] h-8 bg-[#2C5FBD]/80 rounded-md'
                   animate={{
-                    x: activeTab === 'viewed' ? '100%' : '0',
+                    x: activeTab === 'viewed' ? '103%' : '0',
                   }}
                   transition={{
                     type: 'spring',
                     stiffness: 300,
-                    damping: 25,
+                    damping: 26,
                   }}
                 />
                 <button
@@ -142,7 +142,7 @@ const NotificationModal = ({
               </div>
 
               {/* 메이트 리스트 */}
-              <ul className='overflow-y-auto max-h-[calc(100vh-400px)] flex flex-col gap-6'>
+              <ul className='overflow-y-auto max-h-[calc(100vh-400px)] flex flex-col gap-6 px-4'>
                 {[1, 2, 3, 4].map((_, index) => (
                   <li
                     key={index}
