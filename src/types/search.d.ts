@@ -1,4 +1,4 @@
-export interface SearchItemType {
+interface SearchItemType {
   id: string;
   title: string;
   author?: string; // 작가

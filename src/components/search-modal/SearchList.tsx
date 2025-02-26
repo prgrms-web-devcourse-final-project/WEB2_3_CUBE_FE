@@ -1,4 +1,3 @@
-import type { SearchItemType } from '@/types/search';
 import { SearchItem } from './SearchItem';
 
 interface SearchListProps {

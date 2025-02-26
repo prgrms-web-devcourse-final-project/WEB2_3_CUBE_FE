@@ -15,7 +15,7 @@ const UserProfileSection = ({ profile }: UserProfileSectionProps) => {
         className='rounded-full h-25 w-25'
       />
       <h2 className='text-2xl font-bold text-[#3E507D] mt-2'>{nickname}</h2>
-      <p className='text-sm font-medium text-[#AFAFAF]'>{bio}</p>
+      <p className='text-sm font-medium text-[#AFAFAF] mt-1'>{bio}</p>
     </div>
   );
 };
