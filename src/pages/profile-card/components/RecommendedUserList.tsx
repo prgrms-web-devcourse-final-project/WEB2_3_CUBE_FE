@@ -33,7 +33,7 @@ const RecommendedUserList = ({ users }: RecommendedUserListProps) => {
                     className='w-full h-full rounded-full bg-[#E8F0FE] object-cover'
                   />
                 </div>
-                <span className='text-sm font-medium text-[#3E507D] text-center w-full px-2 truncate'>
+                <span className='text-sm text-[#3E507D] text-center w-full px-2 truncate font-semibold'>
                   {user.nickname}
                 </span>
               </div>
