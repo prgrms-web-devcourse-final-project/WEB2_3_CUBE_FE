@@ -70,7 +70,7 @@ const Router = () => {
         element={<BookPage />}
       />
       <Route
-        path='/cd/:cdId/user/:userId'
+        path='/cd/:myCdId'
         element={<CdPage />}
       />
 

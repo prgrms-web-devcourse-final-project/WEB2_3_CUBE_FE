@@ -215,3 +215,73 @@ export const addCdToMyRack = async (userId: number, cdData: PostCDInfo) => {
   console.log(response.data);
   return response.data;
 };
+
+//  ------------- cd 템플릿 CRUD ------------
+
+/**
+ * 
+ * @param myCdId 특정 cd에대한 사용자 고유ID
+ * @returns 
+
+ */
+export const getCdTemplate = async (myCdId: number) => {
+  const response = await axiosInstance.get(
+    `/${API_URL}/my-cd/${myCdId}/template`,
+  );
+  return response.data;
+};
+
+/**
+ *
+ * @param myCdId 특정 cd에대한 사용자 고유ID
+ * @param userId 사용자 ID
+ * @param contents 템플릿에 담긴 4가지 댓글 내용들
+ * @returns
+ */
+export const addCdTemplate = async (
+  myCdId: number,
+  userId: number,
+  contents: {
+    comment1: string;
+    comment2: string;
+    comment3: string;
+    comment4: string;
+  },
+) => {
+  const response = await axiosInstance.post(
+    `/${API_URL}/my-cd/${myCdId}/template?userId=${userId}`,
+    contents,
+  );
+  return response.data;
+};
+
+/**
+ *
+ * @param myCdId 특정 cd에대한 사용자 고유ID
+ * @param userId 사용자 ID
+ * @param contents 템플릿에 담긴 4가지 댓글 내용들
+ * @returns
+ */
+export const updateTemplate = async (
+  myCdId: number,
+  userId: number,
+  contents: {
+    comment1: string;
+    comment2: string;
+    comment3: string;
+    comment4: string;
+  },
+) => {
+  const response = await axiosInstance.patch(
+    `/${API_URL}/my-cd/${myCdId}/template?userId=${userId}`,
+    contents,
+  );
+  return response.data;
+};
+
+export const deleteTemplate = async (myCdId: number, userId: number) => {
+  const response = await axiosInstance.delete(
+    `/${API_URL}/my-cd/${myCdId}/template?userId=${userId}`,
+  );
+  return response;
+};
