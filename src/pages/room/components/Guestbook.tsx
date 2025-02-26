@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import GuestbookMessage from './GuestbookMessage';
-import GusetbookInput from './GusetbookInput';
+import GuestbookMessage from '@pages/room/components/GuestbookMessage';
+import GusetbookInput from '@pages/room/components/GusetbookInput';
 
 import exProfile from '@assets/rank/exProfile.png';
 
@@ -45,7 +45,7 @@ const guestbookData = [
   // },
 ];
 
-export default function Guestbook({ onClose }) {
+export default function Guestbook({ onClose, userId }) {
   const handleClickOutside = (e) => {
     if (e.target === e.currentTarget) {
       onClose();

@@ -16,4 +16,5 @@ interface FurnitureData {
 
 interface FurnitureProps {
   item: FurnitureData;
+  onInteract: (itemType: string) => void;
 }
