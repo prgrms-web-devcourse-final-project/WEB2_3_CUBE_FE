@@ -4,7 +4,7 @@ const GenreCard = ({ title, genres }: GenreCardProps) => {
   return (
     <div className='item-row gap-2 bg-[#B5B5B5]/10 rounded-2xl px-8 py-4 w-full'>
       <h4 className='font-semibold text-[#224DBA] text-sm'>{title}</h4>
-      <div className='flex flex-wrap gap-2'>
+      <div className='flex gap-2'>
         {genres.map((genre, index) => (
           <span
             key={`${genre}-${index}`}

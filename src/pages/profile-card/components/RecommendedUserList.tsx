@@ -1,6 +1,9 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
 import { RecommendedUser } from './types';
 import 'swiper/css';
+import 'swiper/css/navigation';
+import '@styles/RecommendedUserList.css';
 
 interface RecommendedUserListProps {
   users: RecommendedUser[];
@@ -8,28 +11,37 @@ interface RecommendedUserListProps {
 
 const RecommendedUserList = ({ users }: RecommendedUserListProps) => {
   return (
-    <div className='item-row gap-2 bg-[#B5B5B5]/10 rounded-2xl px-8 py-4 w-full'>
-      <h3 className='font-bold text-[#224DBA]'>비슷한 취향의 유저</h3>
+    <div className='flex flex-col w-full gap-4 bg-[#B5B5B5]/10 rounded-2xl px-8 py-4'>
+      <h3 className='text-[#224DBA] text-lg font-bold text-center'>
+        나와 취향이 비슷한 유저
+      </h3>
 
-      <Swiper
-        spaceBetween={8}
-        slidesPerView={5}
-        className='w-full'>
-        {users.map((user) => (
-          <SwiperSlide key={user.userId}>
-            <li className='gap-2 bg-[#FCF7FD] rounded-xl p-4 item-row drop-shadow-logo'>
-              <img
-                src={user.profileImage}
-                alt={`${user.nickname}님의 프로필`}
-                className='object-cover w-10 h-10 rounded-full'
-              />
-              <strong className='text-[#3E507D] font-semibold'>
-                {user.nickname}
-              </strong>
-            </li>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      <div className='relative w-full overflow-hidden'>
+        <Swiper
+          modules={[Navigation]}
+          spaceBetween={10}
+          slidesPerView={5}
+          navigation
+          loop={true}
+          className='w-full'>
+          {users.map((user) => (
+            <SwiperSlide key={user.userId}>
+              <div className='flex flex-col items-center w-[80px] h-[100px] py-4 bg-white shadow-md rounded-[10px] mb-1'>
+                <div className='w-10 h-10 mb-2 shrink-0'>
+                  <img
+                    src={user.profileImage}
+                    alt={`${user.nickname}님의 프로필`}
+                    className='w-full h-full rounded-full bg-[#E8F0FE] object-cover'
+                  />
+                </div>
+                <span className='text-sm font-medium text-[#3E507D] text-center w-full px-2 truncate'>
+                  {user.nickname}
+                </span>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
     </div>
   );
 };

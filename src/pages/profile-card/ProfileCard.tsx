@@ -10,11 +10,64 @@ import ProfileButtons from './components/ProfileButtons';
 import { UserProfile, RecommendedUser } from './components/types';
 
 interface ProfileCardProps {
-  userProfile: UserProfile;
-  recommendedUsers: RecommendedUser[];
+  userProfile?: UserProfile;
+  recommendedUsers?: RecommendedUser[];
 }
 
-const ProfileCard = ({ userProfile, recommendedUsers }: ProfileCardProps) => {
+const defaultProfile: UserProfile = {
+  id: '0',
+  nickname: '찰스엔터',
+  profileImage:
+    'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMjU0%2FMDAxNzMzODg1NDI1MzA3.VROvADpR2srcPOcEaDyA-9MVaVz5dqNwJD24qrbXFz0g.4NuJKBzpFM-9JCNct1S5n-L9EjWQ1lTbRD4tV6xsB70g.JPEG%2FIMG_1593.JPG&type=sc960_832',
+  bio: '내가 선생이야 누나야',
+  musicGenres: ['HIPHOP', 'ROCK', 'JAZZ'],
+  bookGenres: ['SF', 'ROMANCE', 'THRILLER'],
+  myProfile: false,
+};
+
+const defaultRecommendedUsers: RecommendedUser[] = [
+  {
+    userId: '1',
+    nickname: '추천유저1',
+    profileImage:
+      'https://i.pinimg.com/736x/9e/00/8e/9e008e514cc474b12d7190c9e87ebf48.jpg',
+  },
+  {
+    userId: '2',
+    nickname: '추천유저2',
+    profileImage:
+      'https://i.pinimg.com/736x/9e/00/8e/9e008e514cc474b12d7190c9e87ebf48.jpg',
+  },
+  {
+    userId: '3',
+    nickname: '추천유저3',
+    profileImage:
+      'https://i.pinimg.com/736x/9e/00/8e/9e008e514cc474b12d7190c9e87ebf48.jpg',
+  },
+  {
+    userId: '4',
+    nickname: '추천유저4',
+    profileImage:
+      'https://i.pinimg.com/736x/9e/00/8e/9e008e514cc474b12d7190c9e87ebf48.jpg',
+  },
+  {
+    userId: '5',
+    nickname: '추천유저5',
+    profileImage:
+      'https://i.pinimg.com/736x/9e/00/8e/9e008e514cc474b12d7190c9e87ebf48.jpg',
+  },
+  {
+    userId: '6',
+    nickname: '추천유저6',
+    profileImage:
+      'https://i.pinimg.com/736x/9e/00/8e/9e008e514cc474b12d7190c9e87ebf48.jpg',
+  },
+];
+
+const ProfileCard = ({
+  userProfile = defaultProfile,
+  recommendedUsers = defaultRecommendedUsers,
+}: ProfileCardProps) => {
   const navigate = useNavigate();
 
   const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {
