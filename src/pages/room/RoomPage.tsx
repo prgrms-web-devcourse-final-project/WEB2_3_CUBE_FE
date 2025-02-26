@@ -33,7 +33,7 @@ export default function RoomPage() {
   };
 
   return (
-    <main className='main-background w-full min-h-screen relative overflow-hidden'>
+    <main className='relative w-full min-h-screen overflow-hidden main-background'>
       <Room
         modelPath={themeData[selectedTheme].modelPath}
         theme={selectedTheme}
@@ -61,7 +61,7 @@ export default function RoomPage() {
           initial='hidden'
           animate='visible'
           variants={animationVariants}
-          className='w-full absolute top-0 left-0 z-30'>
+          className='w-full absolute top-0 left-0 z-50'>
           <PreferenceSetting />
         </motion.div>
       )}

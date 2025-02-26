@@ -12,6 +12,8 @@ import RequireAuth from './layout/RequireAuth';
 import RedirectionKakao from '@pages/login/components/RedirectionKakao';
 import RedirectionNaver from '@pages/login/components/RedirectionNaver';
 import RedirectionGoogle from '@pages/login/components/RedirectionGoogle';
+import ProfileCardPage from '@pages/profile-card/ProfileCardPage';
+import ProfileCardEditPage from '@pages/profile-card/ProfileCardEditPage';
 
 const Router = () => {
   return (
@@ -46,6 +48,14 @@ const Router = () => {
         <Route
           path='/room'
           element={<RoomPage />}
+        />
+        <Route
+          path='/profile/:userId'
+          element={<ProfileCardPage />}
+        />
+        <Route
+          path='/profile/:userId/edit'
+          element={<ProfileCardEditPage />}
         />
       </Route>
 

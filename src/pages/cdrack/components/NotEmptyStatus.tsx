@@ -4,12 +4,22 @@ import CdSwiper from './CdSwiper';
 import { SwiperRef } from 'swiper/react';
 import SlidingTitle from './SlidingTitle';
 
-export default function NotEmptyStatus({ cdDatas }) {
+interface NotEmptyStatusProps {
+  cdDatas: { data: CDInfo[]; nextCursor: number };
+  onPrevPage: () => void;
+  onNextPage: () => void;
+}
+
+export default function NotEmptyStatus({
+  cdDatas,
+  onPrevPage,
+  onNextPage,
+}: NotEmptyStatusProps) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   // cdDatas는 {data: {}[], nextCursor} 형태
   const activeTrack = cdDatas.data.find(
-    (track: CDInfo) => track.cdId === cdDatas.data[activeIndex]?.cdId,
+    (track: CDInfo) => track.myCdId === cdDatas.data[activeIndex]?.myCdId,
   );
 
   const swiperRef = useRef<SwiperRef | null>(null);
@@ -38,6 +48,8 @@ export default function NotEmptyStatus({ cdDatas }) {
         isEmpty={false}
         cdDatas={cdDatas}
         activeIndex={activeIndex}
+        onPrevPage={onPrevPage}
+        onNextPage={onNextPage}
       />
     </div>
   );

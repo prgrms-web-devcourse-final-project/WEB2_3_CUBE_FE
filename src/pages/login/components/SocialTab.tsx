@@ -24,7 +24,7 @@ export default function SocialTab() {
   const GOOGLE_AUTH_URL = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${GOOGLE_CLIENT_ID}&scope=openid%20profile%20email&redirect_uri=${GOOGLE_REDIRECT_URI}`;
 
   const handleKakaoLogin = () => {
-    window.location.href = KAKAO_AUTH_URL;
+    window.location.href = 'http://3.39.182.150/oauth2/authorization/kakao';
   };
 
   const handleNaverLogin = () => {

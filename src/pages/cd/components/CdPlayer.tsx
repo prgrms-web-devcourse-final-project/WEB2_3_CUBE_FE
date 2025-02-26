@@ -15,13 +15,12 @@ export default function CdPlayer() {
   const [isCdStop, setIsCdStop] = useState(false);
   const [isCdListOpen, setIsCdListOpen] = useState(false);
 
-  const formattedCds = mockCD.data.map((book) => ({
-    id: book.myCdId,
-    title: book.title,
-    artist: book.artist,
-    releasedYear: book.releaseDate.split('.')[0],
-    album: book.album,
-    imageUrl: book.coverUrl,
+  const formattedCds = mockCD.data.map((cd) => ({
+    id: String(cd.myCdId),
+    title: cd.title,
+    artist: cd.artist,
+    released_year: cd.releaseDate,
+    album: cd.album,
   }));
 
   const handleControlCd = () => {
@@ -33,32 +32,28 @@ export default function CdPlayer() {
       <div className='w-full h-[13vh] shrink-0  '>
         {/* 진행 시간 */}
         {/* <div className='w-[600px] h-full bg-white '></div> */}
-        <div>
-          <input
-            type='range'
-            min='0'
-            max='100'
-            // value={volume}
-            // onChange={handleVolumeChange}
-            className='  w-full h-[10px] rounded-[1.3px] bg-[#FFFFFF80]
+        <input
+          type='range'
+          min='0'
+          max='100'
+          // value={volume}
+          // onChange={handleVolumeChange}
+          className='  w-full h-[5px]  rounded-[1.3px] bg-[#FFFFFF80]
              appearance-none focus:outline-none focus:ring-2 '
-          />
-        </div>
+        />
 
-        <div className='  h-full relative'>
+        <div className=' w-full h-full relative'>
           <div className='flex items-center absolute bottom-4 left-0'>
             {/* 앨범 이미지 */}
-            <div>
-              <img
-                className=' w-35 h-35'
-                src={sample}
-                alt='CD 앨범 이미지'
-              />
-            </div>
+            <img
+              className=' w-29 h-29'
+              src={sample}
+              alt='CD 앨범 이미지'
+            />
             {/* 음량 */}
             <div className=' flex justify-center items-center gap-2 pl-13 '>
               <img
-                className='w-8 h-8'
+                className='w-8 h-8 cursor-pointer '
                 src={soundIcon}
                 alt='음량 아이콘'
               />
@@ -69,7 +64,7 @@ export default function CdPlayer() {
                 // value={volume}
                 // onChange={handleVolumeChange}
                 className='w-[100px] h-[6px] rounded-[1.3px] bg-[#FFFFFF80]
-             appearance-none focus:outline-none focus:ring-2 focus:ring-green-500'
+             appearance-none focus:outline-none focus:ring-2'
               />
             </div>
           </div>
@@ -82,7 +77,7 @@ export default function CdPlayer() {
             />
             <img
               onClick={handleControlCd}
-              className='fill-black'
+              className='fill-black w-13 h-13 '
               src={isCdStop ? pauseSong : playSong}
               alt='노래 일시정지 버튼'
             />
