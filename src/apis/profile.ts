@@ -2,6 +2,14 @@ import axiosInstance from './axiosInstance';
 
 const API_URL = 'mock';
 
+export interface UpdateProfileRequest {
+  nickname?: string;
+  bio?: string;
+  profileImage?: string | File;
+  musicGenres?: string[];
+  bookGenres?: string[];
+}
+
 export const profileAPI = {
   /**
    * 음악 장르 목록 조회
@@ -73,6 +81,31 @@ export const profileAPI = {
     const { data } = await axiosInstance.get<RecommendedUserResponse[]>(
       `${API_URL}/users/${userId}/recommendations`,
     );
+    return data;
+  },
+
+  /**
+   * 프로필 정보 수정
+   * @param userId - 수정할 사용자의 ID
+   * @param profileData - 수정할 프로필 정보
+   */
+  updateProfile: async (userId: string, profileData: UpdateProfileRequest) => {
+    const { data } = await axiosInstance.patch(
+      `${API_URL}/users/profile`,
+      profileData,
+    );
+    return data;
+  },
+
+  /**
+   * 프로필 이미지 업로드용 S3 업로드 로직 필요
+   * @returns Presigned URL과 이미지 접근 URL
+   */
+  getPresignedUrl: async () => {
+    const { data } = await axiosInstance.get<{
+      presignedUrl: string;
+      imageUrl: string;
+    }>(`${API_URL}/users/profile/image-upload-url`);
     return data;
   },
 };
