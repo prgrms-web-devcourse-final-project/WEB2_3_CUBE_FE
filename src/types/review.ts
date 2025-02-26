@@ -4,10 +4,10 @@ export interface ReviewData {
   // 도서 정보 (API로 받아올 정보)
   bookTitle: string;
   author: string;
-  genres: string[];
+  genreNames: string[];
   publishedDate: string;
-  imageUrl?: string;  // 책 표지 이미지 URL 추가
-  
+  imageUrl?: string; // 책 표지 이미지 URL 추가
+
   // 리뷰 정보 (사용자 입력)
   title: string;
   reviewDate: string;
@@ -17,4 +17,4 @@ export interface ReviewData {
   reason: string;
   discussion: string;
   freeform: string;
-} 
+}
