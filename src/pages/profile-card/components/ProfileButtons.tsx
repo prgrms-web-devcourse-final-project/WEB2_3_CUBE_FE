@@ -10,17 +10,17 @@ const ProfileButtons = ({
     <div className='gap-10 mt-5 item-middle'>
       {isMyProfile ? (
         <LayeredButton
-          theme='gray'
+          theme='purple'
           className='py-1.5'
           onClick={onMateButtonClick}>
           프로필 수정
         </LayeredButton>
       ) : (
         <LayeredButton
-          theme='gray'
+          theme={isMyProfile ? 'gray' : 'red'}
           className='py-1.5'
           onClick={onMateButtonClick}>
-          메이트 {isMyProfile ? '취소' : '추가'}
+          메이트 {isMyProfile ? '취소' : '맺기'}
         </LayeredButton>
       )}
       <LayeredButton
