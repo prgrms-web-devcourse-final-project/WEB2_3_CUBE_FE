@@ -41,7 +41,7 @@ export default function DataList({ datas, type, onDelete }: DataListProps) {
       return (
         data.author?.toLowerCase().includes(searchTerm) ||
         data.publisher?.toLowerCase().includes(searchTerm) ||
-        data.releasedYear?.toLowerCase().includes(searchTerm) ||
+        data.released_year?.toLowerCase().includes(searchTerm) ||
         data.artist?.toLowerCase().includes(searchTerm) ||
         data.title?.toLowerCase().includes(searchTerm)
       );
@@ -110,7 +110,7 @@ export default function DataList({ datas, type, onDelete }: DataListProps) {
       return (
         data.author?.includes(debouncedQuery) ||
         data.publisher?.includes(debouncedQuery) ||
-        data.releasedYear?.includes(debouncedQuery) ||
+        data.released_year?.includes(debouncedQuery) ||
         data.artist?.includes(debouncedQuery) ||
         data.title?.includes(debouncedQuery)
       );

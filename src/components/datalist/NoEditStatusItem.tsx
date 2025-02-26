@@ -35,7 +35,7 @@ export default function NoEditStatusItem({
             {data.released_year.split('-')[0]}
             {isBook
               ? ` | ${data.publisher}`
-              : ` | ${truncateTitle(data.album_name, TITLE_MAX_LENGTH)}`}
+              : ` | ${truncateTitle(data.album, TITLE_MAX_LENGTH)}`}
           </span>
         </div>
       </div>
