@@ -1,25 +1,10 @@
-import ExImg from '@assets/main/exRoomtheme.png';
 import checkIcon from '@assets/room/checkIcon.svg';
 import lock from '@assets/room/lock.png';
 import point from '@assets/room/point.png';
 
-const themeData = {
-  basic: {
-    title: '베이직',
-    description: '심플하고 깔끔한 스타일',
-  },
-  modernCentury: {
-    title: '모던 센추리',
-    description: '클래식한 세련된 스타일',
-  },
-  retro: {
-    title: '레트로',
-    description: '복고풍 개성 있는 스타일',
-  },
-};
-
 export default function ThemeSettingCard({
   theme,
+  themeData,
   isSelected,
   isLocked,
   onClick,
@@ -60,7 +45,7 @@ export default function ThemeSettingCard({
       )}
       {/* 테마 컨텐츠 */}
       <div
-        className={`flex flex-col items-center justify-center relative w-full h-full rounded-xl bg-[#FCF7FD] p-11 transition-transform duration-300`}>
+        className={`flex flex-col items-center justify-center relative w-full h-full rounded-xl bg-[#FCF7FD] p-9 2xl:p-11 transition-transform duration-300`}>
         {isSelected && (
           <img
             className='absolute top-2.5 right-2.5 w-5 h-5 2xl:w-7 2xl:h-7'
@@ -70,12 +55,13 @@ export default function ThemeSettingCard({
         )}
         {/* 이미지 썸네일 */}
         <img
-          className='2xl:w-28'
-          src={ExImg}
+          className='w-44 2xl:w-40 mb-3'
+          src={themeData[theme].thumbnail
+          }
           alt={themeData[theme].title}
         />
         {/* 테마 소개 */}
-        <div className='flex flex-col items-center gap-1'>
+        <div className='flex flex-col items-center '>
           <h2 className='font-bold text-base 2xl:text-lg text-[#162C63]'>
             {themeData[theme].title}
           </h2>
