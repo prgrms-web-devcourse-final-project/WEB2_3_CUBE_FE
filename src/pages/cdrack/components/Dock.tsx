@@ -8,21 +8,20 @@ import { SwiperRef } from 'swiper/react';
 
 interface DockProps {
   isEmpty?: boolean;
-  cdDatas?: { data: CDInfo[]; cursor: number };
+  cdDatas?: { data: CDInfo[]; nextCursor: number };
   activeIndex?: number;
+  onPrevPage: () => void;
+  onNextPage: () => void;
 }
 
 const Dock = forwardRef<SwiperRef, DockProps>(
-  ({ isEmpty = true, cdDatas, activeIndex }, ref) => {
+  ({ isEmpty = true, cdDatas, activeIndex, onPrevPage, onNextPage }, ref) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDockOpen, setIsDockOpen] = useState(false);
-
-    console.log(cdDatas);
 
     // 슬라이드 위치 변경
     const handleSlideChange = (index: number) => {
       const swiper = (ref as React.RefObject<SwiperRef>).current?.swiper;
-      console.log(swiper);
 
       if (swiper) {
         swiper.slideTo(index); // 슬라이드 이동
@@ -48,8 +47,13 @@ const Dock = forwardRef<SwiperRef, DockProps>(
             <div className='w-[calc(100vw-300px)]  h-full flex justify-center items-center  gap-2 '>
               {/* 이전 cd목록 버튼 */}
               <button
-                className='h-full overflow-hidden hover:opacity-50 all-200-eio'
-                disabled={true}>
+                onClick={onPrevPage}
+                className={`h-full overflow-hidden  all-200-eio ${
+                  cdDatas.nextCursor - 15 === 0
+                    ? 'opacity-15'
+                    : 'hover:opacity-80'
+                }`}
+                disabled={cdDatas.nextCursor - 15 === 0}>
                 <img
                   className='w-13 h-13'
                   src={show_prev_cd}
@@ -57,7 +61,7 @@ const Dock = forwardRef<SwiperRef, DockProps>(
                 />
               </button>
 
-              <ul className='flex justify-center items-center gap-7 w-full h-full  '>
+              <ul className='flex justify-center items-center gap-7 max-xl:gap-2 w-full h-full  '>
                 {cdDatas.data.map((data: CDInfo, index: number) => (
                   <li
                     onClick={() => handleSlideChange(index)}
@@ -67,7 +71,7 @@ const Dock = forwardRef<SwiperRef, DockProps>(
                       'border-2 border-red-600 rounded-[6.4px]'
                     } `}>
                     <img
-                      className='aspect-square rounded-[6.4px]'
+                      className=' rounded-[6.4px] w-20 h-20 max-2xl:w-15 max-2xl:h-15 '
                       src={data.coverUrl}
                       alt='CD 이미지'
                     />
@@ -76,8 +80,13 @@ const Dock = forwardRef<SwiperRef, DockProps>(
               </ul>
               {/* 이후 cd목록 버튼 */}
               <button
-                className='h-full overflow-hidden hover:opacity-50 all-200-eio'
-                disabled={true}>
+                onClick={onNextPage}
+                className={`h-full overflow-hidden  all-200-eio ${
+                  cdDatas.nextCursor - 15 === cdDatas.data.length
+                    ? 'opacity-15'
+                    : 'hover:opacity-80'
+                }`}
+                disabled={cdDatas.nextCursor - 15 === cdDatas.data.length}>
                 <img
                   className='w-13 h-13'
                   src={show_next_cd}
