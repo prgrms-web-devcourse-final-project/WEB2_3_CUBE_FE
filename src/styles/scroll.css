@@ -8,14 +8,14 @@
 }
 
 .scrollbar::-webkit-scrollbar-thumb {
-  background: #2656cd; /* 스크롤바 색상 */
+  background: #2656cd;
   border-radius: 6px; /* 스크롤바 둥근 테두리 */
   width: 13px;
   height: 25px;
 }
 
 .scrollbar::-webkit-scrollbar-track {
-  background: #2656cd0d; /*스크롤바 뒷 배경 색상*/
+  background: transparent; /*스크롤바 뒷 배경 색상*/
   width: 13px;
   height: 25px;
 }
