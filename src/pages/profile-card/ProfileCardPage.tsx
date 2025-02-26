@@ -8,6 +8,7 @@ import RecommendedUserList from './components/RecommendedUserList';
 import ProfileButtons from './components/ProfileButtons';
 import { useEffect, useState } from 'react';
 import { profileAPI } from '@apis/profile';
+import { housemateAPI } from '@apis/housemate';
 import { useUserStore } from '../../store/useUserStore';
 
 const ProfileCardPage = () => {
@@ -18,6 +19,7 @@ const ProfileCardPage = () => {
     [],
   );
   const [isLoading, setIsLoading] = useState(true);
+  const [isMyProfile, setIsMyProfile] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,14 +39,37 @@ const ProfileCardPage = () => {
           profileAPI.getRecommendedUsers(userId),
         ]);
 
-        // API 응답을 UserProfile 타입에 맞게 변환
+        // 현재 로그인한 사용자의 프로필인지 직접 확인 (로직 분기용)
+        const currentIsMyProfile = userId === String(user.userId);
+        setIsMyProfile(currentIsMyProfile);
+
+        // 다른 유저의 프로필인 경우에만 메이트 여부 확인
+        let isMatched = false;
+        if (!currentIsMyProfile) {
+          const following = await housemateAPI.getFollowing(
+            undefined,
+            undefined,
+            profile.nickname,
+          );
+          isMatched = following.length > 0;
+        }
+
+        // API 응답을 UserProfile 타입에 맞게 변환 (UI 렌더링용 myProfile은 API 값 사용)
         const userProfileData: UserProfile = {
           ...profile,
-          isMatched: profile.isMatched ?? false,
+          isMatched,
         };
+
+        console.log(userProfileData);
 
         setUserProfile(userProfileData);
         setRecommendedUsers(recommendations);
+        // console.log(
+        //   'userProfileData',
+        //   userProfileData,
+        //   'recommendations',
+        //   recommendations,
+        // );
       } catch (error) {
         console.error('프로필 데이터 조회 실패:', error);
       } finally {
@@ -66,10 +91,21 @@ const ProfileCardPage = () => {
 
     try {
       const profile = await profileAPI.getUserProfile(userId);
-      // API 응답을 UserProfile 타입에 맞게 변환
+      const currentIsMyProfile = userId === String(user?.userId);
+      let isMatched = false;
+
+      if (!currentIsMyProfile) {
+        const following = await housemateAPI.getFollowing(
+          undefined,
+          undefined,
+          profile.nickname,
+        );
+        isMatched = following.length > 0;
+      }
+
       const userProfileData: UserProfile = {
         ...profile,
-        isMatched: profile.isMatched ?? false,
+        isMatched,
       };
       setUserProfile(userProfileData);
     } catch (error) {
@@ -120,8 +156,7 @@ const ProfileCardPage = () => {
           {/* 메인 배경 */}
           <section className='relative flex flex-col gap-4 items-center justify-around w-[660px] h-[660px] bg-[#FCF7FD] rounded-[60px] border-2 border-[#2656CD] p-13'>
             {/* 포인트 */}
-            <button
-              className='flex items-center gap-2 bg-[#B5B5B5]/10 rounded-full px-3 py-1.5 absolute top-10 left-10'>
+            <button className='flex items-center gap-2 bg-[#B5B5B5]/10 rounded-full px-3 py-1.5 absolute top-10 left-10'>
               <img
                 src={pointIcon}
                 alt='사용자 현재 포인트'
@@ -171,7 +206,7 @@ const ProfileCardPage = () => {
             {userId && (
               <ProfileButtons
                 userId={userId}
-                isMyProfile={userProfile.myProfile}
+                isMyProfile={isMyProfile}
                 isMatched={userProfile.isMatched}
                 onProfileUpdate={handleProfileUpdate}
               />

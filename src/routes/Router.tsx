@@ -13,7 +13,7 @@ import RedirectionKakao from '@pages/login/components/RedirectionKakao';
 import RedirectionNaver from '@pages/login/components/RedirectionNaver';
 import RedirectionGoogle from '@pages/login/components/RedirectionGoogle';
 import ProfileCardPage from '@pages/profile-card/ProfileCardPage';
-import ProfileCardEditPage from '@pages/profile-card/ProfileCardEditPage';
+import ProfileCardEditPage from '@pages/profile-card-edit/ProfileCardEditPage';
 
 const Router = () => {
   return (
