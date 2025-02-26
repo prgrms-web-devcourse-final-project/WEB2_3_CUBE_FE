@@ -6,6 +6,7 @@ interface UserProfile {
   musicGenres: string[];
   bookGenres: string[];
   myProfile: boolean;
+  isMatched: boolean;
 }
 
 interface RecommendedUser {
@@ -33,6 +34,7 @@ interface UserProfileResponse {
   musicGenres: string[];
   bookGenres: string[];
   myProfile: boolean;
+  isMatched: boolean;
 }
 
 interface RecommendedUserResponse {

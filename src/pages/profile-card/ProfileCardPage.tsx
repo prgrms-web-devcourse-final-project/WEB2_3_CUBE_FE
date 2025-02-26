@@ -1,72 +1,59 @@
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import shareIcon from '@assets/profile-card/share-icon.svg';
 import pointIcon from '@assets/toast/coin.png';
 import UserProfileSection from './components/UserProfileSection';
 import GenreCard from './components/GenreCard';
 import RecommendedUserList from './components/RecommendedUserList';
 import ProfileButtons from './components/ProfileButtons';
+import { useEffect, useState } from 'react';
+import { profileAPI } from '@apis/profile';
+import { useUserStore } from '../../store/useUserStore';
 
-interface ProfileCardProps {
-  userProfile?: UserProfile;
-  recommendedUsers?: RecommendedUser[];
-}
-
-const defaultProfile: UserProfile = {
-  id: '0',
-  nickname: '찰스엔터',
-  profileImage:
-    'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMTFfMjU0%2FMDAxNzMzODg1NDI1MzA3.VROvADpR2srcPOcEaDyA-9MVaVz5dqNwJD24qrbXFz0g.4NuJKBzpFM-9JCNct1S5n-L9EjWQ1lTbRD4tV6xsB70g.JPEG%2FIMG_1593.JPG&type=sc960_832',
-  bio: '내가 선생이야 누나야',
-  musicGenres: ['HIPHOP', 'ROCK', 'JAZZ'],
-  bookGenres: ['SF', 'ROMANCE', 'THRILLER'],
-  myProfile: false,
-};
-
-const defaultRecommendedUsers: RecommendedUser[] = [
-  {
-    userId: '1',
-    nickname: '추천유저1',
-    profileImage:
-      'https://i.pinimg.com/736x/9e/00/8e/9e008e514cc474b12d7190c9e87ebf48.jpg',
-  },
-  {
-    userId: '2',
-    nickname: '추천유저2',
-    profileImage:
-      'https://i.pinimg.com/736x/9e/00/8e/9e008e514cc474b12d7190c9e87ebf48.jpg',
-  },
-  {
-    userId: '3',
-    nickname: '추천유저3',
-    profileImage:
-      'https://i.pinimg.com/736x/9e/00/8e/9e008e514cc474b12d7190c9e87ebf48.jpg',
-  },
-  {
-    userId: '4',
-    nickname: '추천유저4',
-    profileImage:
-      'https://i.pinimg.com/736x/9e/00/8e/9e008e514cc474b12d7190c9e87ebf48.jpg',
-  },
-  {
-    userId: '5',
-    nickname: '추천유저5',
-    profileImage:
-      'https://i.pinimg.com/736x/9e/00/8e/9e008e514cc474b12d7190c9e87ebf48.jpg',
-  },
-  {
-    userId: '6',
-    nickname: '추천유저6',
-    profileImage:
-      'https://i.pinimg.com/736x/9e/00/8e/9e008e514cc474b12d7190c9e87ebf48.jpg',
-  },
-];
-
-const ProfileCardPage = ({
-  userProfile = defaultProfile,
-  recommendedUsers = defaultRecommendedUsers,
-}: ProfileCardProps) => {
+const ProfileCardPage = () => {
+  const { userId } = useParams();
+  const { user } = useUserStore();
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [recommendedUsers, setRecommendedUsers] = useState<RecommendedUser[]>(
+    [],
+  );
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        setIsLoading(true);
+        if (!userId) return;
+
+        // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+        if (!user) {
+          navigate('/login');
+          return;
+        }
+
+        const [profile, recommendations] = await Promise.all([
+          profileAPI.getUserProfile(userId),
+          profileAPI.getRecommendedUsers(userId),
+        ]);
+
+        // API 응답을 UserProfile 타입에 맞게 변환
+        const userProfileData: UserProfile = {
+          ...profile,
+          isMatched: profile.isMatched ?? false,
+        };
+
+        setUserProfile(userProfileData);
+        setRecommendedUsers(recommendations);
+      } catch (error) {
+        console.error('프로필 데이터 조회 실패:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProfileData();
+  }, [userId, user, navigate]);
 
   const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -74,21 +61,46 @@ const ProfileCardPage = ({
     }
   };
 
-  const handleMateButtonClick = () => {
-    // TODO: 메이트 추가/취소 로직 구현
+  const handleProfileUpdate = async () => {
+    if (!userId) return;
+
+    try {
+      const profile = await profileAPI.getUserProfile(userId);
+      // API 응답을 UserProfile 타입에 맞게 변환
+      const userProfileData: UserProfile = {
+        ...profile,
+        isMatched: profile.isMatched ?? false,
+      };
+      setUserProfile(userProfileData);
+    } catch (error) {
+      console.error('프로필 정보 업데이트 실패:', error);
+    }
   };
 
-  const handleRoomButtonClick = () => {
-    // TODO: 방 구경하기 로직 구현
+  const handleShareButtonClick = async () => {
+    if (!userId || !userProfile) return;
+
+    try {
+      const shareData = {
+        title: `${userProfile.nickname}님의 프로필`,
+        text: `${userProfile.nickname}님의 취향이 담긴 방을 확인해보세요!`,
+        url: `${window.location.origin}/room/${userId}`,
+      };
+
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(shareData.url);
+        // TODO: 복사 완료 토스트 메시지 표시
+      }
+    } catch (error) {
+      console.error('공유하기 실패:', error);
+    }
   };
 
-  const handleShareButtonClick = () => {
-    //  TODO: 공유 로직 구현
-  };
-
-  const handlePointButtonClick = () => {
-    navigate('/profile/:userId/edit');
-  };
+  if (isLoading || !userProfile) {
+    return <div>로딩 중...</div>;
+  }
 
   return (
     <div className='w-full h-screen main-background'>
@@ -109,7 +121,6 @@ const ProfileCardPage = ({
           <section className='relative flex flex-col gap-4 items-center justify-around w-[660px] h-[660px] bg-[#FCF7FD] rounded-[60px] border-2 border-[#2656CD] p-13'>
             {/* 포인트 */}
             <button
-              onClick={handlePointButtonClick}
               className='flex items-center gap-2 bg-[#B5B5B5]/10 rounded-full px-3 py-1.5 absolute top-10 left-10'>
               <img
                 src={pointIcon}
@@ -122,7 +133,7 @@ const ProfileCardPage = ({
             {/* 공유 버튼 */}
             <button
               onClick={handleShareButtonClick}
-             className='flex items-center gap-2 hover:bg-[#B5B5B5]/10 rounded-full px-1.5 py-1.5 transition-all absolute top-10 right-10'>
+              className='flex items-center gap-2 hover:bg-[#B5B5B5]/10 rounded-full px-1.5 py-1.5 transition-all absolute top-10 right-10'>
               <img
                 src={shareIcon}
                 alt='공유 버튼'
@@ -157,11 +168,14 @@ const ProfileCardPage = ({
             <RecommendedUserList users={recommendedUsers} />
 
             {/* 메이트 취소/추가 및 방 구경하기 버튼 */}
-            <ProfileButtons
-              isMyProfile={userProfile.myProfile}
-              onMateButtonClick={handleMateButtonClick}
-              onRoomButtonClick={handleRoomButtonClick}
-            />
+            {userId && (
+              <ProfileButtons
+                userId={userId}
+                isMyProfile={userProfile.myProfile}
+                isMatched={userProfile.isMatched}
+                onProfileUpdate={handleProfileUpdate}
+              />
+            )}
           </section>
         </div>
       </motion.div>

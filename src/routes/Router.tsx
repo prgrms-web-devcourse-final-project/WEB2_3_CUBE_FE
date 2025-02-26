@@ -46,7 +46,7 @@ const Router = () => {
           element={<CdRackPage />}
         />
         <Route
-          path='/room'
+          path='/room/:userId'
           element={<RoomPage />}
         />
         <Route

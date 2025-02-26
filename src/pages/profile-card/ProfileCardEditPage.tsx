@@ -1,17 +1,43 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
+import { profileAPI } from '@apis/profile';
 import copyIcon from '@assets/profile-card/copy-icon.svg';
 import LayeredButton from '@components/LayeredButton';
-import { useState, useRef } from 'react';
+import { useUserStore } from '../../store/useUserStore';
 
 const ProfileCardEditPage = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [nickname, setNickname] = useState('PH-1');
-  const [bio, setBio] = useState('나를 표현해보세요 ψ(｀∇´)ψ ♪');
-  const [profileImage, setProfileImage] = useState(
-    'https://i.pinimg.com/736x/9e/00/8e/9e008e514cc474b12d7190c9e87ebf48.jpg',
-  );
+  const { user } = useUserStore();
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [nickname, setNickname] = useState('');
+  const [bio, setBio] = useState('');
+  const [profileImage, setProfileImage] = useState('');
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        setIsLoading(true);
+        if (!user?.userId) {
+          navigate('/login');
+          return;
+        }
+
+        const profile = await profileAPI.getUserProfile(String(user.userId));
+        setNickname(profile.nickname);
+        setBio(profile.bio);
+        setProfileImage(profile.profileImage);
+      } catch (error) {
+        console.error('프로필 데이터 조회 실패:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserProfile();
+  }, [user?.userId, navigate]);
 
   const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -33,6 +59,25 @@ const ProfileCardEditPage = () => {
   const handleImageButtonClick = () => {
     fileInputRef.current?.click();
   };
+
+  const handleSubmit = async () => {
+    try {
+      // TODO: 프로필 수정 API 연동
+      // await profileAPI.updateUserProfile({
+      //   nickname,
+      //   bio,
+      //   profileImage,
+      // });
+
+      navigate(-1);
+    } catch (error) {
+      console.error('프로필 수정 실패:', error);
+    }
+  };
+
+  if (isLoading) {
+    return <div>로딩 중...</div>;
+  }
 
   return (
     <div className='w-full h-screen main-background'>
@@ -107,7 +152,8 @@ const ProfileCardEditPage = () => {
             <div className='flex flex-col items-center gap-4'>
               <LayeredButton
                 theme='purple'
-                className='py-1.5 px-10'>
+                className='py-1.5 px-10'
+                onClick={handleSubmit}>
                 수정 완료
               </LayeredButton>
               <button className='text-sm text-[#3E507D]/30 mt-2'>
