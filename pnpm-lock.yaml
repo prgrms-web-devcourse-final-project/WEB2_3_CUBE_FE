@@ -71,6 +71,9 @@ importers:
       swiper:
         specifier: ^11.2.2
         version: 11.2.2
+      tailwind-merge:
+        specifier: ^3.0.2
+        version: 3.0.2
       tailwindcss:
         specifier: ^4.0.6
         version: 4.0.6
@@ -1773,6 +1776,9 @@ packages:
   swiper@11.2.2:
     resolution: {integrity: sha512-FmAN6zACpVUbd/1prO9xQ9gKo9cc6RE2UKU/z4oXtS8fNyX4sdOW/HHT/e444WucLJs0jeMId6WjdWM2Lrs8zA==}
     engines: {node: '>= 4.7.0'}
+
+  tailwind-merge@3.0.2:
+    resolution: {integrity: sha512-l7z+OYZ7mu3DTqrL88RiKrKIqO3NcpEO8V/Od04bNpvk0kiIFndGEoqfuzvj4yuhRkHKjRkII2z+KS2HfPcSxw==}
 
   tailwind-scrollbar-hide@2.0.0:
     resolution: {integrity: sha512-lqiIutHliEiODwBRHy4G2+Tcayo2U7+3+4frBmoMETD72qtah+XhOk5XcPzC1nJvXhXUdfl2ajlMhUc2qC6CIg==}
@@ -3573,6 +3579,8 @@ snapshots:
       react: 19.0.0
 
   swiper@11.2.2: {}
+
+  tailwind-merge@3.0.2: {}
 
   tailwind-scrollbar-hide@2.0.0(tailwindcss@4.0.6):
     dependencies:
