@@ -1,23 +1,28 @@
 import { loginAPI } from '@apis/login';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function RedirectionNaver() {
+  const [isLoading, setIsLoading] = useState(true);
   const code = new URL(window.location.href).searchParams.get('code');
+
   const navigate = useNavigate();
+
   const getAuthData = async () => {
     try {
       await loginAPI('NAVER', code);
       navigate('/');
     } catch (error) {
       console.error(error);
-      navigate('/login');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     getAuthData();
   }, []);
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className='animate-spin'>

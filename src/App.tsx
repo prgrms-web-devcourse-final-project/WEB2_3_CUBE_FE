@@ -33,6 +33,7 @@ function App() {
         }
       } catch (error) {
         console.error(error);
+        // accessToken 재발행 실패시 로그아웃
         await logoutAPI();
       } finally {
         setIsLoading(false);

@@ -15,13 +15,13 @@ export default function CdPlayer() {
   const [isCdStop, setIsCdStop] = useState(false);
   const [isCdListOpen, setIsCdListOpen] = useState(false);
 
-  const formattedCds = mockCD.map((book) => ({
-    id: book.trackId,
+  const formattedCds = mockCD.data.map((book) => ({
+    id: book.myCdId,
     title: book.title,
     artist: book.artist,
-    released_year: book.release_date.split('.')[0],
-    album_name: book.album_name,
-    imageURL: book.imgUrl,
+    releasedYear: book.releaseDate.split('.')[0],
+    album: book.album,
+    imageUrl: book.coverUrl,
   }));
 
   const handleControlCd = () => {

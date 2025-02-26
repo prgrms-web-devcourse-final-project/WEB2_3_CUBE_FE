@@ -1,8 +1,9 @@
 import { loginAPI } from '@apis/login';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function RedirectionKakao() {
+  const [isLoading, setIsLoading] = useState(true);
   const code = new URL(window.location.href).searchParams.get('code');
 
   const navigate = useNavigate();
@@ -13,13 +14,15 @@ export default function RedirectionKakao() {
       navigate('/');
     } catch (error) {
       console.error(error);
-      navigate('/login');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     getAuthData();
   }, []);
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className='animate-spin'>

@@ -6,15 +6,14 @@ import { SearchInput } from '@components/search-modal/SearchInput';
 import { useDebounce } from '@hooks/useDebounce';
 import SkeletonItem from '@components/SkeletonItem';
 import { bookAPI } from '@/apis/book';
-import search_icon from '@assets/search-icon.svg';
 
-export default function DataList({
-  datas,
-  type,
-}: {
+interface DataListProps {
   datas: DataListInfo[];
   type: string;
-}) {
+  onDelete?: (deletedIds: string[]) => void;
+}
+
+export default function DataList({ datas, type, onDelete }: DataListProps) {
   const isBook = type === 'book' ? true : false;
   const mainColor = isBook ? '#2656CD' : '#7838AF';
   const subColor = isBook ? 'text-[#3E507D]' : 'text-[#60308C]';
@@ -42,7 +41,7 @@ export default function DataList({
       return (
         data.author?.toLowerCase().includes(searchTerm) ||
         data.publisher?.toLowerCase().includes(searchTerm) ||
-        data.released_year?.toLowerCase().includes(searchTerm) ||
+        data.releasedYear?.toLowerCase().includes(searchTerm) ||
         data.artist?.toLowerCase().includes(searchTerm) ||
         data.title?.toLowerCase().includes(searchTerm)
       );
@@ -70,6 +69,7 @@ export default function DataList({
           (data) => !selectedIds.includes(data.id),
         );
         setFilteredDatas(updatedDatas);
+        onDelete?.(selectedIds);
         setSelectedIds([]);
       }
     } catch (error) {
@@ -110,7 +110,7 @@ export default function DataList({
       return (
         data.author?.includes(debouncedQuery) ||
         data.publisher?.includes(debouncedQuery) ||
-        data.released_year?.includes(debouncedQuery) ||
+        data.releasedYear?.includes(debouncedQuery) ||
         data.artist?.includes(debouncedQuery) ||
         data.title?.includes(debouncedQuery)
       );

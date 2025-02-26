@@ -1,29 +1,8 @@
 import { SearchItemType } from '@/types/search';
 import { useState, useEffect } from 'react';
 import { bookAPI } from '@apis/book';
-import axios from 'axios';
 import { useDebounce } from './useDebounce';
-
-// SPOTIFY accesstoken 얻는 로직
-const CLIENT_ID = import.meta.env.VITE_SPOTIFY_ID;
-const CLIENT_SECRET = import.meta.env.VITE_SPOTIFY_SECRET_KEY;
-
-const getSpotifyToken = async () => {
-  const auth = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);
-
-  const res = await axios.post(
-    'https://accounts.spotify.com/api/token',
-    'grant_type=client_credentials',
-    {
-      headers: {
-        Authorization: `Basic ${auth}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    },
-  );
-
-  return res.data.access_token;
-};
+import { searchSpotifyCds } from '@apis/cd';
 
 export const useSearch = (type: 'CD' | 'BOOK') => {
   const [query, setQuery] = useState<string>('');
@@ -78,24 +57,19 @@ export const useSearch = (type: 'CD' | 'BOOK') => {
       setIsLoading(true);
       setError(null);
 
-      const token = await getSpotifyToken();
-      const encodedQuery = encodeURIComponent(searchQuery);
-      const url = `https://api.spotify.com/v1/search?q=${encodedQuery}&type=track&market=KR&limit=10`;
-      const { data } = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const data = await searchSpotifyCds(searchQuery);
 
-      return data.tracks.items.map((music: CDSearch) => ({
-        id: music.id,
-        title: music.name,
-        artist: music.artists[0].name,
-        album_title: music.album.name,
-        date: music.album.release_date,
-        imageUrl: music.album.images[1].url,
+      return data.map((cd: CDSearchResult) => ({
+        id: cd.id,
+        title: cd.title,
+        artist: cd.artist,
+        album_title: cd.album_title,
+        date: cd.date,
+        imageUrl: cd.imageUrl,
         type: 'CD' as const,
-        genres: [],
+        genres: cd.genres,
+        youtubeUrl: cd.youtubeUrl,
+        duration: cd.duration,
       }));
     } catch (error: any) {
       console.error(error);
