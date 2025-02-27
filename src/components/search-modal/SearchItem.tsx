@@ -1,4 +1,3 @@
-import type { SearchItemType } from '@/types/search';
 import { SEARCH_THEME } from '@/constants/searchTheme';
 import { truncateTitle } from '@/utils/truncate';
 import { toKoreanDate } from '@utils/dateFormat';
