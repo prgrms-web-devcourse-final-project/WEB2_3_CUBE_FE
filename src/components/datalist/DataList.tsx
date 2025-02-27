@@ -6,15 +6,14 @@ import { SearchInput } from '@components/search-modal/SearchInput';
 import { useDebounce } from '@hooks/useDebounce';
 import SkeletonItem from '@components/SkeletonItem';
 import { bookAPI } from '@/apis/book';
-import search_icon from '@assets/search-icon.svg';
 
-export default function DataList({
-  datas,
-  type,
-}: {
+interface DataListProps {
   datas: DataListInfo[];
   type: string;
-}) {
+  onDelete?: (deletedIds: string[]) => void;
+}
+
+export default function DataList({ datas, type, onDelete }: DataListProps) {
   const isBook = type === 'book' ? true : false;
   const mainColor = isBook ? '#2656CD' : '#7838AF';
   const subColor = isBook ? 'text-[#3E507D]' : 'text-[#60308C]';
@@ -70,6 +69,7 @@ export default function DataList({
           (data) => !selectedIds.includes(data.id),
         );
         setFilteredDatas(updatedDatas);
+        onDelete?.(selectedIds);
         setSelectedIds([]);
       }
     } catch (error) {

@@ -8,14 +8,28 @@ import NotFoundPage from '@pages/NotFoundPage';
 import BaseLayout from '@routes/layout/BaseLayout';
 import CdRackPage from '@pages/cdrack/CdRackPage';
 import RoomPage from '../pages/room/RoomPage';
-// import RequireAuth from './layout/RequireAuth';
+import RequireAuth from './layout/RequireAuth';
 import RedirectionKakao from '@pages/login/components/RedirectionKakao';
 import RedirectionNaver from '@pages/login/components/RedirectionNaver';
 import RedirectionGoogle from '@pages/login/components/RedirectionGoogle';
+import ProfileCardPage from '@pages/profile-card/ProfileCardPage';
+import ProfileCardEditPage from '@pages/profile-card-edit/ProfileCardEditPage';
 
 const Router = () => {
   return (
     <Routes>
+      <Route
+        path='/login/oauth2/code/kakao'
+        element={<RedirectionKakao />}
+      />
+      <Route
+        path='/login/oauth2/code/naver'
+        element={<RedirectionNaver />}
+      />
+      <Route
+        path='/login/oauth2/code/google'
+        element={<RedirectionGoogle />}
+      />
       {/* <Route element={<RequireAuth />}> */}
       {/* 헤더가 필요한 페이지 */}
       <Route element={<BaseLayout hasHeader={true} />}>
@@ -28,12 +42,20 @@ const Router = () => {
           element={<BookCasePage />}
         />
         <Route
-          path='/cdrack'
+          path='/cdrack/:userId'
           element={<CdRackPage />}
         />
         <Route
-          path='/room'
+          path='/room/:userId'
           element={<RoomPage />}
+        />
+        <Route
+          path='/profile/:userId'
+          element={<ProfileCardPage />}
+        />
+        <Route
+          path='/profile/:userId/edit'
+          element={<ProfileCardEditPage />}
         />
       </Route>
 
@@ -48,7 +70,7 @@ const Router = () => {
         element={<BookPage />}
       />
       <Route
-        path='/cd'
+        path='/cd/:cdId/user/:userId'
         element={<CdPage />}
       />
 
@@ -56,26 +78,10 @@ const Router = () => {
         path='*'
         element={<NotFoundPage />}
       />
-
-      {/* 헤더가 필요없는 페이지 */}
-      <Route element={<BaseLayout hasHeader={false} />}>
-        <Route
-          path='/login'
-          element={<LoginPage />}
-        />
-        <Route
-          path='/login/oauth2/code/kakao'
-          element={<RedirectionKakao />}
-        />
-        <Route
-          path='/login/oauth2/code/naver'
-          element={<RedirectionNaver />}
-        />
-        <Route
-          path='/login/oauth2/code/google'
-          element={<RedirectionGoogle />}
-        />
-      </Route>
+      <Route
+        path='/login'
+        element={<LoginPage />}
+      />
       {/* </Route> */}
     </Routes>
   );

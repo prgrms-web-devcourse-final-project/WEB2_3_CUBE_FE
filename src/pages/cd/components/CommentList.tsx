@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import trashIcon from '@assets/cd/trash-icon.svg';
 import { useDebounce } from '@hooks/useDebounce';
 import { SearchInput } from '@components/search-modal/SearchInput';
-import Pagination from '@components/\bPagination';
+import Pagination from '@components/Pagination';
 import { cdComments } from '@/mocks/mockCdComment';
 
 export default function CommentList({ onClose }) {

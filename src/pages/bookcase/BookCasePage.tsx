@@ -2,12 +2,18 @@ import { useState, useEffect, useRef } from 'react';
 import ToolBoxButton from './components/ToolBoxButton';
 import { SearchModal } from '@components/search-modal/SearchModal';
 import BookCaseList from './components/BookCaseList';
+import DataList from '@components/datalist/DataList';
 import { bookAPI } from '@apis/book';
-import { tokenService } from '@utils/token';
+import ModalBackground from '@components/ModalBackground';
+import { useUserStore } from '../../store/useUserStore';
+import { useNavigate } from 'react-router-dom';
 
 const BookCasePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isListOpen, setIsListOpen] = useState(false);
   const [books, setBooks] = useState<BookCaseListType[]>([]);
+  const [dataListItems, setDataListItems] = useState<DataListInfo[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const BOOKS_PER_ROW = 15;
   const [isDragging, setIsDragging] = useState(false);
@@ -16,17 +22,52 @@ const BookCasePage = () => {
   const [scrollLeft, setScrollLeft] = useState(0);
   const [scrollTop, setScrollTop] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { user } = useUserStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
         setIsLoading(true);
-        const response = await bookAPI.getBookCaseList(
-          tokenService.getUser()?.id,
-          1,
-          1000,
-        );
-        setBooks(response.data);
+        console.log('Fetching books...');
+
+        // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+        if (!user) {
+          navigate('/login');
+          return;
+        }
+
+        const response = await bookAPI.getBookCaseList(user.userId, 1);
+
+        console.log('API Response:', response);
+
+        if (response?.myBooks) {
+          const formattedBooks = response.myBooks.map((book: any) => ({
+            id: book.id,
+            title: book.title,
+            author: book.author,
+            publisher: book.publisher,
+            publishedDate: book.publishedDate,
+            imageURL: book.imageUrl,
+            genreNames: book.genreNames,
+          }));
+
+          // DataList 컴포넌트용 데이터 변환
+          const dataListFormat = response.myBooks.map((book: any) => ({
+            id: book.id.toString(),
+            title: book.title,
+            author: book.author,
+            publisher: book.publisher,
+            released_year: book.publishedDate,
+            imageUrl: book.imageUrl,
+          }));
+
+          console.log('Formatted DataList Items:', dataListFormat);
+
+          setBooks(formattedBooks);
+          setDataListItems(dataListFormat);
+          setTotalCount(response.count);
+        }
       } catch (error) {
         console.error('책 목록을 가져오는데 실패했습니다:', error);
       } finally {
@@ -34,7 +75,7 @@ const BookCasePage = () => {
       }
     };
     fetchBooks();
-  }, []);
+  }, [user, navigate]);
 
   const handleDragStart = (clientX: number, clientY: number) => {
     setIsDragging(true);
@@ -64,6 +105,19 @@ const BookCasePage = () => {
     setIsDragging(false);
   };
 
+  const handleDeleteBooks = (deletedIds: string[]) => {
+    // books state 업데이트
+    setBooks((prevBooks) =>
+      prevBooks.filter((book) => !deletedIds.includes(book.id.toString())),
+    );
+    // dataListItems state 업데이트
+    setDataListItems((prevItems) =>
+      prevItems.filter((item) => !deletedIds.includes(item.id)),
+    );
+    // totalCount 감소
+    setTotalCount((prev) => prev - deletedIds.length);
+  };
+
   const bookCaseRows = Math.max(3, Math.ceil(books.length / BOOKS_PER_ROW));
 
   if (isLoading) {
@@ -73,7 +127,7 @@ const BookCasePage = () => {
   return (
     <div
       ref={containerRef}
-      className='overflow-auto w-full h-screen bg-white select-none cursor-grab active:cursor-grabbing'
+      className='w-full h-screen overflow-auto bg-white select-none cursor-grab active:cursor-grabbing'
       onMouseDown={(e) => handleDragStart(e.pageX, e.pageY)}
       onMouseMove={(e) => handleDragMove(e.pageX, e.pageY)}
       onMouseUp={handleDragEnd}
@@ -95,10 +149,14 @@ const BookCasePage = () => {
             key={index}
             page={index + 1}
             books={rowBooks}
+            showEmptyMessage={books.length === 0 && index === 1}
           />
         );
       })}
-      <ToolBoxButton onAddBook={() => setIsModalOpen(true)} />
+      <ToolBoxButton
+        onAddBook={() => setIsModalOpen(true)}
+        onOpenList={() => setIsListOpen(true)}
+      />
 
       {isModalOpen && (
         <SearchModal
@@ -107,6 +165,16 @@ const BookCasePage = () => {
           onClose={() => setIsModalOpen(false)}
           onSelect={() => {}}
         />
+      )}
+
+      {isListOpen && (
+        <ModalBackground onClose={() => setIsListOpen(false)}>
+          <DataList
+            datas={dataListItems}
+            type='book'
+            onDelete={handleDeleteBooks}
+          />
+        </ModalBackground>
       )}
     </div>
   );
