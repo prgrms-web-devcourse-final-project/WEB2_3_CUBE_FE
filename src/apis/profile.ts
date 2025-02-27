@@ -62,7 +62,7 @@ export const profileAPI = {
   },
 
   /**
-   * 프로필 정보 수정 (닉네임, 자기소개, 장르)
+   * 프로필 정보 수정 (닉네임, 자기소개)
    * @param profileData - 수정할 프로필 정보
    */
   updateProfile: async (profileData: UpdateProfileRequest) => {
