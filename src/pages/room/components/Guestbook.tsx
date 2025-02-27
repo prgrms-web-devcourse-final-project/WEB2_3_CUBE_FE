@@ -1,52 +1,37 @@
 import { motion } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { guestbookAPI } from '../../../apis/guestbook';
+
 import GuestbookMessage from '@pages/room/components/GuestbookMessage';
 import GusetbookInput from '@pages/room/components/GusetbookInput';
+import { useUserStore } from '../../../store/useUserStore';
 
-import exProfile from '@assets/rank/exProfile.png';
+export default function Guestbook({ onClose, roomId }) {
+  const [guestbookData, setGuestbookData] = useState<GuestbookMessageType[]>(
+    [],
+  );
+  const user = useUserStore((state) => state.user);
 
-const guestbookData = [
-  {
-    guestbookId: 1,
-    userId: 67890,
-    nickname: 'VisitorA',
-    profileImage: exProfile,
-    message:
-      'Lorem ipsum dolor sit amet consectetur. Laoreet pellentesque adipiscing viverra mauris integer pharetra cursus id. Lorem eleifend ut consequat cras rhoncus viverra tincidunt morbi ',
-    createdAt: '2025-02-14T15:00:00',
-    relation: '하우스메이트',
-  },
-  {
-    guestbookId: 2,
-    userId: 67890,
-    nickname: 'VisitorA',
-    profileImage: exProfile,
-    message:
-      'Lorem ipsum dolor sit amet consectetur. Laoreet pellentesque adipiscing viverra mauris integer pharetra cursus id. Lorem eleifend ut consequat cras rhoncus viverra tincidunt morbi ',
-    createdAt: '2025-02-14T15:00:00',
-    relation: '지나가던 나그네',
-  },
-  // {
-  //   guestbookId: 2,
-  //   userId: 78901,
-  //   nickname: "VisitorB",
-  //   profileImage: exProfile,
-  //   message: "Love the theme!",
-  //   createdAt: "2025-02-14T16:00:00",
-  //   relation: "지나가던 나그네",
-  // },
-  // {
-  //   guestbookId: 3,
-  //   userId: 78901,
-  //   nickname: "VisitorB",
-  //   profileImage: exProfile,
-  //   message: "Love the theme!",
-  //   createdAt: "2025-02-14T16:00:00",
-  //   relation: "지나가던 나그네",
-  // },
-];
+  useEffect(() => {
+    const fetchGuestbookData = async () => {
+      try {
+        const response = await guestbookAPI.getGuestbook(roomId, 1, 2);
+        setGuestbookData(response.guestbook);
+        console.log(response.guestbook);
+      } catch (error) {
+        console.error('방명록 조회 중 오류:', error);
+      }
+    };
+    fetchGuestbookData();
+  }, [roomId]);
 
-export default function Guestbook({ onClose, userId }) {
-  const handleClickOutside = (e) => {
+  const handleDeleteMessage = (guestbookId: number) => {
+    setGuestbookData((prev) =>
+      prev.filter((msg) => msg.guestbookId !== guestbookId),
+    );
+  };
+
+  const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
@@ -83,16 +68,21 @@ export default function Guestbook({ onClose, userId }) {
         </div>
 
         {/* 메인 배경 */}
-        <section className='guest-book  flex-col items-center pt-12 2xl:pt-20 px-13 2xl:px-16'>
+        <section className='guest-book @3xl:gap-5 flex-col items-center pt-10 @3xl:pt-20 px-13 @3xl:px-16'>
           {/* 방명록 컨텐츠 */}
-          <span className='flex gap-1 font-bold @lg:text-2xl @2xl:text-4xl @2xl:my-3'>
-            <p className='text-[#4983EF]'>체보아</p>
+          <span className='flex gap-2 font-bold text-3xl @3xl:text-4xl @3xl:my-3'>
+            {/*todo: 방 userId -> 닉네임으로 수정 */}
+            <p className='text-[#4983EF]'>{user.nickname}</p>
             <p className='text-[#3E507D]'>님의 방명록</p>
           </span>
           {/* 방명록 글 */}
-          <GuestbookMessage messages={guestbookData} />
+          <GuestbookMessage
+            messages={guestbookData}
+            userId={user.userId}
+            onDelete={handleDeleteMessage}
+          />
           {/* 작성 필드 */}
-          <GusetbookInput />
+          <GusetbookInput roomId={roomId} />
         </section>
       </div>
     </motion.div>

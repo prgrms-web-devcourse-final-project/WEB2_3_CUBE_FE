@@ -1,11 +1,11 @@
+import { themeData } from '@constants/roomTheme';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { themeData } from '@constants/roomTheme';
 import DockMenu from './components/DockMenu';
 import PreferenceSetting from './components/PreferenceSetting';
-import Room from './components/Room';
+import RoomModel from './components/RoomModel';
 import ThemeSetting from './components/ThemeSetting';
-
+import { useUserStore } from '../../store/useUserStore';
 
 const animationVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -24,6 +24,8 @@ export default function RoomPage() {
   const [activeSettings, setActiveSettings] = useState(null);
   const [selectedTheme, setSelectedTheme] = useState('basic');
 
+  const user = useUserStore((state) => state.user);
+
   const handleSettingsChange = (setting) => {
     setActiveSettings(activeSettings === setting ? null : setting);
   };
@@ -34,9 +36,10 @@ export default function RoomPage() {
 
   return (
     <main className='relative w-full min-h-screen overflow-hidden main-background'>
-      <Room
+      <RoomModel
+        userId={user.userId}
+        roomId={user.roomId}
         modelPath={themeData[selectedTheme].modelPath}
-        theme={selectedTheme}
         activeSettings={activeSettings}
       />
 
@@ -61,7 +64,7 @@ export default function RoomPage() {
           initial='hidden'
           animate='visible'
           variants={animationVariants}
-          className='w-full absolute top-0 left-0 z-50'>
+          className='w-full absolute top-0 left-0 z-30'>
           <PreferenceSetting />
         </motion.div>
       )}

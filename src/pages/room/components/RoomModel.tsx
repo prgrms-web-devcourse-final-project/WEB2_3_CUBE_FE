@@ -4,51 +4,22 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Suspense, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import Furnitures from '../../../components/room-models/Furnitures';
+import { RoomLighting } from '../../../components/room-models/RoomLighting';
 import { CAMERA_CONFIG } from '../../../constants/sceneSetting';
-import Furnitures from './Furnitures';
+import { useRoomItems } from '../hooks/useRoomItems';
 import Guestbook from './Guestbook';
-import { RoomLighting } from './RoomLighting';
 
-export default function Room({ modelPath, activeSettings, userId }) {
+export default function RoomModel({
+  modelPath,
+  activeSettings,
+  userId,
+  roomId,
+}) {
   const { scene } = useGLTF(modelPath) as GLTFResult;
+  const { items } = useRoomItems();
   const navigate = useNavigate();
-
   const [isGuestBookOpen, setIsGuestBookOpen] = useState(false);
-
-  const [items, setItems] = useState<FurnitureData[]>([
-    {
-      id: 'bookShelf',
-      type: 'bookShelf',
-      rotation: [0, Math.PI / -4.4, 0],
-      position: [-0.13, -0.55, -0.3],
-      modelPath: '/models/bookshelf.glb',
-      isEditable: true,
-    },
-    {
-      id: 'cdPlayer',
-      type: 'cdPlayer',
-      rotation: [0, Math.PI / -4.4, 0],
-      position: [-0.09, -0.58, -0.03],
-      modelPath: '/models/cdplayer.glb',
-      isEditable: true,
-    },
-    {
-      id: 'piggyCash',
-      type: 'piggyCash',
-      rotation: [0, Math.PI / -4.4, 0],
-      position: [-0.15, -0.55, -0.15],
-      modelPath: '/models/piggycash.glb',
-      isEditable: false,
-    },
-    {
-      id: 'guestBook',
-      type: 'guestBook',
-      rotation: [0, Math.PI / -4.4, 0],
-      position: [-0.07, -0.45, -0.1],
-      modelPath: '/models/guestbook.glb',
-      isEditable: false,
-    },
-  ]);
 
   useEffect(() => {
     if (scene) {
@@ -123,7 +94,7 @@ export default function Room({ modelPath, activeSettings, userId }) {
         {isGuestBookOpen && (
           <Guestbook
             onClose={() => setIsGuestBookOpen(false)}
-            userId={userId}
+            roomId={roomId}
           />
         )}
       </AnimatePresence>

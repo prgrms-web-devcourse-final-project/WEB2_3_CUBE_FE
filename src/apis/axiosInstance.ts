@@ -56,7 +56,7 @@ axiosInstance.interceptors.response.use(
 
         cookies.set('accessToken', response.accessToken, {
           path: '/',
-          maxAge: 3590,
+          maxAge: 1209600,
         });
         cookies.set('refreshToken', response.refreshToken, {
           path: '/',
