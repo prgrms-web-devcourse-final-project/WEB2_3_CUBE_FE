@@ -1,32 +1,35 @@
 import axiosInstance from './axiosInstance';
+import { NotificationResponse } from '@/types/notification';
 
 const API_URL = 'mock';
 
 export const notificationAPI = {
   /**
    * 알림 목록 조회
-   * @param cursor - 페이지네이션 커서 (마지막으로 받은 알림 ID)
-   * @param limit - 한 페이지당 조회할 알림 수
-   * @param status - 읽음 여부로 필터링 (READ, UNREAD)
+   * @param cursor - 페이지네이션 커서
+   * @param limit - 한 번에 가져올 알림 개수
+   * @param read - 읽음 여부로 필터링 (true: 읽은 알림, false: 읽지 않은 알림)
    * @returns 알림 목록 조회 결과
    * @example
    * // 읽지 않은 알림 20개 조회
-   * const result = await notificationAPI.getNotifications(undefined, 20, 'UNREAD');
+   * const result = await notificationAPI.getNotifications(undefined, 20, false);
    */
   getNotifications: async (
     cursor?: number,
     limit: number = 20,
-    status?: 'READ' | 'UNREAD',
+    read?: boolean,
   ) => {
-    const params = new URLSearchParams();
-    if (cursor) params.append('cursor', cursor.toString());
-    if (limit) params.append('limit', limit.toString());
-    if (status) params.append('status', status);
-
-    const response = await axiosInstance.get(`/${API_URL}/notifications`, {
-      params,
-    });
-    return response.data;
+    const { data } = await axiosInstance.get<NotificationResponse>(
+      `${API_URL}/notifications`,
+      {
+        params: {
+          cursor,
+          limit,
+          read,
+        },
+      },
+    );
+    return data;
   },
 
   /**
@@ -37,9 +40,9 @@ export const notificationAPI = {
    * const result = await notificationAPI.readNotification(123);
    */
   readNotification: async (notificationId: number) => {
-    const response = await axiosInstance.patch(
-      `/${API_URL}/notifications/${notificationId}/read`,
+    const { data } = await axiosInstance.patch(
+      `${API_URL}/notifications/${notificationId}/read`,
     );
-    return response.data;
+    return data;
   },
 };

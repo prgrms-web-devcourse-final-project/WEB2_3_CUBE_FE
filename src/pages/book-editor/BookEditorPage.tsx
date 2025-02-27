@@ -15,17 +15,17 @@ import { useToastStore } from '@/store/useToastStore';
 import { bookAPI } from '@/apis/book';
 
 interface BookEditorPageProps {
-  bookTitle: string;
-  author: string;
-  genres: string[];
-  publishedDate: string;
-  imageUrl: string;
+  bookTitle?: string;
+  author?: string;
+  genreNames?: string[];
+  publishedDate?: string;
+  imageUrl?: string;
 }
 
 const BookEditorPage = ({
   bookTitle,
   author,
-  genres,
+  genreNames,
   publishedDate,
   imageUrl,
 }: BookEditorPageProps) => {
@@ -48,7 +48,7 @@ const BookEditorPage = ({
       // 도서 정보
       bookTitle,
       author,
-      genres,
+      genreNames,
       publishedDate,
       imageUrl,
       // 리뷰 정보
@@ -96,7 +96,7 @@ const BookEditorPage = ({
           setReviewFields({
             bookTitle,
             author,
-            genres,
+            genreNames,
             publishedDate,
             imageUrl,
             title: review.title,
@@ -104,7 +104,7 @@ const BookEditorPage = ({
             theme: review.coverColor,
             quote: review.quote,
             emotion: review.takeaway,
-            reason: review.motive,
+            reason: review.motivate,
             discussion: review.topic,
             freeform: review.freeFormText,
           });
@@ -116,7 +116,7 @@ const BookEditorPage = ({
     };
 
     fetchReview();
-  }, [bookId, bookTitle, author, genres, publishedDate, imageUrl]);
+  }, [bookId, bookTitle, author, genreNames, publishedDate, imageUrl]);
 
   const handleFieldChange =
     (field: keyof ReviewData) => (value: string | BookThemeType) => {
@@ -141,7 +141,7 @@ const BookEditorPage = ({
         title: reviewFields.title,
         quote: reviewFields.quote,
         takeaway: reviewFields.emotion,
-        motive: reviewFields.reason,
+        motivate: reviewFields.reason,
         topic: reviewFields.discussion,
         freeFormText: reviewFields.freeform,
         coverColor: reviewFields.theme,
