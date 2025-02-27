@@ -112,4 +112,16 @@ export const profileAPI = {
     );
     return data;
   },
+
+  /**
+   * 회원 탈퇴
+   * @returns 탈퇴 성공 여부
+   * @example
+   * const result = await profileAPI.withdraw();
+   * // true
+   */
+  withdraw: async () => {
+    const { data } = await axiosInstance.delete(`${API_URL}/auth/withdraw`);
+    return data;
+  },
 };

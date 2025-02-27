@@ -8,10 +8,8 @@ export const useProfileEdit = (userId: string) => {
 
   const handleImageUpload = async (file: File) => {
     try {
-      // 1. Get presigned URL from backend
-      const { presignedUrl, imageUrl } = await profileAPI.getPresignedUrl();
+      const { presignedUrl, imageUrl } = await profileAPI.updateProfileImage(file);
 
-      // 2. Upload image to S3 using presigned URL
       await fetch(presignedUrl, {
         method: 'PUT',
         body: file,
