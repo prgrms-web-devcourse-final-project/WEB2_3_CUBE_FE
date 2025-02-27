@@ -14,21 +14,12 @@ import RedirectionNaver from '@pages/login/components/RedirectionNaver';
 import RedirectionGoogle from '@pages/login/components/RedirectionGoogle';
 import ProfileCardPage from '@pages/profile-card/ProfileCardPage';
 import ProfileCardEditPage from '@pages/profile-card-edit/ProfileCardEditPage';
-
 const Router = () => {
   return (
     <Routes>
-      <Route
-        path='/login/oauth2/code/kakao'
-        element={<RedirectionKakao />}
-      />
-      <Route
-        path='/login/oauth2/code/naver'
-        element={<RedirectionNaver />}
-      />
-      <Route
-        path='/login/oauth2/code/google'
-        element={<RedirectionGoogle />}
+     <Route
+        path='/oauth/callback'
+        element={<Redirection />}
       />
       <Route element={<RequireAuth />}>
       {/* 헤더가 필요한 페이지 */}
@@ -58,7 +49,6 @@ const Router = () => {
           element={<ProfileCardEditPage />}
         />
       </Route>
-
       {/* 내 서평 보기/수정 */}
       <Route
         path='/book/:bookId'
@@ -73,7 +63,6 @@ const Router = () => {
         path='/cd/:cdId/user/:userId'
         element={<CdPage />}
       />
-
       <Route
         path='*'
         element={<NotFoundPage />}
@@ -86,5 +75,4 @@ const Router = () => {
     </Routes>
   );
 };
-
 export default Router;

@@ -1,16 +1,17 @@
 import { loginAPI } from '@apis/login';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
-export default function RedirectionNaver() {
+export default function Redirection() {
   const [isLoading, setIsLoading] = useState(true);
-  const code = new URL(window.location.href).searchParams.get('code');
+  const [searchParams] = useSearchParams();
+  const authorization = searchParams.get('accessToken');
 
   const navigate = useNavigate();
 
   const getAuthData = async () => {
     try {
-      await loginAPI('NAVER', code);
+      await loginAPI(authorization);
       navigate('/');
     } catch (error) {
       console.error(error);
@@ -21,7 +22,7 @@ export default function RedirectionNaver() {
 
   useEffect(() => {
     getAuthData();
-  }, []);
+  }, [authorization]);
   if (isLoading) return <div>Loading...</div>;
 
   return (

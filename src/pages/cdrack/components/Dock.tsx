@@ -10,8 +10,8 @@ interface DockProps {
   isEmpty?: boolean;
   cdDatas?: { data: CDInfo[]; nextCursor: number };
   activeIndex?: number;
-  onPrevPage: () => void;
-  onNextPage: () => void;
+  onPrevPage?: () => void;
+  onNextPage?: () => void;
 }
 
 const Dock = forwardRef<SwiperRef, DockProps>(
