@@ -215,7 +215,7 @@ export const bookAPI = {
    * @returns
    */
   updateReview: async (myBookId: string, review: ReviewType) => {
-    const response = await axiosInstance.patch(
+    const response = await axiosInstance.put(
       `/${API_URL}/mybooks-review?myBookId=${myBookId}`,
       review,
     );
