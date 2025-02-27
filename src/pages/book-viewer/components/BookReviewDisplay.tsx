@@ -8,7 +8,7 @@ interface ReviewData {
   // 도서 정보
   bookTitle: string;
   author: string;
-  genres: string[];
+  genreNames: string[];
   publishedDate: string; // 출판일자
   // 리뷰 정보
   title: string;
@@ -88,7 +88,7 @@ const BookReviewDisplay = ({
 
   // 실제 표시할 데이터 (preview 모드면 previewData 사용)
   const displayData = previewData; // mode와 상관없이 previewData 사용
-
+console.log(displayData)
   if (!displayData) return null;
 
   const colors = BOOK_THEME[(displayData.theme as BookThemeType) || 'BLUE'];
@@ -197,7 +197,7 @@ const BookReviewDisplay = ({
             </div>
           </div>
           <div className='flex gap-2 mt-2'>
-            {displayData.genres.map((genre) => (
+            {displayData.genreNames.map((genre) => (
               <span
                 key={genre}
                 className='px-4 py-1 text-sm rounded-full'

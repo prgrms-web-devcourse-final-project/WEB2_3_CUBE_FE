@@ -30,7 +30,7 @@ const Router = () => {
         path='/login/oauth2/code/google'
         element={<RedirectionGoogle />}
       />
-      {/* <Route element={<RequireAuth />}> */}
+      <Route element={<RequireAuth />}>
       {/* 헤더가 필요한 페이지 */}
       <Route element={<BaseLayout hasHeader={true} />}>
         <Route
@@ -82,7 +82,7 @@ const Router = () => {
         path='/login'
         element={<LoginPage />}
       />
-      {/* </Route> */}
+      </Route>
     </Routes>
   );
 };

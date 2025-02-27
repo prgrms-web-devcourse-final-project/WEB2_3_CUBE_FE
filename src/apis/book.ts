@@ -158,7 +158,7 @@ export const bookAPI = {
    *   "title": 제목,
    *   "quote": 인상 깊은 구절,
    *   "takeaway": 느낀점/그 때 나의 감정,
-   *   "motive": 책을 선택하게 된 계기,
+   *   "motivate": 책을 선택하게 된 계기,
    *   "topic": 다른 사람과 나누고 싶은 대화 주제,
    *   "freeFormText": 자유 형식 글,
    *   "coverColor": 커버 색상
@@ -184,7 +184,7 @@ export const bookAPI = {
    *   "quote": 인상 깊은 구절,
    *   "takeaway": 느낀점/그 때 나의 감정,
    *   "freeFormText": 자유 형식 글,
-   *   "motive" : 책을 선택하게 된 계기
+   *   "motivate" : 책을 선택하게 된 계기
    *   "topic" : 다른 사람과 나누고 싶은 대화 주제
    *   "coverColor": 커버 색상
    * }
@@ -194,7 +194,7 @@ export const bookAPI = {
    *   quote: '인상 깊은 구절',
    *   takeaway: '느낀점/그 때 나의 감정',
    *   freeFormText: '자유 형식 글',
-   *   motive: '책을 선택하게 된 계기',
+   *   motivate: '책을 선택하게 된 계기',
    *   topic: '다른 사람과 나누고 싶은 대화 주제',
    *   coverColor: '커버 색상',
    * });
