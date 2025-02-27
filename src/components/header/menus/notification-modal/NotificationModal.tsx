@@ -71,6 +71,7 @@ const NotificationModal = ({
                 notification={notification}
                 onRead={handleReadNotification}
                 activeTab={activeTab}
+                onClose={onClose}
               />
             ))}
             {hasMore && (
