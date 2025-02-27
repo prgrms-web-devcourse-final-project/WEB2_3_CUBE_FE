@@ -6,7 +6,7 @@ import { useUserStore } from '@/store/useUserStore';
 import { getCdRack } from '@apis/cd';
 
 export default function CdRackPage() {
-  const [cdDatas, setCDdatas] = useState(null);
+  const [cdDatas, setCDdatas] = useState({ data: [], nextCursor: 0 });
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const user = useUserStore((state) => state.user);
@@ -23,7 +23,7 @@ export default function CdRackPage() {
     const fetchCds = async () => {
       try {
         setIsLoading(true);
-        const response = await getCdRack(1, 15, 15 * (page - 1));
+        const response = await getCdRack(user.userId, 15, 15 * (page - 1));
 
         setCDdatas(response);
       } catch (error) {

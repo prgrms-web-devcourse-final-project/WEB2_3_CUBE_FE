@@ -19,6 +19,8 @@ const Dock = forwardRef<SwiperRef, DockProps>(
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDockOpen, setIsDockOpen] = useState(false);
 
+    console.log(cdDatas);
+
     // 슬라이드 위치 변경
     const handleSlideChange = (index: number) => {
       const swiper = (ref as React.RefObject<SwiperRef>).current?.swiper;
@@ -49,11 +51,11 @@ const Dock = forwardRef<SwiperRef, DockProps>(
               <button
                 onClick={onPrevPage}
                 className={`h-full overflow-hidden  all-200-eio ${
-                  cdDatas.nextCursor - 15 === 0
-                    ? 'opacity-15'
+                  cdDatas.nextCursor <= 15
+                    ? 'opacity-15 pointer-events-none'
                     : 'hover:opacity-80'
                 }`}
-                disabled={cdDatas.nextCursor - 15 === 0}>
+                disabled={cdDatas.nextCursor <= 15}>
                 <img
                   className='w-13 h-13'
                   src={show_prev_cd}
@@ -85,8 +87,7 @@ const Dock = forwardRef<SwiperRef, DockProps>(
                   cdDatas.nextCursor - 15 === cdDatas.data.length
                     ? 'opacity-15'
                     : 'hover:opacity-80'
-                }`}
-                disabled={cdDatas.nextCursor - 15 === cdDatas.data.length}>
+                }`}>
                 <img
                   className='w-13 h-13'
                   src={show_next_cd}
