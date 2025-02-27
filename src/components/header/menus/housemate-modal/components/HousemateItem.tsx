@@ -7,6 +7,7 @@ interface HousemateItemProps {
   profileImage?: string;
   bio?: string;
   status: 'ONLINE' | 'OFFLINE';
+  onClose: () => void;
 }
 
 export const HousemateItem = ({
@@ -15,10 +16,12 @@ export const HousemateItem = ({
   profileImage,
   bio,
   status,
+  onClose,
 }: HousemateItemProps) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
+    onClose();
     navigate(`/profile/${userId}`);
   };
 

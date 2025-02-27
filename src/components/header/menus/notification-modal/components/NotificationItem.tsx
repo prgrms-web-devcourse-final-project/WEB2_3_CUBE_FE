@@ -8,10 +8,11 @@ interface NotificationItemProps {
   notification: Notification;
   onRead: (id: number) => void;
   activeTab: 'pendingRead' | 'viewed';
+  onClose: () => void;
 }
 
 export const NotificationItem = memo(
-  ({ notification, onRead, activeTab }: NotificationItemProps) => {
+  ({ notification, onRead, activeTab, onClose }: NotificationItemProps) => {
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -19,6 +20,7 @@ export const NotificationItem = memo(
       if (activeTab === 'pendingRead' && !notification.isRead) {
         onRead(notification.notificationId);
       }
+      onClose();
       // 알림 타입에 따른 이동 처리
       switch (notification.type) {
         case 'GUESTBOOK':
@@ -39,6 +41,7 @@ export const NotificationItem = memo(
 
     const handleProfileClick = (e: React.MouseEvent) => {
       e.stopPropagation();
+      onClose();
       navigate(`/profile/${notification.senderId}`);
     };
 
