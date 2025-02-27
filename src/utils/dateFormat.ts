@@ -14,3 +14,14 @@ export const formatDate = (date: Date) => {
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}.${month}.${day}.`;
 };
+
+/**
+ * ISO 날짜 문자열을 YYYY년 M월 D일 형식으로 변환
+ */
+export const formatToKoreanFullDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return `${year}년 ${month}월 ${day}일`;
+};
