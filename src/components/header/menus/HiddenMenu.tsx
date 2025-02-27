@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { logoutAPI } from '@apis/login';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -10,11 +10,13 @@ interface HiddenMenuProps {
 
 const HiddenMenu = ({ isOpen, onClose }: HiddenMenuProps) => {
   const menuRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await logoutAPI();
-    navigate('/login');
+    try {
+      await logoutAPI();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

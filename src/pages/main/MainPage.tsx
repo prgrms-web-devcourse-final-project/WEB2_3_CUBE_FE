@@ -4,6 +4,7 @@ import MyRoom from './components/MyRoom';
 import RankingModal from './components/RankingModal';
 import RankMenu from './components/RankMenu';
 import Guestbook from './components/Guestbook';
+import { Link } from 'react-router-dom';
 
 export default function MainPage() {
   const [isRankingOpen, setIsRankingOpen] = useState(false);
@@ -27,6 +28,12 @@ export default function MainPage() {
         className='absolute top-50 right-50'>
         임시 방명록
       </button>
+
+      <Link
+        to='/cdrack/1'
+        className='absolute bottom-50 right-50'>
+        cdrack
+      </Link>
       <AnimatePresence>
         {isGuestBookOpen && (
           <Guestbook onClose={() => setisGuestBookOpen(false)} />
