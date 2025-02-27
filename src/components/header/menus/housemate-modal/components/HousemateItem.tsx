@@ -1,4 +1,5 @@
 import rightIcon from '@/assets/housemate-right-icon.svg';
+import { useNavigate } from 'react-router-dom';
 
 interface HousemateItemProps {
   userId: number;
@@ -15,8 +16,16 @@ export const HousemateItem = ({
   bio,
   status,
 }: HousemateItemProps) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/profile/${userId}`);
+  };
+
   return (
-    <li className='gap-3 item-between'>
+    <li
+      className='gap-3 cursor-pointer item-between'
+      onClick={handleClick}>
       <div
         aria-label='프로필 정보'
         className='gap-2 item-middle'>
