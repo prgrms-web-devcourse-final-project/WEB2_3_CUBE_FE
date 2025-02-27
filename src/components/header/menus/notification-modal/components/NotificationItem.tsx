@@ -25,7 +25,8 @@ export const NotificationItem = memo(
           navigate(`/room/${notification.targetId}`);
           break;
         case 'MUSIC_COMMENT':
-          navigate(`/cd/${notification.targetId}`);
+          // navigate(`/cd/${cdId}/user/${notification.targetId}`);
+          navigate(`/cd/1/user/${notification.targetId}`);
           break;
         case 'HOUSE_MATE':
           navigate(`/profile/${notification.senderId}`);
