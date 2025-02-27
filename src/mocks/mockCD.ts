@@ -1,7 +1,6 @@
 export const mockCD = {
   data: [
     {
-      cdId: 0,
       myCdId: 0,
       title: 'BAD BOY',
       artist: '레드벨벳',
@@ -14,7 +13,6 @@ export const mockCD = {
     },
     {
       myCdId: 1,
-      cdId: 1,
       title: '하루하루',
       artist: '빅뱅',
       album: 'Stand Up (2008 빅뱅 3rd Mini Album)',
@@ -26,7 +24,6 @@ export const mockCD = {
     },
     {
       myCdId: 2,
-      cdId: 2,
       title: 'DNA',
       artist: '방탄소년단',
       album: 'Love Yourself: Tear',
@@ -38,7 +35,6 @@ export const mockCD = {
     },
     {
       myCdId: 3,
-      cdId: 3,
       title: 'Cheer Up',
       artist: '트와이스',
       album: 'Page Two',
@@ -50,7 +46,6 @@ export const mockCD = {
     },
     {
       myCdId: 4,
-      cdId: 4,
       title: '피 땀 눈물',
       artist: '방탄소년단',
       album: 'WINGS',
@@ -62,7 +57,6 @@ export const mockCD = {
     },
     {
       myCdId: 5,
-      cdId: 5,
       title: 'Fake Love',
       artist: '방탄소년단',
       album: 'Love Yourself: Answer',
@@ -74,7 +68,6 @@ export const mockCD = {
     },
     {
       myCdId: 6,
-      cdId: 6,
       title: 'TT',
       artist: '트와이스',
       album: 'Twicecoaster: Lane 1',
@@ -86,7 +79,6 @@ export const mockCD = {
     },
     {
       myCdId: 7,
-      cdId: 7,
       title: 'Likey',
       artist: '트와이스',
       album: 'Twicecoaster: Lane 2',
@@ -98,7 +90,6 @@ export const mockCD = {
     },
     {
       myCdId: 8,
-      cdId: 8,
       title: '불타오르네',
       artist: '방탄소년단',
       album: 'The Most Beautiful Moment in Life: Young Forever',
@@ -110,7 +101,6 @@ export const mockCD = {
     },
     {
       myCdId: 9,
-      cdId: 9,
       title: 'Gashina',
       artist: '선미',
       album: 'Gashina',
@@ -122,7 +112,6 @@ export const mockCD = {
     },
     {
       myCdId: 10,
-      cdId: 10,
       title: '나를 잊지 말아요',
       artist: '이승철',
       album: '나를 잊지 말아요',
@@ -134,7 +123,6 @@ export const mockCD = {
     },
     {
       myCdId: 11,
-      cdId: 11,
       title: 'The Light',
       artist: '젝스키스',
       album: 'The Light',
@@ -146,7 +134,6 @@ export const mockCD = {
     },
     {
       myCdId: 12,
-      cdId: 12,
       title: 'Lonely',
       artist: '2NE1',
       album: '2NE1 2nd Mini Album',
@@ -158,7 +145,6 @@ export const mockCD = {
     },
     {
       myCdId: 13,
-      cdId: 13,
       title: '가시나',
       artist: '선미',
       album: 'Gashina',
@@ -170,7 +156,6 @@ export const mockCD = {
     },
     {
       myCdId: 14,
-      cdId: 14,
       title:
         '사랑하긴 했었나요 스쳐가는 인연이었나요. 짧지않은 우리 함께했던 시간속에 ',
       artist: '잔나비',
@@ -180,6 +165,182 @@ export const mockCD = {
       duration: 137280,
       coverUrl:
         'https://i.scdn.co/image/ab67616d0000b273a49a8bb234f8741c80d8ec5a',
+    },
+    {
+      myCdId: 15,
+      title: '에너제틱',
+      artist: '워너원',
+      album: '1X1=1 (TO BE ONE)',
+      releaseDate: '2017-08-07',
+      genres: ['KPOP', 'DANCE', 'POP'],
+      duration: 219000,
+      coverUrl:
+        'https://i.scdn.co/image/ab67616d0000b2734c9e8f8e3f5e91bb2a7c6e12',
+    },
+    {
+      myCdId: 16,
+      title: '비처럼 음악처럼',
+      artist: '김현식',
+      album: '김현식 3집',
+      releaseDate: '1986-10-15',
+      genres: ['BALLAD', 'KOREAN'],
+      duration: 290345,
+      coverUrl:
+        'https://i.scdn.co/image/ab67616d0000b273d5f7a8f1c2f0e91c37f7d70e',
+    },
+    {
+      myCdId: 17,
+      title: '붉은 노을',
+      artist: '빅뱅',
+      album: 'Remember',
+      releaseDate: '2008-11-05',
+      genres: ['KPOP', 'DANCE', 'POP'],
+      duration: 244125,
+      coverUrl:
+        'https://i.scdn.co/image/ab67616d0000b273b4e2f3e9e0c8d4c1f8e2c1f8',
+    },
+    {
+      myCdId: 18,
+      title: 'LALALA',
+      artist: 'SG 워너비',
+      album: 'My Friend',
+      releaseDate: '2008-04-24',
+      genres: ['BALLAD', 'KPOP'],
+      duration: 273541,
+      coverUrl:
+        'https://i.scdn.co/image/ab67616d0000b273f3e8c9f1e2d3c4b5e8f9e1f7',
+    },
+    {
+      myCdId: 19,
+      title: '그대라는 사치',
+      artist: '한동근',
+      album: 'Your Diary',
+      releaseDate: '2016-06-02',
+      genres: ['BALLAD', 'KPOP'],
+      duration: 260987,
+      coverUrl:
+        'https://i.scdn.co/image/ab67616d0000b273f9e2f1e8c3d4c7b6f1e8c3d5',
+    },
+    {
+      myCdId: 20,
+      title: '너를 만나',
+      artist: '폴킴',
+      album: '너를 만나',
+      releaseDate: '2018-10-29',
+      genres: ['BALLAD', 'KPOP'],
+      duration: 223987,
+      coverUrl:
+        'https://i.scdn.co/image/ab67616d0000b273f2e3d1e9c4b5e9f2c4d3c5e8',
+    },
+    {
+      myCdId: 21,
+      title: '봄날',
+      artist: '방탄소년단',
+      album: 'You Never Walk Alone',
+      releaseDate: '2017-02-13',
+      genres: ['KPOP', 'BALLAD', 'POP'],
+      duration: 276456,
+      coverUrl:
+        'https://i.scdn.co/image/ab67616d0000b2737f7a9e8e8e7b9f1f3f5e1e9a',
+    },
+    {
+      myCdId: 22,
+      title: '거짓말',
+      artist: 'BIGBANG',
+      album: 'Always',
+      releaseDate: '2007-08-16',
+      genres: ['KPOP', 'HIPHOP', 'POP'],
+      duration: 234321,
+      coverUrl:
+        'https://i.scdn.co/image/ab67616d0000b2735c7b2a1e9e6c8b5e9f4e3c7d',
+    },
+    {
+      myCdId: 23,
+      title: '사랑했나봐',
+      artist: '윤도현',
+      album: 'Difference',
+      releaseDate: '2005-06-10',
+      genres: ['BALLAD', 'ROCK'],
+      duration: 257890,
+      coverUrl:
+        'https://i.scdn.co/image/ab67616d0000b273f9c4e7f1e3c8b4d3e8f1c6e9',
+    },
+    {
+      myCdId: 24,
+      title: '비와 당신',
+      artist: '런블피쉬',
+      album: '비와 당신',
+      releaseDate: '2006-06-13',
+      genres: ['ROCK', 'BALLAD'],
+      duration: 282123,
+      coverUrl:
+        'https://i.scdn.co/image/ab67616d0000b273f2e1e7f1e5c9d3e8b4c7e1f3',
+    },
+    {
+      myCdId: 25,
+      title: '너무 보고 싶어',
+      artist: '어반자카파',
+      album: '너무 보고 싶어',
+      releaseDate: '2014-05-19',
+      genres: ['BALLAD', 'KPOP'],
+      duration: 261876,
+      coverUrl:
+        'https://i.scdn.co/image/ab67616d0000b273c3e9d1e5b6c8f2d3e8c4e5f1',
+    },
+    {
+      myCdId: 26,
+      title: '한 페이지가 될 수 있게',
+      artist: 'DAY6',
+      album: 'Remember Us : Youth Part 2',
+      releaseDate: '2018-12-10',
+      genres: ['ROCK', 'KPOP'],
+      duration: 230567,
+      coverUrl:
+        'https://i.scdn.co/image/ab67616d0000b273f2e4e1c5d3e9b2f8c1e7d5f2',
+    },
+    {
+      myCdId: 27,
+      title: '시간을 거슬러',
+      artist: '린',
+      album: '해를 품은 달 OST',
+      releaseDate: '2012-01-10',
+      genres: ['BALLAD', 'OST'],
+      duration: 270876,
+      coverUrl:
+        'https://i.scdn.co/image/ab67616d0000b273c2e1d7e8c9f4b3e6d1c5e7f9',
+    },
+    {
+      myCdId: 28,
+      title: '밤편지',
+      artist: '아이유',
+      album: 'Palette',
+      releaseDate: '2017-04-21',
+      genres: ['BALLAD', 'KPOP'],
+      duration: 251234,
+      coverUrl:
+        'https://i.scdn.co/image/ab67616d0000b273f1e4c2b7e9d3f2b6c1d7e8c4',
+    },
+    {
+      myCdId: 29,
+      title: '가을 아침',
+      artist: '아이유',
+      album: '꽃갈피 둘',
+      releaseDate: '2017-09-22',
+      genres: ['BALLAD', 'FOLK'],
+      duration: 203987,
+      coverUrl:
+        'https://i.scdn.co/image/ab67616d0000b273c1e9b3f4d2e8c7f5b6d1e7c4',
+    },
+    {
+      myCdId: 30,
+      title: '내 손을 잡아',
+      artist: '아이유',
+      album: '최고의 사랑 OST',
+      releaseDate: '2011-05-25',
+      genres: ['BALLAD', 'OST', 'KPOP'],
+      duration: 223456,
+      coverUrl:
+        'https://i.scdn.co/image/ab67616d0000b273b1e7c3d9f2b5e4c6d3e8b4c2',
     },
   ],
   nextCursor: 0,

@@ -1,6 +1,6 @@
 import { BookThemeType } from '@/constants/bookTheme';
 
-export interface ReviewData {
+interface ReviewData {
   // 도서 정보 (API로 받아올 정보)
   bookTitle: string;
   author: string;

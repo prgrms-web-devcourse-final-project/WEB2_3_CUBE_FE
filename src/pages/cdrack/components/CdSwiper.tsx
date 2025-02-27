@@ -8,7 +8,7 @@ import 'swiper/swiper-bundle.css';
 import { useNavigate } from 'react-router-dom';
 
 interface CdSwiperProps {
-  cdDatas: { data: CDInfo[]; cursor: number };
+  cdDatas: { data: CDInfo[]; nextCursor: number };
   onActiveTrackId: (index: number) => void;
 }
 
@@ -63,7 +63,7 @@ const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
           stretch: 10,
           depth: 100,
           modifier: 2,
-          slideShadows: true,
+          slideShadows: false,
         }}
         mousewheel={true}
         modules={[EffectCoverflow, Mousewheel]}
@@ -75,33 +75,37 @@ const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
         {cdData.map((data: CDInfo, index: number) => (
           <SwiperSlide
             key={data.myCdId}
-            className='relative overflow-visible'>
+            className='relative '>
             <div
-              className='relative transition-all duration-100 cursor-pointer '
+              className=' cursor-pointer  transition-transform duration-500 ease-linear '
               style={{
                 transform: ` rotateY(${rotateY[index] || 0}deg) rotateX(${
                   rotateX[index] || 0
                 }deg)`,
+                filter: `drop-shadow(${rotateY[index] || 0}px ${
+                  rotateX[index] || 0
+                }px 20px rgba(0, 0, 0, 0.5))`, // 그림자 방향 조정
               }}
               onClick={() => navigate('/cd/1/user/1')}
               onMouseMove={(e) => handleMouseMove(e, index)}
               onMouseLeave={() => handleMouseLeave(index)}>
               <img
-                className='poster'
+                className='poster rounded-[10px]'
                 src={data.coverUrl}
                 alt='앨범 이미지'
               />
-              {/* 장르 */}
-              <ul className='flex absolute bottom-8 left-1/2 transform -translate-x-1/2 justify-center items-center gap-5'>
-                {data.genres.map((genre, index) => (
-                  <li
-                    className='w-16 h-7 rounded-[80px] bg-[#FFFFFF1A] backdrop-blur-[20px] flex items-center justify-center'
-                    key={index}>
-                    <span className='text-[14px] text-white'>{genre}</span>
-                  </li>
-                ))}
-              </ul>
             </div>
+
+            {/* 장르 */}
+            <ul className='flex absolute bottom-8 left-1/2 transform -translate-x-1/2 justify-center items-center gap-5'>
+              {data.genres.map((genre, index) => (
+                <li
+                  className='w-16 h-7 rounded-[80px] bg-[#FFFFFF1A] backdrop-blur-[20px] flex items-center justify-center'
+                  key={index}>
+                  <span className='text-[14px] text-white'>{genre}</span>
+                </li>
+              ))}
+            </ul>
           </SwiperSlide>
         ))}
       </Swiper>

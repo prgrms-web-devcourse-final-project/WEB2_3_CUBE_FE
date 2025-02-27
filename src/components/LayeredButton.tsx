@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 const BUTTON_THEMES = {
   red: {
@@ -33,24 +34,36 @@ const LayeredButton = ({
   const colorTheme = BUTTON_THEMES[theme];
 
   return (
-    <button
-      className={`relative px-6 py-3 font-bold text-white rounded-lg transition-all duration-100 ${className}`}
-      style={{
-        backgroundColor: colorTheme.backgroundColor,
-        border: `1px solid ${colorTheme.borderColor}`,
-        boxShadow: isPressed
-          ? `0 4px 0 ${colorTheme.shadow}`
-          : `0 8px 0 ${colorTheme.shadow}`,
-        transform: isPressed ? 'translateY(4px)' : 'translateY(0)',
-      }}
-      onMouseDown={() => setIsPressed(true)}
-      onMouseUp={() => setIsPressed(false)}
-      onMouseLeave={() => setIsPressed(false)}
-      onTouchStart={() => setIsPressed(true)}
-      onTouchEnd={() => setIsPressed(false)}
-      {...props}>
-      <span>{children}</span>
-    </button>
+    <div className='relative'>
+      {/* 그림자 레이어 */}
+      <div
+        className='absolute w-full h-full rounded-lg'
+        style={{
+          backgroundColor: colorTheme.shadow,
+          border: `2px solid ${colorTheme.borderColor}`,
+          top: '8px',
+        }}
+      />
+      {/* 버튼 */}
+      <button
+        className={twMerge(
+          'relative w-full font-bold text-white rounded-lg transition-all duration-100 px-6 py-3',
+          className,
+        )}
+        style={{
+          backgroundColor: colorTheme.backgroundColor,
+          border: `2px solid ${colorTheme.borderColor}`,
+          transform: isPressed ? 'translateY(4px)' : 'translateY(0)',
+        }}
+        onMouseDown={() => setIsPressed(true)}
+        onMouseUp={() => setIsPressed(false)}
+        onMouseLeave={() => setIsPressed(false)}
+        onTouchStart={() => setIsPressed(true)}
+        onTouchEnd={() => setIsPressed(false)}
+        {...props}>
+        <span>{children}</span>
+      </button>
+    </div>
   );
 };
 

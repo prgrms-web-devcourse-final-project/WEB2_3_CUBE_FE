@@ -8,7 +8,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   padding: 4px;
-  z-index: 50;
+  z-index: 70;
 }
 
 .bottom-menu-icon {
@@ -31,7 +31,7 @@
 
 /* 설정 컴포넌트 */
 .setting-gradient {
-  background: linear-gradient(180deg, rgba(22, 44, 99, 0.00) 37.37%, rgba(22, 44, 99, 0.15) 68.68%, rgba(22, 44, 99, 0.4) 100%);
+  background: linear-gradient(180deg, rgba(22, 44, 99, 0.00) 37.37%, rgba(22, 44, 99, 0.1) 68.68%, rgba(22, 44, 99, 0.45) 100%);
 }
 
 /* 테마 설정 컴포넌트 */
@@ -40,7 +40,7 @@
   height: calc(100vw * 0.143);
   max-width: 252px;
   max-height: 274px;
-  min-width: 200px;
+  min-width: 190px;
   min-height: 222px;
   background-color: #FCF7FD/20;
   display: flex;

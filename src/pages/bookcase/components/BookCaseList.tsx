@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 
 import { useNavigate, useParams } from 'react-router-dom';
-import { tokenService } from '@/utils/token';
+import { useUserStore } from '../../../store/useUserStore';
 
 const truncateText = (text: string, maxLength: number) => {
   if (text.length > maxLength) {
@@ -19,10 +19,10 @@ interface BookCaseListProps {
 const BookCaseList = ({ page, books, showEmptyMessage }: BookCaseListProps) => {
   const navigate = useNavigate();
   const { userId: pageUserId } = useParams<{ userId: string }>();
-  const myUserId = tokenService.getUser()?.id;
+  const { user } = useUserStore();
 
   const handleBookClick = (bookId: number | string) => {
-    if (pageUserId === myUserId) {
+    if (pageUserId === String(user?.userId)) {
       navigate(`/book/${bookId}`);
     } else {
       navigate(`/book/${bookId}/user/${pageUserId}`);

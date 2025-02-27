@@ -4,8 +4,9 @@ import { SearchModal } from '@components/search-modal/SearchModal';
 import BookCaseList from './components/BookCaseList';
 import DataList from '@components/datalist/DataList';
 import { bookAPI } from '@apis/book';
-import { tokenService } from '@utils/token';
 import ModalBackground from '@components/ModalBackground';
+import { useUserStore } from '../../store/useUserStore';
+import { useNavigate } from 'react-router-dom';
 
 const BookCasePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,6 +22,8 @@ const BookCasePage = () => {
   const [scrollLeft, setScrollLeft] = useState(0);
   const [scrollTop, setScrollTop] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { user } = useUserStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -28,10 +31,13 @@ const BookCasePage = () => {
         setIsLoading(true);
         console.log('Fetching books...');
 
-        const response = await bookAPI.getBookCaseList(
-          tokenService.getUser()?.userId || 1,
-          1,
-        );
+        // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+        if (!user) {
+          navigate('/login');
+          return;
+        }
+
+        const response = await bookAPI.getBookCaseList(user.userId, 1);
 
         console.log('API Response:', response);
 
@@ -69,7 +75,7 @@ const BookCasePage = () => {
       }
     };
     fetchBooks();
-  }, []);
+  }, [user, navigate]);
 
   const handleDragStart = (clientX: number, clientY: number) => {
     setIsDragging(true);
