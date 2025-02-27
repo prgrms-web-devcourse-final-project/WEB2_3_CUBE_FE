@@ -1,23 +1,28 @@
-import { useNavigate, useParams } from 'react-router-dom';
-import shareIcon from '@assets/profile-card/share-icon.svg';
-import pointIcon from '@assets/toast/coin.png';
+import { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useUserStore } from '@/store/useUserStore';
+import { useUserProfile } from '@/hooks/useUserProfile';
+import { ProfileCardLayout } from '@/components/profile-card/ProfileCardLayout';
+import shareIcon from '@/assets/profile-card/share-icon.svg';
+import pointIcon from '@/assets/toast/coin.png';
 import UserProfileSection from './components/UserProfileSection';
 import GenreCard from './components/GenreCard';
 import RecommendedUserList from './components/RecommendedUserList';
 import ProfileButtons from './components/ProfileButtons';
-import { ProfileCardLayout } from './components/ProfileCardLayout';
-import { useProfileData } from './hooks/useProfileData';
 
 const ProfileCardPage = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
-  const {
-    userProfile,
-    recommendedUsers,
-    isLoading,
-    isMyProfile,
-    handleProfileUpdate,
-  } = useProfileData(userId);
+  const { user } = useUserStore();
+  const { profile, updateProfile } = useUserProfile(userId || undefined);
+
+  useEffect(() => {
+    if (!userId) {
+      navigate('/');
+      return;
+    }
+    updateProfile();
+  }, [userId, navigate, updateProfile]);
 
   const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -26,12 +31,12 @@ const ProfileCardPage = () => {
   };
 
   const handleShareButtonClick = async () => {
-    if (!userId || !userProfile) return;
+    if (!userId || !profile) return;
 
     try {
       const shareData = {
-        title: `${userProfile.nickname}님의 프로필`,
-        text: `${userProfile.nickname}님의 취향이 담긴 방을 확인해보세요!`,
+        title: `${profile.nickname}님의 프로필`,
+        text: `${profile.nickname}님의 취향이 담긴 방을 확인해보세요!`,
         url: `${window.location.origin}/room/${userId}`,
       };
 
@@ -46,9 +51,11 @@ const ProfileCardPage = () => {
     }
   };
 
-  if (isLoading || !userProfile) {
+  if (!profile) {
     return <div>로딩 중...</div>;
   }
+
+  const isMyProfile = user?.userId === Number(userId);
 
   return (
     <ProfileCardLayout onClickOutside={handleClickOutside}>
@@ -76,9 +83,9 @@ const ProfileCardPage = () => {
       {/* 사용자 프로필 */}
       <UserProfileSection
         profile={{
-          nickname: userProfile.nickname,
-          profileImage: userProfile.profileImage,
-          bio: userProfile.bio,
+          nickname: profile.nickname,
+          profileImage: profile.profileImage,
+          bio: profile.bio,
         }}
       />
 
@@ -88,24 +95,25 @@ const ProfileCardPage = () => {
         className='w-full gap-2 item-between'>
         <GenreCard
           title='음악 감성'
-          genres={userProfile.musicGenres}
+          genres={profile.musicGenres}
         />
         <GenreCard
           title='독서 취향'
-          genres={userProfile.bookGenres}
+          genres={profile.bookGenres}
         />
       </div>
 
       {/* 유저 추천 */}
-      <RecommendedUserList users={recommendedUsers} />
+      {profile.recommendedUsers && profile.recommendedUsers.length > 0 && (
+        <RecommendedUserList users={profile.recommendedUsers} />
+      )}
 
       {/* 메이트 취소/추가 및 방 구경하기 버튼 */}
       {userId && (
         <ProfileButtons
           userId={userId}
           isMyProfile={isMyProfile}
-          isMatched={userProfile.isMatched}
-          onProfileUpdate={handleProfileUpdate}
+          onProfileUpdate={updateProfile}
         />
       )}
     </ProfileCardLayout>
