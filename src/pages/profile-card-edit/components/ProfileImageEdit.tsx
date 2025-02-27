@@ -31,7 +31,7 @@ export const ProfileImageEdit = ({
         type='file'
         ref={fileInputRef}
         onChange={handleImageUpload}
-        accept='image/*'
+        accept='.jpg,.jpeg,.png'
         className='hidden'
       />
       <img
