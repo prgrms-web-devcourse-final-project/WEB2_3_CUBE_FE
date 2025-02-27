@@ -4,7 +4,7 @@ import { BaseModal } from '../modal/BaseModal';
 import { TabMenu } from '../modal/TabMenu';
 import { LoadingState } from '../modal/LoadingState';
 import { EmptyState } from '../modal/EmptyState';
-import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
+import { useInfiniteScroll } from '../../../../hooks/useInfiniteScroll';
 import { useHousemates } from '../hooks/useHousemates';
 import HousemateSkeletonItem from './components/HousemateSkeletonItem';
 

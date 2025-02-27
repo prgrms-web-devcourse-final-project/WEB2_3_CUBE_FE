@@ -2,7 +2,7 @@ import { BaseModal } from '../modal/BaseModal';
 import { TabMenu } from '../modal/TabMenu';
 import { LoadingState } from '../modal/LoadingState';
 import { EmptyState } from '../modal/EmptyState';
-import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
+import { useInfiniteScroll } from '../../../../hooks/useInfiniteScroll';
 import { useNotifications } from '../hooks/useNotifications';
 import { NotificationItem } from './NotificationItem';
 import NotificationSkeletonItem from './components/NotificationSkeletonItem';

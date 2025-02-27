@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useModalPosition } from '../hooks/useModalPosition';
-import { useClickOutside } from '../hooks/useClickOutside';
+import { useClickOutside } from '../../../../hooks/useClickOutside';
 import { CloseButton } from './CloseButton';
 
 interface BaseModalProps {
