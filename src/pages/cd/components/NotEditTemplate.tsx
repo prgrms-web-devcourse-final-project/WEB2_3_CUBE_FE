@@ -1,19 +1,20 @@
 import writeTemplate from '@/assets/cd/write-template.svg';
 import EmptyTemplate from './EmptyTemplate';
 import { deleteTemplate } from '@apis/cd';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useUserStore } from '@/store/useUserStore';
 
 export default function NotEditTemplate({
   templateData,
   isEditable,
 }: TemplateProps) {
-  const [searchParams] = useSearchParams();
-  const myCdId = Number(useParams().myCdId) || 0;
-  const userId = Number(searchParams.get('userId')) || 0;
-  // 방주인이 아니면 템플릿 작성 버튼은 있을 수 없음
+  const myCdId = Number(useParams().cdId) || 0;
+  const userId = Number(useParams().userId) || 0;
 
-  const myUserId = 1;
-  if (myUserId !== userId) return <EmptyTemplate />;
+  // 방주인이 아니면 템플릿 작성 버튼은 있을 수 없음
+  const user = useUserStore((state) => state.user);
+
+  const myUserId = user.userId;
 
   const handleDeleteTemplate = async () => {
     try {
@@ -24,6 +25,8 @@ export default function NotEditTemplate({
       console.error(error, '템플릿 삭제 실패!');
     }
   };
+
+  if (myUserId !== userId) return <EmptyTemplate />;
   return (
     <>
       {!templateData && (

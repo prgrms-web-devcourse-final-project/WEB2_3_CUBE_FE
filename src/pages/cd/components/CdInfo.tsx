@@ -1,15 +1,15 @@
-import React from 'react';
 import playingCD from '@assets/cd/playing-cd.png';
+import { truncateTitle } from '@utils/truncate';
 
-export default function CdInfo() {
+export default function CdInfo({ cdInfo }: { cdInfo: CDInfo }) {
   return (
     <div className='w-[36%] h-full  flex flex-col gap-10'>
       <div className='text-white flex flex-col gap-1.5 text-center'>
         <span className='2xl:text-2xl  text-xl font-semibold opacity-70'>
-          지드래곤
+          {cdInfo.artist}
         </span>
         <h1 className='2xl:text-[40px] text-2xl font-bold '>
-          무제(無題) (Untitled, 2014)
+          {truncateTitle(cdInfo.title, 40)}
         </h1>
       </div>
 

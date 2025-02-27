@@ -1,14 +1,13 @@
 import { addCdTemplate, updateTemplate } from '@apis/cd';
 import { RefCallback, useActionState, useRef } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 export default function EditTemplate({
   templateData,
   isEditable,
 }: TemplateProps) {
-  const [searchParams] = useSearchParams();
-  const myCdId = Number(useParams().myCdId);
-  const userId = Number(searchParams.get('userId'));
+  const myCdId = Number(useParams().cdId) || 0;
+  const userId = Number(useParams().userId) || 0;
 
   const textAreaRefs = useRef<(HTMLTextAreaElement | null)[]>([]);
 
