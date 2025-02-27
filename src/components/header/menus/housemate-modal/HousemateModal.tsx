@@ -1,11 +1,10 @@
 import { SearchInput } from '@/components/search-modal/SearchInput';
-import rightIcon from '@/assets/housemate-right-icon.svg';
 import { BaseModal } from '../modal/BaseModal';
 import { TabMenu } from '../modal/TabMenu';
-import { LoadingState } from '../modal/LoadingState';
 import { EmptyState } from '../modal/EmptyState';
 import { useInfiniteScroll } from '../../../../hooks/useInfiniteScroll';
 import { useHousemates } from '../hooks/useHousemates';
+import { HousemateItem } from './components/HousemateItem';
 import HousemateSkeletonItem from './components/HousemateSkeletonItem';
 
 type TabType = 'followers' | 'following';
@@ -89,53 +88,10 @@ const HousemateModal = ({
         ) : (
           <>
             {housemates.map((housemate) => (
-              <li
+              <HousemateItem
                 key={housemate.userId}
-                className='gap-3 item-between'>
-                <div
-                  aria-label='프로필 정보'
-                  className='gap-2 item-middle'>
-                  <img
-                    src={
-                      housemate.profileImage ||
-                      'https://i.pinimg.com/736x/cc/5d/07/cc5d07daf1f1872eeebbfc1998b3adad.jpg'
-                    }
-                    alt='profile'
-                    className='object-cover w-10 h-10 rounded-full'
-                  />
-                  <div aria-label='닉네임 및 상태'>
-                    <p className='flex items-center gap-2'>
-                      <span className='font-bold text-[#503A44] text-sm'>
-                        {housemate.nickname}
-                      </span>
-                      <i
-                        aria-label={`${
-                          housemate.status === 'ONLINE' ? '온라인' : '오프라인'
-                        } 상태`}
-                        className={`w-2 h-2 rounded-full ${
-                          housemate.status === 'ONLINE'
-                            ? 'bg-[#61E509]'
-                            : 'bg-gray-300'
-                        }`}
-                      />
-                    </p>
-                    {housemate.bio && (
-                      <span
-                        aria-label='소개'
-                        className='text-xs text-[#503A44]/70 font-medium'>
-                        {housemate.bio}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <button className='flex items-center justify-center w-8 h-8'>
-                  <img
-                    src={rightIcon}
-                    alt='하우스메이트 페이지 바로가기'
-                    className='w-full h-full'
-                  />
-                </button>
-              </li>
+                {...housemate}
+              />
             ))}
 
             {hasMore && (

@@ -9,17 +9,23 @@ export const useNotifications = (isOpen: boolean) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [cursor, setCursor] = useState<number | undefined>(undefined);
+  const [cursor, setCursor] = useState<string | undefined>(undefined);
+  const [isFetching, setIsFetching] = useState(false);
 
   const fetchNotifications = useCallback(
     async (reset = false) => {
+      if (isFetching) return;
+
       try {
-        setIsLoading(true);
-        const status = activeTab === 'pendingRead' ? 'UNREAD' : 'READ';
+        setIsFetching(true);
+        if (reset) {
+          setIsLoading(true);
+        }
+
         const response = await notificationAPI.getNotifications(
-          reset ? undefined : cursor,
+          reset ? undefined : cursor ? Number(cursor) : undefined,
           20,
-          status,
+          activeTab === 'viewed',
         );
 
         setNotifications((prev) =>
@@ -30,10 +36,13 @@ export const useNotifications = (isOpen: boolean) => {
       } catch (error) {
         console.error('알림 목록 조회 실패:', error);
       } finally {
-        setIsLoading(false);
+        setIsFetching(false);
+        if (reset) {
+          setIsLoading(false);
+        }
       }
     },
-    [activeTab, cursor],
+    [activeTab, cursor, isFetching],
   );
 
   const handleReadNotification = async (notificationId: number) => {
@@ -59,7 +68,6 @@ export const useNotifications = (isOpen: boolean) => {
     fetchNotifications(true);
   };
 
-  // 모달이 열릴 때 알림 목록 조회
   useEffect(() => {
     if (isOpen) {
       setNotifications([]);
@@ -67,7 +75,7 @@ export const useNotifications = (isOpen: boolean) => {
       setHasMore(true);
       fetchNotifications(true);
     }
-  }, [isOpen, fetchNotifications]);
+  }, [isOpen]);
 
   return {
     activeTab,

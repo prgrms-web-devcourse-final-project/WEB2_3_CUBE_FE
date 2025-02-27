@@ -1,10 +1,9 @@
 import { BaseModal } from '../modal/BaseModal';
 import { TabMenu } from '../modal/TabMenu';
-import { LoadingState } from '../modal/LoadingState';
 import { EmptyState } from '../modal/EmptyState';
 import { useInfiniteScroll } from '../../../../hooks/useInfiniteScroll';
 import { useNotifications } from '../hooks/useNotifications';
-import { NotificationItem } from './NotificationItem';
+import { NotificationItem } from './components/NotificationItem';
 import NotificationSkeletonItem from './components/NotificationSkeletonItem';
 
 type TabType = 'pendingRead' | 'viewed';
@@ -36,7 +35,7 @@ const NotificationModal = ({
   } = useNotifications(isOpen);
 
   const { listRef, observerRef } = useInfiniteScroll({
-    fetchMore: fetchNotifications,
+    fetchMore: () => fetchNotifications(false),
     isLoading,
     hasMore,
   });
@@ -71,19 +70,24 @@ const NotificationModal = ({
                 key={`notification-${notification.notificationId}`}
                 notification={notification}
                 onRead={handleReadNotification}
+                activeTab={activeTab}
               />
             ))}
-            {hasMore && isLoading && (
-              <div className='flex flex-col gap-6'>
-                {Array.from({ length: 3 }).map((_, index) => (
-                  <NotificationSkeletonItem key={`skeleton-more-${index}`} />
-                ))}
+            {hasMore && (
+              <div
+                ref={observerRef}
+                className='py-2'>
+                {isLoading && (
+                  <div className='flex flex-col gap-6'>
+                    {Array.from({ length: 3 }).map((_, index) => (
+                      <NotificationSkeletonItem
+                        key={`skeleton-more-${index}`}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             )}
-            <div
-              ref={observerRef}
-              style={{ height: '1px' }}
-            />
           </>
         )}
       </ul>
