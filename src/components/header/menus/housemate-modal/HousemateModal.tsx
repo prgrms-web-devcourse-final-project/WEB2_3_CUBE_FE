@@ -70,10 +70,12 @@ const HousemateModal = ({
       <ul
         ref={listRef}
         className='flex flex-col gap-6 px-4 mt-4 overflow-y-auto h-[calc(80vh-280px)]'>
-        {isLoading && !housemates.length ? (
-          Array.from({ length: 5 }).map((_, index) => (
-            <HousemateSkeletonItem key={index} />
-          ))
+        {isLoading ? (
+          <div className='flex flex-col gap-6'>
+            {Array.from({ length: 5 }).map((_, index) => (
+              <HousemateSkeletonItem key={index} />
+            ))}
+          </div>
         ) : error ? (
           <EmptyState message={error} />
         ) : housemates.length === 0 ? (

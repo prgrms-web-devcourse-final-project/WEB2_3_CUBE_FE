@@ -14,7 +14,7 @@ export const NotificationItem = memo(
       <li
         onClick={() => {
           if (!notification.isRead) {
-            onRead(notification.id);
+            onRead(notification.notificationId);
           }
         }}
         className={`gap-3 item-between cursor-pointer transition-opacity hover:opacity-80 ${

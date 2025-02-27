@@ -1,10 +1,10 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { notificationAPI } from '@/apis/notification';
 import { Notification } from '@/types/notification';
 
 type TabType = 'pendingRead' | 'viewed';
 
-export const useNotifications = () => {
+export const useNotifications = (isOpen: boolean) => {
   const [activeTab, setActiveTab] = useState<TabType>('pendingRead');
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -41,7 +41,7 @@ export const useNotifications = () => {
       await notificationAPI.readNotification(notificationId);
       setNotifications((prev) =>
         prev.map((notification) =>
-          notification.id === notificationId
+          notification.notificationId === notificationId
             ? { ...notification, isRead: true }
             : notification,
         ),
@@ -58,6 +58,16 @@ export const useNotifications = () => {
     setHasMore(true);
     fetchNotifications(true);
   };
+
+  // 모달이 열릴 때 알림 목록 조회
+  useEffect(() => {
+    if (isOpen) {
+      setNotifications([]);
+      setCursor(undefined);
+      setHasMore(true);
+      fetchNotifications(true);
+    }
+  }, [isOpen, fetchNotifications]);
 
   return {
     activeTab,

@@ -1,5 +1,5 @@
 interface Notification {
-  id: number;
+  notificationId: number;
   type: 'GUESTBOOK' | 'MUSIC_COMMENT' | 'EVENT' | 'HOUSE_MATE';
   senderId: number;
   senderNickName: string;
