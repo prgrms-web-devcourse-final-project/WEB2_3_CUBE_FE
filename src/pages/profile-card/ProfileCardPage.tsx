@@ -5,16 +5,19 @@ import { useUserProfile } from '@/hooks/useUserProfile';
 import { ProfileCardLayout } from '@/components/profile-card/ProfileCardLayout';
 import shareIcon from '@/assets/profile-card/share-icon.svg';
 import pointIcon from '@/assets/toast/coin.png';
+import shareImage from '@/assets/share-thumbnail.png'; // 공유용 썸네일 이미지
 import UserProfileSection from './components/UserProfileSection';
 import GenreCard from './components/GenreCard';
 import RecommendedUserList from './components/RecommendedUserList';
 import ProfileButtons from './components/ProfileButtons';
+import { useToastStore } from '@/store/useToastStore';
 
 const ProfileCardPage = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
   const { user } = useUserStore();
   const { profile, updateProfile } = useUserProfile(userId || undefined);
+  const { showToast } = useToastStore();
 
   useEffect(() => {
     if (!userId) {
@@ -34,20 +37,42 @@ const ProfileCardPage = () => {
     if (!userId || !profile) return;
 
     try {
-      const shareData = {
+      const shareData: {
+        title: string;
+        text: string;
+        url: string;
+        files?: File[];
+      } = {
         title: `${profile.nickname}님의 프로필`,
         text: `${profile.nickname}님의 취향이 담긴 방을 확인해보세요!`,
-        url: `${window.location.origin}/room/${userId}`,
+        url: `${window.location.origin}/profile/${userId}`,
       };
+
+      if (navigator.canShare) {
+        try {
+          const response = await fetch(shareImage);
+          const blob = await response.blob();
+          const file = new File([blob], 'share-thumbnail.png', {
+            type: 'image/png',
+          });
+
+          if (navigator.canShare({ files: [file] })) {
+            shareData.files = [file];
+          }
+        } catch (error) {
+          console.error('이미지 처리 실패:', error);
+        }
+      }
 
       if (navigator.share) {
         await navigator.share(shareData);
       } else {
         await navigator.clipboard.writeText(shareData.url);
-        // TODO: 복사 완료 토스트 메시지 표시
+        showToast('프로필 카드 링크가 복사되었습니다.', 'success');
       }
     } catch (error) {
       console.error('공유하기 실패:', error);
+      showToast('링크 복사에 실패했습니다.', 'error');
     }
   };
 
