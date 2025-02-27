@@ -1,24 +1,20 @@
 import { useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { logoutAPI } from '@apis/login';
 import { motion, AnimatePresence } from 'framer-motion';
-
+import { useUserStore } from '../../../store/useUserStore';
 interface HiddenMenuProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
 const HiddenMenu = ({ isOpen, onClose }: HiddenMenuProps) => {
   const menuRef = useRef<HTMLDivElement>(null);
-
+  const navigate = useNavigate();
+  const { user } = useUserStore();
   const handleLogout = async () => {
-    try {
-      await logoutAPI();
-    } catch (error) {
-      console.error(error);
-    }
+    await logoutAPI();
+    navigate('/login');
   };
-
   return (
     <AnimatePresence>
       {isOpen && (
@@ -42,7 +38,7 @@ const HiddenMenu = ({ isOpen, onClose }: HiddenMenuProps) => {
             </li>
             <li>
               <button
-                type='button'
+                onClick={() => user && navigate(`/profile/${user.userId}`)}
                 className='w-full px-4 py-3 text-center border-b border-gray-100  text-[#2E4D99]/50 hover:text-[#2E4D99] transition-colors'>
                 내 프로필
               </button>
@@ -75,5 +71,4 @@ const HiddenMenu = ({ isOpen, onClose }: HiddenMenuProps) => {
     </AnimatePresence>
   );
 };
-
 export default HiddenMenu;

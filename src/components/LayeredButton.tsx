@@ -59,7 +59,8 @@ const LayeredButton = ({
         onMouseUp={() => setIsPressed(false)}
         onMouseLeave={() => setIsPressed(false)}
         onTouchStart={() => setIsPressed(true)}
-        onTouchEnd={() => setIsPressed(false)}>
+        onTouchEnd={() => setIsPressed(false)}
+        {...props}>
         <span>{children}</span>
       </button>
     </div>

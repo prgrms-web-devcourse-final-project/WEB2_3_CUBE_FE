@@ -43,7 +43,7 @@ const BookPage = () => {
           setReviewData({
             bookTitle: bookDetail.title,
             author: bookDetail.author,
-            genres: bookDetail.genreNames,
+            genreNames: bookDetail.genreNames,
             publishedDate: bookDetail.publishedDate,
             imageUrl: bookDetail.imageUrl,
             title: review.title,
@@ -51,7 +51,7 @@ const BookPage = () => {
             theme: review.coverColor,
             quote: review.quote,
             emotion: review.takeaway,
-            reason: review.motive,
+            reason: review.motivate,
             discussion: review.topic,
             freeform: review.freeFormText,
           });
@@ -84,7 +84,7 @@ const BookPage = () => {
       <BookReviewEditor
         bookTitle={bookInfo.title}
         author={bookInfo.author}
-        genres={bookInfo.genreNames}
+        genreNames={bookInfo.genreNames}
         publishedDate={bookInfo.publishedDate}
         imageUrl={bookInfo.imageUrl}
       />
