@@ -2,7 +2,6 @@
  * YYYY-MM-DD 형식을 YYYY.MM.DD. 형식으로 변환
  */
 export const toKoreanDate = (date: string) => {
-  if (!date) return '';
   return date.replace(/-/g, '.') + '.';
 };
 

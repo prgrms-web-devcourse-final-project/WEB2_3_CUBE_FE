@@ -6,6 +6,7 @@ interface UserProfile {
   musicGenres: string[];
   bookGenres: string[];
   myProfile: boolean;
+  isMatched: boolean;
 }
 
 interface RecommendedUser {
@@ -33,10 +34,47 @@ interface UserProfileResponse {
   musicGenres: string[];
   bookGenres: string[];
   myProfile: boolean;
+  isMatched: boolean;
 }
 
 interface RecommendedUserResponse {
   userId: string;
   nickname: string;
   profileImage: string;
+}
+
+interface UserProfile {
+  userId: string;
+  nickname: string;
+  profileImage: string;
+  bio: string;
+  musicGenres: string[];
+  bookGenres: string[];
+  isMatched?: boolean;
+}
+
+interface RecommendedUser {
+  userId: string;
+  nickname: string;
+  profileImage: string;
+}
+
+interface ProfileSectionProps {
+  profile: Pick<UserProfile, 'nickname' | 'profileImage' | 'bio'>;
+}
+
+interface GenreCardProps {
+  title: string;
+  genres: string[];
+}
+
+interface RecommendedUserListProps {
+  users: RecommendedUser[];
+}
+
+interface ProfileButtonsProps {
+  userId: string;
+  isMyProfile: boolean;
+  isMatched?: boolean;
+  onProfileUpdate?: () => void;
 }
