@@ -14,7 +14,7 @@ interface ReviewType {
   quote: string;
   takeaway: string;
   freeFormText: string;
-  motive: string;
+  motivate: string;
   topic: string;
   coverColor: string;
 }
