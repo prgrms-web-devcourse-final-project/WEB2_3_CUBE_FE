@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { refreshAccessTokenAPI } from '@apis/login';
 function App() {
-  const [cookies, setCookies] = useCookies(['accessToken', 'refreshToken']);
+  const [cookies] = useCookies(['accessToken', 'refreshToken']);
   const [isTokenRefreshing, setIsTokenRefreshing] = useState(false);
 
   console.log('App 랜더링');
@@ -18,15 +18,6 @@ function App() {
         try {
           const response = await refreshAccessTokenAPI(refreshToken);
           console.log(response);
-
-          // setCookies('accessToken', response.accessToken, {
-          //   path: '/',
-          //   maxAge: 3590,
-          // });
-          // setCookies('refreshToken', response.refreshToken, {
-          //   path: '/',
-          //   maxAge: 1209600,
-          // });
         } catch (error) {
           console.error(error);
         } finally {

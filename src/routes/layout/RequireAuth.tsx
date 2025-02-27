@@ -13,11 +13,6 @@ export default function RequireAuth() {
     const token = cookies.accessToken;
     setIsLoading(false);
 
-    console.log(token);
-
-    // if (token === undefined) {
-    //   return;
-    // }
     if (!token && location.pathname !== '/login') {
       navigate('/login', { replace: true });
     } else if (token && location.pathname === '/login') {
