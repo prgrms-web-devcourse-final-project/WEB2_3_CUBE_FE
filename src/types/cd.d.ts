@@ -52,3 +52,15 @@ interface PostCDInfo {
   duration: number;
   releaseDate?: string;
 }
+
+// template type
+
+interface TemplateProps {
+  isEditable: () => void;
+  templateData: {
+    comment1: string | null;
+    comment2: string | null;
+    comment3: string | null;
+    comment4: string | null;
+  };
+}

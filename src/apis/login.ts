@@ -1,46 +1,47 @@
 import { useUserStore } from '@/store/useUserStore';
 import axiosInstance from './axiosInstance';
+import { Cookies } from 'react-cookie';
 
-const API_URL = 'mock';
-/**
- *
- * @param provider 소셜로그인 제공자
- * @param code 인가코드
- * @returns
- */
-export const loginAPI = async (provider: string, code: string) => {
-  const { data } = await axiosInstance.post(
-    `/${API_URL}/auth/login/${provider}`,
-    {
-      code: code,
+const cookies = new Cookies();
+const API_URL = 'api';
+
+export const loginAPI = async (token: string) => {
+  const { data } = await axiosInstance.get(`/${API_URL}/auth/user`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
     },
-  );
-  sessionStorage.setItem('accessToken', data.accessToken);
-  sessionStorage.setItem(
-    'expiryTime',
-    data.expiresIn + Math.floor(Date.now() / 1000),
-  );
+  });
+  const { accessToken, refreshToken, user } = data;
+  // 토큰 정보 저장
+  cookies.set('accessToken', accessToken, { path: '/', maxAge: 3590 });
+  cookies.set('refreshToken', refreshToken, { path: '/', maxAge: 1209600 });
+
   // user 정보 저장
-  useUserStore.getState().setUser(data.user);
-  console.log(data);
+  useUserStore.getState().setUser(user);
 
   return data;
-  // await logoutAPI();
 };
 
-export const refreshAccessTokenAPI = async () => {
-  const { data } = await axiosInstance.post(`/${API_URL}/auth/reissue-token`);
-
-  sessionStorage.setItem('accessToken', data.access_token);
-  sessionStorage.setItem(
-    'expiryTime',
-    data.expires_in + Math.floor(Date.now() / 1000),
-  );
+/**
+ *
+ * @param token 유효성 검증을 위한 refreshToken
+ * @returns
+ */
+export const refreshAccessTokenAPI = async (token: string) => {
+  const { data } = await axiosInstance.post(`/${API_URL}/auth/reissue-token`, {
+    refreshToken: token,
+  });
+  const { accessToken, refreshToken } = data;
+  cookies.set('accessToken', accessToken, { path: '/', maxAge: 3590 });
+  cookies.set('refreshToken', refreshToken, { path: '/', maxAge: 1209600 });
   return data;
 };
 
 export const logoutAPI = async () => {
   const response = await axiosInstance.post(`/${API_URL}/auth/logout`);
-  sessionStorage.clear();
+
+  localStorage.removeItem('user-storage');
+  cookies.remove('accessToken', { path: '/' });
+  cookies.remove('refreshToken', { path: '/' });
   return response.data;
 };

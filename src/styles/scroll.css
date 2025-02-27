@@ -8,7 +8,7 @@
 }
 
 .scrollbar::-webkit-scrollbar-thumb {
-  background: #2656cd;
+  background: #4e7acf4d;
   border-radius: 6px; /* 스크롤바 둥근 테두리 */
   width: 13px;
   height: 25px;

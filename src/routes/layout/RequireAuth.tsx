@@ -1,23 +1,32 @@
 import { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 export default function RequireAuth() {
-  const [show, setShow] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [cookies] = useCookies(['accessToken']);
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+
   useEffect(() => {
-    const token = sessionStorage.getItem('accessToken');
-    // 토큰이 없고 현재 login 페이지가 아니면 login 페이지로 리디렉트
+    const token = cookies.accessToken;
+    setIsLoading(false);
+
+    console.log(token);
+
+    // if (token === undefined) {
+    //   return;
+    // }
     if (!token && location.pathname !== '/login') {
       navigate('/login', { replace: true });
-      // 토큰이 있고 현재 login 페이지면 메인 페이지로 리디렉트
     } else if (token && location.pathname === '/login') {
       navigate('/', { replace: true });
     }
+  }, [navigate, location.pathname, cookies.accessToken]);
 
-    setShow(true);
-  }, [navigate, location]);
-
-  return <>{show && <Outlet />}</>;
+  if (isLoading) {
+    return <div>로딩 중...</div>; // 로딩 상태 표시
+  }
+  return <Outlet />;
 }
