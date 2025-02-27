@@ -5,8 +5,8 @@ import notificationIcon from '@/assets/header/notification-icon.svg';
 import housemateIcon from '@/assets/header/housemate-list-icon.svg';
 import { Link } from 'react-router-dom';
 import HiddenMenu from './menus/HiddenMenu';
-import HousemateModal from './menus/HousemateModal';
-import NotificationModal from './menus/NotificationModal';
+import HousemateModal from './menus/housemate-modal/HousemateModal';
+import NotificationModal from './menus/notification-modal/NotificationModal';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
