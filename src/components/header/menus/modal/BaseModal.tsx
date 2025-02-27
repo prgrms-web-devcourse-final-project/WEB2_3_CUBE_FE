@@ -50,8 +50,6 @@ export const BaseModal = ({
     onClose,
   });
 
-  if (!isOpen) return null;
-
   return (
     <AnimatePresence>
       {isOpen && (
