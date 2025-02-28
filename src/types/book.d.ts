@@ -42,7 +42,7 @@ export interface BookReviewData {
 
   // 리뷰 정보 (사용자 입력)
   title: string;
-  reviewDate: string;
+  writeDateTime: string; // reviewDate를 writeDateTime으로 변경
   theme: BookThemeType;
   quote: string;
   emotion: string;

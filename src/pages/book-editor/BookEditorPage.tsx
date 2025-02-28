@@ -53,7 +53,7 @@ const BookEditorPage = ({
       imageUrl,
       // 리뷰 정보
       title: '',
-      reviewDate: new Date().toISOString().split('T')[0],
+      writeDateTime: '',
       theme: 'BLUE',
       quote: '',
       emotion: '',
@@ -100,7 +100,7 @@ const BookEditorPage = ({
             publishedDate,
             imageUrl,
             title: review.title,
-            reviewDate: new Date().toLocaleDateString('ko-KR'),
+            writeDateTime: review.writeDateTime,
             theme: review.coverColor,
             quote: review.quote,
             emotion: review.takeaway,

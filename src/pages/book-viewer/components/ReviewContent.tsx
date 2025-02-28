@@ -1,5 +1,6 @@
 import { BookReviewData } from '@/types/book';
 import { BOOK_THEME, BookThemeType } from '@/constants/bookTheme';
+import scrollDownIcon from '@assets/book/scroll-down-icon.svg';
 
 interface ReviewField {
   key: keyof BookReviewData;
@@ -47,10 +48,29 @@ export const ReviewContent = ({
   onDelete,
 }: ReviewContentProps) => (
   <>
-    <div
-      className='mt-20 text-sm'
-      style={{ color: `${colors.primary}70` }}>
-      {reviewData.reviewDate}
+    <div className='item-between'>
+      <p
+        className='text-sm py-18'
+        style={{ color: `${colors.primary}80` }}>
+        {reviewData.writeDateTime}
+      </p>
+      <button
+        onClick={() => {
+          const section = document.getElementById('section-quote');
+          if (section) {
+            section.scrollIntoView({ behavior: 'smooth' });
+          }
+        }}
+        className='gap-2 px-6 py-3 text-xl border-2 rounded-full item-middle'
+        style={{
+          borderColor: colors.primary,
+        }}>
+        Scroll Down
+        <img
+          src={scrollDownIcon}
+          alt='scroll-down-icon'
+        />
+      </button>
     </div>
 
     {reviewFields.map(

@@ -47,7 +47,7 @@ const BookPage = () => {
             publishedDate: bookDetail.publishedDate,
             imageUrl: bookDetail.imageUrl,
             title: review.title,
-            reviewDate: new Date().toLocaleDateString('ko-KR'),
+            writeDateTime: review.writeDateTime,
             theme: review.coverColor,
             quote: review.quote,
             emotion: review.takeaway,
