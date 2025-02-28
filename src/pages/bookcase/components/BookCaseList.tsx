@@ -55,7 +55,7 @@ const BookCaseList = ({ page, books, showEmptyMessage }: BookCaseListProps) => {
                 alt={book.title}
                 className='object-cover w-full h-full rounded-2xl'
               />
-              <div className='absolute bottom-0 w-full p-2.5 bg-white rounded-b-2xl h-15'>
+              <div className='absolute bottom-0 w-full p-2.5 pl-4 bg-white rounded-b-2xl h-15'>
                 <p className=' text-[#2656CD] font-medium truncate'>
                   {book.title}
                 </p>

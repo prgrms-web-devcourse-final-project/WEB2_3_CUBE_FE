@@ -71,6 +71,23 @@ const BookCasePage = () => {
     fetchBooks();
   }, [user, navigate]);
 
+  // 초기 스크롤 위치 설정
+  useEffect(() => {
+    if (containerRef.current && !isLoading) {
+      const container = containerRef.current;
+      // 가로 중앙
+      const scrollX = (container.scrollWidth - container.clientWidth) / 2;
+      // 세로 중앙
+      const scrollY = (container.scrollHeight - container.clientHeight) / 2;
+
+      container.scrollTo({
+        left: scrollX,
+        top: scrollY,
+        behavior: 'smooth',
+      });
+    }
+  }, [isLoading]);
+
   const handleDragStart = (clientX: number, clientY: number) => {
     setIsDragging(true);
     if (containerRef.current) {
@@ -121,7 +138,7 @@ const BookCasePage = () => {
   return (
     <div
       ref={containerRef}
-      className='w-full h-screen overflow-auto bg-white select-none cursor-grab active:cursor-grabbing'
+      className='w-full h-screen overflow-auto bg-white select-none cursor-grab active:cursor-grabbing scrollbar-none'
       onMouseDown={(e) => handleDragStart(e.pageX, e.pageY)}
       onMouseMove={(e) => handleDragMove(e.pageX, e.pageY)}
       onMouseUp={handleDragEnd}

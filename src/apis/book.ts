@@ -3,7 +3,7 @@ import axiosInstance from './axiosInstance';
 import { BookType, ReviewType } from '@/types/book';
 
 const ALADIN_KEY = import.meta.env.VITE_ALADIN_KEY;
-const API_URL = 'mock';
+const API_URL = 'api';
 
 export const bookAPI = {
   // ------------------------------ 검색 ------------------------------
