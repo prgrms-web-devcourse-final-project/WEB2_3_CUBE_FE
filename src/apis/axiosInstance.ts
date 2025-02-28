@@ -12,18 +12,18 @@ const axiosInstance = axios.create({
 });
 
 // 요청 인터셉터
-axiosInstance.interceptors.request.use(
-  async (config) => {
-    const accessToken = cookies.get('accessToken');
+// axiosInstance.interceptors.request.use(
+//   async (config) => {
+//     const accessToken = cookies.get('accessToken');
 
-    if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
+//     if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
 
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  },
-);
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   },
+// );
 
 // 응답 인터셉터
 axiosInstance.interceptors.response.use(
