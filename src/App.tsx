@@ -3,30 +3,22 @@ import Router from './routes/Router';
 import { Toast } from '@components/Toast';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
-import { refreshAccessTokenAPI } from '@apis/login';
+import { refreshAccessTokenAPI } from '@apis/auth';
 function App() {
-  const [cookies, setCookies] = useCookies(['accessToken', 'refreshToken']);
+  const [cookies] = useCookies(['accessToken', 'refreshToken']);
   const [isTokenRefreshing, setIsTokenRefreshing] = useState(false);
 
-  console.log('App 랜더링');
   useEffect(() => {
     const accessToken = cookies.accessToken;
     const refreshToken = cookies.refreshToken;
+    console.log(accessToken, refreshToken);
+
     const fetchTokenData = async () => {
-      if (!accessToken && refreshToken && !isTokenRefreshing) {
+      // 엑세스 토큰 재발급 로직
+      if (!accessToken && refreshToken) {
         setIsTokenRefreshing(true);
         try {
-          const response = await refreshAccessTokenAPI(refreshToken);
-          console.log(response);
-
-          // setCookies('accessToken', response.accessToken, {
-          //   path: '/',
-          //   maxAge: 3590,
-          // });
-          // setCookies('refreshToken', response.refreshToken, {
-          //   path: '/',
-          //   maxAge: 1209600,
-          // });
+          await refreshAccessTokenAPI(refreshToken);
         } catch (error) {
           console.error(error);
         } finally {

@@ -31,7 +31,12 @@
 
 /* 설정 컴포넌트 */
 .setting-gradient {
-  background: linear-gradient(180deg, rgba(22, 44, 99, 0.00) 37.37%, rgba(22, 44, 99, 0.1) 68.68%, rgba(22, 44, 99, 0.45) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(22, 44, 99, 0) 37.37%,
+    rgba(22, 44, 99, 0.1) 68.68%,
+    rgba(22, 44, 99, 0.45) 100%
+  );
 }
 
 /* 테마 설정 컴포넌트 */
@@ -44,14 +49,13 @@
   min-height: 222px;
   background-color: #FCF7FD/20;
   display: flex;
-  border: 2px solid #FCF7FD;
+  border: 2px solid #fcf7fd;
 }
-
 
 /* 테마 설정 컴포넌트 */
 .prefer-card {
-  width: calc(100vw*0.265);
-  height: calc(100vw*0.143);
+  width: calc(100vw * 0.265);
+  height: calc(100vw * 0.143);
   max-width: 509px;
   max-height: 275px;
   min-width: 384px;
@@ -62,15 +66,15 @@
 
 /* 랭킹 */
 .rank-modal {
-  width: calc(100vh*0.343);
-  height: calc(100vh*0.6755);
+  width: calc(100vh * 0.343);
+  height: calc(100vh * 0.6755);
   max-width: 410px;
   max-height: 780px;
   min-width: 340px;
   min-height: 600px;
   background-color: #FCF7FD/20;
   display: flex;
-  border: 2px solid #FCF7FD;
+  border: 2px solid #fcf7fd;
   z-index: 5;
 }
 
@@ -82,16 +86,16 @@
   max-height: 822px;
   min-width: 600px;
   min-height: 550px;
-  background-color: #FCF7FD;
+  background-color: #fcf7fd;
   display: flex;
   border-radius: 60px;
-  border: 2px solid #2656CD;
+  border: 2px solid #2656cd;
   position: relative;
   z-index: 10;
 }
 
 .inputBase {
-  @apply placeholder:font-medium placeholder:text-xs @2xl:placeholder:text-sm placeholder:text-[#A2A2A2]/70 ;
+  @apply placeholder:font-medium placeholder:text-xs @2xl:placeholder:text-sm placeholder:text-[#A2A2A2]/70;
   @apply bg-[#EDE6EE]/25 border-2 border-[#A2A2A2]/30 rounded-[8px] @2xl:rounded-xl;
-  @apply text-sm text-[#292929] font-medium @2xl:text-base
+  @apply text-sm text-[#292929] font-medium @2xl:text-base;
 }

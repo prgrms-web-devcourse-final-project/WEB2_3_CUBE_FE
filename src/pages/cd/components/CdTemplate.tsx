@@ -9,15 +9,15 @@ export default function CdTemplate() {
   const [templateData, setTemplateData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const { myCdId } = useParams();
+  const myCdId = Number(useParams().cdId);
 
   useEffect(() => {
     const fetchTemplateData = async () => {
       try {
-        const templateData = await getCdTemplate(Number(myCdId));
+        const templateData = await getCdTemplate(myCdId);
         setTemplateData(templateData); // 템플릿 조회
       } catch (error) {
-        console.error(error, '템플릿 조회 실패!');
+        console.error(error, '템플릿을 작성해주세요!');
       } finally {
         setIsLoading(false);
       }

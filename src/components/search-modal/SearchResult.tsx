@@ -67,7 +67,7 @@ export const SearchResult = ({
           setIsAlertModalOpen(true);
           return;
         }
-        await addCdToMyRack(1, cdData);
+        await addCdToMyRack(user.userId, cdData);
       }
       onSelect(item);
       onClose();

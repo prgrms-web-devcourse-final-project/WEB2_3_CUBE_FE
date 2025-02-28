@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { refreshAccessTokenAPI } from './login';
 import { Cookies } from 'react-cookie';
+import { refreshAccessTokenAPI } from './auth';
 const cookies = new Cookies();
 
 const axiosInstance = axios.create({
@@ -33,13 +33,6 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401) {
-      console.error('네트워크 오류 또는 서버 응답 없음:', error.message);
-      return Promise.reject(error);
-      // 로그아웃
-      // await logoutAPI();
-    }
-
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true; // 무한 루프 방지
 
@@ -47,25 +40,16 @@ axiosInstance.interceptors.response.use(
 
       if (!refreshToken) {
         console.error('🚨 Refresh Token이 없습니다. 다시 로그인하세요.');
-        // 로그아웃 로직
+        // await logoutAPI();
         return Promise.reject(error);
       }
       try {
         const response = await refreshAccessTokenAPI(refreshToken);
-        // 기존 요청에 새로운 토큰 추가 후 재요청
-
-        cookies.set('accessToken', response.accessToken, {
-          path: '/',
-          maxAge: 1209600,
-        });
-        cookies.set('refreshToken', response.refreshToken, {
-          path: '/',
-          maxAge: 1209600,
-        });
         originalRequest.headers.Authorization = `Bearer ${response.accessToken}`;
         return axiosInstance(originalRequest);
       } catch (error) {
         console.error('🚨 Refresh Token이 만료되었습니다. 다시 로그인하세요.');
+        // await logoutAPI();
         return Promise.reject(error);
       }
     } else {

@@ -5,7 +5,7 @@ import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import { Mousewheel, EffectCoverflow } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface CdSwiperProps {
   cdDatas: { data: CDInfo[]; nextCursor: number };
@@ -18,7 +18,7 @@ const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
     const navigate = useNavigate();
     const [rotateX, setRotateX] = useState<{ [key: number]: number }>({});
     const [rotateY, setRotateY] = useState<{ [key: number]: number }>({});
-
+    const userId = useParams().userId;
     const handleMouseMove = (
       e: React.MouseEvent<HTMLDivElement, MouseEvent>,
       index: number,
@@ -86,7 +86,7 @@ const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
                   rotateX[index] || 0
                 }px 20px rgba(0, 0, 0, 0.5))`, // 그림자 방향 조정
               }}
-              onClick={() => navigate('/cd/1/user/1')}
+              onClick={() => navigate(`/cd/${data.myCdId}/user/${userId}`)}
               onMouseMove={(e) => handleMouseMove(e, index)}
               onMouseLeave={() => handleMouseLeave(index)}>
               <img

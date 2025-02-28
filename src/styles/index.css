@@ -2,6 +2,7 @@
 @import './main.css';
 @import './scroll.css';
 @import './swiper.css';
+@import './range.css';
 
 * {
   font-family: 'Pretendard Variable', Pretendard, -apple-system,

@@ -182,6 +182,7 @@ export const searchSpotifyCds = async (
  * @param userId 사용자의 고유한 id
  * @param size  페이지 크기
  * @param cursor 마지막으로 조회한 Cd id (첫 페이지 조회 시 제외)
+ * @param keyword 검색 입력값
  *
  * @returns cd 목록
  *
@@ -194,10 +195,38 @@ export const getCdRack = async (
 ) => {
   const url = cursor
     ? `/${API_URL}/my-cd?userId=${userId}&size=${size}&cursor=${cursor}`
-    : `/${API_URL}/my-cd?userId=${userId}&size=${size}`;
+    : `/${API_URL}/my-cd?userId=${userId}&size=${size}0`;
 
   const response = await axiosInstance.get(url);
 
+  return response.data;
+};
+
+export const getCdRackSearch = async (
+  userId: number,
+  size?: number,
+  cursor?: number,
+  keyword?: string,
+) => {
+  const url = cursor
+    ? `/${API_URL}/my-cd?userId=${userId}&size=${size}&cursor=${cursor}&keyword=${keyword}`
+    : `/${API_URL}/my-cd?userId=${userId}&size=${size}&keyword=${keyword}`;
+
+  const response = await axiosInstance.get(url);
+
+  return response.data;
+};
+
+/**
+ *
+ * @param myCdId 사용자의 고유cdId
+ * @param userId 사용자 id
+ * @returns
+ */
+export const getCdInfo = async (myCdId: number, userId: number) => {
+  const response = await axiosInstance(
+    `/${API_URL}/my-cd/${myCdId}?userId=${userId}`,
+  );
   return response.data;
 };
 
