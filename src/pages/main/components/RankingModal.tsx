@@ -1,28 +1,27 @@
-import exProfile from '@assets/rank/exProfile.png';
 import closeIcon from '@assets/rank/rank-close-icon.svg';
 import { motion } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { rankAPI } from '../../../apis/ranking';
 import RankingItem from './RankingItem';
 import TopRankingItem from './TopRankingItem';
-
-const rankingMocData = [
-  { rank: 1, nickname: 'Adnming', visits: 500, profileImg: exProfile },
-  { rank: 2, nickname: '최보아', visits: 450, profileImg: exProfile },
-  { rank: 3, nickname: '채보아', visits: 400, profileImg: exProfile },
-];
-
-const otherRankingMocData = [
-  { rank: 4, nickname: '닉네임이야원', visits: 350 },
-  { rank: 5, nickname: '닉네임이야', visits: 300 },
-  { rank: 6, nickname: '닉네임이', visits: 280 },
-  { rank: 7, nickname: '닉네임', visits: 260 },
-  { rank: 8, nickname: '닉네임', visits: 240 },
-  { rank: 9, nickname: '닉네임', visits: 220 },
-  { rank: 10, nickname: '닉네임', visits: 200 },
-];
+import goldMedal from "@assets/rank/gold-medal.svg";
+import TypingText from '../../../components/TypingText';
 
 export default function RankingModal({ onClose }) {
+  const [rankingData, setRankingData] = useState<RankData[] | null>([]);
   const rankModalRef = useRef(null);
+
+  useEffect(() => {
+    const fetchRankData = async () => {
+      try {
+        const rankData = await rankAPI.getRanking();
+        setRankingData(rankData);
+      } catch (error) {
+        console.error('랭킹 불러오기 실패:', error);
+      }
+    };
+    fetchRankData();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -58,27 +57,40 @@ export default function RankingModal({ onClose }) {
         />
         {/* 랭킹 컨텐츠 */}
         <div className='flex flex-col items-center gap-6 @2xl:gap-6'>
-          <h2 className='font-bold text-2xl text-[#162C63]'>
-            RANKING
-          </h2>
-          {/* 랭킹 1~3위 */}
-          <div className='flex flex-row items-end gap-4 @2xl:gap-5'>
-            {rankingMocData.map((user) => (
-              <TopRankingItem
-                key={user.rank}
-                {...user}
-              />
-            ))}
-          </div>
-          {/* 랭킹 4~10위 */}
-          <div className='w-full flex flex-col gap-2.5'>
-            {otherRankingMocData.map((user) => (
-              <RankingItem
-                key={user.rank}
-                {...user}
-              />
-            ))}
-          </div>
+          {rankingData.length === 0 ? (
+            <div className='flex flex-col items-center '>
+            <p className='text-[#4B6BBA] text-sm @2xl:text-base font-medium'>
+              높은 랭크를 달성할 수록
+            </p>
+            <p className='text-[#4B6BBA] text-sm @2xl:text-base font-medium mb-8'>
+              더 많은 포인트를 받을 수 있어요! 
+            </p>
+            <img src={goldMedal} alt="" className='w-30 mb-10' />
+            <TypingText text="랭크 측정 중 ..." speed={80} pauseTime={2000} className='absolute bottom-35 2xl:bottom-40 2xl:text-lg' />
+            </div>
+          ) : (
+            <>
+            <h2 className='font-bold text-2xl text-[#162C63]'>RANKING</h2>
+              {/* 랭킹 1~3위 */}
+              <div className='flex flex-row items-end gap-4 @2xl:gap-5'>
+                {rankingData.slice(0, 3).map((user) => (
+                  <TopRankingItem
+                    key={user.rank}
+                    user={user}
+                  />
+                ))}
+              </div>
+              {/* 랭킹 4~10위 */}
+              <div className='w-full flex flex-col gap-2.5'>
+                {rankingData.slice(3, 10).map((user) => (
+                  <RankingItem
+                    key={user.rank}
+                    user={user}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </motion.section>
