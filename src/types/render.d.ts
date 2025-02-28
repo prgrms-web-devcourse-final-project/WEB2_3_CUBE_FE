@@ -18,3 +18,10 @@ interface FurnitureProps {
   item: FurnitureData;
   onInteract: (itemType: string) => void;
 }
+interface RoomModelProps {
+  userId: number;
+  roomId: number;
+  modelPath: string;
+  activeSettings: string;
+  furnitures: Furniture[];
+}

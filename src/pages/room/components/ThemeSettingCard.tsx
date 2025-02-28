@@ -1,10 +1,10 @@
 import checkIcon from '@assets/room/checkIcon.svg';
 import lock from '@assets/room/lock.png';
 import point from '@assets/room/point.png';
+import { themeData } from '@constants/roomTheme';
 
 export default function ThemeSettingCard({
   theme,
-  themeData,
   isSelected,
   isLocked,
   onClick,

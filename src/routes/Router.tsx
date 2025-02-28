@@ -12,7 +12,6 @@ import RequireAuth from './layout/RequireAuth';
 import ProfileCardPage from '@pages/profile-card/ProfileCardPage';
 import ProfileCardEditPage from '@pages/profile-card-edit/ProfileCardEditPage';
 import Redirection from '@pages/login/components/Redirection';
-import Redirection from '@pages/login/components/Redirection';
 const Router = () => {
   return (
     <Routes>
