@@ -55,11 +55,11 @@ const BookCaseList = ({ page, books, showEmptyMessage }: BookCaseListProps) => {
                 alt={book.title}
                 className='object-cover w-full h-full rounded-2xl'
               />
-              <div className='absolute bottom-0 w-full p-2 bg-white rounded-b-2xl h-13'>
-                <p className='text-sm text-[#2656CD] font-medium truncate'>
+              <div className='absolute bottom-0 w-full p-2.5 pl-4 bg-white rounded-b-2xl h-15'>
+                <p className=' text-[#2656CD] font-medium truncate'>
                   {book.title}
                 </p>
-                <p className='text-xs text-[#2656CD]/70'>{book.author}</p>
+                <p className='text-xs text-[#2656CD]/70 font-medium'>{book.author}</p>
               </div>
             </li>
           ) : (
@@ -76,11 +76,11 @@ const BookCaseList = ({ page, books, showEmptyMessage }: BookCaseListProps) => {
                   {truncateText(book.author, 8)}
                 </p>
               </div>
-              <div className='absolute bottom-0 w-full p-2 text-center rounded-b-2xl book-gradient h-13'>
+              <div className='absolute bottom-0 w-full p-2.5 text-center rounded-b-2xl book-gradient h-15'>
                 <p className='text-xs text-[#2656CD]'>
                   {book.publishedDate.split('.')[0]}
                 </p>
-                <p className='text-xs text-[#2656CD]'>민음사</p>
+                <p className='font-bold text-[#2656CD]'>{book.publisher}</p>
               </div>
             </li>
           ),

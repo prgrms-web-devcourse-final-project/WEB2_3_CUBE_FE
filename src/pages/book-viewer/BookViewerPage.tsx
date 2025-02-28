@@ -15,7 +15,7 @@ const BookViewerPage = ({ reviewData, bookId }: BookViewerPageProps) => {
     <section className='flex w-full h-screen overflow-auto'>
       <figure className='w-1/2 h-full p-4'>
         <img
-          className='object-cover w-full h-full rounded-2xl'
+          className='object-cover object-top w-full h-full rounded-2xl'
           src={reviewData.imageUrl || tempIMG}
           alt={reviewData.bookTitle}
         />
