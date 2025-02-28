@@ -1,4 +1,3 @@
-import { SearchItemType } from '@/types/search';
 import { useState, useEffect } from 'react';
 import { bookAPI } from '@apis/book';
 import { useDebounce } from './useDebounce';

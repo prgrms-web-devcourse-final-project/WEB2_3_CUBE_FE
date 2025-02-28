@@ -1,7 +1,6 @@
-import { useEffect, useState, useRef } from 'react';
-
 import { useNavigate, useParams } from 'react-router-dom';
 import { useUserStore } from '../../../store/useUserStore';
+import { BookCaseListType } from '@/types/book';
 
 const truncateText = (text: string, maxLength: number) => {
   if (text.length > maxLength) {

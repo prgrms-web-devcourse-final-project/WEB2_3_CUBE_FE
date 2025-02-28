@@ -10,7 +10,7 @@ interface Notification {
   isRead: boolean;
 }
 
-export interface NotificationResponse {
+ interface NotificationResponse {
   notifications: Notification[];
   hasNext: boolean;
   nextCursor: string;

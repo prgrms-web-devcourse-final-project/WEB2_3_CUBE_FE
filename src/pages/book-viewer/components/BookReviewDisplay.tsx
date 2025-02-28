@@ -3,35 +3,19 @@ import React, { useState, useEffect } from 'react';
 import { BOOK_THEME, BookThemeType } from '@/constants/bookTheme';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToastStore } from '@/store/useToastStore';
-
-interface ReviewData {
-  // 도서 정보
-  bookTitle: string;
-  author: string;
-  genreNames: string[];
-  publishedDate: string; // 출판일자
-  // 리뷰 정보
-  title: string;
-  reviewDate: string; // 리뷰 작성일자
-  theme: BookThemeType;
-  quote?: string; // 인상 깊은 구절
-  emotion?: string; // 그 때 나의 감정
-  reason?: string; // 책을 선택하게 된 계기
-  discussion?: string; // 다른 사람과 나누고 싶은 대화 주제
-  freeform?: string; // 자유 형식
-}
+import { BookReviewData } from '@/types/book';
 
 interface BookReviewDisplayProps {
   mode: 'preview' | 'view';
   // preview 모드일 때는 실시간 데이터를 직접 받음
-  previewData?: ReviewData;
+  previewData?: BookReviewData;
   // view 모드일 때는 userId와 bookId로 데이터를 조회
   userId?: string;
   bookId?: string;
 }
 
 interface ReviewField {
-  key: keyof ReviewData;
+  key: keyof BookReviewData;
   title: string;
 }
 
@@ -78,7 +62,7 @@ const BookReviewDisplay = ({
   const { bookId: urlBookId } = useParams();
   const showToast = useToastStore((state) => state.showToast);
   // view 모드일 때 사용할 데이터 fetch 로직
-  const [reviewData, setReviewData] = useState<ReviewData | null>(null);
+  const [reviewData, setReviewData] = useState<BookReviewData | null>(null);
 
   useEffect(() => {
     if (mode === 'view' && userId && bookId) {
@@ -88,7 +72,7 @@ const BookReviewDisplay = ({
 
   // 실제 표시할 데이터 (preview 모드면 previewData 사용)
   const displayData = previewData; // mode와 상관없이 previewData 사용
-console.log(displayData)
+  console.log(displayData);
   if (!displayData) return null;
 
   const colors = BOOK_THEME[(displayData.theme as BookThemeType) || 'BLUE'];
