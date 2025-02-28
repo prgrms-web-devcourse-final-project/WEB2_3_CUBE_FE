@@ -9,7 +9,7 @@ import ReviewTextField from './components/ReviewTextField';
 import FreeformEditor from './components/FreeformEditor';
 import BookReviewDisplay from '@pages/book-viewer/components/BookReviewDisplay';
 import { BOOK_THEME, BookThemeType } from '@/constants/bookTheme';
-import CheckIcon from './components/CheckIcon';
+import ThemeSelector from './components/ThemeSelector';
 import { useToastStore } from '@/store/useToastStore';
 import { bookAPI } from '@/apis/book';
 import { BookReviewData } from '@/types/book';
@@ -209,41 +209,10 @@ const BookEditorPage = ({
           />
 
           {/* 테마 선택 영역 */}
-          <div className='flex gap-4'>
-            <button
-              onClick={() => handleFieldChange('theme')('BLUE')}
-              className='w-8 h-8 rounded-full cursor-pointer transition-all relative ring-2 ring-[#3E507D]/70'
-              style={{ backgroundColor: BOOK_THEME.BLUE.surface }}>
-              {reviewFields.theme === 'BLUE' && (
-                <CheckIcon
-                  color={BOOK_THEME.BLUE.primary}
-                  className='absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2'
-                />
-              )}
-            </button>
-            <button
-              onClick={() => handleFieldChange('theme')('RED')}
-              className='w-8 h-8 rounded-full cursor-pointer transition-all relative ring-2 ring-[#7D3E59]/70'
-              style={{ backgroundColor: BOOK_THEME.RED.surface }}>
-              {reviewFields.theme === 'RED' && (
-                <CheckIcon
-                  color={BOOK_THEME.RED.primary}
-                  className='absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2'
-                />
-              )}
-            </button>
-            <button
-              onClick={() => handleFieldChange('theme')('GREEN')}
-              className='w-8 h-8 rounded-full cursor-pointer transition-all relative ring-2 ring-[#567D3E]/70'
-              style={{ backgroundColor: BOOK_THEME.GREEN.surface }}>
-              {reviewFields.theme === 'GREEN' && (
-                <CheckIcon
-                  color={BOOK_THEME.GREEN.primary}
-                  className='absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2'
-                />
-              )}
-            </button>
-          </div>
+          <ThemeSelector
+            selectedTheme={reviewFields.theme}
+            onThemeChange={(theme) => handleFieldChange('theme')(theme)}
+          />
 
           <div className='space-y-6'>
             <ReviewTextField
