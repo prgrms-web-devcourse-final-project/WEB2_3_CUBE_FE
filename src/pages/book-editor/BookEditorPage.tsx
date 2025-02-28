@@ -190,7 +190,7 @@ const BookEditorPage = ({
   return (
     <section className='flex w-full h-screen'>
       {/* 에디터 영역 */}
-      <article className='w-1/2 h-full p-8 overflow-auto'>
+      <article className='w-1/2 h-full p-8 overflow-auto bg-[#FDFEFF] scroll-bar-none'>
         <div className='flex flex-col gap-8 py-12 overflow-auto px-14 '>
           {/* 제목 입력 영역 */}
           <input
@@ -256,13 +256,13 @@ const BookEditorPage = ({
             <div className='flex justify-end gap-4'>
               <button
                 onClick={handleTempSave}
-                className='px-4 py-2 text-gray-600 bg-gray-200 rounded-md drop-shadow-logo'>
+                className='px-7 py-2 text-gray-600 bg-gray-200 rounded-[10px] drop-shadow-logo'>
                 임시저장
               </button>
               <button
                 disabled={!isValidReview() || isSubmitting}
                 onClick={handleSave}
-                className='px-4 py-2 text-white transition-colors rounded-md disabled:bg-gray-400 hover:opacity-80 active:bg-white drop-shadow-logo'
+                className='px-7 py-2 text-white transition-colors disabled:bg-gray-400 hover:opacity-80 active:bg-white drop-shadow-logo rounded-[10px]'
                 style={{
                   backgroundColor:
                     !isValidReview() || isSubmitting
