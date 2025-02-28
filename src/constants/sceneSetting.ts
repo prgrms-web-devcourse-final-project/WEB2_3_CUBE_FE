@@ -30,7 +30,7 @@ export const LIGHT_CONFIG = {
 
   fill: {
     position: [-4, 2, -4],
-    intensity: 0.4,
+    intensity: 0.7,
     color: '#ffecf2'
   }
 };
