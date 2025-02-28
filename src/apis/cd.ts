@@ -1,6 +1,5 @@
 import axios from 'axios';
 import axiosInstance from './axiosInstance';
-import { SearchItemType } from '@/types/search';
 
 const API_URL = 'mock';
 const SPOTIFY_API_KEY = import.meta.env.VITE_SPOTIFY_ID;

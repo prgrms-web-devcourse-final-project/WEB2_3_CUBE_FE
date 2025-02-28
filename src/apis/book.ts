@@ -1,5 +1,6 @@
 import axios from 'axios';
 import axiosInstance from './axiosInstance';
+import { BookType, ReviewType } from '@/types/book';
 
 const ALADIN_KEY = import.meta.env.VITE_ALADIN_KEY;
 const API_URL = 'mock';
