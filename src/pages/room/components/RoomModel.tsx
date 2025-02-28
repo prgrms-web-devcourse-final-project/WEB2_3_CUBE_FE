@@ -93,6 +93,7 @@ export default function RoomModel({
       <AnimatePresence>
         {isGuestBookOpen && (
           <Guestbook
+            ownerId={userId}
             onClose={() => setIsGuestBookOpen(false)}
             roomId={roomId}
           />

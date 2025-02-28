@@ -77,8 +77,8 @@
 
 /* 방명록 */
 .guest-book {
-  width: calc(100vw * 0.4266);
-  height: calc(100vw * 0.3911);
+  width: calc(100vw * 0.3966);
+  height: calc(100vw * 0.3411);
   max-width: 819px;
   max-height: 822px;
   min-width: 600px;

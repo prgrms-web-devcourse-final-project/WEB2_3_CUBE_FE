@@ -59,19 +59,19 @@
   }
 
   .spring-left-first {
-    @apply absolute -top-[30px] z-20 left-[calc(50%-200px-28px)] 2xl:left-[calc(50%-270px-32px)];
+    @apply absolute -top-[30px] z-20 left-[calc(50%-200px-48px)] @2xl:left-[calc(50%-270px-32px)];
   }
 
   .spring-left-second {
-    @apply absolute -top-[30px] z-20 left-[calc(50%-200px+12px)] 2xl:left-[calc(50%-270px+12px)];
+    @apply absolute -top-[30px] z-20 left-[calc(50%-200px-2px)] @2xl:left-[calc(50%-270px+12px)];
   }
 
   .spring-right-first {
-    @apply absolute -top-[30px] z-20 right-[calc(50%-200px-28px)] 2xl:right-[calc(50%-270px-32px)];
+    @apply absolute -top-[30px] z-20 right-[calc(50%-200px-48px)] @2xl:right-[calc(50%-270px-32px)];
   }
 
   .spring-right-second {
-    @apply absolute -top-[30px] z-20 right-[calc(50%-200px+12px)] 2xl:right-[calc(50%-270px+12px)];
+    @apply absolute -top-[30px] z-20 right-[calc(50%-200px-2px)] @2xl:right-[calc(50%-270px+12px)];
   }
 
   .spring-element {
