@@ -58,7 +58,6 @@
   min-height: 212px;
   background-color: #FCF7FD/20;
   display: flex;
-  border: 2px solid #FCF7FD;
 }
 
 /* 랭킹 */
@@ -77,8 +76,8 @@
 
 /* 방명록 */
 .guest-book {
-  width: calc(100vw * 0.4266);
-  height: calc(100vw * 0.3911);
+  width: calc(100vw * 0.3966);
+  height: calc(100vw * 0.3411);
   max-width: 819px;
   max-height: 822px;
   min-width: 600px;
@@ -92,6 +91,7 @@
 }
 
 .inputBase {
-  @apply placeholder:font-medium placeholder:text-xs 2xl:placeholder:text-sm placeholder:text-[#A2A2A2]/70 ;
-  @apply bg-[#EDE6EE]/25 border-2 border-[#A2A2A2]/30 rounded-[10px] 2xl:rounded-xl;
+  @apply placeholder:font-medium placeholder:text-xs @2xl:placeholder:text-sm placeholder:text-[#A2A2A2]/70 ;
+  @apply bg-[#EDE6EE]/25 border-2 border-[#A2A2A2]/30 rounded-[8px] @2xl:rounded-xl;
+  @apply text-sm text-[#292929] font-medium @2xl:text-base
 }

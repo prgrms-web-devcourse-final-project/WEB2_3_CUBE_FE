@@ -25,3 +25,19 @@ export const formatToKoreanFullDate = (dateString: string) => {
   const day = date.getDate();
   return `${year}년 ${month}월 ${day}일`;
 };
+
+
+/**
+ * YYYY.MM.DD HH:mm 형식으로 날짜 변환
+ */
+export const formatTimeDate = (date: string) => {
+  return new Date(date)
+    .toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+    .replace(/(\d{4})\. (\d{2})\. (\d{2})\./, '$1. $2. $3');
+};
