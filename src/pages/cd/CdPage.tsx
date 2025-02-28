@@ -40,7 +40,7 @@ export default function CdPage() {
         <CdComment />
       </div>
       {/* 플레이어 */}
-      <CdPlayer />
+      <CdPlayer cdInfo={cdInfo} />
     </div>
   );
 }

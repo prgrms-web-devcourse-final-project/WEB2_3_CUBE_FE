@@ -50,7 +50,7 @@ interface PostCDInfo {
   coverUrl: string;
   youtubeUrl: string;
   duration: number;
-  releaseDate?: string;
+  releaseDate: string;
 }
 
 // template type
