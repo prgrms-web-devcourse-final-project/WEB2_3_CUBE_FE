@@ -31,11 +31,15 @@ const ReviewSection = ({
     id={id}
     className='mb-6'>
     <h2
-      className='mb-2 text-lg font-semibold'
+      className='mb-2 text-2xl font-semibold'
       style={{ color: colors.primary }}>
       {title}
     </h2>
-    <p style={{ color: colors.secondary }}>{content}</p>
+    <p
+      className='text-lg'
+      style={{ color: colors.secondary }}>
+      {content}
+    </p>
   </div>
 );
 
@@ -48,9 +52,9 @@ export const ReviewContent = ({
   onDelete,
 }: ReviewContentProps) => (
   <>
-    <div className='item-between'>
+    <div className='mb-12 item-between'>
       <p
-        className='text-sm py-18'
+        className='py-16 text-sm'
         style={{ color: `${colors.primary}80` }}>
         {reviewData.writeDateTime}
       </p>
@@ -109,7 +113,7 @@ export const ReviewContent = ({
           onClick={onEdit}
           className='px-4 py-2 text-sm transition-colors rounded-full hover:opacity-80'
           style={{
-            backgroundColor: `${colors.secondary}10`,
+            backgroundColor: `${colors.secondary}20`,
             color: colors.secondary,
           }}>
           수정
@@ -118,7 +122,7 @@ export const ReviewContent = ({
           onClick={onDelete}
           className='px-4 py-2 text-sm transition-colors rounded-full hover:opacity-80'
           style={{
-            backgroundColor: `${colors.secondary}10`,
+            backgroundColor: `${colors.secondary}20`,
             color: colors.secondary,
           }}>
           삭제
