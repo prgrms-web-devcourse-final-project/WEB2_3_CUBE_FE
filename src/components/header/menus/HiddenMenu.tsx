@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { logoutAPI } from '@apis/login';
+import { logoutAPI } from '@apis/auth';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUserStore } from '../../../store/useUserStore';
 interface HiddenMenuProps {
