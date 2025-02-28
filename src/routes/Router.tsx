@@ -15,11 +15,11 @@ import Redirection from '@pages/login/components/Redirection';
 const Router = () => {
   return (
     <Routes>
-      {/* <Route
+      <Route
         path='/oauth/callback'
         element={<Redirection />}
       />
-      <Route element={<RequireAuth />}> */}
+      <Route element={<RequireAuth />}>
         {/* 헤더가 필요한 페이지 */}
         <Route element={<BaseLayout hasHeader={true} />}>
           <Route
@@ -69,7 +69,7 @@ const Router = () => {
           path='/login'
           element={<LoginPage />}
         />
-      {/* </Route> */}
+      </Route>
     </Routes>
   );
 };
