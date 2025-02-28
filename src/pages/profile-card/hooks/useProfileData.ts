@@ -5,7 +5,6 @@ import { useUserStore } from '@/store/useUserStore';
 
 interface UseProfileDataReturn {
   userProfile: UserProfile | null;
-  recommendedUsers: RecommendedUser[];
   isLoading: boolean;
   isMyProfile: boolean;
   handleProfileUpdate: () => Promise<void>;
@@ -16,9 +15,6 @@ export const useProfileData = (
 ): UseProfileDataReturn => {
   const { user } = useUserStore();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [recommendedUsers, setRecommendedUsers] = useState<RecommendedUser[]>(
-    [],
-  );
   const [isLoading, setIsLoading] = useState(true);
 
   const isMyProfile = useMemo(
@@ -31,10 +27,7 @@ export const useProfileData = (
       setIsLoading(true);
       if (!userId) return;
 
-      const [profile, recommendations] = await Promise.all([
-        profileAPI.getUserProfile(userId),
-        profileAPI.getRecommendedUsers(userId),
-      ]);
+      const [profile] = await Promise.all([profileAPI.getUserProfile(userId)]);
 
       let isMatched = false;
       if (!isMyProfile) {
@@ -53,7 +46,6 @@ export const useProfileData = (
       };
 
       setUserProfile(userProfileData);
-      setRecommendedUsers(recommendations);
     } catch (error) {
       console.error('프로필 데이터 조회 실패:', error);
     } finally {
@@ -72,7 +64,6 @@ export const useProfileData = (
 
   return {
     userProfile,
-    recommendedUsers,
     isLoading,
     isMyProfile,
     handleProfileUpdate,

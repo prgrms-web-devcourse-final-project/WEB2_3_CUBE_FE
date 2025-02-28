@@ -1,10 +1,10 @@
-import { SearchItemType } from '@/types/search';
 import { bookAPI } from '@/apis/book';
 import addIcon from '@/assets/add-icon.svg';
 import { SEARCH_THEME } from '@/constants/searchTheme';
 import { toKoreanDate } from '@utils/dateFormat';
 import { addCdToMyRack } from '@apis/cd';
 import { useUserStore } from '@/store/useUserStore';
+import { useToastStore } from '@/store/useToastStore';
 import AlertModal from '@components/AlertModal';
 import { useState } from 'react';
 
@@ -28,21 +28,27 @@ export const SearchResult = ({
 }: SearchResultProps) => {
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const theme = SEARCH_THEME[type];
-  const user = useUserStore((state) => state.user);
+  const { user } = useUserStore();
+  const { showToast } = useToastStore();
   const handleAddBook = async (item: SearchItemType) => {
     try {
+      if (!user?.userId) {
+        showToast('로그인이 필요한 서비스입니다.', 'error');
+        return;
+      }
+
       if (type === 'BOOK') {
         const bookData: BookType = {
           isbn: item.id,
           title: item.title,
           author: item.author,
           publisher: item.publisher,
-          publishedDate: new Date(item.date).toISOString(),
+          publishedDate: new Date(item.date).toISOString().split('T')[0],
           imageUrl: item.imageUrl,
           genreNames: item.genres,
           page: 0,
         };
-        await bookAPI.addBookToMyBook(bookData);
+        await bookAPI.addBookToMyBook(bookData, user.userId);
       } else if (type === 'CD') {
         // CD 추가 요청 로직
         const cdData: PostCDInfo = {

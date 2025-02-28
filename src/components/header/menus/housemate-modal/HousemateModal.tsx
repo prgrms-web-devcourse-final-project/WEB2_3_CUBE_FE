@@ -91,6 +91,7 @@ const HousemateModal = ({
               <HousemateItem
                 key={housemate.userId}
                 {...housemate}
+                onClose={onClose}
               />
             ))}
 

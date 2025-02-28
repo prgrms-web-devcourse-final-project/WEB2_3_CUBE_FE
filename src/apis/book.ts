@@ -2,7 +2,7 @@ import axios from 'axios';
 import axiosInstance from './axiosInstance';
 
 const ALADIN_KEY = import.meta.env.VITE_ALADIN_KEY;
-const API_URL = 'mock';
+const API_URL = 'api';
 
 export const bookAPI = {
   // ------------------------------ 검색 ------------------------------
@@ -106,8 +106,11 @@ export const bookAPI = {
    * }
    * @returns
    */
-  addBookToMyBook: async (book: BookType) => {
-    const response = await axiosInstance.post(`/${API_URL}/mybooks`, book);
+  addBookToMyBook: async (book: BookType, userId: number) => {
+    const response = await axiosInstance.post(
+      `${API_URL}/mybooks?userId=${userId}`,
+      book,
+    );
     return response.data;
   },
 

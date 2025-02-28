@@ -7,6 +7,7 @@ import { useProfileEdit } from './hooks/useProfileEdit';
 import { ProfileImageEdit } from './components/ProfileImageEdit';
 import { ProfileForm } from './components/ProfileForm';
 import { ProfileActions } from './components/ProfileActions';
+import { useToastStore } from '@/store/useToastStore';
 
 interface FormData {
   nickname: string;
@@ -24,10 +25,13 @@ const ProfileCardEditPage = () => {
     bio: '',
     profileImage: '',
   });
+  const { showToast } = useToastStore();
 
-  const { updateProfile, isLoading: isUpdating } = useProfileEdit(
-    String(user?.userId),
-  );
+  const {
+    updateProfile,
+    isLoading: isUpdating,
+    validateImage,
+  } = useProfileEdit();
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -46,13 +50,14 @@ const ProfileCardEditPage = () => {
         });
       } catch (error) {
         console.error('프로필 데이터 조회 실패:', error);
+        showToast('프로필 정보를 불러오는데 실패했습니다.', 'error');
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchUserProfile();
-  }, [user?.userId, navigate]);
+  }, [user?.userId, navigate, showToast]);
 
   const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -61,28 +66,36 @@ const ProfileCardEditPage = () => {
   };
 
   const handleImageChange = (file: File) => {
-    setFormData((prev) => ({
-      ...prev,
-      profileImage: file,
-    }));
+    try {
+      validateImage(file);
 
-    // 미리보기 생성
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const imagePreviewUrl = reader.result as string;
       setFormData((prev) => ({
         ...prev,
-        imagePreview: imagePreviewUrl,
+        profileImage: file,
       }));
-    };
-    reader.readAsDataURL(file);
+
+      // 미리보기 생성
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const imagePreviewUrl = reader.result as string;
+        setFormData((prev) => ({
+          ...prev,
+          imagePreview: imagePreviewUrl,
+        }));
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      if (error instanceof Error) {
+        showToast(error.message, 'error');
+      }
+    }
   };
 
   const handleSubmit = async () => {
     try {
       await updateProfile(formData);
     } catch (error) {
-      console.error('프로필 수정 실패:', error);
+      // 에러는 useProfileEdit에서 처리됨
     }
   };
 
