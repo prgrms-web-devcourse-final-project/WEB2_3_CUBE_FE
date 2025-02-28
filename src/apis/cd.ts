@@ -1,7 +1,7 @@
 import axios from 'axios';
 import axiosInstance from './axiosInstance';
 
-const API_URL = 'mock';
+const API_URL = 'api';
 const SPOTIFY_API_KEY = import.meta.env.VITE_SPOTIFY_ID;
 const SPOTIFY_SECRET_KEY = import.meta.env.VITE_SPOTIFY_SECRET_KEY;
 const YOUTUBE_API_KEY = import.meta.env.VITE_YOUTUBE_KEY;

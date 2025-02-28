@@ -1,6 +1,6 @@
 import axiosInstance from './axiosInstance';
 
-const API_URL = 'mock';
+const API_URL = 'api';
 
 export const housemateAPI = {
   /**

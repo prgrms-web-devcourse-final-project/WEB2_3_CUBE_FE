@@ -3,7 +3,7 @@ import axiosInstance from './axiosInstance';
 import { Cookies } from 'react-cookie';
 
 const cookies = new Cookies();
-const API_URL = 'mock';
+const API_URL = 'api';
 
 export const loginAPI = async (token: string) => {
   const { data } = await axiosInstance.get(`/${API_URL}/auth/user`, {
