@@ -42,8 +42,8 @@ export default function CdPlayer() {
              appearance-none focus:outline-none focus:ring-2 '
         />
 
-        <div className=' w-full h-full relative'>
-          <div className='flex items-center absolute bottom-4 left-0'>
+        <div className='relative w-full h-full '>
+          <div className='absolute left-0 flex items-center bottom-4'>
             {/* 앨범 이미지 */}
             <img
               className=' w-29 h-29'
@@ -51,7 +51,7 @@ export default function CdPlayer() {
               alt='CD 앨범 이미지'
             />
             {/* 음량 */}
-            <div className=' flex justify-center items-center gap-2 pl-13 '>
+            <div className='flex items-center justify-center gap-2  pl-13'>
               <img
                 className='w-8 h-8 cursor-pointer '
                 src={soundIcon}
@@ -107,6 +107,9 @@ export default function CdPlayer() {
           <DataList
             datas={formattedCds}
             type='cd'
+            hasMore={false}
+            isLoading={false}
+            fetchMore={() => {}}
           />
         </ModalBackground>
       )}

@@ -10,9 +10,9 @@ import FreeformEditor from './components/FreeformEditor';
 import BookReviewDisplay from '@pages/book-viewer/components/BookReviewDisplay';
 import { BOOK_THEME, BookThemeType } from '@/constants/bookTheme';
 import CheckIcon from './components/CheckIcon';
-import { ReviewData } from '@/types/review';
 import { useToastStore } from '@/store/useToastStore';
 import { bookAPI } from '@/apis/book';
+import { BookReviewData } from '@/types/book';
 
 interface BookEditorPageProps {
   bookTitle?: string;
@@ -37,7 +37,7 @@ const BookEditorPage = ({
   const [isEditMode, setIsEditMode] = useState(
     searchParams.get('mode') === 'edit',
   );
-  const [reviewFields, setReviewFields] = useState<ReviewData>(() => {
+  const [reviewFields, setReviewFields] = useState<BookReviewData>(() => {
     // localStorage에서 임시저장 데이터 불러오기
     const savedData = localStorage.getItem(`draft-review-${bookId}`);
     if (savedData) {
@@ -119,7 +119,7 @@ const BookEditorPage = ({
   }, [bookId, bookTitle, author, genreNames, publishedDate, imageUrl]);
 
   const handleFieldChange =
-    (field: keyof ReviewData) => (value: string | BookThemeType) => {
+    (field: keyof BookReviewData) => (value: string | BookReviewData) => {
       setReviewFields((prev) => ({
         ...prev,
         [field]: value,

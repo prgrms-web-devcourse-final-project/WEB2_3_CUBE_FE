@@ -1,5 +1,4 @@
 import axiosInstance from './axiosInstance';
-import { NotificationResponse } from '@/types/notification';
 
 const API_URL = 'mock';
 

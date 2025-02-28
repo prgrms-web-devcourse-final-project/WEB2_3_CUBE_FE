@@ -2,7 +2,7 @@ import axios from 'axios';
 import axiosInstance from './axiosInstance';
 
 const ALADIN_KEY = import.meta.env.VITE_ALADIN_KEY;
-const API_URL = 'api';
+const API_URL = 'mock';
 
 export const bookAPI = {
   // ------------------------------ 검색 ------------------------------

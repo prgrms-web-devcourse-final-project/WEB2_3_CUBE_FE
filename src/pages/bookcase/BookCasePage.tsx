@@ -7,6 +7,7 @@ import { bookAPI } from '@apis/book';
 import ModalBackground from '@components/ModalBackground';
 import { useUserStore } from '../../store/useUserStore';
 import { useNavigate } from 'react-router-dom';
+import { BookCaseListType } from '@/types/book';
 
 const BookCasePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -29,13 +30,6 @@ const BookCasePage = () => {
     const fetchBooks = async () => {
       try {
         setIsLoading(true);
-        console.log('Fetching books...');
-
-        // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
-        if (!user) {
-          navigate('/login');
-          return;
-        }
 
         const response = await bookAPI.getBookCaseList(user.userId, 1);
 
@@ -173,6 +167,9 @@ const BookCasePage = () => {
             datas={dataListItems}
             type='book'
             onDelete={handleDeleteBooks}
+            hasMore={false}
+            isLoading={isLoading}
+            fetchMore={() => {}}
           />
         </ModalBackground>
       )}

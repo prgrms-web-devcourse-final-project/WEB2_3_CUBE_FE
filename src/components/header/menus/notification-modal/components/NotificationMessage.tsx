@@ -1,4 +1,3 @@
-import { Notification } from '@/types/notification';
 
 interface NotificationMessageProps {
   notification: Notification;

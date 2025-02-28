@@ -1,6 +1,5 @@
 import { memo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Notification } from '@/types/notification';
 import { formatToKoreanFullDate } from '@/utils/dateFormat';
 import { NotificationMessage } from './NotificationMessage';
 

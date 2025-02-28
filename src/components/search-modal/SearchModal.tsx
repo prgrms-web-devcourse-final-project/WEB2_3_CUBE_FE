@@ -3,7 +3,6 @@ import { SearchInput } from './SearchInput';
 import { SearchList } from './SearchList';
 import { SearchResult } from './SearchResult';
 import { useSearch } from '@/hooks/useSearch';
-import type { SearchItemType } from '@/types/search';
 import ModalBackground from '@/components/ModalBackground';
 import { SEARCH_THEME } from '@/constants/searchTheme';
 
@@ -51,7 +50,7 @@ export const SearchModal = ({
             />
           </div>
           {/* 검색 결과 */}
-          <div className='pl-8 w-1/2'>
+          <div className='w-1/2 pl-8'>
             <SearchResult
               item={selectedItem}
               type={type}
