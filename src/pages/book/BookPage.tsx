@@ -3,15 +3,15 @@ import { useState, useEffect } from 'react';
 import BookReviewEditor from '../book-editor/BookEditorPage';
 import BookReviewViewer from '../book-viewer/BookViewerPage';
 import { bookAPI } from '@/apis/book';
-import type { ReviewData } from '@/types/review';
 import { useToastStore } from '@/store/useToastStore';
+import { BookReviewData } from '@/types/book';
 
 const BookPage = () => {
   const { bookId, userId } = useParams();
   const [searchParams] = useSearchParams();
   const showToast = useToastStore((state) => state.showToast);
   const [hasReview, setHasReview] = useState(false);
-  const [reviewData, setReviewData] = useState<ReviewData | null>(null);
+  const [reviewData, setReviewData] = useState<BookReviewData | null>(null);
   const [bookInfo, setBookInfo] = useState<{
     title: string;
     author: string;

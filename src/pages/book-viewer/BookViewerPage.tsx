@@ -1,10 +1,10 @@
 import BookReviewDisplay from './components/BookReviewDisplay';
-import type { ReviewData } from '@/types/review';
 import NotFoundPage from '@pages/NotFoundPage';
 import tempIMG from '@assets/book/temp.jpg';
+import { BookReviewData } from '@/types/book';
 
 interface BookViewerPageProps {
-  reviewData: ReviewData | null;
+  reviewData: BookReviewData | null;
   bookId?: string;
 }
 

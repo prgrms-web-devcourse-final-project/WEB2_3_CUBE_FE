@@ -7,6 +7,7 @@ import { useUserStore } from '@/store/useUserStore';
 import { useToastStore } from '@/store/useToastStore';
 import AlertModal from '@components/AlertModal';
 import { useState } from 'react';
+import { BookType } from '@/types/book';
 
 interface SearchResultProps {
   item: SearchItemType | null;

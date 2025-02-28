@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
 import { notificationAPI } from '@/apis/notification';
-import { Notification } from '@/types/notification';
 
 type TabType = 'pendingRead' | 'viewed';
 
