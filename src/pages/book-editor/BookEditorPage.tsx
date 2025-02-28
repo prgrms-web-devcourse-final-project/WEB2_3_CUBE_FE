@@ -188,17 +188,18 @@ const BookEditorPage = ({
   });
 
   return (
-    <section className='flex w-full h-screen'>
+    <section className='flex w-full h-screen overflow-x-hidden'>
       {/* 에디터 영역 */}
-      <article className='w-1/2 h-full p-8 overflow-auto bg-[#FDFEFF] scroll-bar-none'>
+      <article className='w-1/2 h-full p-8 overflow-y-auto bg-[#FDFEFF] scroll-bar-none'>
         <div className='flex flex-col gap-8 py-12 overflow-auto px-14 '>
           {/* 제목 입력 영역 */}
           <input
             type='text'
+            maxLength={25}
             placeholder='제목을 입력해주세요...'
             value={reviewFields.title}
             onChange={(e) => handleFieldChange('title')(e.target.value)}
-            className={`w-full py-4 text-4xl font-semibold focus:outline-none placeholder:text-opacity-40`}
+            className={`w-full py-4 text-4xl font-semibold focus:outline-none placeholder:text-opacity-40 overflow-hidden text-ellipsis`}
             style={{
               borderBottomWidth: '2px',
               borderBottomColor: `${
@@ -281,7 +282,7 @@ const BookEditorPage = ({
       </article>
 
       {/* 실시간 뷰어 영역 */}
-      <article className='w-1/2 h-full overflow-auto'>
+      <article className='w-1/2 h-full overflow-x-hidden'>
         <BookReviewDisplay
           mode='preview'
           previewData={reviewFields}

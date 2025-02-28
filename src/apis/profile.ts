@@ -56,7 +56,7 @@ export const profileAPI = {
    */
   getUserProfile: async (userId: string) => {
     const { data } = await axiosInstance.get<UserProfileResponse>(
-      `${API_URL}/users/${userId}`,
+      `${API_URL}/users/${userId}/profile`,
     );
     return data;
   },

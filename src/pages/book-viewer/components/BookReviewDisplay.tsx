@@ -94,7 +94,7 @@ const BookReviewDisplay = ({
   };
 
   return (
-    <div className='relative h-full overflow-auto'>
+    <div className='relative h-full overflow-x-hidden'>
       <BookHeader
         title={displayData.title}
         reviewFields={REVIEW_FIELDS}
@@ -103,7 +103,7 @@ const BookReviewDisplay = ({
       />
 
       <article
-        className='absolute flex flex-col w-full gap-4 rounded-tl-[80px] top-[70%] min-h-[30%] px-24 py-16'
+        className='absolute flex flex-col w-full gap-4 rounded-tl-[80px] top-[70%] min-h-[30%] px-24 py-16 overflow-x-hidden'
         style={{ backgroundColor: `${colors.surface}` }}>
         <BookInfo
           publishedDate={displayData.publishedDate}

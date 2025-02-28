@@ -21,7 +21,9 @@ export const BookHeader = ({
 }: BookHeaderProps) => (
   <div className='py-12 item-between px-14'>
     <h1
-      className='mb-8 text-6xl font-semibold'
+      className={`mb-8 font-semibold transition-all duration-300 ${
+        title.length > 10 ? 'text-4xl' : 'text-6xl'
+      }`}
       style={{ color: colors.primary }}>
       {title}
     </h1>
