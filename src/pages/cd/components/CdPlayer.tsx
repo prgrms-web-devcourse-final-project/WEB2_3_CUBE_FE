@@ -17,6 +17,7 @@ import { getCdRack } from '@apis/cd';
 export default function CdPlayer({ cdInfo }: { cdInfo: CDInfo }) {
   const [isCdListOpen, setIsCdListOpen] = useState(false);
   const [cdDatas, setCdDatas] = useState(null);
+  const [formattedCds, setFormattedCds] = useState<DataListInfo[]>([]);
 
   // cd 초기상태 관리
   const [cdReady, setCdReady] = useState({
@@ -50,14 +51,6 @@ export default function CdPlayer({ cdInfo }: { cdInfo: CDInfo }) {
     },
   };
 
-  // const formattedCds = mockCD.data.map((cd) => ({
-  //   id: String(cd.myCdId),
-  //   title: cd.title,
-  //   artist: cd.artist,
-  //   released_year: cd.releaseDate,
-  //   album: cd.album,
-  // }));
-
   const progressStyle = {
     background: `linear-gradient(to right, #162C63 ${cdPlayer.progress}%, #E5E7EB ${cdPlayer.progress}%)`,
   };
@@ -66,6 +59,14 @@ export default function CdPlayer({ cdInfo }: { cdInfo: CDInfo }) {
     const fetchData = async () => {
       try {
         const result = await getCdRack(userId);
+        const formatted = result.data.map((cd) => ({
+          id: String(cd.myCdId),
+          title: cd.title,
+          artist: cd.artist,
+          released_year: cd.releaseDate,
+          album: cd.album,
+        }));
+        setFormattedCds(formatted);
       } catch (error) {
         console.error(error);
       }
@@ -244,8 +245,8 @@ export default function CdPlayer({ cdInfo }: { cdInfo: CDInfo }) {
           />
         </div>
 
-        <div className=' w-full h-full relative'>
-          <div className='flex items-center absolute bottom-10  left-10 '>
+        <div className='relative w-full h-full '>
+          <div className='absolute flex items-center bottom-10 left-10 '>
             {/* 앨범 이미지 */}
             <img
               className='w-20 h-20 rounded-[8px]'
@@ -253,7 +254,7 @@ export default function CdPlayer({ cdInfo }: { cdInfo: CDInfo }) {
               alt='CD 앨범 이미지'
             />
             {/* 음량 */}
-            <div className=' flex justify-center items-center gap-2 pl-13 '>
+            <div className='flex items-center justify-center gap-2 pl-13'>
               {cdReady.isMuted ? (
                 <button
                   onClick={() =>
@@ -350,6 +351,7 @@ export default function CdPlayer({ cdInfo }: { cdInfo: CDInfo }) {
             hasMore={false}
             isLoading={false}
             fetchMore={() => {}}
+            userId={userId}
           />
         </ModalBackground>
       )}

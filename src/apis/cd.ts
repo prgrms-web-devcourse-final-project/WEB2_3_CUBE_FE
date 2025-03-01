@@ -194,8 +194,8 @@ export const getCdRack = async (
   cursor?: number,
 ) => {
   const url = cursor
-    ? `/${API_URL}/my-cd?userId=${userId}&size=${size}&cursor=${cursor}`
-    : `/${API_URL}/my-cd?userId=${userId}&size=${size}0`;
+    ? `/${API_URL}/my-cd?userId=${userId}&size=${size || 14}&cursor=${cursor}`
+    : `/${API_URL}/my-cd?userId=${userId}&size=${size || 14}`;
 
   const response = await axiosInstance.get(url);
 
@@ -312,4 +312,17 @@ export const deleteTemplate = async (myCdId: number, userId: number) => {
     `/${API_URL}/my-cd/${myCdId}/template?userId=${userId}`,
   );
   return response;
+};
+
+/**
+ * CD 삭제 API
+ * @param userId 사용자 ID
+ * @param myCdIds 삭제할 CD ID 목록 (쉼표로 구분된 문자열)
+ * @returns
+ */
+export const deleteCdsFromMyRack = async (userId: number, myCdIds: string) => {
+  const response = await axiosInstance.delete(
+    `/${API_URL}/my-cd?userId=${userId}&myCdIds=${myCdIds}`,
+  );
+  return response.data;
 };

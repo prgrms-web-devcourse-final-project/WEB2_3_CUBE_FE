@@ -6,6 +6,7 @@ import { SearchInput } from '@components/search-modal/SearchInput';
 import { useDebounce } from '@hooks/useDebounce';
 import SkeletonItem from '@components/SkeletonItem';
 import { bookAPI } from '@/apis/book';
+import { deleteCdsFromMyRack } from '@/apis/cd';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 
 interface DataListProps {
@@ -15,6 +16,7 @@ interface DataListProps {
   hasMore: boolean;
   isLoading: boolean;
   fetchMore: () => void;
+  userId: number;
 }
 
 export default function DataList({
@@ -24,6 +26,7 @@ export default function DataList({
   hasMore,
   isLoading: isLoadingMore,
   fetchMore,
+  userId,
 }: DataListProps) {
   const isBook = type === 'book' ? true : false;
   const mainColor = isBook ? '#2656CD' : '#7838AF';
@@ -78,9 +81,16 @@ export default function DataList({
 
   const handleDelete = async () => {
     try {
-      if (isBook && selectedIds.length > 0) {
-        const myBookIds = selectedIds.join(',');
-        await bookAPI.deleteBookFromMyBook('1', myBookIds);
+      if (selectedIds.length > 0) {
+        if (isBook) {
+          // 도서 삭제 로직
+          const myBookIds = selectedIds.join(',');
+          await bookAPI.deleteBookFromMyBook(String(userId), myBookIds);
+        } else {
+          // CD 삭제 로직
+          const myCdIds = selectedIds.join(',');
+          await deleteCdsFromMyRack(userId, myCdIds);
+        }
 
         const updatedDatas = filteredDatas.filter(
           (data) => !selectedIds.includes(data.id),
