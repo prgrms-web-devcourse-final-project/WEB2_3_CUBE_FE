@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import LayeredButton from '@components/LayeredButton';
 import { housemateAPI } from '@/apis/housemate';
 import { useToastStore } from '@/store/useToastStore';
+import { AxiosError } from 'axios';
 
 interface ProfileButtonsProps {
   userId: string;
@@ -34,12 +35,40 @@ export const ProfileButtons = ({
       }
       onProfileUpdate?.();
     } catch (error) {
-      showToast(
-        isMatched
-          ? '하우스메이트 취소에 실패했어요.'
-          : '하우스메이트 추가에 실패했어요.',
-        'error',
-      );
+      if (error instanceof AxiosError) {
+        const status = error.response?.status;
+        const errorMessage = error.response?.data?.message;
+
+        if (errorMessage) {
+          showToast(errorMessage, 'error');
+        } else {
+          switch (status) {
+            case 400:
+              showToast('유효하지 않은 사용자입니다.', 'error');
+              break;
+            case 404:
+              showToast('존재하지 않는 사용자입니다.', 'error');
+              break;
+            case 409:
+              showToast('이미 하우스메이트로 추가된 사용자입니다.', 'error');
+              break;
+            default:
+              showToast(
+                isMatched
+                  ? '하우스메이트 취소에 실패했어요.'
+                  : '하우스메이트 추가에 실패했어요.',
+                'error',
+              );
+          }
+        }
+      } else {
+        showToast(
+          isMatched
+            ? '하우스메이트 취소에 실패했어요.'
+            : '하우스메이트 추가에 실패했어요.',
+          'error',
+        );
+      }
     }
   };
 
