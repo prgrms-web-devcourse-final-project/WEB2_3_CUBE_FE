@@ -22,7 +22,7 @@ export default function GuestbookMessage({
   };
 
   return (
-    <div className='@container w-full flex flex-col gap-4 @3xl:mt-1 mt-1 mb-4 max-h-80 min-h-[300px] '>
+    <div className='@container w-full flex flex-col gap-4 @3xl:mt-1 mt-4 mb-4 max-h-80 min-h-[300px] '>
       {/* 방명록 글 0개일 경우 */}
       {messages.length === 0 ? (
         <div className='flex flex-col justify-center items-center text-gray-500/50 h-74 @xl:h-96 font-medium'>
@@ -81,9 +81,9 @@ export default function GuestbookMessage({
                     <img
                       src={msg.profileImage || exProfile}
                       alt={`${msg.nickname}의 프로필`}
-                      className='w-6 @2xl:w-8 rounded-full'
+                      className='w-6 @2xl:w-7 rounded-full'
                     />
-                    <p className='text-sm @xl:text-base font-semibold text-[#292929]'>
+                    <p className='text-sm @2xl:pb-1 @2xl:text-base font-semibold text-[#292929]'>
                       {msg.nickname}
                     </p>
                   </Link>

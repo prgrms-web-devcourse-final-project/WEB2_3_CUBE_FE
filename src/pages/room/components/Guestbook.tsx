@@ -9,9 +9,7 @@ import { useUserStore } from '../../../store/useUserStore';
 import { formatTimeDate } from '../../../utils/dateFormat';
 
 export default function Guestbook({ onClose, roomId, ownerName, ownerId }) {
-  const [guestbookData, setGuestbookData] = useState<GuestbookMessageType[]>(
-    [],
-  );
+  const [guestbookData, setGuestbookData] = useState<GuestbookMessageType[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const user = useUserStore((state) => state.user);
@@ -23,11 +21,6 @@ export default function Guestbook({ onClose, roomId, ownerName, ownerId }) {
         console.log('API 응답:', response);
         setGuestbookData(response.guestbook);
         setTotalPage(response.pagination.totalPages);
-        console.log('페이지 정보 업데이트:', {
-          currentPage: page,
-          totalPages: response.pagination.totalPages,
-          dataLength: response.guestbook.length,
-        });
       } catch (error) {
         console.error('방명록 조회 중 오류:', error);
       }
@@ -44,33 +37,19 @@ export default function Guestbook({ onClose, roomId, ownerName, ownerId }) {
   const handleSubmitMessage = async (guestMessage: string) => {
     if (guestMessage.trim() === '') return;
 
-    const tempMessage = {
-      guestbookId: Date.now(),
-      userId: user.userId,
-      nickname: user.nickname,
-      message: guestMessage,
-      createdAt: formatTimeDate(new Date().toISOString()),
-    };
-
-    setGuestbookData((prev) => [tempMessage, ...prev]);
-
     try {
-      const newMessage = await guestbookAPI.createGuestbook(
+      const response = await guestbookAPI.createGuestbook(
         roomId,
         user.userId,
         guestMessage,
       );
-      console.log('방명록 등록 성공:', newMessage);
-      setGuestbookData((prev) =>
-        prev.map((msg) =>
-          msg.guestbookId === tempMessage.guestbookId ? newMessage : msg,
-        ),
-      );
+      console.log('방명록 등록 성공:', response);
+      setGuestbookData(response.guestbook);
+      setTotalPage(response.pagination.totalPages);
+
+      setCurrentPage(1);
     } catch (error) {
       console.error('방명록 등록 중 오류 발생:', error);
-      setGuestbookData((prev) =>
-        prev.filter((msg) => msg.guestbookId !== tempMessage.guestbookId),
-      );
     }
   };
 
@@ -99,7 +78,7 @@ export default function Guestbook({ onClose, roomId, ownerName, ownerId }) {
       transition={{ type: 'spring', stiffness: 130, damping: 18 }}
       onClick={handleClickOutside}
       className='fixed inset-0 z-10 flex items-center justify-center'>
-      <div className='@container relative w-[calc(100vw*0.3966)] max-w-[819px] h-[calc(100vw*0.3411)] max-h-[822px] min-w-[600px] min-h-[550px]'>
+      <div className='@container relative w-[calc(100vw*0.3966)] max-w-[819px] h-[calc(100vw*0.3611)] max-h-[822px] min-w-[600px] min-h-[550px]'>
         {/* 뒤 배경 */}
         <div
           className='absolute w-full h-full bg-[#73A1F7] rounded-[60px] border-2 border-[#2656CD]'
