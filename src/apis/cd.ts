@@ -204,13 +204,17 @@ export const getCdRack = async (
 
 export const getCdRackSearch = async (
   userId: number,
+  keyword: string,
   size?: number,
   cursor?: number,
-  keyword?: string,
 ) => {
   const url = cursor
-    ? `/${API_URL}/my-cd?userId=${userId}&size=${size}&cursor=${cursor}&keyword=${keyword}`
-    : `/${API_URL}/my-cd?userId=${userId}&size=${size}&keyword=${keyword}`;
+    ? `/${API_URL}/my-cd?userId=${userId}&keyword=${keyword}&size=${
+        size || 14
+      }&cursor=${cursor}`
+    : `/${API_URL}/my-cd?userId=${userId}&keyword=${keyword}&size=${
+        size || 14
+      }`;
 
   const response = await axiosInstance.get(url);
 
@@ -241,6 +245,19 @@ export const addCdToMyRack = async (userId: number, cdData: PostCDInfo) => {
     cdData,
   );
   console.log(response.data);
+  return response.data;
+};
+
+/**
+ * CD 삭제 API
+ * @param userId 사용자 ID
+ * @param myCdIds 삭제할 CD ID 목록 (쉼표로 구분된 문자열)
+ * @returns
+ */
+export const deleteCdsFromMyRack = async (userId: number, myCdIds: string) => {
+  const response = await axiosInstance.delete(
+    `/${API_URL}/my-cd?userId=${userId}&myCdIds=${myCdIds}`,
+  );
   return response.data;
 };
 
@@ -314,15 +331,53 @@ export const deleteTemplate = async (myCdId: number, userId: number) => {
   return response;
 };
 
-/**
- * CD 삭제 API
- * @param userId 사용자 ID
- * @param myCdIds 삭제할 CD ID 목록 (쉼표로 구분된 문자열)
- * @returns
- */
-export const deleteCdsFromMyRack = async (userId: number, myCdIds: string) => {
-  const response = await axiosInstance.delete(
-    `/${API_URL}/my-cd?userId=${userId}&myCdIds=${myCdIds}`,
+// -------------cd 댓글 API---------------
+
+export const addCdComment = async (
+  userId: number,
+  myCdId: number,
+  commentInfo: CdCommentPost,
+) => {
+  const response = await axiosInstance.post(
+    `/${API_URL}/my-cd/${myCdId}/comment?userId=${userId}`,
+    commentInfo,
   );
   return response.data;
+};
+
+export const getCdComment = async (
+  myCdId: number,
+  page?: number,
+  size?: number,
+) => {
+  const response = await axiosInstance.get(
+    `/${API_URL}/my-cd/${myCdId}/comments?page=${page}&size=${size}`,
+  );
+  return response.data;
+};
+
+export const getCdCommentAll = async (myCdId: number) => {
+  const response = await axiosInstance.get(
+    `/${API_URL}/my-cd/${myCdId}/comments/all`,
+  );
+  return response.data;
+};
+
+export const getCdCommentSearch = async (
+  myCdId: number,
+  query: string,
+  page?: number,
+  size?: number,
+) => {
+  const response = await axiosInstance.get(
+    `/${API_URL}/my-cd/${myCdId}/comments/search?query=${query}&page=${page}&size=${size}`,
+  );
+  return response.data;
+};
+
+export const deleteCdComment = async (userId: number, commentId: number) => {
+  const response = await axiosInstance.delete(
+    `/${API_URL}/my-cd/comments/${commentId}?userId=${userId}`,
+  );
+  return response;
 };
