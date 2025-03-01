@@ -64,3 +64,19 @@ interface UpdateProfileRequest {
   musicGenres?: string[];
   bookGenres?: string[];
 }
+
+interface UserProfileResponse {
+  id: string;
+  nickname: string;
+  profileImage: string;
+  bio: string;
+  musicGenres: string[];
+  bookGenres: string[];
+  recommendedUsers?: {
+    userId: number;
+    nickname: string;
+    profileImage: string;
+  }[];
+  following: boolean;
+  myProfile: boolean;
+}
