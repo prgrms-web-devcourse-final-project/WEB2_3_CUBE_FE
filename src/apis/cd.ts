@@ -204,13 +204,13 @@ export const getCdRack = async (
 
 export const getCdRackSearch = async (
   userId: number,
+  keyword: string,
   size?: number,
   cursor?: number,
-  keyword?: string,
 ) => {
   const url = cursor
-    ? `/${API_URL}/my-cd?userId=${userId}&size=${size}&cursor=${cursor}&keyword=${keyword}`
-    : `/${API_URL}/my-cd?userId=${userId}&size=${size}&keyword=${keyword}`;
+    ? `/${API_URL}/my-cd?userId=${userId}&keyword=${keyword}&size=${size}&cursor=${cursor}`
+    : `/${API_URL}/my-cd?userId=${userId}&keyword=${keyword}&size=${size}`;
 
   const response = await axiosInstance.get(url);
 
@@ -312,4 +312,55 @@ export const deleteTemplate = async (myCdId: number, userId: number) => {
     `/${API_URL}/my-cd/${myCdId}/template?userId=${userId}`,
   );
   return response;
+};
+
+// -------------cd 댓글 API---------------
+
+export const addCdComment = async (
+  userId: number,
+  myCdId: number,
+  commentInfo: CdCommentPost,
+) => {
+  const response = await axiosInstance.post(
+    `/${API_URL}/my-cd/${myCdId}/comment?userId=${userId}`,
+    commentInfo,
+  );
+  return response.data;
+};
+
+export const getCdComment = async (
+  myCdId: number,
+  page?: number,
+  size?: number,
+) => {
+  const response = await axiosInstance.get(
+    `/${API_URL}/my-cd/${myCdId}/comments?page=${page}&size=${size}`,
+  );
+  return response.data;
+};
+
+export const getCdCommentAll = async (myCdId: number) => {
+  const response = await axiosInstance.get(
+    `/${API_URL}/my-cd/${myCdId}/comments/all`,
+  );
+  return response.data;
+};
+
+export const getCdCommentSearch = async (
+  myCdId: number,
+  query: string,
+  page?: number,
+  size?: number,
+) => {
+  const response = await axiosInstance.get(
+    `/${API_URL}/my-cd/${myCdId}/comments/search?query=${query}&page=${page}&size=${size}`,
+  );
+  return response.data;
+};
+
+export const deleteCdComment = async (userId: number, commentId: number) => {
+  const response = await axiosInstance.delete(
+    `/${API_URL}/my-cd/comments/${commentId}?userId=${userId}`,
+  );
+  return response.data;
 };
