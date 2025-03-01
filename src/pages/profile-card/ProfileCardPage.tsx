@@ -61,11 +61,20 @@ const ProfileCardPage = () => {
           }
         } catch (error) {
           console.error('이미지 처리 실패:', error);
+          // 이미지 처리 실패 시에도 계속 진행 (이미지 없이 공유)
         }
       }
 
       if (navigator.share) {
-        await navigator.share(shareData);
+        try {
+          await navigator.share(shareData);
+        } catch (error) {
+          // AbortError는 사용자가 의도적으로 취소한 것이므로 에러 메시지를 표시하지 않음
+          if (error instanceof Error && error.name !== 'AbortError') {
+            console.error('공유하기 실패:', error);
+            showToast('공유하기에 실패했습니다.', 'error');
+          }
+        }
       } else {
         await navigator.clipboard.writeText(shareData.url);
         showToast('프로필 카드 링크가 복사되었습니다.', 'success');
