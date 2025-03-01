@@ -288,8 +288,8 @@ export default function CdPlayer({
           />
         </div>
 
-        <div className=' w-full h-full relative'>
-          <div className='flex items-center absolute bottom-10  left-10 '>
+        <div className='relative w-full h-full '>
+          <div className='absolute flex items-center bottom-10 left-10 '>
             {/* 앨범 이미지 */}
             <img
               className='w-20 h-20 rounded-[8px]'
@@ -297,7 +297,7 @@ export default function CdPlayer({
               alt='CD 앨범 이미지'
             />
             {/* 음량 */}
-            <div className=' flex justify-center items-center gap-2 pl-13 '>
+            <div className='flex items-center justify-center gap-2 pl-13'>
               {cdReady.isMuted ? (
                 <button
                   onClick={() =>
@@ -397,6 +397,7 @@ export default function CdPlayer({
             hasMore={false}
             isLoading={false}
             fetchMore={() => {}}
+            userId={userId}
           />
         </ModalBackground>
       )}
