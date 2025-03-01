@@ -52,9 +52,9 @@ export const ReviewContent = ({
   onDelete,
 }: ReviewContentProps) => (
   <>
-    <div className='mb-12 item-between'>
+    <div className='items-end py-8 mb-12 item-between'>
       <p
-        className='py-16 text-sm'
+        className='text-sm '
         style={{ color: `${colors.primary}80` }}>
         {reviewData.writeDateTime}
       </p>

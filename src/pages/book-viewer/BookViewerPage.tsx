@@ -20,7 +20,7 @@ const BookViewerPage = ({ reviewData, bookId }: BookViewerPageProps) => {
           alt={reviewData.bookTitle}
         />
       </figure>
-      <article className='w-1/2 h-full'>
+      <article className='w-1/2 h-full scroll-smooth'>
         <BookReviewDisplay
           mode='view'
           previewData={reviewData}
