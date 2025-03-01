@@ -65,7 +65,7 @@ export const housemateAPI = {
    */
   followHousemate: async (targetId: number) => {
     const response = await axiosInstance.post(
-      `/${API_URL}/mates/follow/${targetId}`,
+      `/${API_URL}/mates/${targetId}`,
     );
     return response.data;
   },
@@ -81,7 +81,7 @@ export const housemateAPI = {
    */
   unfollowHousemate: async (targetId: number) => {
     const response = await axiosInstance.delete(
-      `/${API_URL}/mates/follow/${targetId}`,
+      `/${API_URL}/mates/${targetId}`,
     );
     return response.data;
   },

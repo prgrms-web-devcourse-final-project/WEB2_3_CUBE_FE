@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useUserStore } from '@/store/useUserStore';
 import { useUserProfile } from '@/hooks/useUserProfile';
-import { ProfileCardLayout } from '@/components/profile-card/ProfileCardLayout';
+import { ProfileCardLayout } from './components/ProfileCardLayout';
 import shareIcon from '@/assets/profile-card/share-icon.svg';
 import pointIcon from '@/assets/toast/coin.png';
 import shareImage from '@/assets/share-thumbnail.png'; // 공유용 썸네일 이미지
@@ -129,9 +129,7 @@ const ProfileCardPage = () => {
       </div>
 
       {/* 유저 추천 */}
-      {profile.recommendedUsers && profile.recommendedUsers.length > 0 && (
-        <RecommendedUserList users={profile.recommendedUsers} />
-      )}
+      <RecommendedUserList users={profile.recommendedUsers || []} />
 
       {/* 메이트 취소/추가 및 방 구경하기 버튼 */}
       {userId && (

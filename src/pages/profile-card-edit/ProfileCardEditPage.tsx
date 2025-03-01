@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { profileAPI } from '@apis/profile';
 import { useUserStore } from '@/store/useUserStore';
-import { ProfileCardLayout } from '@components/profile-card/ProfileCard/ProfileCardLayout';
+import { ProfileCardLayout } from '../profile-card/components/ProfileCardLayout';
 import { useProfileEdit } from './hooks/useProfileEdit';
 import { ProfileImageEdit } from './components/ProfileImageEdit';
 import { ProfileForm } from './components/ProfileForm';
