@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useUserStore } from '@/store/useUserStore';
 import { useUserProfile } from '@/hooks/useUserProfile';
-import { ProfileCardLayout } from '@/components/profile-card/ProfileCardLayout';
+import { ProfileCardLayout } from './components/ProfileCardLayout';
 import shareIcon from '@/assets/profile-card/share-icon.svg';
 import pointIcon from '@/assets/toast/coin.png';
 import shareImage from '@/assets/share-thumbnail.png'; // 공유용 썸네일 이미지
@@ -61,11 +61,20 @@ const ProfileCardPage = () => {
           }
         } catch (error) {
           console.error('이미지 처리 실패:', error);
+          // 이미지 처리 실패 시에도 계속 진행 (이미지 없이 공유)
         }
       }
 
       if (navigator.share) {
-        await navigator.share(shareData);
+        try {
+          await navigator.share(shareData);
+        } catch (error) {
+          // AbortError는 사용자가 의도적으로 취소한 것이므로 에러 메시지를 표시하지 않음
+          if (error instanceof Error && error.name !== 'AbortError') {
+            console.error('공유하기 실패:', error);
+            showToast('공유하기에 실패했습니다.', 'error');
+          }
+        }
       } else {
         await navigator.clipboard.writeText(shareData.url);
         showToast('프로필 카드 링크가 복사되었습니다.', 'success');
@@ -129,9 +138,7 @@ const ProfileCardPage = () => {
       </div>
 
       {/* 유저 추천 */}
-      {profile.recommendedUsers && profile.recommendedUsers.length > 0 && (
-        <RecommendedUserList users={profile.recommendedUsers} />
-      )}
+      <RecommendedUserList users={profile.recommendedUsers || []} />
 
       {/* 메이트 취소/추가 및 방 구경하기 버튼 */}
       {userId && (

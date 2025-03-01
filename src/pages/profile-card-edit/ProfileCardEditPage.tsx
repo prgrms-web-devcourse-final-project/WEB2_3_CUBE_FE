@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { profileAPI } from '@apis/profile';
 import { useUserStore } from '@/store/useUserStore';
-import { ProfileCardLayout } from '@components/profile-card/ProfileCard/ProfileCardLayout';
+import { ProfileCardLayout } from '../profile-card/components/ProfileCardLayout';
 import { useProfileEdit } from './hooks/useProfileEdit';
 import { ProfileImageEdit } from './components/ProfileImageEdit';
 import { ProfileForm } from './components/ProfileForm';
@@ -14,6 +14,8 @@ interface FormData {
   bio: string;
   profileImage: string | File;
   imagePreview?: string;
+  musicGenres: string[];
+  bookGenres: string[];
 }
 
 const ProfileCardEditPage = () => {
@@ -24,6 +26,8 @@ const ProfileCardEditPage = () => {
     nickname: '',
     bio: '',
     profileImage: '',
+    musicGenres: [],
+    bookGenres: [],
   });
   const { showToast } = useToastStore();
 
@@ -38,19 +42,23 @@ const ProfileCardEditPage = () => {
       try {
         setIsLoading(true);
         if (!user?.userId) {
+          showToast('로그인이 필요한 서비스입니다.', 'error');
           navigate('/login');
           return;
         }
 
         const profile = await profileAPI.getUserProfile(String(user.userId));
         setFormData({
-          nickname: profile.nickname,
-          bio: profile.bio,
-          profileImage: profile.profileImage,
+          nickname: profile.nickname || '',
+          bio: profile.bio || '',
+          profileImage: profile.profileImage || '',
+          musicGenres: profile.musicGenres || [],
+          bookGenres: profile.bookGenres || [],
         });
       } catch (error) {
         console.error('프로필 데이터 조회 실패:', error);
         showToast('프로필 정보를 불러오는데 실패했습니다.', 'error');
+        navigate(-1);
       } finally {
         setIsLoading(false);
       }
@@ -92,15 +100,29 @@ const ProfileCardEditPage = () => {
   };
 
   const handleSubmit = async () => {
+    if (!formData.nickname.trim()) {
+      showToast('닉네임을 입력해주세요.', 'error');
+      return;
+    }
+
     try {
-      await updateProfile(formData);
+      await updateProfile({
+        ...formData,
+        bio: formData.bio.trim(),
+      });
     } catch (error) {
       // 에러는 useProfileEdit에서 처리됨
     }
   };
 
   if (isLoading) {
-    return <div>로딩 중...</div>;
+    return (
+      <ProfileCardLayout onClickOutside={handleClickOutside}>
+        <div className='flex items-center justify-center h-full'>
+          <p className='text-lg text-[#3E507D]'>프로필 정보를 불러오는 중...</p>
+        </div>
+      </ProfileCardLayout>
+    );
   }
 
   return (
