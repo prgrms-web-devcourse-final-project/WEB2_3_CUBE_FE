@@ -8,6 +8,7 @@ import SkeletonItem from '@components/SkeletonItem';
 import { bookAPI } from '@/apis/book';
 import { deleteCdsFromMyRack } from '@/apis/cd';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import axiosInstance from '@/apis/axiosInstance';
 
 interface DataListProps {
   datas: DataListInfo[];
@@ -88,8 +89,18 @@ export default function DataList({
           await bookAPI.deleteBookFromMyBook(String(userId), myBookIds);
         } else {
           // CD 삭제 로직
-          const myCdIds = selectedIds.join(',');
-          await deleteCdsFromMyRack(userId, myCdIds);
+          if (selectedIds.length === 1) {
+            // 단일 CD 삭제
+            await axiosInstance.delete(
+              `/api/my-cd?userId=${userId}&myCdIds=${selectedIds[0]}`,
+            );
+          } else {
+            // 다중 CD 삭제
+            const myCdIds = selectedIds.join(',');
+            await axiosInstance.delete(
+              `/api/my-cd?userId=${userId}&myCdIds=${myCdIds}`,
+            );
+          }
         }
 
         const updatedDatas = filteredDatas.filter(
