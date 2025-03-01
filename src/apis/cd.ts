@@ -209,8 +209,12 @@ export const getCdRackSearch = async (
   cursor?: number,
 ) => {
   const url = cursor
-    ? `/${API_URL}/my-cd?userId=${userId}&keyword=${keyword}&size=${size}&cursor=${cursor}`
-    : `/${API_URL}/my-cd?userId=${userId}&keyword=${keyword}&size=${size}`;
+    ? `/${API_URL}/my-cd?userId=${userId}&keyword=${keyword}&size=${
+        size || 14
+      }&cursor=${cursor}`
+    : `/${API_URL}/my-cd?userId=${userId}&keyword=${keyword}&size=${
+        size || 14
+      }`;
 
   const response = await axiosInstance.get(url);
 

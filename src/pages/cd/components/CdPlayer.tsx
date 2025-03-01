@@ -28,6 +28,8 @@ export default function CdPlayer({
   const [cdDatas, setCdDatas] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  console.log(cdDatas);
+
   // cd 초기상태 관리
   const [cdReady, setCdReady] = useState({
     isPlaying: false,
@@ -48,7 +50,7 @@ export default function CdPlayer({
   });
 
   const { cdId, userId: userIdParam } = useParams();
-  const myCdId = useMemo(() => Number(cdId), [cdId]);
+
   const userId = useMemo(() => Number(userIdParam), [userIdParam]);
   const user = useUserStore((state) => state.user);
   const myUserId = user.userId;
@@ -89,7 +91,7 @@ export default function CdPlayer({
   useEffect(() => {
     const fetchCdSearchData = async () => {
       try {
-        const result = await getCdRackSearch(userId, '', 7);
+        const result = await getCdRackSearch(userId, '');
         const formattedDatas = result.data.map((item: CDInfo) => ({
           id: String(item.myCdId),
           title: item.title,
