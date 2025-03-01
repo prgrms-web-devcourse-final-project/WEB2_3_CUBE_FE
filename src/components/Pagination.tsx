@@ -28,11 +28,11 @@ export default function Pagination({
   console.log('계산된 페이지 범위:', { startNum, endNum, pageNumberArr });
 
   return (
-    <div className='w-full gap-3 py-4 item-middle '>
+    <div className='@container w-full gap-3 py-4 item-middle '>
       <button
         disabled={currentPage === 1}
         onClick={() => onChangePage(1)}
-        className='w-8 h-8 transition-all duration-300 bg-white rounded-lg item-middle hover:bg-gray-100'>
+        className='@md:w-7 @md:h-7 w-8 h-8 transition-all duration-300  rounded-lg item-middle hover:bg-gray-100'>
         <img
           src={goFirstPage}
           alt='첫 페이지로 가는 버튼'
@@ -43,7 +43,7 @@ export default function Pagination({
       <button
         disabled={currentPage === 1}
         onClick={() => onChangePage(currentPage - 1)}
-        className='w-8 h-8 transition-all duration-300 bg-white rounded-lg item-middle hover:bg-gray-100'>
+        className='@md:w-7 @md:h-7 w-8 h-8 transition-all duration-300 rounded-lg item-middle hover:bg-gray-100'>
         <img
           src={goPrevPage}
           alt='이전 페이지로 가는 버튼'
@@ -55,7 +55,7 @@ export default function Pagination({
           style={{
             backgroundColor: currentPage === page ? color : 'transparent',
           }}
-          className={`p-2 rounded-lg w-8 h-8 item-middle transition-all duration-300 ${
+          className={`p-2 @md:text-sm rounded-lg @md:w-7 @md:h-7 w-8 h-8 item-middle transition-all duration-300 ${
             currentPage === page
               ? 'text-white'
               : 'text-[#292929] hover:bg-gray-100'
@@ -65,13 +65,13 @@ export default function Pagination({
           {page}
         </button>
       ))}
-      {currentPage + 1 < totalPage && <p>...</p>}
-      {currentPage + 1 < totalPage && <p>{totalPage}</p>}
+      {currentPage + 1 < totalPage && <p className='@md:text-sm'>...</p>}
+      {currentPage + 1 < totalPage && <p className='@md:text-sm'>{totalPage}</p>}
 
       <button
         disabled={currentPage === totalPage}
         onClick={() => onChangePage(currentPage + 1)}
-        className='w-8 h-8 transition-all duration-300 bg-white rounded-lg item-middle hover:bg-gray-100'>
+        className='w-8 h-8 transition-all duration-300 rounded-lg item-middle hover:bg-gray-100'>
         <img
           src={goNextPage}
           alt='다음 페이지로 가는 버튼'
@@ -81,7 +81,7 @@ export default function Pagination({
       <button
         disabled={currentPage === totalPage}
         onClick={() => onChangePage(totalPage)}
-        className='w-8 h-8 transition-all duration-300 bg-white rounded-lg item-middle hover:bg-gray-100'>
+        className='w-8 h-8 transition-all duration-300 rounded-lg item-middle hover:bg-gray-100'>
         <img
           src={goLastPage}
           alt='마지막 페이지로 가는 버튼'
