@@ -5,15 +5,17 @@ const API_URL = 'api';
 export const notificationAPI = {
   /**
    * 알림 목록 조회
+   * @param userId - 사용자 ID
    * @param cursor - 페이지네이션 커서
    * @param limit - 한 번에 가져올 알림 개수
    * @param read - 읽음 여부로 필터링 (true: 읽은 알림, false: 읽지 않은 알림)
    * @returns 알림 목록 조회 결과
    * @example
    * // 읽지 않은 알림 20개 조회
-   * const result = await notificationAPI.getNotifications(undefined, 20, false);
+   * const result = await notificationAPI.getNotifications(1, undefined, 20, false);
    */
   getNotifications: async (
+    userId: number,
     cursor?: number,
     limit: number = 20,
     read?: boolean,
@@ -22,6 +24,7 @@ export const notificationAPI = {
       `${API_URL}/notifications`,
       {
         params: {
+          userId,
           cursor,
           limit,
           read,

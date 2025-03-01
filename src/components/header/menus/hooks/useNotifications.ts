@@ -1,9 +1,11 @@
 import { useState, useCallback, useEffect } from 'react';
 import { notificationAPI } from '@/apis/notification';
+import { useUserStore } from '@/store/useUserStore';
 
 type TabType = 'pendingRead' | 'viewed';
 
 export const useNotifications = (isOpen: boolean) => {
+  const { user } = useUserStore();
   const [activeTab, setActiveTab] = useState<TabType>('pendingRead');
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -13,7 +15,7 @@ export const useNotifications = (isOpen: boolean) => {
 
   const fetchNotifications = useCallback(
     async (reset = false, currentTab?: TabType) => {
-      if (isFetching) return;
+      if (isFetching || !user) return;
 
       try {
         setIsFetching(true);
@@ -22,6 +24,7 @@ export const useNotifications = (isOpen: boolean) => {
         }
 
         const response = await notificationAPI.getNotifications(
+          user.userId,
           reset ? undefined : cursor ? Number(cursor) : undefined,
           20,
           (currentTab || activeTab) === 'viewed',
@@ -41,7 +44,7 @@ export const useNotifications = (isOpen: boolean) => {
         }
       }
     },
-    [cursor, isFetching, activeTab],
+    [cursor, isFetching, activeTab, user],
   );
 
   const handleReadNotification = async (notificationId: number) => {
