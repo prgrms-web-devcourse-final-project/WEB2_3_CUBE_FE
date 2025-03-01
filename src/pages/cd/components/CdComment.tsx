@@ -18,14 +18,13 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
   const myCdId = Number(useParams().cdId);
   const [currentComments, setCurrentComments] = useState<CdComment[]>([]); // 현재 보여지는 댓글목록
 
-  console.log(commentTime);
-
   // 전체 댓글 목록 캐싱
   const { data: cdComments } = useQuery<CdComment[]>({
     queryKey: [`cdComments ${myCdId}`],
     queryFn: async () => {
       const result = await getCdCommentAll(myCdId);
-      return result.data || [];
+      console.log(result);
+      return result || [];
     },
     staleTime: 1000 * 10 * 5,
     gcTime: 1000 * 10 * 5,

@@ -331,7 +331,7 @@ export const deleteTemplate = async (myCdId: number, userId: number) => {
   return response;
 };
 
-// -------------cd 댓글 API---------------
+// ------------------------cd 댓글 API--------------------------
 
 export const addCdComment = async (
   userId: number,
@@ -349,9 +349,12 @@ export const getCdComment = async (
   myCdId: number,
   page?: number,
   size?: number,
+  query?: string,
 ) => {
   const response = await axiosInstance.get(
-    `/${API_URL}/my-cd/${myCdId}/comments?page=${page}&size=${size}`,
+    query
+      ? `/${API_URL}/my-cd/${myCdId}/comments?page=${page}&size=${size}&query=${query}`
+      : `/${API_URL}/my-cd/${myCdId}/comments?page=${page}&size=${size}`,
   );
   return response.data;
 };
@@ -359,18 +362,6 @@ export const getCdComment = async (
 export const getCdCommentAll = async (myCdId: number) => {
   const response = await axiosInstance.get(
     `/${API_URL}/my-cd/${myCdId}/comments/all`,
-  );
-  return response.data;
-};
-
-export const getCdCommentSearch = async (
-  myCdId: number,
-  query: string,
-  page?: number,
-  size?: number,
-) => {
-  const response = await axiosInstance.get(
-    `/${API_URL}/my-cd/${myCdId}/comments/search?query=${query}&page=${page}&size=${size}`,
   );
   return response.data;
 };
