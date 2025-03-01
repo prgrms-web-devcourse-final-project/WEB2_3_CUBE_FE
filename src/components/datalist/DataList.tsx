@@ -203,7 +203,7 @@ export default function DataList({
         />
         <ul
           ref={listRef}
-          className='flex flex-col h-full gap-6 pr-2 overflow-auto scrollbar'>
+          className='flex flex-col max-h-[calc(100vh-200px)] gap-6 pr-2 overflow-y-auto scrollbar'>
           {isSearching ? (
             Array(5)
               .fill(0)
