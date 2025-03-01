@@ -18,13 +18,14 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
   const myCdId = Number(useParams().cdId);
   const [currentComments, setCurrentComments] = useState<CdComment[]>([]); // 현재 보여지는 댓글목록
 
+  console.log(commentTime);
+
   // 전체 댓글 목록 캐싱
   const { data: cdComments } = useQuery<CdComment[]>({
     queryKey: [`cdComments ${myCdId}`],
     queryFn: async () => {
       const result = await getCdCommentAll(myCdId);
-      console.log(result);
-      return result || [];
+      return result.data || [];
     },
     staleTime: 1000 * 10 * 5,
     gcTime: 1000 * 10 * 5,
@@ -52,7 +53,7 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
         myCdId: myCdId,
         userId: user.userId,
         nickname: user.nickname,
-        timestamp: String(commentTime),
+        timestamp: commentTime,
         content: commentInputRef.current.value,
         createdAt: new Date().toISOString(),
       };
@@ -88,18 +89,33 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
 
   // 특정 시간대에 작성된 댓글 불러오기
   useEffect(() => {
+    if (commentTime <= 1) {
+      setCurrentComments([]);
+      return;
+    }
+    // 현재 시간대에 해당하는 댓글들 필터링
     const exactTimeComments = (cdComments || []).filter(
-      (comment) => comment.timestamp === String(commentTime),
+      (comment) => comment.timestamp === commentTime,
     );
     if (exactTimeComments.length > 0) {
-      setCurrentComments((prev) => [...prev, ...exactTimeComments]);
+      // 이미 표시된 댓글은 중복 표시하지 않도록 처리
+      setCurrentComments((prev) => {
+        // 이미 보여지고 있는 댓글 ID 목록
+        const existingIds = new Set(prev.map((comment) => comment.id));
+        // 새로 추가할 댓글만 필터링
+        const newComments = exactTimeComments.filter(
+          (comment) => !existingIds.has(comment.id),
+        );
+        // 새 댓글만 추가
+        return [...prev, ...newComments];
+      });
     }
   }, [cdComments, commentTime]);
 
   // 댓글 작성
   const handleSubmitComment = useCallback(async () => {
     mutate({
-      timestamp: String(commentTime),
+      timestamp: commentTime,
       content: commentInputRef.current.value,
     });
   }, [mutate, commentTime]);

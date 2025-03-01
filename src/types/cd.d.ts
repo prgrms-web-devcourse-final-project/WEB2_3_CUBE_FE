@@ -72,12 +72,12 @@ interface CdComment {
   myCdId: number;
   userId: number;
   nickname: string;
-  timestamp: string;
+  timestamp: number;
   content: string;
   createdAt?: string;
 }
 
 interface CdCommentPost {
-  timestamp: string;
+  timestamp: number;
   content: string;
 }

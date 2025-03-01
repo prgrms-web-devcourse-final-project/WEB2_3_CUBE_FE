@@ -46,7 +46,6 @@ export const getRelativeTimeString = (dateString: string) => {
   const now = new Date();
   const past = new Date(dateString);
   const pastKST = new Date(past.getTime() + 9 * 60 * 60 * 1000);
-  console.log(dateString);
 
   const diffMs = now.getTime() - pastKST.getTime();
 

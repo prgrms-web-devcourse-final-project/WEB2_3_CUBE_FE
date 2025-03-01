@@ -3,7 +3,7 @@ import CdTemplate from './components/CdTemplate';
 import CdInfo from './components/CdInfo';
 import CdComment from './components/CdComment';
 import CdPlayer from './components/CdPlayer';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getCdInfo } from '@apis/cd';
 import { useParams } from 'react-router-dom';
 

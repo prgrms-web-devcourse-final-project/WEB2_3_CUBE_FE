@@ -14,7 +14,6 @@ import YouTube, { YouTubeEvent } from 'react-youtube';
 import { useParams } from 'react-router-dom';
 import { getCdRackSearch } from '@apis/cd';
 import { useUserStore } from '@/store/useUserStore';
-import { toKoreanDate } from '@utils/dateFormat';
 
 export default function CdPlayer({
   cdInfo,
