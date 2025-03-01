@@ -8,7 +8,7 @@ import Pagination from '../../../components/Pagination';
 import { useUserStore } from '../../../store/useUserStore';
 import { formatTimeDate } from '../../../utils/dateFormat';
 
-export default function Guestbook({ onClose, roomId, ownerId }) {
+export default function Guestbook({ onClose, roomId, ownerName, ownerId }) {
   const [guestbookData, setGuestbookData] = useState<GuestbookMessageType[]>(
     [],
   );
@@ -19,7 +19,7 @@ export default function Guestbook({ onClose, roomId, ownerId }) {
   useEffect(() => {
     const fetchGuestbookData = async (page: number) => {
       try {
-        const response = await guestbookAPI.getGuestbook(roomId, page, 2);
+        const response = await guestbookAPI.getGuestbook(ownerId, page, 2);
         console.log('API 응답:', response);
         setGuestbookData(response.guestbook);
         setTotalPage(response.pagination.totalPages);
@@ -33,7 +33,7 @@ export default function Guestbook({ onClose, roomId, ownerId }) {
       }
     };
     fetchGuestbookData(currentPage);
-  }, [roomId, currentPage]);
+  }, [ownerId, currentPage]);
 
   const handleDeleteMessage = (guestbookId: number) => {
     setGuestbookData((prev) =>
@@ -126,7 +126,7 @@ export default function Guestbook({ onClose, roomId, ownerId }) {
           {/* 방명록 컨텐츠 */}
           <span className='flex gap-2 font-bold text-3xl @3xl:text-4xl @3xl:my-3'>
             {/*todo: 방 userId -> 닉네임으로 수정 */}
-            <p className='text-[#4983EF]'>{user.nickname}</p>
+            <p className='text-[#4983EF]'>{ownerName}</p>
             <p className='text-[#3E507D]'>님의 방명록</p>
           </span>
           {/* 방명록 글 */}

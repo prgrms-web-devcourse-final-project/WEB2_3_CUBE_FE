@@ -14,6 +14,8 @@ export default function RoomModel({
   modelPath,
   activeSettings,
   userId,
+  ownerName,
+  ownerId,
   roomId,
 }) {
   const { scene } = useGLTF(modelPath) as GLTFResult;
@@ -93,9 +95,10 @@ export default function RoomModel({
       <AnimatePresence>
         {isGuestBookOpen && (
           <Guestbook
-            ownerId={userId}
+            ownerName={ownerName}
             onClose={() => setIsGuestBookOpen(false)}
             roomId={roomId}
+            ownerId={ownerId}
           />
         )}
       </AnimatePresence>
