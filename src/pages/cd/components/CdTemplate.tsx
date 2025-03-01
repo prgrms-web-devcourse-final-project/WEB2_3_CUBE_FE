@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import NotEditTemplate from './NotEditTemplate';
 import EditTemplate from './EditTemplate';
 import { getCdTemplate } from '@apis/cd';
 import { useParams } from 'react-router-dom';
 
-export default function CdTemplate() {
+const CdTemplate = React.memo(() => {
   const [isEdit, setIsEdit] = useState(false);
   const [templateData, setTemplateData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -43,4 +43,6 @@ export default function CdTemplate() {
       )}
     </div>
   );
-}
+});
+
+export default CdTemplate;

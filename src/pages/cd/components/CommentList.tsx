@@ -4,14 +4,17 @@ import trashIcon from '@assets/cd/trash-icon.svg';
 import { useDebounce } from '@hooks/useDebounce';
 import { SearchInput } from '@components/search-modal/SearchInput';
 import Pagination from '@components/Pagination';
-import { cdComments } from '@/mocks/mockCdComment';
+import { getCdCommentSearch } from '@apis/cd';
+import { useParams } from 'react-router-dom';
 
 export default function CommentList({ onClose }) {
   const [currentInput, setCurrentInput] = useState('');
   const [fileredResults, setFilteredResults] = useState([]);
-
+  const [cdComments, setCdComments] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPage = useRef<number>(20);
+  const totalPage = useRef<number>(null);
+
+  const myCdId = Number(useParams().cdId);
 
   // const startNum = Math.max(currentPage - 1, 1);
   // const endNum = Math.min(currentPage + 1, totalPage);
@@ -20,6 +23,24 @@ export default function CommentList({ onClose }) {
   //   (_, index) => startNum + index,
   // );
   const debouncedQuery = useDebounce(currentInput, 500);
+
+  useEffect(() => {
+    const fetchCdComments = async () => {
+      try {
+        const result = await getCdCommentSearch(
+          myCdId,
+          '뭐가있어야됌',
+          currentPage,
+          5,
+        );
+        totalPage.current = result.totalPages;
+        setCdComments(result.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchCdComments();
+  }, [currentPage]);
 
   useEffect(() => {
     const filteredDatas = cdComments.filter(
@@ -34,9 +55,6 @@ export default function CommentList({ onClose }) {
     setCurrentPage(page);
   };
 
-  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setCurrentInput(event.target.value);
-  // };
   return (
     <ModalBackground onClose={onClose}>
       <div className='w-[662px] rounded-3xl border-2 border-[#FCF7FD] shadow-box  backdrop-blur-[15px] p-4  '>
