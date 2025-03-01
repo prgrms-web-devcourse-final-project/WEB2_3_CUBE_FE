@@ -64,3 +64,20 @@ interface TemplateProps {
     comment4: string | null;
   };
 }
+
+// cd comments
+
+interface CdComment {
+  id?: number;
+  myCdId: number;
+  userId: number;
+  nickname: string;
+  timestamp: string;
+  content: string;
+  createdAt?: string;
+}
+
+interface CdCommentPost {
+  timestamp: string;
+  content: string;
+}

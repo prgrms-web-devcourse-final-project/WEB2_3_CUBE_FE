@@ -4,14 +4,17 @@ import { Toast } from '@components/Toast';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { refreshAccessTokenAPI } from '@apis/auth';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 function App() {
+  const queryClient = new QueryClient();
+
   const [cookies] = useCookies(['accessToken', 'refreshToken']);
   const [isTokenRefreshing, setIsTokenRefreshing] = useState(false);
 
   useEffect(() => {
     const accessToken = cookies.accessToken;
     const refreshToken = cookies.refreshToken;
-    console.log(accessToken, refreshToken);
 
     const fetchTokenData = async () => {
       // 엑세스 토큰 재발급 로직
@@ -32,10 +35,12 @@ function App() {
   if (isTokenRefreshing) return <div>로딩중...</div>;
 
   return (
-    <BrowserRouter>
-      <Toast />
-      <Router />
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Toast />
+        <Router />
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 }
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import soundIcon from '@assets/cd/sound-icon.svg';
 import muteIcon from '@assets/cd/mute-icon.svg';
 
@@ -11,12 +11,23 @@ import cdList from '@assets/cd/music-list-icon.svg';
 import ModalBackground from '@components/ModalBackground';
 import DataList from '@components/datalist/DataList';
 import YouTube, { YouTubeEvent } from 'react-youtube';
-import { useNavigate, useParams } from 'react-router-dom';
-import { getCdRack } from '@apis/cd';
+import { useParams } from 'react-router-dom';
+import { getCdRackSearch } from '@apis/cd';
+import { useUserStore } from '@/store/useUserStore';
+import { toKoreanDate } from '@utils/dateFormat';
 
-export default function CdPlayer({ cdInfo }: { cdInfo: CDInfo }) {
+export default function CdPlayer({
+  cdInfo,
+  onOffCdPlay,
+  onCdTime,
+}: {
+  cdInfo: CDInfo;
+  onOffCdPlay: (value: boolean) => void;
+  onCdTime: (value: number) => void;
+}) {
   const [isCdListOpen, setIsCdListOpen] = useState(false);
   const [cdDatas, setCdDatas] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // cd 초기상태 관리
   const [cdReady, setCdReady] = useState({
@@ -37,18 +48,27 @@ export default function CdPlayer({ cdInfo }: { cdInfo: CDInfo }) {
     duration: 0,
   });
 
-  const navigate = useNavigate();
-  const myCdId = Number(useParams().cdId);
-  const userId = Number(useParams().userId);
-  const videoId = cdInfo.youtubeUrl.match(/[?&]v=([^&]+)/)[1];
+  const { cdId, userId: userIdParam } = useParams();
+  const myCdId = useMemo(() => Number(cdId), [cdId]);
+  const userId = useMemo(() => Number(userIdParam), [userIdParam]);
+  const user = useUserStore((state) => state.user);
+  const myUserId = user.userId;
 
-  const opts = {
-    height: '0',
-    width: '0',
-    playerVars: {
-      autoplay: 1,
-    },
-  };
+  const videoId = useMemo(() => {
+    const match = cdInfo.youtubeUrl.match(/[?&]v=([^&]+)/);
+    return match ? match[1] : '';
+  }, [cdInfo.youtubeUrl]);
+
+  const opts = useMemo(
+    () => ({
+      height: '0',
+      width: '0',
+      playerVars: {
+        autoplay: 1,
+      },
+    }),
+    [],
+  );
 
   // const formattedCds = mockCD.data.map((cd) => ({
   //   id: String(cd.myCdId),
@@ -58,28 +78,43 @@ export default function CdPlayer({ cdInfo }: { cdInfo: CDInfo }) {
   //   album: cd.album,
   // }));
 
-  const progressStyle = {
-    background: `linear-gradient(to right, #162C63 ${cdPlayer.progress}%, #E5E7EB ${cdPlayer.progress}%)`,
-  };
+  const progressStyle = useMemo(
+    () => ({
+      background: `linear-gradient(to right, #162C63 ${cdPlayer.progress}%, #E5E7EB ${cdPlayer.progress}%)`,
+    }),
+    [cdPlayer.progress],
+  );
+
+  // ---------------------------------------
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCdSearchData = async () => {
       try {
-        const result = await getCdRack(userId);
+        const result = await getCdRackSearch(userId, '', 7);
+        const formattedDatas = result.data.map((item: CDInfo) => ({
+          id: String(item.myCdId),
+          title: item.title,
+          artist: item.artist,
+          album: item.album,
+          released_year: item.releaseDate,
+        }));
+
+        setCdDatas({ ...result, data: formattedDatas });
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     };
-    fetchData();
-  }, [myCdId]);
-
+    fetchCdSearchData();
+  }, []);
   // 재생 시간 업데이트 함수
   useEffect(() => {
     if (cdStateChangeEvent) {
       const interval = setInterval(() => {
         const current = cdStateChangeEvent.target.getCurrentTime();
         const total = cdStateChangeEvent.target.getDuration();
-
+        onCdTime(Math.floor(current));
         setCdPlayer((prev) => ({
           ...prev,
           currentTime: current,
@@ -92,19 +127,6 @@ export default function CdPlayer({ cdInfo }: { cdInfo: CDInfo }) {
     }
   }, [cdStateChangeEvent]);
 
-  // useEffect(() => {
-  //   if (cdStateChangeEvent) {
-  //     cdStateChangeEvent.target.stopVideo();
-
-  //     const newVideoId = cdInfo.youtubeUrl?.match(/[?&]v=([^&]+)/)?.[1];
-
-  //     if (newVideoId) {
-  //       // 새 비디오 로드 및 재생
-  //       cdStateChangeEvent.target.loadVideoById(newVideoId);
-  //     }
-  //   }
-  // }, [myCdId, cdInfo]);
-
   // 시간 포맷팅 함수
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
@@ -112,110 +134,133 @@ export default function CdPlayer({ cdInfo }: { cdInfo: CDInfo }) {
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   };
 
-  const handleChangeTime = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTime = (Number(e.target.value) / 100) * cdPlayer.duration;
-    setCdPlayer((prev) => ({ ...prev, currentTime: newTime }));
-    cdStateChangeEvent.target.seekTo(newTime);
-  };
+  const handleChangeTime = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newTime = (Number(e.target.value) / 100) * cdPlayer.duration;
+      setCdPlayer((prev) => ({ ...prev, currentTime: newTime }));
+      cdStateChangeEvent.target.seekTo(newTime);
+    },
+    [cdStateChangeEvent, cdPlayer.duration],
+  );
 
-  const handleMuteCdVolume = (event: YouTubeEvent<number>) => {
-    if (!cdReady.isMuted) {
+  const handleMuteCdVolume = useCallback(
+    (event: YouTubeEvent<number>) => {
+      if (!cdReady.isMuted) {
+        setCdReady((prev) => ({
+          ...prev,
+          previousVolume: prev.volume,
+          isMuted: true,
+          volume: 0,
+        }));
+        event?.target.setVolume(0);
+      } else {
+        event?.target.setVolume(String(cdReady.previousVolume));
+        setCdReady((prev) => ({
+          ...prev,
+          volume: prev.previousVolume,
+          isMuted: false,
+        }));
+      }
+    },
+    [cdReady.isMuted, cdReady.previousVolume],
+  );
+
+  const handleChangeCdVolume = useCallback(
+    (event: YouTubeEvent<number>, volume: string) => {
+      event?.target.setVolume(volume);
       setCdReady((prev) => ({
         ...prev,
-        previousVolume: prev.volume,
-        isMuted: true,
-        volume: 0,
-      }));
-      event?.target.setVolume(0);
-    } else {
-      event?.target.setVolume(String(cdReady.previousVolume));
-      setCdReady((prev) => ({
-        ...prev,
-        volume: prev.previousVolume,
+        volume: Number(volume),
+        previousVolume: Number(volume),
         isMuted: false,
       }));
-    }
-  };
+    },
+    [],
+  );
+  const handleOnOffCd = useCallback(
+    (event?: YouTubeEvent<number>) => {
+      if (!event) return;
 
-  const handleChangeCdVolume = (
-    event: YouTubeEvent<number>,
-    volume: string,
-  ) => {
-    event?.target.setVolume(volume);
-    setCdReady((prev) => ({
-      ...prev,
-      volume: Number(volume),
-      previousVolume: Number(volume),
-      isMuted: false,
-    }));
-  };
+      if (event.data === 2 || event.data === 0 || event.data === null) {
+        event.target?.playVideo(); // event.target이 없을 수도 있으니 ? 붙여줌
+        setCdReady((prev) => ({ ...prev, isPlaying: true }));
+        onOffCdPlay(true);
+      } else if (event.data === 1) {
+        event.target?.pauseVideo();
+        setCdReady((prev) => ({ ...prev, isPlaying: false }));
+        onOffCdPlay(false);
+      }
+    },
+    [onOffCdPlay],
+  );
 
-  const handleOnOffCd = (event: YouTubeEvent<number>) => {
-    if (event.data === 2 || event.data === 0 || null) {
-      event?.target.playVideo();
-      setCdReady((prev) => ({ ...prev, isPlaying: true }));
-    } else if (event.data === 1) {
-      event?.target.pauseVideo();
-      setCdReady((prev) => ({ ...prev, isPlaying: false }));
-    }
-  };
+  // const handleGoBeforeCd = () => {
+  //   if (cdStateChangeEvent) {
+  //     cdStateChangeEvent.target.stopVideo();
+  //   }
+  //   navigate(`/cd/${myCdId - 1}/user/${+userId}`);
+  // };
 
-  const handleGoBeforeCd = () => {
-    if (cdStateChangeEvent) {
-      cdStateChangeEvent.target.stopVideo();
-    }
-    navigate(`/cd/${myCdId - 1}/user/${+userId}`);
-  };
+  // const handleGoAfterCd = () => {
+  //   if (cdStateChangeEvent) {
+  //     cdStateChangeEvent.target.stopVideo();
+  //   }
+  //   navigate(`/cd/${myCdId + 1}/user/${+userId}`);
+  // };
 
-  const handleGoAfterCd = () => {
-    if (cdStateChangeEvent) {
-      cdStateChangeEvent.target.stopVideo();
-    }
-    navigate(`/cd/${myCdId + 1}/user/${+userId}`);
-  };
-
-  const handleToggleLoop = () => {
+  const handleToggleLoop = useCallback(() => {
     const newLoopState = !cdReady.isLooping;
     setCdReady((prev) => ({ ...prev, isLooping: newLoopState }));
-  };
+  }, [cdReady.isLooping]);
+
+  // YouTube 이벤트 핸들러 메모이제이션
+  const handleYouTubeReady = useCallback(
+    (e: YouTubeEvent<any>) => {
+      e.target.setVolume(cdReady.volume);
+      e.target.playVideo();
+      setCdReady((prev) => ({
+        ...prev,
+        isPlaying: true,
+        volume: 20,
+        previousVolume: 20,
+        isMuted: e.target.playerInfo.muted,
+      }));
+      setCdPlayer((prev) => ({
+        ...prev,
+        duration: e.target.getDuration(),
+      }));
+    },
+    [cdReady.volume],
+  );
+
+  const handleYouTubeStateChange = useCallback(
+    (e: YouTubeEvent<number>) => {
+      if (e.data === 0) {
+        if (cdReady.isLooping) {
+          setTimeout(() => {
+            e.target.seekTo(0);
+            e.target.playVideo();
+          }, 100);
+        } else {
+          setCdReady((prev) => ({
+            ...prev,
+            isPlaying: false,
+          }));
+        }
+      }
+      setCdStateChangeEvent(e);
+    },
+    [cdReady.isLooping],
+  );
+
+  if (isLoading) return <div>로딩중...</div>;
   return (
     <>
       <YouTube
         videoId={videoId}
         opts={opts}
-        onReady={(e) => {
-          console.log(e.target);
-          e.target.setVolume(cdReady.volume);
-          e.target.playVideo();
-          setCdReady((prev) => ({
-            ...prev,
-            isPlaying: true,
-            volume: 20,
-            previousVolume: 20,
-            isMuted: e.target.playerInfo.muted,
-          }));
-          setCdPlayer((prev) => ({
-            ...prev,
-            duration: e.target.getDuration(),
-          }));
-        }}
-        onStateChange={(e) => {
-          console.log(e.target);
-          if (e.data === 0) {
-            if (cdReady.isLooping) {
-              setTimeout(() => {
-                e.target.seekTo(0);
-                e.target.playVideo();
-              }, 100);
-            } else {
-              setCdReady((prev) => ({
-                ...prev,
-                isPlaying: false,
-              }));
-            }
-          }
-          setCdStateChangeEvent(e);
-        }}
+        onReady={handleYouTubeReady}
+        onStateChange={handleYouTubeStateChange}
       />
       <div className='w-full h-[13vh] shrink-0  '>
         {/* 진행 시간 */}
@@ -313,14 +358,14 @@ export default function CdPlayer({ cdInfo }: { cdInfo: CDInfo }) {
             </button> */}
 
             {/* 현재시간/ 총 재생 시간 */}
-            {/* <div className='flex justify-center items-center gap-2 absolute right-[-100px] font-semibold '>
+            <div className='flex justify-center items-center gap-2 absolute right-[-100px] font-semibold '>
               <span className='text-black'>
                 {formatTime(cdPlayer.currentTime)} /{' '}
               </span>
               <span className='text-black'>
                 {formatTime(cdPlayer.duration)}
               </span>
-            </div> */}
+            </div>
           </div>
 
           {/* 음악 부가기능 */}
@@ -334,18 +379,21 @@ export default function CdPlayer({ cdInfo }: { cdInfo: CDInfo }) {
               />
             </button>
 
-            <img
-              onClick={() => setIsCdListOpen(true)}
-              src={cdList}
-              alt='cd 목록 리스트 보여주는 버튼'
-            />
+            {myUserId === userId && (
+              <button onClick={() => setIsCdListOpen(true)}>
+                <img
+                  src={cdList}
+                  alt='cd 목록 리스트 보여주는 버튼'
+                />
+              </button>
+            )}
           </div>
         </div>
       </div>
       {isCdListOpen && (
         <ModalBackground onClose={() => setIsCdListOpen(false)}>
           <DataList
-            datas={formattedCds}
+            datas={cdDatas.data}
             type='cd'
             hasMore={false}
             isLoading={false}
