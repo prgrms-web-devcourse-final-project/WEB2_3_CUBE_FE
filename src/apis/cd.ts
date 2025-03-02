@@ -180,9 +180,9 @@ export const searchSpotifyCds = async (
 /**
  *
  * @param userId 사용자의 고유한 id
+ * @param targetUserId 조회 대상 id
  * @param size  페이지 크기
  * @param cursor 마지막으로 조회한 Cd id (첫 페이지 조회 시 제외)
- * @param keyword 검색 입력값
  *
  * @returns cd 목록
  *
@@ -190,31 +190,46 @@ export const searchSpotifyCds = async (
  */
 export const getCdRack = async (
   userId: number,
+  targetUserId: number,
   size?: number,
   cursor?: number,
 ) => {
   const url = cursor
-    ? `/${API_URL}/my-cd?userId=${userId}&size=${size || 14}&cursor=${cursor}`
-    : `/${API_URL}/my-cd?userId=${userId}&size=${size || 14}`;
+    ? `/${API_URL}/my-cd?userId=${userId}&targetUserId=${targetUserId}&size=${
+        size || 14
+      }&cursor=${cursor}`
+    : `/${API_URL}/my-cd?userId=${userId}&targetUserId=${targetUserId}&size=${
+        size || 14
+      }`;
 
   const response = await axiosInstance.get(url);
 
   return response.data;
 };
 
+/**
+ *
+ * @param userId  사용자의 고유한 id
+ * @param targetUserId  조회 대상 id
+ * @param keyword 키워드
+ * @param size  페이지 크기
+ * @param cursor 마지막으로 조회한 Cd id (첫 페이지 조회 시 제외)
+ * @returns
+ */
 export const getCdRackSearch = async (
   userId: number,
+  targetUserId: number,
   keyword: string,
   size?: number,
   cursor?: number,
 ) => {
   const url = cursor
-    ? `/${API_URL}/my-cd?userId=${userId}&keyword=${keyword}&size=${
+    ? `/${API_URL}/my-cd?userId=${userId}&targetUserId=${targetUserId}&size=${
         size || 14
-      }&cursor=${cursor}`
-    : `/${API_URL}/my-cd?userId=${userId}&keyword=${keyword}&size=${
+      }&keyword=${keyword}&cursor=${cursor}`
+    : `/${API_URL}/my-cd?userId=${userId}&size=${
         size || 14
-      }`;
+      }&keyword=${keyword}`;
 
   const response = await axiosInstance.get(url);
 
