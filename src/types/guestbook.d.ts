@@ -12,5 +12,6 @@ interface GuestbookMessageProps {
   messages: Message[];
   userId: number;
   ownerId: number;
-  onDelete: (guesbookId:number) => void
+  refetchGuestbook: ()=> void;
+  onDelete: ()=> void
 }

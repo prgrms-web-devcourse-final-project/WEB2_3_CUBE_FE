@@ -6,23 +6,30 @@ import { useUserStore } from '../../../store/useUserStore';
 
 export default function GuestbookMessage({
   messages = [],
-  onDelete,
   userId,
   ownerId,
+  refetchGuestbook,
+  onDelete,
 }: GuestbookMessageProps) {
-    const user = useUserStore((state) => state.user);
+  const user = useUserStore((state) => state.user);
+
   const handleDelete = async (guestbookId: number) => {
     try {
       await guestbookAPI.deleteGuestbook(guestbookId, userId);
-      onDelete(guestbookId);
       console.log('삭제 완료', guestbookId);
+
+      if (refetchGuestbook) {
+        refetchGuestbook();
+      }
+
+      onDelete();
     } catch (error) {
       console.log('삭제 중 오류 발생', error);
     }
   };
 
   return (
-    <div className='@container w-full flex flex-col gap-4 @3xl:mt-1 mt-4 mb-4 max-h-80 min-h-[300px] '>
+    <div className='@container w-full flex flex-col gap-4 @3xl:gap-7 @3xl:mt-1 mt-4 mb-4 max-h-80 min-h-[300px] '>
       {/* 방명록 글 0개일 경우 */}
       {messages.length === 0 ? (
         <div className='flex flex-col justify-center items-center text-gray-500/50 h-74 @xl:h-96 font-medium'>

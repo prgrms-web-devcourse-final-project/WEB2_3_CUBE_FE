@@ -1,12 +1,10 @@
 import { motion } from 'framer-motion';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { guestbookAPI } from '../../../apis/guestbook';
-
 import GuestbookMessage from '@pages/room/components/GuestbookMessage';
 import GusetbookInput from '@pages/room/components/GusetbookInput';
 import Pagination from '../../../components/Pagination';
 import { useUserStore } from '../../../store/useUserStore';
-import { formatTimeDate } from '../../../utils/dateFormat';
 
 export default function Guestbook({ onClose, roomId, ownerName, ownerId }) {
   const [guestbookData, setGuestbookData] = useState<GuestbookMessageType[]>([]);
@@ -14,25 +12,20 @@ export default function Guestbook({ onClose, roomId, ownerName, ownerId }) {
   const [totalPage, setTotalPage] = useState(1);
   const user = useUserStore((state) => state.user);
 
-  useEffect(() => {
-    const fetchGuestbookData = async (page: number) => {
-      try {
-        const response = await guestbookAPI.getGuestbook(ownerId, page, 2);
-        console.log('API 응답:', response);
-        setGuestbookData(response.guestbook);
-        setTotalPage(response.pagination.totalPages);
-      } catch (error) {
-        console.error('방명록 조회 중 오류:', error);
-      }
-    };
-    fetchGuestbookData(currentPage);
-  }, [ownerId, currentPage]);
+  const fetchGuestbookData = useCallback(async (page: number) => {
+    try {
+      const response = await guestbookAPI.getGuestbook(ownerId, page, 2);
+      console.log('API 응답:', response);
+      setGuestbookData(response.guestbook);
+      setTotalPage(response.pagination.totalPages);
+    } catch (error) {
+      console.error('방명록 조회 중 오류:', error);
+    }
+  }, [ownerId]); 
 
-  const handleDeleteMessage = (guestbookId: number) => {
-    setGuestbookData((prev) =>
-      prev.filter((msg) => msg.guestbookId !== guestbookId),
-    );
-  };
+  useEffect(() => {
+    fetchGuestbookData(currentPage);
+  }, [fetchGuestbookData, currentPage]);
 
   const handleSubmitMessage = async (guestMessage: string) => {
     if (guestMessage.trim() === '') return;
@@ -64,11 +57,13 @@ export default function Guestbook({ onClose, roomId, ownerName, ownerId }) {
     setCurrentPage(page);
   };
 
-  console.log('렌더링 시 상태:', {
-    currentPage,
-    totalPage,
-    dataLength: guestbookData.length,
-  });
+  const handleDeleteGuestbook = () => {
+    if (guestbookData.length === 1 && currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    } else {
+      fetchGuestbookData(currentPage);
+    }
+  };
 
   return (
     <motion.div
@@ -113,7 +108,8 @@ export default function Guestbook({ onClose, roomId, ownerName, ownerId }) {
             ownerId={ownerId}
             messages={guestbookData}
             userId={user.userId}
-            onDelete={handleDeleteMessage}
+            refetchGuestbook={() => fetchGuestbookData(currentPage)}
+            onDelete={handleDeleteGuestbook}
           />
           {/* 작성 필드 */}
           <GusetbookInput onSubmitMessage={handleSubmitMessage} />
