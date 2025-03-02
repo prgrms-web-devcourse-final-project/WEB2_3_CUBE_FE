@@ -173,7 +173,7 @@ export const bookAPI = {
    */
   getReview: async (myBookId: string) => {
     const response = await axiosInstance.get(
-      `/${API_URL}/mybooks-review?myBookId=${myBookId}`,
+      `/${API_URL}/mybooks/${myBookId}/review`,
     );
     return response.data;
   },
@@ -206,7 +206,7 @@ export const bookAPI = {
 
   addReview: async (myBookId: string, review: ReviewType) => {
     const response = await axiosInstance.post(
-      `/${API_URL}/mybooks-review?myBookId=${myBookId}`,
+      `/${API_URL}/mybooks/${myBookId}/review`,
       review,
     );
     return response.data;
@@ -220,7 +220,7 @@ export const bookAPI = {
    */
   updateReview: async (myBookId: string, review: ReviewType) => {
     const response = await axiosInstance.patch(
-      `/${API_URL}/mybooks-review/${myBookId}`,
+      `/${API_URL}/mybooks/${myBookId}/review`,
       review,
     );
     return response.data;
@@ -233,7 +233,7 @@ export const bookAPI = {
    */
   deleteReview: async (myBookId: string) => {
     const response = await axiosInstance.delete(
-      `/${API_URL}/mybooks-review/${myBookId}`,
+      `/${API_URL}/mybooks/${myBookId}/review`,
     );
     return response.data;
   },
