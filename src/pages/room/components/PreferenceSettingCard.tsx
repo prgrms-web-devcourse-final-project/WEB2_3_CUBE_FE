@@ -8,6 +8,7 @@ export default function PreferenceSettingCard({
   writtenCount,
   isAdd,
   onClick,
+  level,
 }) {
   const isMusic = title === '음악';
 
@@ -15,10 +16,10 @@ export default function PreferenceSettingCard({
     <section
       onClick={onClick}
       className={`@container prefer-card backdrop-blur-2xl rounded-3xl drop-shadow-modal items-center justify-center p-2 border-2
-        border-[#${isAdd ? '4983EF' : 'FCF7FD' }] cursor-pointer relative
+        ${isAdd ? 'border-4 border-[#4983EF]' : 'border-2 border-[#FCF7FD]'} cursor-pointer relative
     `}>
       {isAdd && (
-        <img src={addCheck} alt="" className={`absolute top-0 right-6 drop-shadow-logo`} />
+        <img src={addCheck} alt="" className={`absolute top-[-4px] right-6 drop-shadow-logo`} />
       )}
       <article
         className={`@container w-full h-full rounded-2xl bg-[#FCF7FD] p-11 flex place-content-center`}>
@@ -36,7 +37,7 @@ export default function PreferenceSettingCard({
                 <p className='font-bold text-xl @sm:text-2xl text-[#162C63]'>
                   {title}
                 </p>
-                <p className='font-semibold text-[#3E507D]'>Lv.1</p>
+                <p className='font-semibold text-[#3E507D]'>Lv.{level}</p>
               </div>
               <p className='text-[#3E507D]/70 text-xs @sm:text-sm font-medium'>
                 최대 저장 가능한 갯수 {maxCount}개

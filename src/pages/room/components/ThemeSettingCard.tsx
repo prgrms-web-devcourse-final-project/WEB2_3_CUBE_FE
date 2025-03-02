@@ -1,5 +1,5 @@
-import checkIcon from '@assets/room/checkIcon.svg';
 import lock from '@assets/room/lock.png';
+import addCheck from "@assets/room/addFurniture-icon.svg";
 import point from '@assets/room/point.png';
 import { themeData } from '@constants/roomTheme';
 
@@ -13,7 +13,7 @@ export default function ThemeSettingCard({
     <div
       onClick={!isLocked ? onClick : undefined}
       className={`theme-card border-2 border-[#FCF7FD]
-    bg-[#FCF7FD]/20 backdrop-blur-2xl rounded-2xl relative
+    bg-[#FCF7FD]/20 backdrop-blur-2xl rounded-2xl relative @container
       drop-shadow-modal items-center justify-center p-1.5 transition-all duration-300 ease-in-out
     ${
       isSelected
@@ -45,11 +45,11 @@ export default function ThemeSettingCard({
       )}
       {/* 테마 컨텐츠 */}
       <div
-        className={`flex flex-col items-center justify-center relative w-full h-full rounded-xl bg-[#FCF7FD] p-9 2xl:p-11 transition-transform duration-300`}>
+        className={`@container flex flex-col items-center justify-center relative w-full h-full rounded-xl bg-[#FCF7FD] p-9 2xl:p-11 transition-transform duration-300`}>
         {isSelected && (
           <img
-            className='absolute top-2.5 right-2.5 w-5 h-5 2xl:w-7 2xl:h-7'
-            src={checkIcon}
+            className='absolute top-[-10px] right-2.5 w-7 '
+            src={addCheck}
             alt='선택 하기'
           />
         )}
@@ -61,11 +61,11 @@ export default function ThemeSettingCard({
           alt={themeData[theme].title}
         />
         {/* 테마 소개 */}
-        <div className='flex flex-col items-center '>
-          <h2 className='font-bold text-base 2xl:text-lg text-[#162C63]'>
+        <div className='flex flex-col items-center gap-1 '>
+          <h2 className='font-bold text-base 3xl:text-lg text-[#162C63]'>
             {themeData[theme].title}
           </h2>
-          <p className='font-medium 2xl:font-semibold text-[10px] 2xl:text-sm text-[#3E507D]/70'>
+          <p className='font-medium 3xl:font-semibold text-xs 3xl:text-sm text-[#3E507D]/70'>
             {themeData[theme].description}
           </p>
         </div>

@@ -13,20 +13,19 @@ import Guestbook from './Guestbook';
 export default function RoomModel({
   modelPath,
   activeSettings,
-  userId,
   ownerName,
   ownerId,
   roomId,
+  furnitures,
 }) {
   const { scene } = useGLTF(modelPath) as GLTFResult;
-  const { items } = useRoomItems();
-  const navigate = useNavigate();
+  const { items } = useRoomItems({ roomId, furnitures });
   const [isGuestBookOpen, setIsGuestBookOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (scene) {
       scene.position.set(0, 0, 0);
-
       scene.traverse((object) => {
         if (object.isMesh) {
           object.castShadow = true;
@@ -39,10 +38,10 @@ export default function RoomModel({
   const handleInteraction = (itemType: string) => {
     switch (itemType) {
       case 'bookShelf':
-        navigate(`/bookcase/${userId}`);
+        navigate(`/bookcase/${ownerId}`);
         break;
       case 'cdPlayer':
-        navigate(`/cdrack/${userId}`);
+        navigate(`/cdrack/${ownerId}`);
         break;
       case 'guestBook':
         setIsGuestBookOpen(true);
@@ -51,6 +50,7 @@ export default function RoomModel({
         console.log(`None`);
     }
   };
+  
 
   return (
     <>
