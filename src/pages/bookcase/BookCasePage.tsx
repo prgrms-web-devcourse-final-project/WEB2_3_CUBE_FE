@@ -1,12 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import ToolBoxButton from './components/ToolBoxButton';
 import { SearchModal } from '@components/search-modal/SearchModal';
 import BookCaseList from './components/BookCaseList';
 import DataList from '@components/datalist/DataList';
 import { bookAPI } from '@apis/book';
 import ModalBackground from '@components/ModalBackground';
-import { useUserStore } from '../../store/useUserStore';
-import { useNavigate } from 'react-router-dom';
 import { BookCaseListType } from '@/types/book';
 
 const BookCasePage = () => {
@@ -23,15 +22,16 @@ const BookCasePage = () => {
   const [scrollLeft, setScrollLeft] = useState(0);
   const [scrollTop, setScrollTop] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { user } = useUserStore();
   const navigate = useNavigate();
+  const { userId } = useParams();
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
         setIsLoading(true);
+        if (!userId) return;
 
-        const response = await bookAPI.getBookCaseList(user.userId, 1);
+        const response = await bookAPI.getBookCaseList(Number(userId), 45);
 
         console.log('API Response:', response);
 
@@ -69,7 +69,7 @@ const BookCasePage = () => {
       }
     };
     fetchBooks();
-  }, [user, navigate]);
+  }, [userId, navigate]);
 
   // 초기 스크롤 위치 설정
   useEffect(() => {
@@ -187,7 +187,7 @@ const BookCasePage = () => {
             hasMore={false}
             isLoading={isLoading}
             fetchMore={() => {}}
-            userId={user.userId}
+            userId={Number(userId)}
           />
         </ModalBackground>
       )}

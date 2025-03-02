@@ -11,6 +11,7 @@ interface BookHeaderProps {
   reviewFields: ReviewField[];
   headings: Array<{ id: string; level: number; text: string }>;
   colors: (typeof BOOK_THEME)[BookThemeType];
+  reviewData: BookReviewData;
 }
 
 export const BookHeader = ({
@@ -18,6 +19,7 @@ export const BookHeader = ({
   reviewFields,
   headings,
   colors,
+  reviewData,
 }: BookHeaderProps) => (
   <div className='py-12 item-between px-14'>
     <h1
@@ -33,14 +35,16 @@ export const BookHeader = ({
         style={{ color: colors.primary }}>
         목차
       </li>
-      {reviewFields.map(({ key, title }) => (
-        <li
-          key={key}
-          className='text-sm'
-          style={{ color: colors.primary }}>
-          <a href={`#section-${key}`}>{title}</a>
-        </li>
-      ))}
+      {reviewFields.map(({ key, title }) =>
+        reviewData[key] ? (
+          <li
+            key={key}
+            className='text-sm'
+            style={{ color: colors.primary }}>
+            <a href={`#section-${key}`}>{title}</a>
+          </li>
+        ) : null,
+      )}
       {headings.map(({ id, level, text }) => (
         <li
           key={id}

@@ -14,6 +14,7 @@ interface ReviewContentProps {
   mode: 'preview' | 'view';
   onEdit: () => void;
   onDelete: () => void;
+  isMyReview?: boolean;
 }
 
 const ReviewSection = ({
@@ -50,6 +51,7 @@ export const ReviewContent = ({
   mode,
   onEdit,
   onDelete,
+  isMyReview = true,
 }: ReviewContentProps) => (
   <>
     <div className='items-end py-8 mb-12 item-between'>
@@ -107,24 +109,16 @@ export const ReviewContent = ({
       />
     )}
 
-    {mode === 'view' && (
-      <div className='gap-3 mt-8 item-middle'>
+    {mode === 'view' && isMyReview && (
+      <div className='flex justify-end gap-4'>
         <button
           onClick={onEdit}
-          className='px-4 py-2 text-sm transition-colors rounded-full hover:opacity-80'
-          style={{
-            backgroundColor: `${colors.secondary}20`,
-            color: colors.secondary,
-          }}>
+          className='px-7 py-2 text-gray-600 bg-gray-200 rounded-[10px] drop-shadow-logo'>
           수정
         </button>
         <button
           onClick={onDelete}
-          className='px-4 py-2 text-sm transition-colors rounded-full hover:opacity-80'
-          style={{
-            backgroundColor: `${colors.secondary}20`,
-            color: colors.secondary,
-          }}>
+          className='px-7 py-2 text-white bg-red-500 rounded-[10px] drop-shadow-logo'>
           삭제
         </button>
       </div>

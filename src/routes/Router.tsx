@@ -53,14 +53,9 @@ const Router = () => {
             element={<TestPage />}
           />
         </Route>
-        {/* 내 서평 보기/수정 */}
+        {/* 내 서평 보기/작성/수정 */}
         <Route
           path='/book/:bookId'
-          element={<BookPage />}
-        />
-        {/* 다른 유저의 서평 보기 */}
-        <Route
-          path='/book/:bookId/user/:userId'
           element={<BookPage />}
         />
         <Route
