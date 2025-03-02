@@ -237,4 +237,18 @@ export const bookAPI = {
     );
     return response.data;
   },
+
+  // ------------------------------ 책 레벨 업그레이드 ------------------------------
+  /**
+   * 책 레벨 업그레이드
+   * @param roomId 방 ID
+   * @param nextLevel 다음 레벨
+   * @returns
+   */
+  upgradeBookLevel: async (roomId: string, nextLevel: number) => {
+    const response = await axiosInstance.post(
+      `/${API_URL}/rooms/${roomId}/furniture/bookshelf?level=${nextLevel}`,
+    );
+    return response.data;
+  },
 };
