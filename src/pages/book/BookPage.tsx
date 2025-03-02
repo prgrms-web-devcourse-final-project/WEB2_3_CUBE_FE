@@ -23,7 +23,8 @@ const BookPage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const isEditMode = searchParams.get('mode') === 'edit';
-  const isMyReview = !userId; // URL에 userId가 없으면 내 서평
+  // URL에 userId가 있으면 다른 사람의 서평
+  const isMyReview = !userId;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,8 +60,8 @@ const BookPage = () => {
           setHasReview(true);
         } else {
           setHasReview(false);
-          // 내 서평이고 작성 페이지가 아닌 경우에만 리다이렉트
-          if (isMyReview && !isEditMode) {
+          // URL에 userId가 없고(내 서평이고) 작성 페이지가 아닌 경우에만 리다이렉트
+          if (!userId && !isEditMode) {
             showToast('조회된 서평이 없어 작성 페이지로 이동합니다.', 'info');
             navigate(`/book/${bookId}?mode=edit`, { replace: true });
             return;

@@ -82,8 +82,7 @@ const BookReviewDisplay = ({
     : [];
 
   const handleEdit = () => {
-    // 로그인한 유저와 서평 작성자가 다른 경우
-    if (userId && user.userId.toString() !== userId) {
+    if (!isMyReview) {
       showToast('작성된 서평이 없습니다.', 'error');
       return;
     }
@@ -93,8 +92,7 @@ const BookReviewDisplay = ({
   const handleDelete = async () => {
     if (!urlBookId) return;
 
-    // 로그인한 유저와 서평 작성자가 다른 경우
-    if (userId && user.userId.toString() !== userId) {
+    if (!isMyReview) {
       showToast('작성된 서평이 없습니다.', 'error');
       return;
     }
@@ -102,7 +100,7 @@ const BookReviewDisplay = ({
     try {
       await bookAPI.deleteReview(urlBookId);
       showToast('서평이 삭제되었습니다.', 'success');
-      navigate(`/bookCase/${userId}`);
+      navigate(`/bookCase/${user.userId}`);
     } catch (error) {
       console.error('서평 삭제 중 오류 발생:', error);
       showToast('서평 삭제에 실패했습니다.', 'error');
@@ -111,8 +109,11 @@ const BookReviewDisplay = ({
     }
   };
 
-  // 로그인한 유저와 서평 작성자가 같은지 여부
-  const isMyReview = !userId || user.userId.toString() === userId;
+  // URL 패턴으로 내 서평인지 판단
+  const pathParts = window.location.pathname.split('/');
+  const isMyReview = !(
+    pathParts.includes('book') && pathParts.includes('user')
+  );
 
   return (
     <div

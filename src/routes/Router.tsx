@@ -58,6 +58,11 @@ const Router = () => {
           path='/book/:bookId'
           element={<BookPage />}
         />
+        {/* 다른 유저의 서평 보기 */}
+        <Route
+          path='/book/:bookId/user/:userId'
+          element={<BookPage />}
+        />
         <Route
           path='/cd/:cdId/user/:userId'
           element={<CdPage />}
