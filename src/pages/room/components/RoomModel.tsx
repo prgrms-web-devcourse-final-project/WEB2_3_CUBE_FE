@@ -96,7 +96,6 @@ export default function RoomModel({
           <Guestbook
             ownerName={ownerName}
             onClose={() => setIsGuestBookOpen(false)}
-            roomId={roomId}
             ownerId={ownerId}
           />
         )}

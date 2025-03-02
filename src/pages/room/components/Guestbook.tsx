@@ -6,10 +6,10 @@ import GusetbookInput from '@pages/room/components/GusetbookInput';
 import Pagination from '../../../components/Pagination';
 import { useUserStore } from '../../../store/useUserStore';
 
-export default function Guestbook({ onClose, roomId, ownerName, ownerId }) {
+export default function Guestbook({ onClose, ownerName, ownerId }: GuestbookProps) {
   const [guestbookData, setGuestbookData] = useState<GuestbookMessageType[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPage, setTotalPage] = useState<number>(1);
   const user = useUserStore((state) => state.user);
 
   const fetchGuestbookData = useCallback(async (page: number) => {
@@ -32,7 +32,7 @@ export default function Guestbook({ onClose, roomId, ownerName, ownerId }) {
 
     try {
       const response = await guestbookAPI.createGuestbook(
-        roomId,
+        ownerId,
         user.userId,
         guestMessage,
       );
@@ -53,7 +53,6 @@ export default function Guestbook({ onClose, roomId, ownerName, ownerId }) {
   };
 
   const handlePageChange = (page: number) => {
-    console.log('페이지 변경 요청:', page);
     setCurrentPage(page);
   };
 
@@ -96,9 +95,9 @@ export default function Guestbook({ onClose, roomId, ownerName, ownerId }) {
         </div>
 
         {/* 메인 배경 */}
-        <section className='guest-book @3xl:gap-5 flex-col items-center pt-10 @3xl:pt-20 px-13 @3xl:px-16'>
+        <section className='guest-book flex-col items-center pt-10 @2xl:pt-15 px-13 @2xl:px-16'>
           {/* 방명록 컨텐츠 */}
-          <span className='flex gap-2 font-bold text-3xl @3xl:text-4xl @3xl:my-3'>
+          <span className='flex gap-2 font-bold text-3xl @2xl:text-4xl @2xl:my-3'>
             {/*todo: 방 userId -> 닉네임으로 수정 */}
             <p className='text-[#4983EF]'>{ownerName}</p>
             <p className='text-[#3E507D]'>님의 방명록</p>
