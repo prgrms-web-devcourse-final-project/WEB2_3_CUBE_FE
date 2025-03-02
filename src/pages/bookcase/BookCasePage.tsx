@@ -31,7 +31,7 @@ const BookCasePage = () => {
       try {
         setIsLoading(true);
 
-        const response = await bookAPI.getBookCaseList(user.userId, 1);
+        const response = await bookAPI.getBookCaseList(user.userId, 45);
 
         console.log('API Response:', response);
 

@@ -3,7 +3,7 @@ import axiosInstance from './axiosInstance';
 import { BookType, ReviewType } from '@/types/book';
 
 const ALADIN_KEY = import.meta.env.VITE_ALADIN_KEY;
-const API_URL = 'mock';
+const API_URL = 'api';
 
 export const bookAPI = {
   // ------------------------------ 검색 ------------------------------
@@ -220,7 +220,7 @@ export const bookAPI = {
    */
   updateReview: async (myBookId: string, review: ReviewType) => {
     const response = await axiosInstance.patch(
-      `/${API_URL}/mybooks-review?myBookId=${myBookId}`,
+      `/${API_URL}/mybooks-review/${myBookId}`,
       review,
     );
     return response.data;
