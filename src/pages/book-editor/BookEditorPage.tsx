@@ -111,7 +111,7 @@ const BookEditorPage = ({
         }
       } catch (error) {
         console.error('서평 조회 중 오류 발생:', error);
-        showToast('서평 조회에 실패했습니다.', 'error');
+        showToast('작성된 서평이 없어 작성 페이지로 이동합니다.', 'success');
       }
     };
 
