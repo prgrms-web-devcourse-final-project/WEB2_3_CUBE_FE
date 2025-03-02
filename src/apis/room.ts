@@ -47,7 +47,7 @@ export const roomAPI = {
       try{
         const response = await axiosInstance.put(
           `/${API_URL}/rooms/${roomId}/furniture?userId=${userId}`, 
-          { furnitureType: furnitureType } );
+          { furnitureType } );
         return response.data;
       } catch (error) {
         console.error('방 가구 설정 변경 API 호출 오류:', error);

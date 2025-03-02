@@ -19,6 +19,7 @@ interface UserStorage {
 
 interface RoomData {
   roomId: number;
+  nickname: string;
   userId: number;
   theme: string;
   createdAt: string;
