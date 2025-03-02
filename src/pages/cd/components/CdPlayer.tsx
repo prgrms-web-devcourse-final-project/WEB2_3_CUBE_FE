@@ -28,8 +28,6 @@ export default function CdPlayer({
   const [cdDatas, setCdDatas] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  console.log(cdDatas);
-
   // cd 초기상태 관리
   const [cdReady, setCdReady] = useState({
     isPlaying: false,
