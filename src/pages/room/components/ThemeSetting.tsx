@@ -3,11 +3,11 @@ import ThemeSettingCard from './ThemeSettingCard';
 import { useClickOutside } from '../../../hooks/useClickOutside';
 import { useRef } from 'react';
 
-export default function ThemeSetting({ selectedTheme, onThemeSelect, onClose }) {
+export default function ThemeSetting({ selectedTheme, onThemeSelect, onClose }: ThemeSettingProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  useClickOutside({ modalRef, buttonRef, isOpen: true, onClose });
+  useClickOutside({ modalRef, buttonRef, isOpen: true, onClose, excludeSelectors: ['.bottom-menu'] });
 
   return (
     <div className='flex flex-col items-center justify-end w-full min-h-screen'>

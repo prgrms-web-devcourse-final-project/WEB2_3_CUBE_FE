@@ -4,17 +4,13 @@ interface Furniture {
   level: number;
   maxCapacity: number;
 }
-
-interface StorageLimits {
+interface StorageData {
   maxMusic: number;
-  maxBooks: number;
-}
-
-interface UserStorage {
   savedMusic: number;
+  writtenMusicLogs: number;
+  maxBooks: number;
   savedBooks: number;
   writtenReviews: number;
-  writtenMusicLogs: number;
 }
 
 interface RoomData {
@@ -26,4 +22,10 @@ interface RoomData {
   furnitures: Furniture[];
   storageLimits: StorageLimits;
   userStorage: UserStorage;
+}
+
+interface DockMenuProps {
+  activeSettings: string;
+  onSettingsChange: (setting: 'preference' | 'theme' | null) => void;
+  resetState: boolean;
 }
