@@ -15,11 +15,12 @@ import { bookAPI } from '@/apis/book';
 import { BookReviewData } from '@/types/book';
 
 interface BookEditorPageProps {
-  bookTitle?: string;
-  author?: string;
-  genreNames?: string[];
-  publishedDate?: string;
-  imageUrl?: string;
+  bookTitle: string;
+  author: string;
+  genreNames: string[];
+  publishedDate: string;
+  imageUrl: string;
+  onComplete?: () => void;
 }
 
 const BookEditorPage = ({
@@ -28,6 +29,7 @@ const BookEditorPage = ({
   genreNames,
   publishedDate,
   imageUrl,
+  onComplete,
 }: BookEditorPageProps) => {
   const { bookId } = useParams();
   const navigate = useNavigate();
@@ -158,8 +160,8 @@ const BookEditorPage = ({
       // 성공 시 임시저장 데이터 삭제
       localStorage.removeItem(`draft-review-${bookId}`);
 
-      // 서평 상세 페이지로 이동
-      navigate(`/book/${bookId}`);
+      // 페이지 리로드
+      window.location.href = `/book/${bookId}`;
     } catch (error) {
       console.error('서평 저장 중 오류 발생:', error);
       showToast('서평 저장에 실패했습니다.', 'error');

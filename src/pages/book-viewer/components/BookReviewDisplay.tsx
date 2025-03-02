@@ -102,6 +102,7 @@ const BookReviewDisplay = ({
         reviewFields={REVIEW_FIELDS}
         headings={headings}
         colors={colors}
+        reviewData={displayData}
       />
 
       <article
