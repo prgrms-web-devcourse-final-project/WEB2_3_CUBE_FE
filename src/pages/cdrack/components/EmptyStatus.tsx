@@ -1,7 +1,11 @@
 import cd from '@assets/cd/cd.png';
 import Dock from './Dock';
+import { SearchModal } from '@components/search-modal/SearchModal';
+import cd_add_icon from '@assets/cd/cd-add-icon.svg';
+import { useState } from 'react';
 
 export default function EmptyStatus() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <div className='w-full h-screen'>
       {/* 제목 & cd 이미지 */}
@@ -18,6 +22,27 @@ export default function EmptyStatus() {
 
       {/* CD 목록 독(하단바) */}
       <Dock isEmpty={true} />
+
+      <div
+        onClick={() => setIsModalOpen((prev) => !prev)}
+        className='fixed bottom-17 right-15 z-[5] bg-[#FFFFFF33] backdrop-blur-[35px] rounded-full w-16 h-16 cursor-pointer 
+       item-middle border-2 border-[#FFFFFFB2]'>
+        <img
+          className='w-5 h-5'
+          src={cd_add_icon}
+          alt='cd 추가 아이콘'
+        />
+      </div>
+
+      {/* 검색 모달 */}
+      {isModalOpen && (
+        <SearchModal
+          title='CD 랙에 담을 음악 찾기'
+          onClose={() => setIsModalOpen(false)}
+          type='CD'
+          onSelect={() => {}}
+        />
+      )}
     </div>
   );
 }
