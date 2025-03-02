@@ -42,7 +42,7 @@ export default function NoEditStatusItem({
 
       <Link
         to={`${isBook ? '/book' : '/cd'}`}
-        className='hover:translate-x-1  all-200-eio'>
+        className='hover:translate-x-1 all-200-eio'>
         <img
           className='cursor-pointer'
           src={isBook ? book_go_btn : cd_play_btn}
