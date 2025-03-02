@@ -70,7 +70,6 @@ export const SearchResult = ({
           return;
         }
         onSelect(item);
-
         await addCdToMyRack(user.userId, cdData);
       }
       onClose();
