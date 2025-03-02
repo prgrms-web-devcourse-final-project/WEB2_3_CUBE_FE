@@ -145,6 +145,7 @@ const ProfileCardPage = () => {
         <ProfileButtons
           userId={userId}
           isMyProfile={isMyProfile}
+          isMatched={profile.following}
           onProfileUpdate={updateProfile}
         />
       )}

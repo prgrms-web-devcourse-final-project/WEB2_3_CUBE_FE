@@ -102,7 +102,7 @@ export const profileAPI = {
     formData.append('image', image);
 
     const { data } = await axiosInstance.put<{ imageUrl: string }>(
-      `${API_URL}/users/profile/image`,
+      `${API_URL}/users/image`,
       formData,
       {
         headers: {
