@@ -1,5 +1,6 @@
 import { useGLTF } from '@react-three/drei';
 import { useEffect, useRef, useState } from 'react';
+import * as THREE from 'three';
 
 export default function Furnitures({item, onInteract }:FurnitureProps) {
   const groupRef = useRef(null);
@@ -46,9 +47,9 @@ export default function Furnitures({item, onInteract }:FurnitureProps) {
   return (
     <group
       ref={groupRef}
-      position={item.position}
+      position={new THREE.Vector3(...item.position)}
       scale={0.68}
-      rotation={item.rotation || [0, 0, 0]}
+      rotation={new THREE.Euler(...item.rotation)}
       onClick={(e) => {
         e.stopPropagation();
         onInteract(item.type);

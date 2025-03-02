@@ -8,6 +8,12 @@ interface GuestbookMessageType {
   relation?: string;
 }
 
+interface GuestbookProps {
+  onClose: () => void;
+  ownerName: string;
+  ownerId: number;
+}
+
 interface GuestbookMessageProps {
   messages: Message[];
   userId: number;
