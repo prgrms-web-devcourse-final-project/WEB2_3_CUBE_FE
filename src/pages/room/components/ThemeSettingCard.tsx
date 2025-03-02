@@ -8,7 +8,7 @@ export default function ThemeSettingCard({
   isSelected,
   isLocked,
   onClick,
-}) {
+}:ThemeSettingCardProps) {
   return (
     <div
       onClick={!isLocked ? onClick : undefined}

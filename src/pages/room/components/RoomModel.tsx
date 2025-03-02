@@ -3,11 +3,10 @@ import { Canvas } from '@react-three/fiber';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Suspense, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import Furnitures from '../../../components/room-models/Furnitures';
 import { RoomLighting } from '../../../components/room-models/RoomLighting';
 import { CAMERA_CONFIG } from '../../../constants/sceneSetting';
 import { useRoomItems } from '../hooks/useRoomItems';
+import Furnitures from '../../../components/room-models/Furnitures';
 import Guestbook from './Guestbook';
 
 export default function RoomModel({
@@ -17,7 +16,7 @@ export default function RoomModel({
   ownerId,
   roomId,
   furnitures,
-}) {
+}:RoomModelProps) {
   const { scene } = useGLTF(modelPath) as GLTFResult;
   const { items } = useRoomItems({ roomId, furnitures });
   const [isGuestBookOpen, setIsGuestBookOpen] = useState(false);
@@ -37,13 +36,13 @@ export default function RoomModel({
 
   const handleInteraction = (itemType: string) => {
     switch (itemType) {
-      case 'bookShelf':
+      case 'BOOKSHELF':
         navigate(`/bookcase/${ownerId}`);
         break;
-      case 'cdPlayer':
+      case 'CD_RACK':
         navigate(`/cdrack/${ownerId}`);
         break;
-      case 'guestBook':
+      case 'GUEST_BOOK':
         setIsGuestBookOpen(true);
         break;
       default:

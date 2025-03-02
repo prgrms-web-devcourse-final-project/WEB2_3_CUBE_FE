@@ -14,11 +14,12 @@ export default function RoomPage() {
   const { userId } = useParams<{ userId: string }>();
   const [roomData, setRoomData] = useState<RoomData>(null);
   const [activeSettings, setActiveSettings] = useState<string | null>(null);
+  const [resetDockMenuState, setResetDockMenuState] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState<
     'basic' | 'forest' | 'marine'
   >('basic');
   const [visibleFurnitures, setVisibleFurnitures] = useState<Furniture[]>([]);
-  const [storageData, setStorageData] = useState<StorageLimits & UserStorage>({
+  const [storageData, setStorageData] = useState<StorageData>({
     maxBooks: 0,
     maxMusic: 0,
     savedBooks: 0,
@@ -129,6 +130,15 @@ export default function RoomPage() {
     setActiveSettings(null);
   };
 
+  const handleModalOutsideClick = () => {
+    if (activeSettings === 'theme') {
+      handleSaveTheme();
+    }
+    setActiveSettings(null);
+    setResetDockMenuState(true);
+    setTimeout(() => setResetDockMenuState(false), 0);
+  };
+
   return (
     <main className='relative w-full min-h-screen overflow-hidden main-background'>
       {roomData && (
@@ -145,6 +155,7 @@ export default function RoomPage() {
         <DockMenu
           activeSettings={activeSettings}
           onSettingsChange={handleSettingsChange}
+          resetState={resetDockMenuState}
         />
       )}
       {activeSettings === 'theme' && (
@@ -156,7 +167,7 @@ export default function RoomPage() {
           <ThemeSetting
             selectedTheme={selectedTheme}
             onThemeSelect={handleThemeChange}
-            onClose={handleCloseSettings}
+            onClose={handleModalOutsideClick}
           />
         </motion.div>
       )}

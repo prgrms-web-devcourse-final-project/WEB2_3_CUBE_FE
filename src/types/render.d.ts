@@ -20,9 +20,10 @@ interface FurnitureProps {
 }
 
 interface RoomModelProps {
-  userId: number;
-  roomId: number;
   modelPath: string;
   activeSettings: string;
-  furnitures: Furniture[];
-}
+  ownerName: string;
+  ownerId: number;
+  roomId: number;
+  furnitures: { furnitureType: FurnitureType; isVisible: boolean }[]; 
+};

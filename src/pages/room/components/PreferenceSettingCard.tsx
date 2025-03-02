@@ -9,7 +9,7 @@ export default function PreferenceSettingCard({
   isAdd,
   onClick,
   level,
-}) {
+}: PreferenceSettingCardProps) {
   const isMusic = title === '음악';
 
   return (

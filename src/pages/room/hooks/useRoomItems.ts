@@ -41,7 +41,7 @@ const defaultItems: FurnitureData[] = [
   },
 ];
 
-export function useRoomItems(roomData: { roomId: string; furnitures?: { furnitureType: FurnitureType; isVisible: boolean }[] } | null) {
+export function useRoomItems(roomData: { roomId: number; furnitures?: { furnitureType: FurnitureType; isVisible: boolean }[] } | null) {
   const items = useMemo(() => {
     if (!roomData || !roomData.furnitures) {
       return defaultItems;
