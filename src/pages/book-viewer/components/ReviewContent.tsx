@@ -70,6 +70,7 @@ export const ReviewContent = ({
         className='gap-2 px-6 py-3 text-xl border-2 rounded-full item-middle'
         style={{
           borderColor: colors.primary,
+          color: colors.primary,
         }}>
         Scroll Down
         <img
@@ -110,15 +111,23 @@ export const ReviewContent = ({
     )}
 
     {mode === 'view' && isMyReview && (
-      <div className='flex justify-end gap-4'>
+      <div className='gap-3 mt-8 item-middle'>
         <button
           onClick={onEdit}
-          className='px-7 py-2 text-gray-600 bg-gray-200 rounded-[10px] drop-shadow-logo'>
+          className='px-4 py-2 text-sm transition-colors rounded-full hover:opacity-80'
+          style={{
+            backgroundColor: `${colors.secondary}20`,
+            color: colors.secondary,
+          }}>
           수정
         </button>
         <button
           onClick={onDelete}
-          className='px-7 py-2 text-white bg-red-500 rounded-[10px] drop-shadow-logo'>
+          className='px-4 py-2 text-sm transition-colors rounded-full hover:opacity-80'
+          style={{
+            backgroundColor: `${colors.secondary}20`,
+            color: colors.secondary,
+          }}>
           삭제
         </button>
       </div>
