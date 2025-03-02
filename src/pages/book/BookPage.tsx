@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import BookReviewEditor from '../book-editor/BookEditorPage';
 import BookReviewViewer from '../book-viewer/BookViewerPage';
@@ -6,12 +6,9 @@ import { bookAPI } from '@/apis/book';
 import { useToastStore } from '@/store/useToastStore';
 import { BookReviewData } from '@/types/book';
 
-interface BookPageProps {
-  mode?: 'edit';
-}
-
-const BookPage = ({ mode }: BookPageProps) => {
+const BookPage = () => {
   const { bookId, userId } = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const showToast = useToastStore((state) => state.showToast);
   const [hasReview, setHasReview] = useState(false);
@@ -25,7 +22,7 @@ const BookPage = ({ mode }: BookPageProps) => {
   } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const isEditMode = mode === 'edit';
+  const isEditMode = searchParams.get('mode') === 'edit';
   const isMyReview = !userId; // URL에 userId가 없으면 내 서평
 
   useEffect(() => {
@@ -60,18 +57,12 @@ const BookPage = ({ mode }: BookPageProps) => {
             freeform: review.freeFormText,
           });
           setHasReview(true);
-
-          // 서평이 있는데 edit 모드로 들어온 경우 뷰어로 리다이렉트
-          if (isEditMode) {
-            navigate(`/book/${bookId}`);
-            return;
-          }
         } else {
           setHasReview(false);
           // 내 서평이고 작성 페이지가 아닌 경우에만 리다이렉트
           if (isMyReview && !isEditMode) {
             showToast('조회된 서평이 없어 작성 페이지로 이동합니다.', 'info');
-            navigate(`/book/${bookId}/edit`, { replace: true });
+            navigate(`/book/${bookId}?mode=edit`, { replace: true });
             return;
           }
         }
@@ -94,8 +85,8 @@ const BookPage = ({ mode }: BookPageProps) => {
     return <div>접근할 수 없는 페이지입니다.</div>;
   }
 
-  // 내 서평이고 서평이 없거나 수정 모드인 경우 에디터 표시
-  if (isMyReview && (isEditMode || !hasReview)) {
+  // 내 서평이고 수정 모드이거나, 서평이 없는 경우 에디터 표시
+  if ((isMyReview && isEditMode) || (isMyReview && !hasReview)) {
     return (
       <BookReviewEditor
         bookTitle={bookInfo.title}
@@ -103,9 +94,6 @@ const BookPage = ({ mode }: BookPageProps) => {
         genreNames={bookInfo.genreNames}
         publishedDate={bookInfo.publishedDate}
         imageUrl={bookInfo.imageUrl}
-        onComplete={() => {
-          navigate(`/book/${bookId}`);
-        }}
       />
     );
   }
