@@ -5,11 +5,11 @@ export default function GusetbookInput({ onSubmitMessage }) {
   const [guestMessage, setGuestMessage] = useState('');
   const formRef = useRef<HTMLFormElement | null>(null);
 
-  const handleSubmit = (e?: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
     if (e) e.preventDefault();
 
     if (guestMessage.trim() !== '') {
-      onSubmitMessage(guestMessage);
+      await onSubmitMessage(guestMessage);
       setGuestMessage('');
     }
   };
@@ -17,7 +17,7 @@ export default function GusetbookInput({ onSubmitMessage }) {
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      formRef.current?.requestSubmit();
+      handleSubmit();
     }
   };
 
