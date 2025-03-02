@@ -6,14 +6,14 @@ import preferenceIcon from '@assets/room/preferenceIcon.svg';
 import themeNoselectIcon from '@assets/room/theme-noselect-Icon.svg';
 import themeIcon from '@assets/room/themeIcon.svg';
 
-export default function DockMenu({ activeSettings, onSettingsChange }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [hasSelectedSetting, setHasSelectedSetting] = useState(false);
-  const menuRef = useRef(null);
+export default function DockMenu({ activeSettings, onSettingsChange, resetState }: DockMenuProps) {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [hasSelectedSetting, setHasSelectedSetting] = useState<boolean>(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
@@ -24,15 +24,30 @@ export default function DockMenu({ activeSettings, onSettingsChange }) {
     };
   }, []);
 
+  useEffect(() => {
+    if (resetState) {
+      setIsOpen(false);
+      setHasSelectedSetting(false);
+    }
+  }, [resetState]);
+
+  useEffect(() => {
+    if (activeSettings === null) {
+      setHasSelectedSetting(false);
+    } else {
+      setHasSelectedSetting(true);
+    }
+  }, [activeSettings]);
+
   const getCurrentIcon = () => {
-    if (!hasSelectedSetting) return dockMenuIcon;
+    if (!hasSelectedSetting ) return dockMenuIcon;
     if (isOpen) return dockMenuNoselectIcon;
     if (activeSettings === 'preference' && !isOpen) return preferenceIcon;
     if (activeSettings === 'theme' && !isOpen) return themeIcon;
     return dockMenuIcon;
   };
 
-  const handleSettingClick = (setting) => {
+  const handleSettingClick = (setting: 'preference' | 'theme') => {
     if (setting === activeSettings) {
       setIsOpen(false);
       setHasSelectedSetting(false);
@@ -122,7 +137,7 @@ export default function DockMenu({ activeSettings, onSettingsChange }) {
                   : 'opacity-0 group-hover:opacity-100'
               }`}
               src={preferenceIcon}
-              alt='취향 설정'
+              alt=''
             />
             <img
               className={`bottom-menu-img absolute transition-opacity ${
@@ -131,7 +146,7 @@ export default function DockMenu({ activeSettings, onSettingsChange }) {
                   : 'opacity-100 group-hover:opacity-0'
               }`}
               src={preferenceNoselectIcon}
-              alt='취향 설정'
+              alt=''
             />
 
             {/* tooltip */}
@@ -155,7 +170,7 @@ export default function DockMenu({ activeSettings, onSettingsChange }) {
                   : 'opacity-0 group-hover:opacity-100'
               }`}
               src={themeIcon}
-              alt='테마 설정'
+              alt=''
             />
             <img
               className={`bottom-menu-img absolute transition-opacity ${
@@ -164,7 +179,7 @@ export default function DockMenu({ activeSettings, onSettingsChange }) {
                   : 'opacity-100 group-hover:opacity-0'
               }`}
               src={themeNoselectIcon}
-              alt='테마 설정'
+              alt=''
             />
 
             {/* tooltip */}

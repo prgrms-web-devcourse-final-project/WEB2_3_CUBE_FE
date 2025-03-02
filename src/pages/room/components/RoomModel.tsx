@@ -3,30 +3,28 @@ import { Canvas } from '@react-three/fiber';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Suspense, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import Furnitures from '../../../components/room-models/Furnitures';
 import { RoomLighting } from '../../../components/room-models/RoomLighting';
 import { CAMERA_CONFIG } from '../../../constants/sceneSetting';
 import { useRoomItems } from '../hooks/useRoomItems';
+import Furnitures from '../../../components/room-models/Furnitures';
 import Guestbook from './Guestbook';
 
 export default function RoomModel({
   modelPath,
   activeSettings,
-  userId,
   ownerName,
   ownerId,
   roomId,
-}) {
+  furnitures,
+}:RoomModelProps) {
   const { scene } = useGLTF(modelPath) as GLTFResult;
-  const { items } = useRoomItems();
-  const navigate = useNavigate();
+  const { items } = useRoomItems({ roomId, furnitures });
   const [isGuestBookOpen, setIsGuestBookOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (scene) {
       scene.position.set(0, 0, 0);
-
       scene.traverse((object) => {
         if (object.isMesh) {
           object.castShadow = true;
@@ -38,19 +36,20 @@ export default function RoomModel({
 
   const handleInteraction = (itemType: string) => {
     switch (itemType) {
-      case 'bookShelf':
-        navigate(`/bookcase/${userId}`);
+      case 'BOOKSHELF':
+        navigate(`/bookcase/${ownerId}`);
         break;
-      case 'cdPlayer':
-        navigate(`/cdrack/${userId}`);
+      case 'CD_RACK':
+        navigate(`/cdrack/${ownerId}`);
         break;
-      case 'guestBook':
+      case 'GUEST_BOOK':
         setIsGuestBookOpen(true);
         break;
       default:
         console.log(`None`);
     }
   };
+  
 
   return (
     <>
@@ -97,7 +96,6 @@ export default function RoomModel({
           <Guestbook
             ownerName={ownerName}
             onClose={() => setIsGuestBookOpen(false)}
-            roomId={roomId}
             ownerId={ownerId}
           />
         )}

@@ -3,21 +3,30 @@ import LayeredButton from '../../../components/LayeredButton';
 
 export default function GusetbookInput({ onSubmitMessage }) {
   const [guestMessage, setGuestMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const formRef = useRef<HTMLFormElement | null>(null);
 
   const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
     if (e) e.preventDefault();
 
-    if (guestMessage.trim() !== '') {
+    if (isSubmitting || guestMessage.trim() === '') return;
+
+    try {
+      setIsSubmitting(true);
       await onSubmitMessage(guestMessage);
       setGuestMessage('');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit();
+
+      formRef.current?.dispatchEvent(
+        new Event('submit', { cancelable: true, bubbles: true })
+      );
     }
   };
 
@@ -29,7 +38,7 @@ export default function GusetbookInput({ onSubmitMessage }) {
   return (
     <form
       ref={formRef}
-      className='@container flex items-start w-full gap-2'
+      className='@container flex items-start w-full gap-2 @2xl:mb-4'
       aria-label='방명록 작성'
       onSubmit={handleSubmit}>
       <label
@@ -50,9 +59,10 @@ export default function GusetbookInput({ onSubmitMessage }) {
       />
       {/* 확인 버튼 */}
       <LayeredButton
-        onClick={handleSubmit}
+        onClick={() => handleSubmit()}
         aria-label='방명록 작성 완료'
-        type='submit'
+        type='button'
+        disabled={isSubmitting}
         children={'확인'}
         className='w-20 h-18 @xl:h-26 @xl:w-26'
       />

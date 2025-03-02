@@ -3,10 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { BOOK_THEME, BookThemeType } from '@/constants/bookTheme';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToastStore } from '@/store/useToastStore';
+import { useUserStore } from '@/store/useUserStore';
 import { BookReviewData } from '@/types/book';
 import { BookHeader } from './BookHeader';
 import { BookInfo } from './BookInfo';
 import { ReviewContent } from './ReviewContent';
+import ConfirmModal from '@/components/ConfirmModal';
 
 interface BookReviewDisplayProps {
   mode: 'preview' | 'view';
@@ -57,6 +59,9 @@ const BookReviewDisplay = ({
   const navigate = useNavigate();
   const { bookId: urlBookId } = useParams();
   const showToast = useToastStore((state) => state.showToast);
+  const { user } = useUserStore();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
   // view 모드일 때 사용할 데이터 fetch 로직
   const [reviewData, setReviewData] = useState<BookReviewData | null>(null);
 
@@ -77,11 +82,22 @@ const BookReviewDisplay = ({
     : [];
 
   const handleEdit = () => {
+    // 로그인한 유저와 서평 작성자가 다른 경우
+    if (userId && user.userId.toString() !== userId) {
+      showToast('작성된 서평이 없습니다.', 'error');
+      return;
+    }
     navigate(`/book/${urlBookId}?mode=edit`);
   };
 
   const handleDelete = async () => {
-    if (!urlBookId || !window.confirm('서평을 삭제하시겠습니까?')) return;
+    if (!urlBookId) return;
+
+    // 로그인한 유저와 서평 작성자가 다른 경우
+    if (userId && user.userId.toString() !== userId) {
+      showToast('작성된 서평이 없습니다.', 'error');
+      return;
+    }
 
     try {
       await bookAPI.deleteReview(urlBookId);
@@ -90,8 +106,13 @@ const BookReviewDisplay = ({
     } catch (error) {
       console.error('서평 삭제 중 오류 발생:', error);
       showToast('서평 삭제에 실패했습니다.', 'error');
+    } finally {
+      setIsDeleteModalOpen(false);
     }
   };
+
+  // 로그인한 유저와 서평 작성자가 같은지 여부
+  const isMyReview = !userId || user.userId.toString() === userId;
 
   return (
     <div
@@ -102,6 +123,7 @@ const BookReviewDisplay = ({
         reviewFields={REVIEW_FIELDS}
         headings={headings}
         colors={colors}
+        reviewData={displayData}
       />
 
       <article
@@ -124,9 +146,19 @@ const BookReviewDisplay = ({
           colors={colors}
           mode={mode}
           onEdit={handleEdit}
-          onDelete={handleDelete}
+          onDelete={() => setIsDeleteModalOpen(true)}
+          isMyReview={isMyReview}
         />
       </article>
+
+      {isDeleteModalOpen && (
+        <ConfirmModal
+          title='서평 삭제'
+          subTitle='정말로 이 서평을 삭제하시겠습니까?'
+          onConfirm={handleDelete}
+          onClose={() => setIsDeleteModalOpen(false)}
+        />
+      )}
     </div>
   );
 };
