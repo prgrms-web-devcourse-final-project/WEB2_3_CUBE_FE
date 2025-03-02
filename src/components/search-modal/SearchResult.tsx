@@ -15,7 +15,7 @@ interface SearchResultProps {
   items: SearchItemType[];
   isLoading: boolean;
   error: string | null;
-  onSelect: (item: SearchItemType) => void;
+  onSelect: (item?: SearchItemType) => void;
   onClose: () => void;
 }
 
@@ -31,7 +31,8 @@ export const SearchResult = ({
   const theme = SEARCH_THEME[type];
   const { user } = useUserStore();
   const { showToast } = useToastStore();
-  const handleAddBook = async (item: SearchItemType) => {
+
+  const handleAdd = async (item: SearchItemType) => {
     try {
       if (!user?.userId) {
         showToast('로그인이 필요한 서비스입니다.', 'error');
@@ -52,6 +53,7 @@ export const SearchResult = ({
         await bookAPI.addBookToMyBook(bookData, user.userId);
       } else if (type === 'CD') {
         // CD 추가 요청 로직
+
         const cdData: PostCDInfo = {
           title: item.title,
           artist: item.artist,
@@ -67,11 +69,13 @@ export const SearchResult = ({
           setIsAlertModalOpen(true);
           return;
         }
+        onSelect(item);
+
         await addCdToMyRack(user.userId, cdData);
       }
-      onSelect(item);
       onClose();
     } catch (error) {
+      onSelect(null);
       console.error(`${type} 추가 실패:`, error);
     }
   };
@@ -118,9 +122,8 @@ export const SearchResult = ({
           src={item.imageUrl}
           className='object-contain w-full h-full rounded-lg book-shadow'
         />
-        {/* 내 책장에 담기 버튼 */}
         <button
-          onClick={() => handleAddBook(item)}
+          onClick={() => handleAdd(item)}
           className={`absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 p-2 ${theme.searchResultAddBtn} rounded-full cursor-pointer backdrop-blur-xs`}>
           <img
             src={addIcon}

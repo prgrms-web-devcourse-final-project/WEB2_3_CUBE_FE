@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { formatToKoreanFullDate } from '@/utils/dateFormat';
 import { NotificationMessage } from './NotificationMessage';
+import { useUserStore } from '@/store/useUserStore';
 
 interface NotificationItemProps {
   notification: Notification;
@@ -13,6 +14,7 @@ interface NotificationItemProps {
 export const NotificationItem = memo(
   ({ notification, onRead, activeTab, onClose }: NotificationItemProps) => {
     const navigate = useNavigate();
+    const { user } = useUserStore();
 
     const handleClick = () => {
       // 읽지 않음 탭에서만 read 요청을 보냄
@@ -23,7 +25,7 @@ export const NotificationItem = memo(
       // 알림 타입에 따른 이동 처리
       switch (notification.type) {
         case 'GUESTBOOK':
-          navigate(`/room/${notification.targetId}`);
+          navigate(`/room/${user.userId}`);
           break;
         case 'MUSIC_COMMENT':
           // navigate(`/cd/${cdId}/user/${notification.targetId}`);

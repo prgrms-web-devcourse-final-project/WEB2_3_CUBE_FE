@@ -23,10 +23,10 @@ export const ProfileForm = ({
           onChange={(e) => onNicknameChange(e.target.value)}
           placeholder='닉네임을 입력해주세요'
           className='w-full px-4 py-2 bg-[#4E7ACF]/5 rounded-lg outline-none border-2 border-transparent focus:border-[#73A1F7] transition-colors text-[#3E507D]'
-          maxLength={10}
+          maxLength={15}
         />
         <span className='text-sm text-[#3E507D]/60 text-right'>
-          {nickname.length}/10
+          {nickname.length}/15
         </span>
       </div>
 

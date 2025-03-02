@@ -2,24 +2,23 @@ import { forwardRef, useState } from 'react';
 import show_next_cd from '@assets/cd/show-next-cd.svg';
 import show_prev_cd from '@assets/cd/show-prev-cd.svg';
 import show_cd_list from '@assets/cd/show-cd-list.svg';
-import cd_add_icon from '@assets/cd/cd-add-icon.svg';
-import { SearchModal } from '@components/search-modal/SearchModal';
 import { SwiperRef } from 'swiper/react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 interface DockProps {
   isEmpty?: boolean;
-  cdDatas?: { data: CDInfo[]; nextCursor: number };
+  cdRackInfo?: { data: CDInfo[]; nextCursor: number };
   activeIndex?: number;
   onPrevPage?: () => void;
   onNextPage?: () => void;
 }
 
 const Dock = forwardRef<SwiperRef, DockProps>(
-  ({ isEmpty = true, cdDatas, activeIndex, onPrevPage, onNextPage }, ref) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+  (
+    { isEmpty = true, cdRackInfo, activeIndex, onPrevPage, onNextPage },
+    ref,
+  ) => {
     const [isDockOpen, setIsDockOpen] = useState(false);
-
-    console.log(cdDatas);
 
     // 슬라이드 위치 변경
     const handleSlideChange = (index: number) => {
@@ -33,106 +32,113 @@ const Dock = forwardRef<SwiperRef, DockProps>(
 
     return (
       <>
-        {/* 보여줄 Dock 메뉴 */}
-        <div
-          className={`fixed bottom-10 left-30 z-[5] h-[122px] rounded-2xl border-2 border-[#fff] bg-[#FFFFFF33] backdrop-blur-[20px]  all-200-eio overflow-hidden
-              ${
-                isDockOpen
-                  ? 'max-w-[calc(100vw-300px)] opacity-100 '
-                  : 'max-w-0 opacity-0 py-0 px-0'
-              }`}>
-          {isEmpty ? (
-            <div className='w-[calc(100vw-300px)] h-full flex items-center justify-center'>
-              <span className='text-white text-[30px]'>｡°(っ°´o`°ｃ)°｡</span>
-            </div>
-          ) : (
-            <div className='w-[calc(100vw-300px)]  h-full flex justify-center items-center  gap-2 '>
-              {/* 이전 cd목록 버튼 */}
-              <button
-                onClick={onPrevPage}
-                className={`h-full overflow-hidden  all-200-eio ${
-                  cdDatas.nextCursor <= 15
-                    ? 'opacity-15 pointer-events-none'
-                    : 'hover:opacity-80'
-                }`}
-                disabled={cdDatas.nextCursor <= 15}>
-                <img
-                  className='w-13 h-13'
-                  src={show_prev_cd}
-                  alt='이전 cd 목록 보여주는 아이콘'
-                />
-              </button>
+        <AnimatePresence>
+          <motion.div
+            className='fixed bottom-10 left-30 z-[5] h-[122px] rounded-2xl border-2 border-[#fff] bg-[#FFFFFF33] backdrop-blur-[20px] overflow-hidden'
+            animate={{
+              width: isDockOpen ? 'auto' : 0,
+              maxWidth: isDockOpen ? '80vw' : 0,
+              opacity: isDockOpen ? 1 : 0,
+            }}>
+            {isEmpty ? (
+              <div className='h-full flex items-center justify-center px-8'>
+                <span className='text-white text-[30px]'>｡°(っ°´o`°ｃ)°｡</span>
+              </div>
+            ) : (
+              <div className='h-full flex justify-center items-center gap-2 px-2'>
+                {/* 이전 cd목록 버튼 */}
+                <motion.button
+                  onClick={onPrevPage}
+                  className='h-full overflow-hidden'
+                  whileHover={{ opacity: 0.8 }}
+                  animate={{
+                    opacity: cdRackInfo.nextCursor <= 15 ? 0.15 : 1,
+                  }}
+                  disabled={cdRackInfo.nextCursor <= 15}>
+                  <img
+                    className='w-13 h-13'
+                    src={show_prev_cd}
+                    alt='이전 cd 목록 보여주는 아이콘'
+                  />
+                </motion.button>
 
-              <ul className='flex justify-center items-center gap-7 max-xl:gap-2 w-full h-full  '>
-                {cdDatas.data.map((data: CDInfo, index: number) => (
-                  <li
-                    onClick={() => handleSlideChange(index)}
-                    key={index}
-                    className={`shadow-md cursor-pointer ${
-                      activeIndex === index &&
-                      'border-2 border-red-600 rounded-[6.4px]'
-                    } `}>
-                    <img
-                      className=' rounded-[6.4px] w-20 h-20 max-2xl:w-15 max-2xl:h-15 '
-                      src={data.coverUrl}
-                      alt='CD 이미지'
-                    />
-                  </li>
-                ))}
-              </ul>
-              {/* 이후 cd목록 버튼 */}
-              <button
-                onClick={onNextPage}
-                className={`h-full overflow-hidden  all-200-eio ${
-                  cdDatas.nextCursor - 15 === cdDatas.data.length
-                    ? 'opacity-15'
-                    : 'hover:opacity-80'
-                }`}>
-                <img
-                  className='w-13 h-13'
-                  src={show_next_cd}
-                  alt='이후 cd 목록 보여주는 아이콘'
-                />
-              </button>
-            </div>
-          )}
-        </div>
+                <ul className='flex justify-center items-center gap-7 max-xl:gap-2 w-full h-full'>
+                  {cdRackInfo.data.map((data: CDInfo, index: number) => (
+                    <motion.li
+                      onClick={() => handleSlideChange(index)}
+                      key={index}
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{
+                        scale: 1,
+                        opacity: 1,
+                        transition: {
+                          type: 'spring',
+                          stiffness: 300,
+                          damping: 20,
+                        },
+                      }}
+                      whileHover={{ scale: 1.1 }}
+                      className='cursor-pointer'
+                      style={
+                        activeIndex === index
+                          ? {
+                              border: '2px solid #f56565',
+                              borderRadius: '6.4px',
+                              boxShadow: '0 4px 10px rgba(255, 0, 0, 0.3)', // 활성화된 아이템에 빨간색 그림자
+                            }
+                          : {
+                              boxShadow: '0 4px 10px rgba(255, 255, 255, 0.4)', // 기본 아이템에 흰색 그림자
+                            }
+                      }>
+                      <img
+                        className='rounded-[6.4px] w-20 h-20 max-2xl:w-15 max-2xl:h-15'
+                        src={data.coverUrl}
+                        alt='CD 이미지'
+                      />
+                    </motion.li>
+                  ))}
+                </ul>
 
-        {/* 토글 버튼  */}
-        <button
+                {/* 이후 cd목록 버튼 */}
+                <motion.button
+                  onClick={onNextPage}
+                  className='h-full overflow-hidden'
+                  whileHover={{ opacity: 0.8 }}
+                  animate={{
+                    opacity:
+                      cdRackInfo.nextCursor - 15 === cdRackInfo.data.length
+                        ? 0.15
+                        : 1,
+                  }}>
+                  <img
+                    className='w-13 h-13'
+                    src={show_next_cd}
+                    alt='이후 cd 목록 보여주는 아이콘'
+                  />
+                </motion.button>
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
+
+        {/* 토글 버튼 */}
+        <motion.button
           onClick={() => setIsDockOpen((prev) => !prev)}
-          className='fixed bottom-22 left-12 z-[5]'>
-          <img
+          className='fixed bottom-22 left-12 z-[5]'
+          whileTap={{ scale: 0.9 }}>
+          <motion.img
             src={show_cd_list}
             alt='cd 목록 보여주는 아이콘'
-            className={` cursor-pointer w-8 h-8  all-200-eio  ${
-              isDockOpen ? 'rotate-180' : 'rotate-0'
-            }`}
+            className='cursor-pointer w-8 h-8'
+            animate={{
+              rotate: isDockOpen ? 180 : 0,
+            }}
+            transition={{ duration: 0.3 }}
           />
-        </button>
-
-        {/* cd 추가 버튼  */}
-        <div
-          onClick={() => setIsModalOpen((prev) => !prev)}
-          className='fixed bottom-17 right-15 z-[5] bg-[#FFFFFF33] backdrop-blur-[35px] rounded-full w-16 h-16 cursor-pointer 
-       item-middle border-2 border-[#FFFFFFB2]'>
-          <img
-            className='w-5 h-5'
-            src={cd_add_icon}
-            alt='cd 추가 아이콘'
-          />
-        </div>
-        {/* 검색 모달 */}
-        {isModalOpen && (
-          <SearchModal
-            title='CD 랙에 담을 음악 찾기'
-            onClose={() => setIsModalOpen(false)}
-            type='CD'
-            onSelect={() => {}}
-          />
-        )}
+        </motion.button>
       </>
     );
   },
 );
+
 export default Dock;

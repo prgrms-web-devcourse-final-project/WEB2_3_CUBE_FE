@@ -15,11 +15,12 @@ import { bookAPI } from '@/apis/book';
 import { BookReviewData } from '@/types/book';
 
 interface BookEditorPageProps {
-  bookTitle?: string;
-  author?: string;
-  genreNames?: string[];
-  publishedDate?: string;
-  imageUrl?: string;
+  bookTitle: string;
+  author: string;
+  genreNames: string[];
+  publishedDate: string;
+  imageUrl: string;
+  onComplete?: () => void;
 }
 
 const BookEditorPage = ({
@@ -28,6 +29,7 @@ const BookEditorPage = ({
   genreNames,
   publishedDate,
   imageUrl,
+  onComplete,
 }: BookEditorPageProps) => {
   const { bookId } = useParams();
   const navigate = useNavigate();
@@ -111,7 +113,7 @@ const BookEditorPage = ({
         }
       } catch (error) {
         console.error('서평 조회 중 오류 발생:', error);
-        showToast('서평 조회에 실패했습니다.', 'error');
+        showToast('작성된 서평이 없어 작성 페이지로 이동합니다.', 'success');
       }
     };
 
@@ -148,18 +150,22 @@ const BookEditorPage = ({
       };
 
       if (isEditMode) {
+        // 수정인 경우
         await bookAPI.updateReview(bookId, reviewData);
         showToast('서평이 수정되었습니다.', 'success');
+        // 성공 시 임시저장 데이터 삭제
+        localStorage.removeItem(`draft-review-${bookId}`);
+        // 뷰어 페이지로 이동
+        navigate(`/book/${bookId}`, { replace: true });
       } else {
+        // 새로 작성하는 경우
         await bookAPI.addReview(bookId, reviewData);
         showToast('서평이 등록되었습니다.', 'success');
+        // 성공 시 임시저장 데이터 삭제
+        localStorage.removeItem(`draft-review-${bookId}`);
+        // 페이지 리로드하여 새로 작성된 서평 보기
+        window.location.reload();
       }
-
-      // 성공 시 임시저장 데이터 삭제
-      localStorage.removeItem(`draft-review-${bookId}`);
-
-      // 서평 상세 페이지로 이동
-      navigate(`/book/${bookId}`);
     } catch (error) {
       console.error('서평 저장 중 오류 발생:', error);
       showToast('서평 저장에 실패했습니다.', 'error');
