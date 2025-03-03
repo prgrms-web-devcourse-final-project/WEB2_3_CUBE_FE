@@ -24,7 +24,7 @@ export default function NotEditTemplate({
   const handleDeleteTemplate = async () => {
     try {
       changeTemplateData(null);
-      const result = await deleteTemplate(myCdId, userId);
+      const result = await deleteTemplate(myCdId);
       if (result.status === 204)
         showToast('음악 감상평이 삭제되었습니다.', 'success');
     } catch (error) {

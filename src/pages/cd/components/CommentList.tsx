@@ -28,6 +28,8 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
     [],
   );
 
+  console.log(cdComments);
+
   useEffect(() => {
     const fetchCdComments = async () => {
       try {
@@ -39,6 +41,7 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
             ? await getCdComment(myCdId, currentPage, 5)
             : await getCdComment(myCdId, currentPage, 5, currentInput);
         totalPage.current = result.totalPages;
+
         setCdComments(result.data);
       } catch (error) {
         console.error(error);
@@ -60,13 +63,13 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
     setCurrentPage(page);
   }, []);
 
-  const handleDeleteComment = async (userId: number, commentId: number) => {
+  const handleDeleteComment = async (commentId: number) => {
     const previousComments = [...cdComments];
 
     try {
       // 낙관적 업데이트
       setCdComments(cdComments.filter((comments) => comments.id !== commentId));
-      await deleteCdComment(userId, commentId);
+      await deleteCdComment(myCdId, commentId);
     } catch (error) {
       setCdComments(previousComments);
       console.error(error);
@@ -120,14 +123,9 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
                     </p>
                   </div>
 
-                  {isAccessible(comment.userI) && (
+                  {isAccessible(comment.userId) && (
                     <button
-                      onClick={() =>
-                        handleDeleteComment(
-                          userId === myUserId ? userId : comment.userId,
-                          comment.id,
-                        )
-                      }
+                      onClick={() => handleDeleteComment(comment.id)}
                       className='pr-8 py-7 hover:opacity-50 '>
                       <img
                         src={trashIcon}
