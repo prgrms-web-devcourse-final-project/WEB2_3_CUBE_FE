@@ -336,9 +336,10 @@ export const addCdComment = async (
   commentInfo: CdCommentPost,
 ) => {
   const response = await axiosInstance.post(
-    `/${API_URL}/my-cd/${myCdId}/comment`,
+    `/${API_URL}/my-cd/${myCdId}/comments`,
     commentInfo,
   );
+  console.log(response.data);
   return response.data;
 };
 
@@ -346,11 +347,11 @@ export const getCdComment = async (
   myCdId: number,
   page?: number,
   size?: number,
-  query?: string,
+  keyword?: string,
 ) => {
   const response = await axiosInstance.get(
-    query
-      ? `/${API_URL}/my-cd/${myCdId}/comments?page=${page}&size=${size}&query=${query}`
+    keyword
+      ? `/${API_URL}/my-cd/${myCdId}/comments?page=${page}&size=${size}&keyword=${keyword}`
       : `/${API_URL}/my-cd/${myCdId}/comments?page=${page}&size=${size}`,
   );
   return response.data;
@@ -363,9 +364,9 @@ export const getCdCommentAll = async (myCdId: number) => {
   return response.data;
 };
 
-export const deleteCdComment = async (commentId: number) => {
+export const deleteCdComment = async (myCdId: number, commentId: number) => {
   const response = await axiosInstance.delete(
-    `/${API_URL}/my-cd/comments/${commentId}`,
+    `/${API_URL}/my-cd/${myCdId}/comments/${commentId}`,
   );
   return response;
 };

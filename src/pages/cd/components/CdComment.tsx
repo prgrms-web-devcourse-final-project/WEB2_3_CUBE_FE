@@ -34,7 +34,7 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
   // 새 댓글 낙관적 업데이트 적용
   const { mutate, error, isPending, isError } = useMutation({
     mutationFn: async (newComment: CdCommentPost) => {
-      const result = await addCdComment(user.userId, myCdId, newComment);
+      const result = await addCdComment(myCdId, newComment);
       return result;
     },
     onMutate: async () => {
