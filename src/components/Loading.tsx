@@ -5,15 +5,16 @@ import TypingText from './TypingText';
 const Loading = () => {
   return (
     <div
-      className='flex justify-center items-center w-full h-screen'
+      className='gap-4 w-full h-screen item-row'
       style={{ backgroundImage: `url(${backgroundIMG})` }}>
       <img
         src={logo}
         alt='logo'
+        className='w-80'
       />
       <TypingText
         text='Loading...'
-        className='text-4xl font-bold text-white'
+        className='text-2xl font-medium text-white'
       />
     </div>
   );
