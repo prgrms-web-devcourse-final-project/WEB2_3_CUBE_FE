@@ -9,13 +9,7 @@ import ModalBackground from '@components/ModalBackground';
 import DataList from '@components/datalist/DataList';
 import YouTube, { YouTubeEvent } from 'react-youtube';
 import { useParams } from 'react-router-dom';
-<<<<<<< HEAD
-import { getCdRackSearch } from '@apis/cd';
-import { useUserStore } from '@/store/useUserStore';
-import Loading from '@components/Loading';
-=======
 import { getCdRack, getCdRackSearch } from '@apis/cd';
->>>>>>> a34c6764ebe135bd25fb4ae7c201b813253fc150
 
 export default function CdPlayer({
   cdInfo,
@@ -312,11 +306,6 @@ export default function CdPlayer({
     },
     [cdReady.isLooping],
   );
-<<<<<<< HEAD
-
-  if (isLoading) return <Loading />;
-=======
->>>>>>> a34c6764ebe135bd25fb4ae7c201b813253fc150
   return (
     <>
       <YouTube
@@ -366,27 +355,18 @@ export default function CdPlayer({
           style={{ display: 'none' }}
         />
 
-<<<<<<< HEAD
-        <div className='relative w-full h-full'>
-          <div className='flex absolute bottom-10 left-10 items-center'>
-=======
-        <section className='relative w-full h-full  flex items-center pr-4'>
+        <section className='flex relative items-center pr-4 w-full h-full'>
           {/* 왼쪽 그룹: 앨범 이미지와 음량 조절 */}
-          <article className='flex items-center gap-14 flex-1 h-full '>
->>>>>>> a34c6764ebe135bd25fb4ae7c201b813253fc150
+          <article className='flex flex-1 gap-14 items-center h-full'>
             {/* 앨범 이미지 */}
             <img
-              className='h-full block'
+              className='block h-full'
               src={cdInfo.coverUrl}
               alt='CD 앨범 이미지'
             />
 
             {/* 음량 */}
-<<<<<<< HEAD
-            <div className='flex gap-2 justify-center items-center pl-13'>
-=======
-            <div className='flex items-center justify-center gap-2'>
->>>>>>> a34c6764ebe135bd25fb4ae7c201b813253fc150
+            <div className='flex gap-2 justify-center items-center'>
               {cdReady.isMuted ? (
                 <button
                   onClick={() =>
@@ -416,7 +396,7 @@ export default function CdPlayer({
                 onChange={(e) =>
                   handleChangeCdVolume(cdStateChangeEvent, e.target.value)
                 }
-                className='volume-range w-20'
+                className='w-20 volume-range'
               />
             </div>
           </article>
@@ -425,11 +405,7 @@ export default function CdPlayer({
           <article className='flex flex-col items-center ] '>
             <button onClick={() => handleOnOffCd(cdStateChangeEvent)}>
               <img
-<<<<<<< HEAD
-                className='fill-black w-13 h-13'
-=======
                 className='w-13 h-13'
->>>>>>> a34c6764ebe135bd25fb4ae7c201b813253fc150
                 src={cdReady.isPlaying ? pauseSong : playSong}
                 alt='노래 일시정지 버튼'
               />

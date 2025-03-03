@@ -247,6 +247,7 @@ const BookCasePage = () => {
             isLoading={isLoading}
             fetchMore={() => {}}
             userId={Number(userId)}
+            count={totalCount}
           />
         </ModalBackground>
       )}
