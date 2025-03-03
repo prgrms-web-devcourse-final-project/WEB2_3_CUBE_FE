@@ -1,6 +1,13 @@
+interface CDRackInfo {
+  data: CDInfo[];
+  nextCursor: number;
+  totalCount: number;
+  firstMyCdId: number;
+  lastMyCdId: number;
+}
+
 // cd response body type
 interface CDInfo {
-  cdId?: string;
   myCdId?: number;
   title: string;
   artist: string;
@@ -56,7 +63,15 @@ interface PostCDInfo {
 // template type
 
 interface TemplateProps {
-  isEditable: () => void;
+  onToggleEdit: () => void;
+  changeTemplateData: (
+    value: {
+      comment1: string;
+      comment2: string;
+      comment3: string;
+      comment4: string;
+    } | null,
+  ) => void;
   templateData: {
     comment1: string | null;
     comment2: string | null;
