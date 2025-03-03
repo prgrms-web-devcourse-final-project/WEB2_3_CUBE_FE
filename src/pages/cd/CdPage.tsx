@@ -32,7 +32,7 @@ export default function CdPage() {
       }
     };
     fetchCdInfo();
-  }, []);
+  }, [myCdId, userId]);
 
   if (isLoading) return <Loading />;
 

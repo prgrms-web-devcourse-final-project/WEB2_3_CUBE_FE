@@ -7,3 +7,11 @@ interface DataListInfo {
   album?: string;
   released_year: string;
 }
+
+interface CdDataListInfo {
+  data: DataListInfo[];
+  nextCursor: number;
+  totalCount: number;
+  firstMyCdId: number;
+  lastMyCdId: number;
+}

@@ -9,7 +9,6 @@ const CdTemplate = React.memo(() => {
   const [isEdit, setIsEdit] = useState(false);
   const [templateData, setTemplateData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
   const myCdId = Number(useParams().cdId);
 
   useEffect(() => {
@@ -34,12 +33,14 @@ const CdTemplate = React.memo(() => {
       {isEdit ? (
         <EditTemplate
           templateData={templateData}
-          isEditable={() => setIsEdit(!isEdit)}
+          changeTemplateData={setTemplateData}
+          onToggleEdit={() => setIsEdit(!isEdit)}
         />
       ) : (
         <NotEditTemplate
+          changeTemplateData={setTemplateData}
           templateData={templateData}
-          isEditable={() => setIsEdit(!isEdit)}
+          onToggleEdit={() => setIsEdit(!isEdit)}
         />
       )}
     </div>

@@ -179,7 +179,6 @@ export const searchSpotifyCds = async (
 // -------------------- cd API ------------------------
 /**
  *
- * @param userId 사용자의 고유한 id
  * @param targetUserId 조회 대상 id
  * @param size  페이지 크기
  * @param cursor 마지막으로 조회한 Cd id (첫 페이지 조회 시 제외)
@@ -189,18 +188,15 @@ export const searchSpotifyCds = async (
  *
  */
 export const getCdRack = async (
-  userId: number,
   targetUserId: number,
   size?: number,
   cursor?: number,
 ) => {
   const url = cursor
-    ? `/${API_URL}/my-cd?userId=${userId}&targetUserId=${targetUserId}&size=${
+    ? `/${API_URL}/my-cd?targetUserId=${targetUserId}&size=${
         size || 14
       }&cursor=${cursor}`
-    : `/${API_URL}/my-cd?userId=${userId}&targetUserId=${targetUserId}&size=${
-        size || 14
-      }`;
+    : `/${API_URL}/my-cd?targetUserId=${targetUserId}&size=${size || 14}`;
 
   const response = await axiosInstance.get(url);
 
@@ -209,7 +205,6 @@ export const getCdRack = async (
 
 /**
  *
- * @param userId  사용자의 고유한 id
  * @param targetUserId  조회 대상 id
  * @param keyword 키워드
  * @param size  페이지 크기
@@ -217,19 +212,16 @@ export const getCdRack = async (
  * @returns
  */
 export const getCdRackSearch = async (
-  userId: number,
   targetUserId: number,
   keyword: string,
   size?: number,
   cursor?: number,
 ) => {
   const url = cursor
-    ? `/${API_URL}/my-cd?userId=${userId}&targetUserId=${targetUserId}&size=${
+    ? `/${API_URL}/my-cd?targetUserId=${targetUserId}&size=${
         size || 14
       }&keyword=${keyword}&cursor=${cursor}`
-    : `/${API_URL}/my-cd?userId=${userId}&size=${
-        size || 14
-      }&keyword=${keyword}`;
+    : `/${API_URL}/my-cd?size=${size || 14}&keyword=${keyword}`;
 
   const response = await axiosInstance.get(url);
 
@@ -239,39 +231,34 @@ export const getCdRackSearch = async (
 /**
  *
  * @param myCdId 사용자의 고유cdId
- * @param userId 사용자 id
+ * @param targetUserId 조회대상 id
  * @returns
  */
-export const getCdInfo = async (myCdId: number, userId: number) => {
+export const getCdInfo = async (myCdId: number, targetUserId: number) => {
   const response = await axiosInstance(
-    `/${API_URL}/my-cd/${myCdId}?userId=${userId}`,
+    `/${API_URL}/my-cd/${myCdId}?targetUserId=${targetUserId}`,
   );
   return response.data;
 };
 
 /**
  * @param cdData 추가할 cd 정보
- * @param userId cd를 추가할 사용자id
  * @returns 추가한 cd 상세정보
  */
-export const addCdToMyRack = async (userId: number, cdData: PostCDInfo) => {
-  const response = await axiosInstance.post(
-    `/${API_URL}/my-cd?userId=${userId}`,
-    cdData,
-  );
+export const addCdToMyRack = async (cdData: PostCDInfo) => {
+  const response = await axiosInstance.post(`/${API_URL}/my-cd`, cdData);
   console.log(response.data);
   return response.data;
 };
 
 /**
  * CD 삭제 API
- * @param userId 사용자 ID
  * @param myCdIds 삭제할 CD ID 목록 (쉼표로 구분된 문자열)
  * @returns
  */
-export const deleteCdsFromMyRack = async (userId: number, myCdIds: string) => {
+export const deleteCdsFromMyRack = async (myCdIds: number[]) => {
   const response = await axiosInstance.delete(
-    `/${API_URL}/my-cd?userId=${userId}&myCdIds=${myCdIds}`,
+    `/${API_URL}/my-cd?myCdIds=${myCdIds}`,
   );
   return response.data;
 };
@@ -294,13 +281,11 @@ export const getCdTemplate = async (myCdId: number) => {
 /**
  *
  * @param myCdId 특정 cd에대한 사용자 고유ID
- * @param userId 사용자 ID
  * @param contents 템플릿에 담긴 4가지 댓글 내용들
  * @returns
  */
 export const addCdTemplate = async (
   myCdId: number,
-  userId: number,
   contents: {
     comment1: string;
     comment2: string;
@@ -309,7 +294,7 @@ export const addCdTemplate = async (
   },
 ) => {
   const response = await axiosInstance.post(
-    `/${API_URL}/my-cd/${myCdId}/template?userId=${userId}`,
+    `/${API_URL}/my-cd/${myCdId}/template`,
     contents,
   );
   return response.data;
@@ -318,13 +303,11 @@ export const addCdTemplate = async (
 /**
  *
  * @param myCdId 특정 cd에대한 사용자 고유ID
- * @param userId 사용자 ID
  * @param contents 템플릿에 담긴 4가지 댓글 내용들
  * @returns
  */
 export const updateTemplate = async (
   myCdId: number,
-  userId: number,
   contents: {
     comment1: string;
     comment2: string;
@@ -333,15 +316,15 @@ export const updateTemplate = async (
   },
 ) => {
   const response = await axiosInstance.patch(
-    `/${API_URL}/my-cd/${myCdId}/template?userId=${userId}`,
+    `/${API_URL}/my-cd/${myCdId}/template`,
     contents,
   );
   return response.data;
 };
 
-export const deleteTemplate = async (myCdId: number, userId: number) => {
+export const deleteTemplate = async (myCdId: number) => {
   const response = await axiosInstance.delete(
-    `/${API_URL}/my-cd/${myCdId}/template?userId=${userId}`,
+    `/${API_URL}/my-cd/${myCdId}/template`,
   );
   return response;
 };
@@ -349,12 +332,11 @@ export const deleteTemplate = async (myCdId: number, userId: number) => {
 // ------------------------cd 댓글 API--------------------------
 
 export const addCdComment = async (
-  userId: number,
   myCdId: number,
   commentInfo: CdCommentPost,
 ) => {
   const response = await axiosInstance.post(
-    `/${API_URL}/my-cd/${myCdId}/comment?userId=${userId}`,
+    `/${API_URL}/my-cd/${myCdId}/comment`,
     commentInfo,
   );
   return response.data;
@@ -381,9 +363,9 @@ export const getCdCommentAll = async (myCdId: number) => {
   return response.data;
 };
 
-export const deleteCdComment = async (userId: number, commentId: number) => {
+export const deleteCdComment = async (commentId: number) => {
   const response = await axiosInstance.delete(
-    `/${API_URL}/my-cd/comments/${commentId}?userId=${userId}`,
+    `/${API_URL}/my-cd/comments/${commentId}`,
   );
   return response;
 };

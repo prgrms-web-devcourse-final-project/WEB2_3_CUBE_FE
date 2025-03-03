@@ -43,8 +43,9 @@ const BookCasePage = () => {
             author: book.author,
             publisher: book.publisher,
             publishedDate: book.publishedDate,
-            imageURL: book.imageUrl,
+            imageUrl: book.imageUrl,
             genreNames: book.genreNames,
+            page: book.page || 0,
           }));
 
           // DataList 컴포넌트용 데이터 변환
