@@ -1,9 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import soundIcon from '@assets/cd/sound-icon.svg';
 import muteIcon from '@assets/cd/mute-icon.svg';
-
-import prevSong from '@assets/cd/prev-song-icon.svg';
-import nextSong from '@assets/cd/next-song-icon.svg';
 import pauseSong from '@assets/cd/pause-icon.svg';
 import playSong from '@assets/cd/play-icon.svg';
 import sufflesong from '@assets/cd/shuffle-icon.svg';
@@ -12,8 +9,7 @@ import ModalBackground from '@components/ModalBackground';
 import DataList from '@components/datalist/DataList';
 import YouTube, { YouTubeEvent } from 'react-youtube';
 import { useParams } from 'react-router-dom';
-import { getCdRackSearch } from '@apis/cd';
-import { useUserStore } from '@/store/useUserStore';
+import { getCdRack, getCdRackSearch } from '@apis/cd';
 
 export default function CdPlayer({
   cdInfo,
@@ -24,18 +20,36 @@ export default function CdPlayer({
   onOffCdPlay: (value: boolean) => void;
   onCdTime: (value: number) => void;
 }) {
+  const VOLUME = 10;
   const [isCdListOpen, setIsCdListOpen] = useState(false);
-  const [cdDatas, setCdDatas] = useState(null);
+  const [cdRackInfo, setCdRackInfo] = useState<CdDataListInfo>({
+    data: [],
+    nextCursor: 0,
+    totalCount: 0,
+    firstMyCdId: 0,
+    lastMyCdId: 0,
+  });
   const [isLoading, setIsLoading] = useState(true);
+  const [searchInput, setSearchInput] = useState('');
+  const [cursor, setCursor] = useState(0);
+  const firstMyCdId = useRef(0);
+  const lastMyCdId = useRef(0);
+
+  const { userId: userIdParam } = useParams();
+  const userId = useMemo(() => Number(userIdParam), [userIdParam]);
 
   // cd 초기상태 관리
   const [cdReady, setCdReady] = useState({
     isPlaying: false,
     isLooping: true,
-    volume: 20,
-    previousVolume: 20,
+    volume: VOLUME,
+    previousVolume: VOLUME,
     isMuted: false,
   });
+
+  // 현재 시간 툴팁(호버할때마다 리렌더링되는것을 막기위해 직접 DOM조작)
+  const progressBarRef = useRef(null);
+  const tooltipRef = useRef(null);
 
   // Youtube 컴포넌트 상태가 변화할때 발생하는 이벤트 객체
   const [cdStateChangeEvent, setCdStateChangeEvent] = useState(null);
@@ -46,12 +60,6 @@ export default function CdPlayer({
     currentTime: 0,
     duration: 0,
   });
-
-  const { cdId, userId: userIdParam } = useParams();
-
-  const userId = useMemo(() => Number(userIdParam), [userIdParam]);
-  const user = useUserStore((state) => state.user);
-  const myUserId = user.userId;
 
   const videoId = useMemo(() => {
     const match = cdInfo.youtubeUrl.match(/[?&]v=([^&]+)/);
@@ -69,69 +77,121 @@ export default function CdPlayer({
     [],
   );
 
-  // const formattedCds = mockCD.data.map((cd) => ({
-  //   id: String(cd.myCdId),
-  //   title: cd.title,
-  //   artist: cd.artist,
-  //   released_year: cd.releaseDate,
-  //   album: cd.album,
-  // }));
-
-  const progressStyle = useMemo(
-    () => ({
-      background: `linear-gradient(to right, #162C63 ${cdPlayer.progress}%, #E5E7EB ${cdPlayer.progress}%)`,
-    }),
-    [cdPlayer.progress],
-  );
-
-  // ---------------------------------------
-
-  useEffect(() => {
-    const fetchCdSearchData = async () => {
-      try {
-        const result = await getCdRackSearch(userId, '');
-        const formattedDatas = result.data.map((item: CDInfo) => ({
-          id: String(item.myCdId),
-          title: item.title,
-          artist: item.artist,
-          album: item.album,
-          released_year: item.releaseDate,
-        }));
-
-        setCdDatas({ ...result, data: formattedDatas });
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchCdSearchData();
-  }, []);
-  // 재생 시간 업데이트 함수
-  useEffect(() => {
-    if (cdStateChangeEvent) {
-      const interval = setInterval(() => {
-        const current = cdStateChangeEvent.target.getCurrentTime();
-        const total = cdStateChangeEvent.target.getDuration();
-        onCdTime(Math.floor(current));
-        setCdPlayer((prev) => ({
-          ...prev,
-          currentTime: current,
-          duration: total,
-          progress: (current / total) * 100,
-        }));
-      }, 1000);
-
-      return () => clearInterval(interval);
-    }
-  }, [cdStateChangeEvent]);
-
   // 시간 포맷팅 함수
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   };
+
+  const progressStyle = useMemo(
+    () => ({
+      background: `linear-gradient(to right, white ${cdPlayer.progress}%, #E5E7EB ${cdPlayer.progress}%)`,
+    }),
+    [cdPlayer.progress],
+  );
+
+  const volumeProgressStyle = useMemo(
+    () => ({
+      background: `linear-gradient(to right, #162C63 ${cdReady.volume}%, #E5E7EB ${cdReady.volume}%)`,
+    }),
+    [cdReady.volume],
+  );
+
+  // ----------------함수----------------------
+
+  // 검색에 대한 cd목록 가져오기
+  const fetchCdSearchData = async () => {
+    try {
+      const result = searchInput
+        ? await getCdRackSearch(userId, searchInput, 7, cursor)
+        : await getCdRack(userId, 7, cursor);
+
+      const formattedDatas = result.data.map((item: CDInfo) => ({
+        id: String(item.myCdId),
+        title: item.title,
+        artist: item.artist,
+        album: item.album,
+        released_year: item.releaseDate,
+      }));
+      firstMyCdId.current = result.firstMyCdId;
+      lastMyCdId.current = result.lastMyCdId;
+      setCdRackInfo((prev) => ({
+        ...result,
+        data:
+          cursor === 0
+            ? formattedDatas // 첫 페이지(cursor=0)이면 데이터 대체
+            : [...prev.data, ...formattedDatas], // 아니면 데이터 추가
+      }));
+    } catch (error) {
+      if (cursor === 0) {
+        setCdRackInfo((prev) => ({ ...prev, data: [] }));
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    setCursor(0);
+  }, [searchInput]);
+
+  useEffect(() => {
+    fetchCdSearchData();
+  }, [searchInput, cursor]);
+
+  // 재생 시간 업데이트 함수
+  useEffect(() => {
+    if (cdStateChangeEvent && cdReady.isPlaying) {
+      const interval = setInterval(() => {
+        try {
+          const current = cdStateChangeEvent.target.getCurrentTime();
+          const total = cdStateChangeEvent.target.getDuration();
+          onCdTime(Math.floor(current));
+          setCdPlayer((prev) => ({
+            ...prev,
+            currentTime: current,
+            duration: total,
+            progress: (current / total) * 100,
+          }));
+        } catch (error) {
+          console.error('재생 시간 업데이트 중 오류:', error);
+        }
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [cdStateChangeEvent]);
+
+  useEffect(() => {
+    const bar = progressBarRef.current;
+    const tooltip = tooltipRef.current;
+    if (!bar || !tooltip) return;
+
+    const handleMouseMove = (e) => {
+      const rect = bar.getBoundingClientRect();
+      const position = ((e.clientX - rect.left) / rect.width) * 100;
+      const time = (position / 100) * cdPlayer.duration;
+      tooltip.textContent = formatTime(time);
+      tooltip.style.left = `calc(${position}% - 20px)`;
+      tooltip.style.display = 'block';
+    };
+
+    const handleMouseEnter = () => {
+      tooltip.style.display = 'block';
+    };
+
+    const handleMouseLeave = () => {
+      tooltip.style.display = 'none';
+    };
+    bar.addEventListener('mousemove', handleMouseMove);
+    bar.addEventListener('mouseenter', handleMouseEnter);
+    bar.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      bar.removeEventListener('mousemove', handleMouseMove);
+      bar.removeEventListener('mouseenter', handleMouseEnter);
+      bar.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, [cdPlayer.duration]);
 
   const handleChangeTime = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -193,20 +253,6 @@ export default function CdPlayer({
     [onOffCdPlay],
   );
 
-  // const handleGoBeforeCd = () => {
-  //   if (cdStateChangeEvent) {
-  //     cdStateChangeEvent.target.stopVideo();
-  //   }
-  //   navigate(`/cd/${myCdId - 1}/user/${+userId}`);
-  // };
-
-  // const handleGoAfterCd = () => {
-  //   if (cdStateChangeEvent) {
-  //     cdStateChangeEvent.target.stopVideo();
-  //   }
-  //   navigate(`/cd/${myCdId + 1}/user/${+userId}`);
-  // };
-
   const handleToggleLoop = useCallback(() => {
     const newLoopState = !cdReady.isLooping;
     setCdReady((prev) => ({ ...prev, isLooping: newLoopState }));
@@ -217,11 +263,12 @@ export default function CdPlayer({
     (e: YouTubeEvent<any>) => {
       e.target.setVolume(cdReady.volume);
       e.target.playVideo();
+      // setCdStateChangeEvent(e);
       setCdReady((prev) => ({
         ...prev,
         isPlaying: true,
-        volume: 20,
-        previousVolume: 20,
+        volume: VOLUME,
+        previousVolume: VOLUME,
         isMuted: e.target.playerInfo.muted,
       }));
       setCdPlayer((prev) => ({
@@ -234,8 +281,15 @@ export default function CdPlayer({
 
   const handleYouTubeStateChange = useCallback(
     (e: YouTubeEvent<number>) => {
+      // if (e.data === null) {
+      //   e.target?.playVideo();
+      //   setCdReady((prev) => ({ ...prev, isPlaying: true }));
+      //   onOffCdPlay(true);
+      // }
+      // handleOnOffCd(e);
       if (e.data === 0) {
         if (cdReady.isLooping) {
+          onOffCdPlay(true);
           setTimeout(() => {
             e.target.seekTo(0);
             e.target.playVideo();
@@ -245,14 +299,13 @@ export default function CdPlayer({
             ...prev,
             isPlaying: false,
           }));
+          onOffCdPlay(false);
         }
       }
       setCdStateChangeEvent(e);
     },
     [cdReady.isLooping],
   );
-
-  if (isLoading) return <div>로딩중...</div>;
   return (
     <>
       <YouTube
@@ -261,50 +314,66 @@ export default function CdPlayer({
         onReady={handleYouTubeReady}
         onStateChange={handleYouTubeStateChange}
       />
-      <div className='w-full h-[13vh] shrink-0  '>
+      <section className='w-full h-[13vh] shrink-0 backdrop-blur-[20px] bg-white/10  '>
         {/* 진행 시간 */}
         <style>
           {`
             .progress-range::-webkit-slider-runnable-track {
               width: 100%;
-              height: 4px;
+              height: 10px;
               cursor: pointer;
               background: ${progressStyle.background};
-              border-radius: 1.3px;
+              border-radius: 1px;
             }
            .progress-range:focus::-webkit-slider-runnable-track {
               background: ${progressStyle.background};
             }
+          .volume-range::-webkit-slider-runnable-track {
+            width: 85px;
+            height: 4px;
+            cursor: pointer;
+            background: ${volumeProgressStyle.background};
+            border-radius: 1.3px;
+          }
+          .volume-range:focus::-webkit-slider-runnable-track {
+            background: ${volumeProgressStyle.background};
+          }
           `}
         </style>
-        <div>
-          <input
-            type='range'
-            min='0'
-            max='100'
-            value={cdPlayer.progress}
-            onChange={handleChangeTime}
-            className='focus:ring-0 progress-range'
-          />
-        </div>
+        <input
+          type='range'
+          min='0'
+          max='100'
+          ref={progressBarRef}
+          value={cdPlayer.progress}
+          onChange={handleChangeTime}
+          className=' progress-range h-[17px] block'
+        />
+        <div
+          ref={tooltipRef}
+          className='absolute top-[-40px] bg-gray-800 text-white px-2 py-1 rounded text-xs'
+          style={{ display: 'none' }}
+        />
 
-        <div className='relative w-full h-full '>
-          <div className='absolute flex items-center bottom-10 left-10 '>
+        <section className='relative w-full h-full  flex items-center pr-4'>
+          {/* 왼쪽 그룹: 앨범 이미지와 음량 조절 */}
+          <article className='flex items-center gap-14 flex-1 h-full '>
             {/* 앨범 이미지 */}
             <img
-              className='w-20 h-20 rounded-[8px]'
+              className='h-full block'
               src={cdInfo.coverUrl}
               alt='CD 앨범 이미지'
             />
+
             {/* 음량 */}
-            <div className='flex items-center justify-center gap-2 pl-13'>
+            <div className='flex items-center justify-center gap-2'>
               {cdReady.isMuted ? (
                 <button
                   onClick={() =>
-                    handleChangeCdVolume(cdStateChangeEvent, '20')
+                    handleChangeCdVolume(cdStateChangeEvent, `${VOLUME}`)
                   }>
                   <img
-                    className='w-8 h-8 cursor-pointer '
+                    className='w-8 h-8 cursor-pointer'
                     src={muteIcon}
                     alt='음량 아이콘'
                   />
@@ -312,7 +381,7 @@ export default function CdPlayer({
               ) : (
                 <button onClick={() => handleMuteCdVolume(cdStateChangeEvent)}>
                   <img
-                    className='w-8 h-8 cursor-pointer '
+                    className='w-8 h-8 cursor-pointer'
                     src={soundIcon}
                     alt='음량 아이콘'
                   />
@@ -327,48 +396,24 @@ export default function CdPlayer({
                 onChange={(e) =>
                   handleChangeCdVolume(cdStateChangeEvent, e.target.value)
                 }
-                className='w-[85px] h-[4px] rounded-[1.3px] bg-[#162C63]
-             appearance-none focus:outline-none focus:ring-2'
+                className='volume-range w-20'
               />
             </div>
-          </div>
+          </article>
 
-          {/* 음악 컨트롤 버튼 */}
-          <div className='flex items-center gap-[14px] cursor-pointer absolute bottom-14 left-1/2 -translate-x-1/2  '>
-            {/* <button onClick={handleGoBeforeCd}>
-              <img
-                src={prevSong}
-                alt='이전 노래 버튼'
-              />
-            </button> */}
-
+          {/* 중앙 그룹: 재생 버튼과 시간 - 왼쪽으로 조정 */}
+          <article className='flex flex-col items-center ] '>
             <button onClick={() => handleOnOffCd(cdStateChangeEvent)}>
               <img
-                className='fill-black w-13 h-13 '
+                className='w-13 h-13'
                 src={cdReady.isPlaying ? pauseSong : playSong}
                 alt='노래 일시정지 버튼'
               />
             </button>
-            {/* <button onClick={handleGoAfterCd}>
-              <img
-                src={nextSong}
-                alt='다음 노래 버튼'
-              />
-            </button> */}
+          </article>
 
-            {/* 현재시간/ 총 재생 시간 */}
-            <div className='flex justify-center items-center gap-2 absolute right-[-100px] font-semibold '>
-              <span className='text-black'>
-                {formatTime(cdPlayer.currentTime)} /{' '}
-              </span>
-              <span className='text-black'>
-                {formatTime(cdPlayer.duration)}
-              </span>
-            </div>
-          </div>
-
-          {/* 음악 부가기능 */}
-          <div className='flex items-center gap-2.5 cursor-pointer absolute bottom-14 right-10'>
+          {/* 오른쪽 그룹: 부가 기능 */}
+          <article className='flex items-center gap-2.5 flex-1 justify-end'>
             <button
               onClick={handleToggleLoop}
               className={cdReady.isLooping ? 'opacity-100' : 'opacity-30'}>
@@ -378,25 +423,25 @@ export default function CdPlayer({
               />
             </button>
 
-            {myUserId === userId && (
-              <button onClick={() => setIsCdListOpen(true)}>
-                <img
-                  src={cdList}
-                  alt='cd 목록 리스트 보여주는 버튼'
-                />
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
+            <button onClick={() => setIsCdListOpen(true)}>
+              <img
+                src={cdList}
+                alt='cd 목록 리스트 보여주는 버튼'
+              />
+            </button>
+          </article>
+        </section>
+      </section>
       {isCdListOpen && (
         <ModalBackground onClose={() => setIsCdListOpen(false)}>
           <DataList
-            datas={cdDatas.data}
+            setSearchInput={setSearchInput}
+            totalCount={cdRackInfo.totalCount}
+            datas={cdRackInfo.data}
             type='cd'
-            hasMore={false}
-            isLoading={false}
-            fetchMore={() => {}}
+            hasMore={cdRackInfo.nextCursor <= lastMyCdId.current}
+            isLoading={isLoading}
+            fetchMore={() => setCursor(cdRackInfo.nextCursor)}
             userId={userId}
           />
         </ModalBackground>

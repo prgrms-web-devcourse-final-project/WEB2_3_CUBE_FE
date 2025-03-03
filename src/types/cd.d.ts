@@ -1,6 +1,13 @@
+interface CDRackInfo {
+  data: CDInfo[];
+  nextCursor: number;
+  totalCount: number;
+  firstMyCdId: number;
+  lastMyCdId: number;
+}
+
 // cd response body type
 interface CDInfo {
-  cdId?: string;
   myCdId?: number;
   title: string;
   artist: string;

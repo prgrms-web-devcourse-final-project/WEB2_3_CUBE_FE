@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import NoEditStatusItem from './NoEditStatusItem';
 import EditStatusItem from './EditStatusItem';
 import classNames from 'classnames';
@@ -8,7 +8,8 @@ import SkeletonItem from '@components/SkeletonItem';
 import { bookAPI } from '@/apis/book';
 import { deleteCdsFromMyRack } from '@/apis/cd';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
-import axiosInstance from '@/apis/axiosInstance';
+import { useUserStore } from '@/store/useUserStore';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface DataListProps {
   datas: DataListInfo[];
@@ -18,6 +19,8 @@ interface DataListProps {
   isLoading: boolean;
   fetchMore: () => void;
   userId: number;
+  totalCount?: number;
+  setSearchInput?: (value: string) => void;
 }
 
 export default function DataList({
@@ -28,6 +31,8 @@ export default function DataList({
   isLoading: isLoadingMore,
   fetchMore,
   userId,
+  totalCount,
+  setSearchInput,
 }: DataListProps) {
   const isBook = type === 'book' ? true : false;
   const mainColor = isBook ? '#2656CD' : '#7838AF';
@@ -35,14 +40,14 @@ export default function DataList({
   const completeColor = isBook ? 'text-[#3E507D80]' : 'text-[#60308C]/70';
   const inputBgColor = isBook ? 'bg-[#C3D7FF26]' : 'bg-[#DDC3FF26]';
 
+  const navigate = useNavigate();
+  const myCdId = Number(useParams().cdId);
   const [isEdit, setIsEdit] = useState(false);
-  const [currentInput, setCurrentInput] = useState('');
   const [filteredDatas, setFilteredDatas] = useState<DataListInfo[]>(datas);
+  const [currentInput, setCurrentInput] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-  const debouncedQuery = useDebounce(currentInput, 1000);
+
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [isFocused, setIsFocused] = useState(false);
-  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const { listRef, observerRef } = useInfiniteScroll({
     fetchMore,
@@ -50,35 +55,27 @@ export default function DataList({
     hasMore,
   });
 
+  const debouncedQuery = useDebounce(currentInput, 1000);
+  const myUserId = useUserStore().user.userId;
+
+  useEffect(() => {
+    if (currentInput !== debouncedQuery) {
+      setIsSearching(true);
+    }
+    setSearchInput(debouncedQuery);
+    setIsSearching(false);
+  }, [debouncedQuery]);
+
+  useEffect(() => {
+    if (currentInput !== debouncedQuery) {
+      setIsSearching(true);
+    }
+  }, [currentInput, debouncedQuery]);
+
   // datas가 변경될 때마다 filteredDatas 업데이트
   useEffect(() => {
     setFilteredDatas(datas);
   }, [datas]);
-
-  // 검색어가 변경될 때마다 필터링
-  useEffect(() => {
-    const filteredResults = datas.filter((data) => {
-      const searchTerm = currentInput.toLowerCase();
-      return (
-        data.author?.toLowerCase().includes(searchTerm) ||
-        data.publisher?.toLowerCase().includes(searchTerm) ||
-        data.released_year?.toLowerCase().includes(searchTerm) ||
-        data.artist?.toLowerCase().includes(searchTerm) ||
-        data.title?.toLowerCase().includes(searchTerm)
-      );
-    });
-
-    if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
-    debounceTimeout.current = setTimeout(() => {
-      setFilteredDatas(filteredResults);
-    }, 500);
-
-    return () => {
-      if (debounceTimeout.current) {
-        clearTimeout(debounceTimeout.current);
-      }
-    };
-  }, [currentInput, datas]);
 
   const handleDelete = async () => {
     try {
@@ -89,20 +86,10 @@ export default function DataList({
           await bookAPI.deleteBookFromMyBook(String(userId), myBookIds);
         } else {
           // CD 삭제 로직
-          if (selectedIds.length === 1) {
-            // 단일 CD 삭제
-            await axiosInstance.delete(
-              `/api/my-cd?userId=${userId}&myCdIds=${selectedIds[0]}`,
-            );
-          } else {
-            // 다중 CD 삭제
-            const myCdIds = selectedIds.join(',');
-            await axiosInstance.delete(
-              `/api/my-cd?userId=${userId}&myCdIds=${myCdIds}`,
-            );
-          }
+          const myCdIds = selectedIds.map((item) => Number(item));
+          await deleteCdsFromMyRack(myCdIds);
+          if (myCdIds.includes(myCdId)) navigate(`/cdrack/${userId}`);
         }
-
         const updatedDatas = filteredDatas.filter(
           (data) => !selectedIds.includes(data.id),
         );
@@ -134,30 +121,6 @@ export default function DataList({
     setIsEdit(false);
   };
 
-  useEffect(() => {
-    if (currentInput !== debouncedQuery) {
-      setIsSearching(true);
-    }
-
-    const filteredDatas = datas.filter((data) => {
-      return (
-        data.author?.includes(debouncedQuery) ||
-        data.publisher?.includes(debouncedQuery) ||
-        data.released_year?.includes(debouncedQuery) ||
-        data.artist?.includes(debouncedQuery) ||
-        data.title?.includes(debouncedQuery)
-      );
-    });
-    setFilteredDatas(filteredDatas);
-    setIsSearching(false);
-  }, [debouncedQuery]);
-
-  useEffect(() => {
-    if (currentInput !== debouncedQuery) {
-      setIsSearching(true);
-    }
-  }, [currentInput, debouncedQuery]);
-
   return (
     <div className='absolute top-0 right-0  w-[444px] h-screen bg-[#FFFAFA] overflow-hidden rounded-tl-3xl rounded-bl-3xl z-10'>
       <div className='h-full pr-10 pl-11 pt-15 rounded-tl-3xl rounded-bl-3xl '>
@@ -177,7 +140,7 @@ export default function DataList({
               `text-[18px] `,
               `${subColor}`,
               'font-semibold',
-            )}>{`총 ${datas.length}개`}</span>
+            )}>{`총 ${totalCount}개`}</span>
 
           {isEdit ? (
             <div className='flex items-center gap-4.5'>
@@ -193,14 +156,16 @@ export default function DataList({
               </button>
             </div>
           ) : (
-            <button
-              className={classNames(
-                `cursor-pointer text-[16px] font-semibold`,
-                `text-[${mainColor}]`,
-              )}
-              onClick={handleEdit}>
-              편집
-            </button>
+            userId === myUserId && (
+              <button
+                className={classNames(
+                  `cursor-pointer text-[16px] font-semibold`,
+                  `text-[${mainColor}]`,
+                )}
+                onClick={handleEdit}>
+                편집
+              </button>
+            )
           )}
         </div>
 
@@ -214,7 +179,7 @@ export default function DataList({
         />
         <ul
           ref={listRef}
-          className='flex flex-col max-h-[calc(100vh-200px)] gap-6 pr-2 overflow-y-auto scrollbar'>
+          className='flex flex-col max-h-[calc(100vh-200px)] gap-6 pr-2  overflow-y-auto scrollbar'>
           {isSearching ? (
             Array(5)
               .fill(0)
@@ -240,6 +205,7 @@ export default function DataList({
                     key={index}
                     data={data}
                     isBook={isBook}
+                    userId={userId}
                   />
                 );
               })}
