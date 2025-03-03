@@ -9,7 +9,6 @@ export default function EditTemplate({
   onToggleEdit,
 }: TemplateProps) {
   const myCdId = Number(useParams().cdId) || 0;
-  const userId = Number(useParams().userId) || 0;
 
   const textAreaRefs = useRef<(HTMLTextAreaElement | null)[]>([]);
   const showToast = useToastStore((state) => state.showToast);
@@ -30,7 +29,7 @@ export default function EditTemplate({
       };
       // 낙관적 업데이트
       changeTemplateData(contents);
-      const result = await addCdTemplate(myCdId, userId, contents);
+      const result = await addCdTemplate(myCdId, contents);
       showToast('음악 감상평이 등록되었습니다.', 'success');
       onToggleEdit();
     } catch (error) {
@@ -48,7 +47,7 @@ export default function EditTemplate({
         comment4: textAreaRefs.current[3]?.value,
       };
       changeTemplateData(contents);
-      const result = await updateTemplate(myCdId, userId, contents);
+      const result = await updateTemplate(myCdId, contents);
       showToast('음악 감상평을 수정하였습니다.', 'success');
       onToggleEdit();
     } catch (error) {

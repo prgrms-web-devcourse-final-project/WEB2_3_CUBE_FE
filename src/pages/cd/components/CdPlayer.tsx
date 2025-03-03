@@ -263,7 +263,7 @@ export default function CdPlayer({
     (e: YouTubeEvent<any>) => {
       e.target.setVolume(cdReady.volume);
       e.target.playVideo();
-      // setCdStateChangeEvent(e);
+      setCdStateChangeEvent(e);
       setCdReady((prev) => ({
         ...prev,
         isPlaying: true,
@@ -281,12 +281,6 @@ export default function CdPlayer({
 
   const handleYouTubeStateChange = useCallback(
     (e: YouTubeEvent<number>) => {
-      // if (e.data === null) {
-      //   e.target?.playVideo();
-      //   setCdReady((prev) => ({ ...prev, isPlaying: true }));
-      //   onOffCdPlay(true);
-      // }
-      // handleOnOffCd(e);
       if (e.data === 0) {
         if (cdReady.isLooping) {
           onOffCdPlay(true);
