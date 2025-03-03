@@ -1,11 +1,10 @@
 import axiosInstance from './axiosInstance';
 
-const API_URL = 'mock';
+const API_URL = 'api';
 
 export interface UpdateProfileRequest {
   nickname?: string;
   bio?: string;
-  profileImage?: string | File;
   musicGenres?: string[];
   bookGenres?: string[];
 }
@@ -42,7 +41,7 @@ export const profileAPI = {
   /**
    * 특정 사용자의 프로필 정보 조회
    * @param userId - 조회할 사용자의 ID
-   * @returns 사용자의 프로필 정보 (닉네임, 프로필 이미지, 자기소개, 취향 등)
+   * @returns 사용자의 프로필 정보 (닉네임, 프로필 이미지, 자기소개, 취향, 추천 유저 등)
    * @example
    * const userProfile = await profileAPI.getUserProfile('123');
    * // {
@@ -57,39 +56,16 @@ export const profileAPI = {
    */
   getUserProfile: async (userId: string) => {
     const { data } = await axiosInstance.get<UserProfileResponse>(
-      `${API_URL}/users/${userId}`,
+      `${API_URL}/users/${userId}/profile`,
     );
     return data;
   },
 
   /**
-   * 특정 사용자와 취향이 비슷한 추천 유저 목록 조회
-   * @param userId - 기준이 되는 사용자의 ID
-   * @returns 추천된 유저들의 정보 목록 (닉네임, 프로필 이미지)
-   * @example
-   * const recommendedUsers = await profileAPI.getRecommendedUsers('123');
-   * // [
-   * //   {
-   * //     userId: '456',
-   * //     nickname: '추천유저1',
-   * //     profileImage: 'https://...'
-   * //   },
-   * //   ...
-   * // ]
-   */
-  getRecommendedUsers: async (userId: string) => {
-    const { data } = await axiosInstance.get<RecommendedUserResponse[]>(
-      `${API_URL}/users/${userId}/recommendations`,
-    );
-    return data;
-  },
-
-  /**
-   * 프로필 정보 수정
-   * @param userId - 수정할 사용자의 ID
+   * 프로필 정보 수정 (닉네임, 자기소개)
    * @param profileData - 수정할 프로필 정보
    */
-  updateProfile: async (userId: string, profileData: UpdateProfileRequest) => {
+  updateProfile: async (profileData: UpdateProfileRequest) => {
     const { data } = await axiosInstance.patch(
       `${API_URL}/users/profile`,
       profileData,
@@ -98,14 +74,54 @@ export const profileAPI = {
   },
 
   /**
-   * 프로필 이미지 업로드용 S3 업로드 로직 필요
-   * @returns Presigned URL과 이미지 접근 URL
+   * 프로필 이미지 업로드
+   * @param image - 업로드할 이미지 파일
    */
-  getPresignedUrl: async () => {
-    const { data } = await axiosInstance.get<{
-      presignedUrl: string;
-      imageUrl: string;
-    }>(`${API_URL}/users/profile/image-upload-url`);
+  uploadProfileImage: async (image: File) => {
+    const formData = new FormData();
+    formData.append('image', image);
+
+    const { data } = await axiosInstance.post<{ imageUrl: string }>(
+      `${API_URL}/users/profile/image`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    );
+    return data;
+  },
+
+  /**
+   * 프로필 이미지 수정
+   * @param image - 수정할 이미지 파일
+   */
+  updateProfileImage: async (image: File) => {
+    const formData = new FormData();
+    formData.append('image', image);
+
+    const { data } = await axiosInstance.put<{ imageUrl: string }>(
+      `${API_URL}/users/image`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    );
+    return data;
+  },
+
+  /**
+   * 회원 탈퇴
+   * @returns 탈퇴 성공 여부
+   * @example
+   * const result = await profileAPI.withdraw();
+   * // true
+   */
+  withdraw: async () => {
+    const { data } = await axiosInstance.delete(`${API_URL}/auth/withdraw`);
     return data;
   },
 };

@@ -11,28 +11,16 @@ export default function SocialTab() {
   const [kakaoImage, setKakaoImage] = useState(kakao);
   const [naverImage, setNaverImage] = useState(naver);
 
-  const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID;
-  const KAKAO_REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
-  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
-
-  const NAVER_CLIENT_ID = import.meta.env.VITE_NAVER_CLIENT_ID;
-  const NAVER_REDIRECT_URI = import.meta.env.VITE_NAVER_REDIRECT_URI;
-  const NAVER_AUTH_URL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&redirect_uri=${NAVER_REDIRECT_URI}`;
-
-  const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-  const GOOGLE_REDIRECT_URI = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
-  const GOOGLE_AUTH_URL = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${GOOGLE_CLIENT_ID}&scope=openid%20profile%20email&redirect_uri=${GOOGLE_REDIRECT_URI}`;
-
   const handleKakaoLogin = () => {
     window.location.href = 'http://3.39.182.150/oauth2/authorization/kakao';
   };
 
   const handleNaverLogin = () => {
-    window.location.href = NAVER_AUTH_URL;
+    window.location.href = 'http://3.39.182.150/oauth2/authorization/naver';
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = GOOGLE_AUTH_URL;
+    window.location.href = 'https://desqb38rc2v50.cloudfront.net';
   };
   return (
     <div className='flex flex-col  items-center rounded-3xl h-full bg-[#FCF7FD66] backdrop-blur-lg'>

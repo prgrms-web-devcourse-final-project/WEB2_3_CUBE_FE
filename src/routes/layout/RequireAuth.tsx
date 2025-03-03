@@ -1,23 +1,57 @@
+import { logoutAPI, refreshAccessTokenAPI } from '@apis/auth';
 import { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 export default function RequireAuth() {
-  const [show, setShow] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    const token = sessionStorage.getItem('accessToken');
-    // 토큰이 없고 현재 login 페이지가 아니면 login 페이지로 리디렉트
-    if (!token && location.pathname !== '/login') {
-      navigate('/login', { replace: true });
-      // 토큰이 있고 현재 login 페이지면 메인 페이지로 리디렉트
-    } else if (token && location.pathname === '/login') {
-      navigate('/', { replace: true });
+  const [cookies] = useCookies(['accessToken', 'refreshToken']);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const verifyToken = async () => {
+    try {
+      const accessToken = cookies.accessToken;
+      const refreshToken = cookies.refreshToken;
+
+      // 모든 토큰이 없는 경우
+      if (!accessToken && !refreshToken) {
+        if (location.pathname !== '/login')
+          navigate('/login', { replace: true });
+      }
+
+      // accessToken이 있는 경우
+      if (accessToken) {
+        if (location.pathname === '/login') navigate('/', { replace: true });
+      }
+
+      // accessToken은 없지만 refreshToken이 있는 경우 (재발급 로직)
+      if (!accessToken && refreshToken) {
+        try {
+          await refreshAccessTokenAPI(refreshToken);
+          if (location.pathname === '/login') {
+            navigate('/', { replace: true });
+          }
+        } catch (refreshError) {
+          await logoutAPI();
+          navigate('/login', { replace: true });
+          throw new Error(refreshError);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    setShow(true);
-  }, [navigate, location]);
+  useEffect(() => {
+    verifyToken();
+  }, [location.pathname]);
 
-  return <>{show && <Outlet />}</>;
+  if (isLoading) {
+    return <div>로딩 중...</div>; // 로딩 상태 표시
+  }
+  return <Outlet />;
 }

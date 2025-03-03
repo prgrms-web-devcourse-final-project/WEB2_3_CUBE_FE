@@ -1,31 +1,35 @@
 import { memo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Notification } from '@/types/notification';
 import { formatToKoreanFullDate } from '@/utils/dateFormat';
 import { NotificationMessage } from './NotificationMessage';
+import { useUserStore } from '@/store/useUserStore';
 
 interface NotificationItemProps {
   notification: Notification;
   onRead: (id: number) => void;
   activeTab: 'pendingRead' | 'viewed';
+  onClose: () => void;
 }
 
 export const NotificationItem = memo(
-  ({ notification, onRead, activeTab }: NotificationItemProps) => {
+  ({ notification, onRead, activeTab, onClose }: NotificationItemProps) => {
     const navigate = useNavigate();
+    const { user } = useUserStore();
 
     const handleClick = () => {
       // 읽지 않음 탭에서만 read 요청을 보냄
       if (activeTab === 'pendingRead' && !notification.isRead) {
         onRead(notification.notificationId);
       }
+      onClose();
       // 알림 타입에 따른 이동 처리
       switch (notification.type) {
         case 'GUESTBOOK':
-          navigate(`/room/${notification.targetId}`);
+          navigate(`/room/${user.userId}`);
           break;
         case 'MUSIC_COMMENT':
-          navigate(`/cd/${notification.targetId}`);
+          // navigate(`/cd/${cdId}/user/${notification.targetId}`);
+          navigate(`/cd/1/user/${notification.targetId}`);
           break;
         case 'HOUSE_MATE':
           navigate(`/profile/${notification.senderId}`);
@@ -38,6 +42,7 @@ export const NotificationItem = memo(
 
     const handleProfileClick = (e: React.MouseEvent) => {
       e.stopPropagation();
+      onClose();
       navigate(`/profile/${notification.senderId}`);
     };
 

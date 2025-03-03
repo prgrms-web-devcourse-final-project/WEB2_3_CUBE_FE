@@ -1,10 +1,11 @@
 import { useState, useCallback, useEffect } from 'react';
 import { notificationAPI } from '@/apis/notification';
-import { Notification } from '@/types/notification';
+import { useUserStore } from '@/store/useUserStore';
 
 type TabType = 'pendingRead' | 'viewed';
 
 export const useNotifications = (isOpen: boolean) => {
+  const { user } = useUserStore();
   const [activeTab, setActiveTab] = useState<TabType>('pendingRead');
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -13,8 +14,8 @@ export const useNotifications = (isOpen: boolean) => {
   const [isFetching, setIsFetching] = useState(false);
 
   const fetchNotifications = useCallback(
-    async (reset = false) => {
-      if (isFetching) return;
+    async (reset = false, currentTab?: TabType) => {
+      if (isFetching || !user) return;
 
       try {
         setIsFetching(true);
@@ -23,9 +24,10 @@ export const useNotifications = (isOpen: boolean) => {
         }
 
         const response = await notificationAPI.getNotifications(
+          user.userId,
           reset ? undefined : cursor ? Number(cursor) : undefined,
           20,
-          activeTab === 'viewed',
+          (currentTab || activeTab) === 'viewed',
         );
 
         setNotifications((prev) =>
@@ -42,7 +44,7 @@ export const useNotifications = (isOpen: boolean) => {
         }
       }
     },
-    [activeTab, cursor, isFetching],
+    [cursor, isFetching, activeTab, user],
   );
 
   const handleReadNotification = async (notificationId: number) => {
@@ -65,7 +67,7 @@ export const useNotifications = (isOpen: boolean) => {
     setNotifications([]);
     setCursor(undefined);
     setHasMore(true);
-    fetchNotifications(true);
+    fetchNotifications(true, tab);
   };
 
   useEffect(() => {
@@ -73,7 +75,7 @@ export const useNotifications = (isOpen: boolean) => {
       setNotifications([]);
       setCursor(undefined);
       setHasMore(true);
-      fetchNotifications(true);
+      fetchNotifications(true, activeTab);
     }
   }, [isOpen]);
 

@@ -1,45 +1,81 @@
 import ModalBackground from '@components/ModalBackground';
-import { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import trashIcon from '@assets/cd/trash-icon.svg';
-import { useDebounce } from '@hooks/useDebounce';
 import { SearchInput } from '@components/search-modal/SearchInput';
 import Pagination from '@components/Pagination';
-import { cdComments } from '@/mocks/mockCdComment';
+import { useParams } from 'react-router-dom';
+import { deleteCdComment, getCdComment } from '@apis/cd';
+import { formatDate } from '@utils/dateFormat';
+import { useDebounce } from '@hooks/useDebounce';
+import SkeletonItem from '@components/SkeletonItem';
+import { useUserStore } from '@/store/useUserStore';
 
-export default function CommentList({ onClose }) {
+const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
   const [currentInput, setCurrentInput] = useState('');
-  const [fileredResults, setFilteredResults] = useState([]);
-
+  const [cdComments, setCdComments] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPage = useRef<number>(20);
-
-  // const startNum = Math.max(currentPage - 1, 1);
-  // const endNum = Math.min(currentPage + 1, totalPage);
-  // const pageNumberArr = Array.from(
-  //   { length: endNum - startNum + 1 },
-  //   (_, index) => startNum + index,
-  // );
+  const totalPage = useRef<number>(null);
+  const [isSearching, setIsSearching] = useState(false);
   const debouncedQuery = useDebounce(currentInput, 500);
+  const myCdId = Number(useParams().cdId);
+
+  const myUserId = useUserStore((state) => state.user).userId;
+  const userId = Number(useParams().userId);
+
+  // 작성자이거나 방주인일 경우에만 삭제 가능
+  const isAccessible = useCallback(
+    (commentUerId: number) => userId === myUserId || myUserId === commentUerId,
+    [],
+  );
 
   useEffect(() => {
-    const filteredDatas = cdComments.filter(
-      (comment) =>
-        comment.nickname.includes(debouncedQuery) ||
-        comment.content.includes(debouncedQuery),
-    );
-    setFilteredResults(filteredDatas);
-  }, [debouncedQuery]);
+    const fetchCdComments = async () => {
+      try {
+        if (currentInput !== debouncedQuery) {
+          setIsSearching(true);
+        }
+        const result =
+          currentInput === ''
+            ? await getCdComment(myCdId, currentPage, 5)
+            : await getCdComment(myCdId, currentPage, 5, currentInput);
+        totalPage.current = result.totalPages;
+        setCdComments(result.data);
+      } catch (error) {
+        console.error(error);
+        setCdComments([]);
+      } finally {
+        setIsSearching(false);
+      }
+    };
+    fetchCdComments();
+  }, [currentPage, debouncedQuery]);
 
-  const handleChangePage = (page: number) => {
+  useEffect(() => {
+    if (currentInput !== debouncedQuery) {
+      setIsSearching(true);
+    }
+  }, [currentInput, debouncedQuery]);
+
+  const handleChangePage = useCallback((page: number) => {
     setCurrentPage(page);
+  }, []);
+
+  const handleDeleteComment = async (userId: number, commentId: number) => {
+    const previousComments = [...cdComments];
+
+    try {
+      // 낙관적 업데이트
+      setCdComments(cdComments.filter((comments) => comments.id !== commentId));
+      await deleteCdComment(userId, commentId);
+    } catch (error) {
+      setCdComments(previousComments);
+      console.error(error);
+    }
   };
 
-  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setCurrentInput(event.target.value);
-  // };
   return (
     <ModalBackground onClose={onClose}>
-      <div className='w-[662px] rounded-3xl border-2 border-[#FCF7FD] shadow-box  backdrop-blur-[15px] p-4  '>
+      <div className='w-[662px] rounded-3xl border-2 border-[#FCF7FD] shadow-box  backdrop-blur-[15px] p-4 '>
         <div className='w-full h-full bg-[#FCF7FD] rounded-[16px]  backdrop-blur-[15px] pt-10 px-27'>
           <h1 className='text-[#7838AF]  text-2xl font-bold text-center mb-7'>
             댓글 목록 편집
@@ -54,32 +90,58 @@ export default function CommentList({ onClose }) {
           />
 
           {/* 댓글 목록 */}
+
           <ul className='flex flex-col  gap-3 mt-6 mb-5 min-h-[500px]'>
-            {fileredResults.map((comment) => (
-              <li
-                key={comment.userId}
-                className={`flex justify-between items-center bg-[#F7F1FA80] rounded-[12px]  `}>
-                <div className='flex flex-col gap-1 py-4 pl-7'>
-                  <div className='flex items-baseline gap-2 '>
-                    <span className='text-[#401D5F] text-[16px] font-bold line-clamp-1'>
-                      {comment.nickname}
-                    </span>
-                    <span className='text-[#401D5F80] text-[10px] '>
-                      {comment.date.replaceAll('-', '.')}
-                    </span>
-                  </div>
-                  <p className='text-[#401D5FB2] text-[14px] line-clamp-1'>
-                    {comment.content}
-                  </p>
-                </div>
-                <button className='pr-8 py-7 hover:opacity-50 '>
-                  <img
-                    src={trashIcon}
-                    alt='댓글 삭제버튼'
+            {isSearching ? (
+              Array(5)
+                .fill(0)
+                .map((_, index) => (
+                  <SkeletonItem
+                    key={`skeleton-${index}`}
+                    isBook={false}
                   />
-                </button>
-              </li>
-            ))}
+                ))
+            ) : cdComments.length > 0 ? (
+              cdComments.map((comment) => (
+                <li
+                  key={comment.id}
+                  className={`flex justify-between items-center bg-[#F7F1FA80] rounded-[12px]  `}>
+                  <div className='flex flex-col gap-1 py-4 pl-7'>
+                    <div className='flex items-baseline gap-2 '>
+                      <span className='text-[#401D5F] text-[16px] font-bold line-clamp-1'>
+                        {comment.nickname}
+                      </span>
+                      <span className='text-[#401D5F80] text-[10px] '>
+                        {formatDate(new Date(comment.createdAt + 'Z'))}
+                      </span>
+                    </div>
+                    <p className='text-[#401D5FB2] text-[14px] line-clamp-1'>
+                      {comment.content}
+                    </p>
+                  </div>
+
+                  {isAccessible(comment.userI) && (
+                    <button
+                      onClick={() =>
+                        handleDeleteComment(
+                          userId === myUserId ? userId : comment.userId,
+                          comment.id,
+                        )
+                      }
+                      className='pr-8 py-7 hover:opacity-50 '>
+                      <img
+                        src={trashIcon}
+                        alt='댓글 삭제버튼'
+                      />
+                    </button>
+                  )}
+                </li>
+              ))
+            ) : (
+              <div className='flex flex-col items-center justify-center h-40 text-gray-500'>
+                <p>검색 결과가 없습니다.</p>
+              </div>
+            )}
           </ul>
 
           {/* 페이지네이션 */}
@@ -93,4 +155,6 @@ export default function CommentList({ onClose }) {
       </div>
     </ModalBackground>
   );
-}
+});
+
+export default CommentList;

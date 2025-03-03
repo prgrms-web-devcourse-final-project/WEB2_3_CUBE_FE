@@ -1,8 +1,9 @@
 import axios from 'axios';
 import axiosInstance from './axiosInstance';
+import { BookType, ReviewType } from '@/types/book';
 
 const ALADIN_KEY = import.meta.env.VITE_ALADIN_KEY;
-const API_URL = 'mock';
+const API_URL = 'api';
 
 export const bookAPI = {
   // ------------------------------ 검색 ------------------------------
@@ -106,8 +107,11 @@ export const bookAPI = {
    * }
    * @returns
    */
-  addBookToMyBook: async (book: BookType) => {
-    const response = await axiosInstance.post(`/${API_URL}/mybooks`, book);
+  addBookToMyBook: async (book: BookType, userId: number) => {
+    const response = await axiosInstance.post(
+      `${API_URL}/mybooks?userId=${userId}`,
+      book,
+    );
     return response.data;
   },
 
@@ -169,7 +173,7 @@ export const bookAPI = {
    */
   getReview: async (myBookId: string) => {
     const response = await axiosInstance.get(
-      `/${API_URL}/mybooks-review?myBookId=${myBookId}`,
+      `/${API_URL}/mybooks/${myBookId}/review`,
     );
     return response.data;
   },
@@ -202,7 +206,7 @@ export const bookAPI = {
 
   addReview: async (myBookId: string, review: ReviewType) => {
     const response = await axiosInstance.post(
-      `/${API_URL}/mybooks-review?myBookId=${myBookId}`,
+      `/${API_URL}/mybooks/${myBookId}/review`,
       review,
     );
     return response.data;
@@ -216,7 +220,7 @@ export const bookAPI = {
    */
   updateReview: async (myBookId: string, review: ReviewType) => {
     const response = await axiosInstance.patch(
-      `/${API_URL}/mybooks-review?myBookId=${myBookId}`,
+      `/${API_URL}/mybooks/${myBookId}/review`,
       review,
     );
     return response.data;
@@ -229,7 +233,21 @@ export const bookAPI = {
    */
   deleteReview: async (myBookId: string) => {
     const response = await axiosInstance.delete(
-      `/${API_URL}/mybooks-review/${myBookId}`,
+      `/${API_URL}/mybooks/${myBookId}/review`,
+    );
+    return response.data;
+  },
+
+  // ------------------------------ 책 레벨 업그레이드 ------------------------------
+  /**
+   * 책 레벨 업그레이드
+   * @param roomId 방 ID
+   * @param nextLevel 다음 레벨
+   * @returns
+   */
+  upgradeBookLevel: async (roomId: string, nextLevel: number) => {
+    const response = await axiosInstance.post(
+      `/${API_URL}/rooms/${roomId}/furniture/bookshelf?level=${nextLevel}`,
     );
     return response.data;
   },

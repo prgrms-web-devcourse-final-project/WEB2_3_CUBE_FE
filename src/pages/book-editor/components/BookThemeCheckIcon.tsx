@@ -1,9 +1,9 @@
-interface CheckIconProps {
+interface BookThemeCheckIconProps {
   color: string;
   className?: string;
 }
 
-const CheckIcon = ({ color, className = '' }: CheckIconProps) => {
+const BookThemeCheckIcon = ({ color, className = '' }: BookThemeCheckIconProps) => {
   return (
     <svg
       className={className}
@@ -24,4 +24,4 @@ const CheckIcon = ({ color, className = '' }: CheckIconProps) => {
   );
 };
 
-export default CheckIcon; 
+export default BookThemeCheckIcon; 

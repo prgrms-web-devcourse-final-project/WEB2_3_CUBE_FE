@@ -50,5 +50,34 @@ interface PostCDInfo {
   coverUrl: string;
   youtubeUrl: string;
   duration: number;
-  releaseDate?: string;
+  releaseDate: string;
+}
+
+// template type
+
+interface TemplateProps {
+  isEditable: () => void;
+  templateData: {
+    comment1: string | null;
+    comment2: string | null;
+    comment3: string | null;
+    comment4: string | null;
+  };
+}
+
+// cd comments
+
+interface CdComment {
+  id?: number;
+  myCdId: number;
+  userId: number;
+  nickname: string;
+  timestamp: number;
+  content: string;
+  createdAt?: string;
+}
+
+interface CdCommentPost {
+  timestamp: number;
+  content: string;
 }

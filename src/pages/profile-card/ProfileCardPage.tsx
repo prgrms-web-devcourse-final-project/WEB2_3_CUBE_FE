@@ -1,23 +1,31 @@
-import { useNavigate, useParams } from 'react-router-dom';
-import shareIcon from '@assets/profile-card/share-icon.svg';
-import pointIcon from '@assets/toast/coin.png';
+import { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useUserStore } from '@/store/useUserStore';
+import { useUserProfile } from '@/hooks/useUserProfile';
+import { ProfileCardLayout } from './components/ProfileCardLayout';
+import shareIcon from '@/assets/profile-card/share-icon.svg';
+import pointIcon from '@/assets/toast/coin.png';
+import shareImage from '@/assets/share-thumbnail.png'; // 공유용 썸네일 이미지
 import UserProfileSection from './components/UserProfileSection';
 import GenreCard from './components/GenreCard';
 import RecommendedUserList from './components/RecommendedUserList';
 import ProfileButtons from './components/ProfileButtons';
-import { ProfileCardLayout } from './components/ProfileCardLayout';
-import { useProfileData } from './hooks/useProfileData';
+import { useToastStore } from '@/store/useToastStore';
 
 const ProfileCardPage = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
-  const {
-    userProfile,
-    recommendedUsers,
-    isLoading,
-    isMyProfile,
-    handleProfileUpdate,
-  } = useProfileData(userId);
+  const { user } = useUserStore();
+  const { profile, updateProfile } = useUserProfile(userId || undefined);
+  const { showToast } = useToastStore();
+
+  useEffect(() => {
+    if (!userId) {
+      navigate('/');
+      return;
+    }
+    updateProfile();
+  }, [userId, navigate, updateProfile]);
 
   const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -26,29 +34,62 @@ const ProfileCardPage = () => {
   };
 
   const handleShareButtonClick = async () => {
-    if (!userId || !userProfile) return;
+    if (!userId || !profile) return;
 
     try {
-      const shareData = {
-        title: `${userProfile.nickname}님의 프로필`,
-        text: `${userProfile.nickname}님의 취향이 담긴 방을 확인해보세요!`,
-        url: `${window.location.origin}/room/${userId}`,
+      const shareData: {
+        title: string;
+        text: string;
+        url: string;
+        files?: File[];
+      } = {
+        title: `${profile.nickname}님의 프로필`,
+        text: `${profile.nickname}님의 취향이 담긴 방을 확인해보세요!`,
+        url: `${window.location.origin}/profile/${userId}`,
       };
 
+      if (navigator.canShare) {
+        try {
+          const response = await fetch(shareImage);
+          const blob = await response.blob();
+          const file = new File([blob], 'share-thumbnail.png', {
+            type: 'image/png',
+          });
+
+          if (navigator.canShare({ files: [file] })) {
+            shareData.files = [file];
+          }
+        } catch (error) {
+          console.error('이미지 처리 실패:', error);
+          // 이미지 처리 실패 시에도 계속 진행 (이미지 없이 공유)
+        }
+      }
+
       if (navigator.share) {
-        await navigator.share(shareData);
+        try {
+          await navigator.share(shareData);
+        } catch (error) {
+          // AbortError는 사용자가 의도적으로 취소한 것이므로 에러 메시지를 표시하지 않음
+          if (error instanceof Error && error.name !== 'AbortError') {
+            console.error('공유하기 실패:', error);
+            showToast('공유하기에 실패했습니다.', 'error');
+          }
+        }
       } else {
         await navigator.clipboard.writeText(shareData.url);
-        // TODO: 복사 완료 토스트 메시지 표시
+        showToast('프로필 카드 링크가 복사되었습니다.', 'success');
       }
     } catch (error) {
       console.error('공유하기 실패:', error);
+      showToast('링크 복사에 실패했습니다.', 'error');
     }
   };
 
-  if (isLoading || !userProfile) {
+  if (!profile) {
     return <div>로딩 중...</div>;
   }
+
+  const isMyProfile = user?.userId === Number(userId);
 
   return (
     <ProfileCardLayout onClickOutside={handleClickOutside}>
@@ -76,9 +117,9 @@ const ProfileCardPage = () => {
       {/* 사용자 프로필 */}
       <UserProfileSection
         profile={{
-          nickname: userProfile.nickname,
-          profileImage: userProfile.profileImage,
-          bio: userProfile.bio,
+          nickname: profile.nickname,
+          profileImage: profile.profileImage,
+          bio: profile.bio,
         }}
       />
 
@@ -88,24 +129,24 @@ const ProfileCardPage = () => {
         className='w-full gap-2 item-between'>
         <GenreCard
           title='음악 감성'
-          genres={userProfile.musicGenres}
+          genres={profile.musicGenres}
         />
         <GenreCard
           title='독서 취향'
-          genres={userProfile.bookGenres}
+          genres={profile.bookGenres}
         />
       </div>
 
       {/* 유저 추천 */}
-      <RecommendedUserList users={recommendedUsers} />
+      <RecommendedUserList users={profile.recommendedUsers || []} />
 
       {/* 메이트 취소/추가 및 방 구경하기 버튼 */}
       {userId && (
         <ProfileButtons
           userId={userId}
           isMyProfile={isMyProfile}
-          isMatched={userProfile.isMatched}
-          onProfileUpdate={handleProfileUpdate}
+          isMatched={profile.following}
+          onProfileUpdate={updateProfile}
         />
       )}
     </ProfileCardLayout>

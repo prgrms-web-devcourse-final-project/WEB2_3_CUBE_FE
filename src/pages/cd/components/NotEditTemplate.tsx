@@ -1,63 +1,103 @@
-import React from 'react';
 import writeTemplate from '@/assets/cd/write-template.svg';
+import EmptyTemplate from './EmptyTemplate';
+import { deleteTemplate } from '@apis/cd';
+import { useParams } from 'react-router-dom';
+import { useUserStore } from '@/store/useUserStore';
+
 export default function NotEditTemplate({
+  templateData,
   isEditable,
-}: {
-  isEditable: () => void;
-}) {
+}: TemplateProps) {
+  const myCdId = Number(useParams().cdId) || 0;
+  const userId = Number(useParams().userId) || 0;
+
+  // 방주인이 아니면 템플릿 작성 버튼은 있을 수 없음
+  const user = useUserStore((state) => state.user);
+
+  const myUserId = user.userId;
+
+  const handleDeleteTemplate = async () => {
+    try {
+      const result = await deleteTemplate(myCdId, userId);
+
+      if (result.status === 204) console.log('템플릿 삭제!');
+    } catch (error) {
+      console.error(error, '템플릿 삭제 실패!');
+    }
+  };
+
+  if (myUserId !== userId) return <EmptyTemplate />;
   return (
     <>
-      <button
-        type='button'
-        onClick={isEditable}>
-        <img
-          className='absolute top-6 right-6 w-8 h-8 cursor-pointer hover:opacity-60 '
-          src={writeTemplate}
-          alt='템플릿 작성 버튼'
-        />
-      </button>
+      {!templateData && (
+        <button
+          type='button'
+          onClick={isEditable}>
+          <img
+            className='absolute top-6 right-6 w-8 h-8 cursor-pointer hover:opacity-60 '
+            src={writeTemplate}
+            alt='템플릿 작성 버튼'
+          />
+        </button>
+      )}
+      {templateData && (
+        <>
+          <button
+            onClick={isEditable}
+            className=' absolute top-4 right-24 rounded-[10px] text-[12px] font-semibold
+         bg-white text-[#162C63] drop-shadow-logo px-6 py-2.5 hover:opacity-80'>
+            수정
+          </button>
 
-      <div className='flex flex-col items-center gap-14  overflow-auto h-full pr-3 scrollbar'>
-        <div>
+          <button
+            type='button'
+            onClick={handleDeleteTemplate}
+            className='absolute top-4 right-4 rounded-[10px] text-[12px] font-semibold
+         bg-white text-[#162C63] drop-shadow-logo px-6 py-2.5 hover:opacity-80'>
+            삭제
+          </button>
+        </>
+      )}
+
+      <section className='flex flex-col justify-around items-center gap-14  overflow-auto h-full pr-3 scrollbar'>
+        <article className='w-full'>
           <h3 className='text-2xl font-bol border-b-2 border-[#FFFFFF33] pb-4 mb-5 '>
             이 노래를 듣게 된 계기
           </h3>
           <p className='text-[16px] w-full   drop-shadow-logo '>
-            울면서 집에 가는 길에 들린 카페에서 나온 노래 그 이후부터 힘 낼 일이
-            필요하면 이 노래를 들어용
+            {templateData ? templateData.comment1 : ''}
           </p>
-        </div>
+        </article>
 
-        <div>
+        <article className='w-full'>
           <h3 className='text-2xl font-bol border-b-2 border-[#FFFFFF33] pb-4 mb-5 '>
-            이 노래를 듣게 된 계기
+            이 노래에서 가장 좋았던 부분
           </h3>
           <p className='text-[16px] w-full '>
-            울면서 집에 가는 길에 들린 카페에서 나온 노래 그 이후부터 힘 낼 일이
-            필요하면 이 노래를 들어용
+            {templateData ? templateData.comment2 : ''}
           </p>
-        </div>
+        </article>
 
-        <div>
+        <article className='w-full'>
           <h3 className='text-2xl font-bol border-b-2 border-[#FFFFFF33] pb-4 mb-5 '>
-            이 노래를 듣게 된 계기
+            이 노래를 듣는 지금의 감정
           </h3>
           <p className='text-[16px] w-full '>
-            울면서 집에 가는 길에 들린 카페에서 나온 노래 그 이후부터 힘 낼 일이
-            필요하면 이 노래를 들어용
+            {' '}
+            {templateData ? templateData.comment3 : ''}
           </p>
-        </div>
+        </article>
 
-        <div>
+        <article className='w-full'>
           <h3 className='text-2xl font-bol border-b-2 border-[#FFFFFF33] pb-4 mb-5 '>
-            이 노래를 듣게 된 계기
+            어떨 때 자주 듣는 노래인가요?
           </h3>
           <p className='text-[16px] w-full '>
-            울면서 집에 가는 길에 들린 카페에서 나온 노래 그 이후부터 힘 낼 일이
-            필요하면 이 노래를 들어용
+            {' '}
+            {templateData ? templateData.comment4 : ''}
           </p>
-        </div>
-      </div>
+        </article>
+      </section>
     </>
   );
 }

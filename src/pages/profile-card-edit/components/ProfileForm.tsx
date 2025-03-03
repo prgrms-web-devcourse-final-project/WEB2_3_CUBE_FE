@@ -23,8 +23,11 @@ export const ProfileForm = ({
           onChange={(e) => onNicknameChange(e.target.value)}
           placeholder='닉네임을 입력해주세요'
           className='w-full px-4 py-2 bg-[#4E7ACF]/5 rounded-lg outline-none border-2 border-transparent focus:border-[#73A1F7] transition-colors text-[#3E507D]'
-          maxLength={10}
+          maxLength={15}
         />
+        <span className='text-sm text-[#3E507D]/60 text-right'>
+          {nickname.length}/15
+        </span>
       </div>
 
       <div className='flex flex-col gap-2 w-[400px]'>
@@ -34,8 +37,11 @@ export const ProfileForm = ({
           onChange={(e) => onBioChange(e.target.value)}
           placeholder='나를 표현해보세요 ψ(｀∇´)ψ ♪'
           className='w-full p-4 bg-[#4E7ACF]/5 rounded-lg outline-none resize-none border-2 border-transparent focus:border-[#73A1F7] transition-colors min-h-[100px] text-[#3E507D]'
-          maxLength={100}
+          maxLength={30}
         />
+        <span className='text-sm text-[#3E507D]/60 text-right'>
+          {bio.length}/30
+        </span>
       </div>
     </>
   );

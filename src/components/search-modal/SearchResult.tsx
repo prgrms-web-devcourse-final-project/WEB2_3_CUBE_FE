@@ -1,12 +1,13 @@
-import { SearchItemType } from '@/types/search';
 import { bookAPI } from '@/apis/book';
 import addIcon from '@/assets/add-icon.svg';
 import { SEARCH_THEME } from '@/constants/searchTheme';
 import { toKoreanDate } from '@utils/dateFormat';
 import { addCdToMyRack } from '@apis/cd';
 import { useUserStore } from '@/store/useUserStore';
+import { useToastStore } from '@/store/useToastStore';
 import AlertModal from '@components/AlertModal';
 import { useState } from 'react';
+import { BookType } from '@/types/book';
 
 interface SearchResultProps {
   item: SearchItemType | null;
@@ -14,7 +15,7 @@ interface SearchResultProps {
   items: SearchItemType[];
   isLoading: boolean;
   error: string | null;
-  onSelect: (item: SearchItemType) => void;
+  onSelect: (item?: SearchItemType) => void;
   onClose: () => void;
 }
 
@@ -28,23 +29,31 @@ export const SearchResult = ({
 }: SearchResultProps) => {
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const theme = SEARCH_THEME[type];
-  const user = useUserStore((state) => state.user);
-  const handleAddBook = async (item: SearchItemType) => {
+  const { user } = useUserStore();
+  const { showToast } = useToastStore();
+
+  const handleAdd = async (item: SearchItemType) => {
     try {
+      if (!user?.userId) {
+        showToast('로그인이 필요한 서비스입니다.', 'error');
+        return;
+      }
+
       if (type === 'BOOK') {
         const bookData: BookType = {
           isbn: item.id,
           title: item.title,
           author: item.author,
           publisher: item.publisher,
-          publishedDate: new Date(item.date).toISOString(),
+          publishedDate: new Date(item.date).toISOString().split('T')[0],
           imageUrl: item.imageUrl,
           genreNames: item.genres,
           page: 0,
         };
-        await bookAPI.addBookToMyBook(bookData);
+        await bookAPI.addBookToMyBook(bookData, user.userId);
       } else if (type === 'CD') {
         // CD 추가 요청 로직
+
         const cdData: PostCDInfo = {
           title: item.title,
           artist: item.artist,
@@ -60,11 +69,13 @@ export const SearchResult = ({
           setIsAlertModalOpen(true);
           return;
         }
-        await addCdToMyRack(1, cdData);
+        onSelect(item);
+
+        await addCdToMyRack(user.userId, cdData);
       }
-      onSelect(item);
       onClose();
     } catch (error) {
+      onSelect(null);
       console.error(`${type} 추가 실패:`, error);
     }
   };
@@ -111,9 +122,8 @@ export const SearchResult = ({
           src={item.imageUrl}
           className='object-contain w-full h-full rounded-lg book-shadow'
         />
-        {/* 내 책장에 담기 버튼 */}
         <button
-          onClick={() => handleAddBook(item)}
+          onClick={() => handleAdd(item)}
           className={`absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 p-2 ${theme.searchResultAddBtn} rounded-full cursor-pointer backdrop-blur-xs`}>
           <img
             src={addIcon}

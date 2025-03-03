@@ -6,14 +6,24 @@ type GLTFResult = {
 
 interface FurnitureData {
   id: string;
-  type: 'bookShelf' | 'cdPlayer' | 'piggyCash' | 'guestBook';
+  type: FurnitureType;
+  apiType: FurnitureType;
+  rotation: [number, number, number];
   position: [number, number, number];
-  rotation?: [number, number, number];
-  scale?: number;
   modelPath: string;
   isEditable: boolean;
 }
 
 interface FurnitureProps {
   item: FurnitureData;
+  onInteract: (itemType: string) => void;
 }
+
+interface RoomModelProps {
+  modelPath: string;
+  activeSettings: string;
+  ownerName: string;
+  ownerId: number;
+  roomId: number;
+  furnitures: { furnitureType: FurnitureType; isVisible: boolean }[]; 
+};

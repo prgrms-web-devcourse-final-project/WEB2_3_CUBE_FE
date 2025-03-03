@@ -1,19 +1,48 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import NotEditTemplate from './NotEditTemplate';
 import EditTemplate from './EditTemplate';
+import { getCdTemplate } from '@apis/cd';
+import { useParams } from 'react-router-dom';
 
-export default function CdTemplate() {
+const CdTemplate = React.memo(() => {
   const [isEdit, setIsEdit] = useState(false);
+  const [templateData, setTemplateData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
+  const myCdId = Number(useParams().cdId);
+
+  useEffect(() => {
+    const fetchTemplateData = async () => {
+      try {
+        const templateData = await getCdTemplate(myCdId);
+        setTemplateData(templateData); // 템플릿 조회
+      } catch (error) {
+        console.error(error, '템플릿을 작성해주세요!');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchTemplateData();
+  }, []);
+
+  if (isLoading) <div>Loading...</div>;
   return (
     <div
       className='w-[32%]  text-white rounded-3xl border-2   border-[#FCF7FD]
      bg-[#3E507D1A] backdrop-blur-lg shadow-box h-full pl-12 pr-8 py-15  relative  '>
       {isEdit ? (
-        <EditTemplate isEditable={() => setIsEdit(!isEdit)} />
+        <EditTemplate
+          templateData={templateData}
+          isEditable={() => setIsEdit(!isEdit)}
+        />
       ) : (
-        <NotEditTemplate isEditable={() => setIsEdit(!isEdit)} />
+        <NotEditTemplate
+          templateData={templateData}
+          isEditable={() => setIsEdit(!isEdit)}
+        />
       )}
     </div>
   );
-}
+});
+
+export default CdTemplate;

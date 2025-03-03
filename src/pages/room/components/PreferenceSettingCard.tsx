@@ -1,10 +1,26 @@
-export default function PreferenceSettingCard({ title, thumbnail }) {
+import addCheck from "@assets/room/addFurniture-icon.svg";
+
+export default function PreferenceSettingCard({
+  title,
+  thumbnail,
+  maxCount,
+  savedCount,
+  writtenCount,
+  isAdd,
+  onClick,
+  level,
+}: PreferenceSettingCardProps) {
   const isMusic = title === '음악';
 
   return (
     <section
-      className={`@container prefer-card backdrop-blur-2xl rounded-3xl drop-shadow-modal items-center justify-center p-2
+      onClick={onClick}
+      className={`@container prefer-card backdrop-blur-2xl rounded-3xl drop-shadow-modal items-center justify-center p-2 border-2
+        ${isAdd ? 'border-4 border-[#4983EF]' : 'border-2 border-[#FCF7FD]'} cursor-pointer relative
     `}>
+      {isAdd && (
+        <img src={addCheck} alt="" className={`absolute top-[-4px] right-6 drop-shadow-logo`} />
+      )}
       <article
         className={`@container w-full h-full rounded-2xl bg-[#FCF7FD] p-11 flex place-content-center`}>
         {/* 선택 카드 내용 */}
@@ -21,10 +37,10 @@ export default function PreferenceSettingCard({ title, thumbnail }) {
                 <p className='font-bold text-xl @sm:text-2xl text-[#162C63]'>
                   {title}
                 </p>
-                <p className='font-semibold text-[#3E507D]'>Lv.1</p>
+                <p className='font-semibold text-[#3E507D]'>Lv.{level}</p>
               </div>
               <p className='text-[#3E507D]/70 text-xs @sm:text-sm font-medium'>
-                최대 저장 가능한 갯수 5개
+                최대 저장 가능한 갯수 {maxCount}개
               </p>
             </header>
 
@@ -32,16 +48,17 @@ export default function PreferenceSettingCard({ title, thumbnail }) {
             <ul className='list-disc text-[#162C63] font-medium text-sm @sm:text-base '>
               <li className='ml-3 @sm:ml-4'>
                 {isMusic ? '현재 저장한 음악' : '현재 저장한 도서'}{' '}
-                <strong>3</strong>
+                <strong>{savedCount}</strong>
                 {isMusic ? '곡' : '권'}
               </li>
               <li className='ml-3 @sm:ml-4'>
                 {isMusic ? '현재 기록한 감상' : '현재 기록한 서평'}{' '}
-                <strong>15</strong>개
+                <strong>{writtenCount}</strong>개
               </li>
             </ul>
 
             {/* 취향 키워드 */}
+            {/* todo: 장르 api 연동 */}
             <div className='flex flex-row items-center justify-center gap-2 font-medium mt-1 ml-[-2px] text-[10px] @sm:text-xs'>
               {['힙합', '댄스', '발라드'].map((genre) => (
                 <span

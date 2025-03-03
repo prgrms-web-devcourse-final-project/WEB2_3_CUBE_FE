@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import MyRoomIcon from '@assets/main/myroom-icon.svg';
 
-export default function MyRoom() {
+export default function MyRoom({roomId}) {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/room');
+    navigate(`/room/${roomId}`);
   };
   return (
     <button
@@ -20,7 +20,7 @@ export default function MyRoom() {
         />
       </span>
       {/* tooltip */}
-      <span className='absolute bottom-18 w-max bg-white text-[#162C63] text-xs font-semibold rounded-full px-4 py-[10px] opacity-0 group-hover:opacity-100 transition-opacity'>
+      <span className='absolute bottom-18 w-max bg-white text-[#162C63] text-xs font-semibold rounded-full px-4 py-[9px] opacity-0 group-hover:opacity-100 @xl:text-sm transition-opacity'>
         마이룸
       </span>
     </button>

@@ -1,24 +1,20 @@
 import { useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { logoutAPI } from '@apis/login';
+import { logoutAPI } from '@apis/auth';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUserStore } from '../../../store/useUserStore';
-
 interface HiddenMenuProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
 const HiddenMenu = ({ isOpen, onClose }: HiddenMenuProps) => {
   const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { user } = useUserStore();
-
   const handleLogout = async () => {
     await logoutAPI();
     navigate('/login');
   };
-
   return (
     <AnimatePresence>
       {isOpen && (
@@ -75,5 +71,4 @@ const HiddenMenu = ({ isOpen, onClose }: HiddenMenuProps) => {
     </AnimatePresence>
   );
 };
-
 export default HiddenMenu;

@@ -5,20 +5,20 @@ import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import { Mousewheel, EffectCoverflow } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface CdSwiperProps {
-  cdDatas: { data: CDInfo[]; nextCursor: number };
+  cdRackDatas: CDInfo[];
   onActiveTrackId: (index: number) => void;
 }
 
 const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
-  ({ cdDatas, onActiveTrackId }, ref) => {
-    const cdData = cdDatas.data;
+  ({ cdRackDatas, onActiveTrackId }, ref) => {
+    const cdData = cdRackDatas;
     const navigate = useNavigate();
     const [rotateX, setRotateX] = useState<{ [key: number]: number }>({});
     const [rotateY, setRotateY] = useState<{ [key: number]: number }>({});
-
+    const userId = useParams().userId;
     const handleMouseMove = (
       e: React.MouseEvent<HTMLDivElement, MouseEvent>,
       index: number,
@@ -73,11 +73,9 @@ const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
         }}
         className='mySwiper'>
         {cdData.map((data: CDInfo, index: number) => (
-          <SwiperSlide
-            key={data.myCdId}
-            className='relative '>
+          <SwiperSlide key={data.myCdId}>
             <div
-              className=' cursor-pointer  transition-transform duration-500 ease-linear '
+              className=' cursor-pointer  transition-transform duration-500 ease-linear relative '
               style={{
                 transform: ` rotateY(${rotateY[index] || 0}deg) rotateX(${
                   rotateX[index] || 0
@@ -86,7 +84,7 @@ const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
                   rotateX[index] || 0
                 }px 20px rgba(0, 0, 0, 0.5))`, // 그림자 방향 조정
               }}
-              onClick={() => navigate('/cd/1/user/1')}
+              onClick={() => navigate(`/cd/${data.myCdId}/user/${userId}`)}
               onMouseMove={(e) => handleMouseMove(e, index)}
               onMouseLeave={() => handleMouseLeave(index)}>
               <img
@@ -94,18 +92,19 @@ const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
                 src={data.coverUrl}
                 alt='앨범 이미지'
               />
+              {/* 장르 */}
+              <ul className='flex absolute bottom-18 left-1/2 transform -translate-x-1/2 justify-center items-center gap-5 '>
+                {data.genres.map((genre, index) => (
+                  <li
+                    className=' py-1.5 px-5 rounded-[80px] bg-[#FFFFFF1A] backdrop-blur-[20px] flex items-center justify-center '
+                    key={index}>
+                    <span className='text-[14px] text-white w-full text-center'>
+                      {genre}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </div>
-
-            {/* 장르 */}
-            <ul className='flex absolute bottom-8 left-1/2 transform -translate-x-1/2 justify-center items-center gap-5'>
-              {data.genres.map((genre, index) => (
-                <li
-                  className='w-16 h-7 rounded-[80px] bg-[#FFFFFF1A] backdrop-blur-[20px] flex items-center justify-center'
-                  key={index}>
-                  <span className='text-[14px] text-white'>{genre}</span>
-                </li>
-              ))}
-            </ul>
           </SwiperSlide>
         ))}
       </Swiper>

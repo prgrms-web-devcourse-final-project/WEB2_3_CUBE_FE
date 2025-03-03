@@ -1,5 +1,6 @@
 interface UserProfile {
   id: string;
+  userId: string;
   nickname: string;
   profileImage: string;
   bio: string;
@@ -33,34 +34,13 @@ interface UserProfileResponse {
   bio: string;
   musicGenres: string[];
   bookGenres: string[];
+  recommendedUsers: RecommendedUser[];
   myProfile: boolean;
   isMatched: boolean;
 }
 
-interface RecommendedUserResponse {
-  userId: string;
-  nickname: string;
-  profileImage: string;
-}
-
-interface UserProfile {
-  userId: string;
-  nickname: string;
-  profileImage: string;
-  bio: string;
-  musicGenres: string[];
-  bookGenres: string[];
-  isMatched?: boolean;
-}
-
-interface RecommendedUser {
-  userId: string;
-  nickname: string;
-  profileImage: string;
-}
-
 interface ProfileSectionProps {
-  profile: Pick<UserProfile, 'nickname' | 'profileImage' | 'bio'>;
+  profile: Pick<UserProfileResponse, 'nickname' | 'profileImage' | 'bio'>;
 }
 
 interface GenreCardProps {
@@ -75,6 +55,28 @@ interface RecommendedUserListProps {
 interface ProfileButtonsProps {
   userId: string;
   isMyProfile: boolean;
-  isMatched?: boolean;
   onProfileUpdate?: () => void;
+}
+
+interface UpdateProfileRequest {
+  nickname?: string;
+  bio?: string;
+  musicGenres?: string[];
+  bookGenres?: string[];
+}
+
+interface UserProfileResponse {
+  id: string;
+  nickname: string;
+  profileImage: string;
+  bio: string;
+  musicGenres: string[];
+  bookGenres: string[];
+  recommendedUsers?: {
+    userId: number;
+    nickname: string;
+    profileImage: string;
+  }[];
+  following: boolean;
+  myProfile: boolean;
 }

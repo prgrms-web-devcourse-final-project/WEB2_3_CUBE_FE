@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import ToolBoxButton from './components/ToolBoxButton';
 import { SearchModal } from '@components/search-modal/SearchModal';
 import BookCaseList from './components/BookCaseList';
 import DataList from '@components/datalist/DataList';
 import { bookAPI } from '@apis/book';
 import ModalBackground from '@components/ModalBackground';
-import { useUserStore } from '../../store/useUserStore';
-import { useNavigate } from 'react-router-dom';
+import { BookCaseListType } from '@/types/book';
 
 const BookCasePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,22 +22,16 @@ const BookCasePage = () => {
   const [scrollLeft, setScrollLeft] = useState(0);
   const [scrollTop, setScrollTop] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { user } = useUserStore();
   const navigate = useNavigate();
+  const { userId } = useParams();
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
         setIsLoading(true);
-        console.log('Fetching books...');
+        if (!userId) return;
 
-        // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
-        if (!user) {
-          navigate('/login');
-          return;
-        }
-
-        const response = await bookAPI.getBookCaseList(user.userId, 1);
+        const response = await bookAPI.getBookCaseList(Number(userId), 45);
 
         console.log('API Response:', response);
 
@@ -75,7 +69,24 @@ const BookCasePage = () => {
       }
     };
     fetchBooks();
-  }, [user, navigate]);
+  }, [userId, navigate]);
+
+  // 초기 스크롤 위치 설정
+  useEffect(() => {
+    if (containerRef.current && !isLoading) {
+      const container = containerRef.current;
+      // 가로 중앙
+      const scrollX = (container.scrollWidth - container.clientWidth) / 2;
+      // 세로 중앙
+      const scrollY = (container.scrollHeight - container.clientHeight) / 2;
+
+      container.scrollTo({
+        left: scrollX,
+        top: scrollY,
+        behavior: 'smooth',
+      });
+    }
+  }, [isLoading]);
 
   const handleDragStart = (clientX: number, clientY: number) => {
     setIsDragging(true);
@@ -127,7 +138,7 @@ const BookCasePage = () => {
   return (
     <div
       ref={containerRef}
-      className='w-full h-screen overflow-auto bg-white select-none cursor-grab active:cursor-grabbing'
+      className='w-full h-screen overflow-auto bg-white select-none cursor-grab active:cursor-grabbing scrollbar-none'
       onMouseDown={(e) => handleDragStart(e.pageX, e.pageY)}
       onMouseMove={(e) => handleDragMove(e.pageX, e.pageY)}
       onMouseUp={handleDragEnd}
@@ -173,6 +184,10 @@ const BookCasePage = () => {
             datas={dataListItems}
             type='book'
             onDelete={handleDeleteBooks}
+            hasMore={false}
+            isLoading={isLoading}
+            fetchMore={() => {}}
+            userId={Number(userId)}
           />
         </ModalBackground>
       )}

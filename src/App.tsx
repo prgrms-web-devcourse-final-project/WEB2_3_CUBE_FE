@@ -2,54 +2,45 @@ import { BrowserRouter } from 'react-router-dom';
 import Router from './routes/Router';
 import { Toast } from '@components/Toast';
 import { useEffect, useState } from 'react';
-import { logoutAPI, refreshAccessTokenAPI } from '@apis/login';
+import { useCookies } from 'react-cookie';
+import { refreshAccessTokenAPI } from '@apis/auth';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 function App() {
-  const accessToken = sessionStorage.getItem('accessToken');
-  const expiryTime = Number(sessionStorage.getItem('expiryTime'));
-  const [isLoading, setIsLoading] = useState(true);
+  const queryClient = new QueryClient();
+
+  const [cookies] = useCookies(['accessToken', 'refreshToken']);
+  const [isTokenRefreshing, setIsTokenRefreshing] = useState(false);
 
   useEffect(() => {
-    const validateAccessToken = async () => {
-      try {
-        if (accessToken) {
-          const refreshBeforeExpire = async () => {
-            if (!expiryTime) return;
-            const currentTime = Math.floor(Date.now() / 1000); // 현재 시간 (초 단위)
+    const accessToken = cookies.accessToken;
+    const refreshToken = cookies.refreshToken;
 
-            // const refreshTimeThreshold = expiryTime - currentTime - 3580; // 만료되기 59분 40초전
-            const refreshTimeThreshold = expiryTime - currentTime - 300; // 만료되기 5분전
-
-            if (refreshTimeThreshold > 0) {
-              console.log(refreshTimeThreshold);
-              setTimeout(async () => {
-                refreshAccessTokenAPI();
-              }, refreshTimeThreshold * 1000);
-            } else {
-              refreshAccessTokenAPI();
-            }
-          };
-          await refreshBeforeExpire();
+    const fetchTokenData = async () => {
+      // 엑세스 토큰 재발급 로직
+      if (!accessToken && refreshToken) {
+        setIsTokenRefreshing(true);
+        try {
+          await refreshAccessTokenAPI(refreshToken);
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setIsTokenRefreshing(false);
         }
-      } catch (error) {
-        console.error(error);
-        // accessToken 재발행 실패시 로그아웃
-        await logoutAPI();
-      } finally {
-        setIsLoading(false);
       }
     };
-
-    validateAccessToken(); // accessToken이 없으면 갱신 시도
+    fetchTokenData();
   }, []);
 
-  if (isLoading) return <div>LOADING...</div>;
+  if (isTokenRefreshing) return <div>로딩중...</div>;
 
   return (
-    <BrowserRouter>
-      <Toast />
-      <Router />
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Toast />
+        <Router />
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 }
 

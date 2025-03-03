@@ -3,15 +3,15 @@ import { SearchInput } from './SearchInput';
 import { SearchList } from './SearchList';
 import { SearchResult } from './SearchResult';
 import { useSearch } from '@/hooks/useSearch';
-import type { SearchItemType } from '@/types/search';
 import ModalBackground from '@/components/ModalBackground';
 import { SEARCH_THEME } from '@/constants/searchTheme';
+import { motion } from 'framer-motion';
 
 interface SearchModalProps {
   title: string;
   onClose: () => void;
   type: 'CD' | 'BOOK';
-  onSelect: (item: SearchItemType) => void;
+  onSelect: (item?: SearchItemType) => void;
 }
 
 export const SearchModal = ({
@@ -32,11 +32,21 @@ export const SearchModal = ({
 
   return (
     <ModalBackground onClose={onClose}>
-      <div className='p-4 border-2 border-white bg-white/30 filter-blur rounded-3xl w-[1000px] h-[657px]'>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, x: 20 }}
+        animate={{ opacity: 1, scale: 1, x: 0 }}
+        exit={{ opacity: 0, scale: 0.95, x: 20 }}
+        transition={{
+          duration: 0.2,
+          ease: 'easeOut',
+        }}
+        className='p-4 border-2 border-white bg-white/30 filter-blur rounded-3xl w-[1000px] h-[657px]'>
         <div className='gap-2 p-10 w-full h-full bg-[#FCF7FD] rounded-2xl item-between'>
           {/* 제목 + 검색 바 + 아이템 리스트 */}
           <div className='w-1/2 h-full'>
-            <h2 className={`mb-7 text-3xl font-bold ${theme.title}`}>{title}</h2>
+            <h2 className={`mb-7 text-3xl font-bold ${theme.title}`}>
+              {title}
+            </h2>
             <SearchInput
               value={query}
               onChange={handleSearch}
@@ -51,7 +61,7 @@ export const SearchModal = ({
             />
           </div>
           {/* 검색 결과 */}
-          <div className='pl-8 w-1/2'>
+          <div className='w-1/2 pl-8'>
             <SearchResult
               item={selectedItem}
               type={type}
@@ -63,7 +73,7 @@ export const SearchModal = ({
             />
           </div>
         </div>
-      </div>
+      </motion.div>
     </ModalBackground>
   );
 };

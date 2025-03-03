@@ -6,14 +6,29 @@ import { SearchInput } from '@components/search-modal/SearchInput';
 import { useDebounce } from '@hooks/useDebounce';
 import SkeletonItem from '@components/SkeletonItem';
 import { bookAPI } from '@/apis/book';
+import { deleteCdsFromMyRack } from '@/apis/cd';
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import axiosInstance from '@/apis/axiosInstance';
 
 interface DataListProps {
   datas: DataListInfo[];
   type: string;
   onDelete?: (deletedIds: string[]) => void;
+  hasMore: boolean;
+  isLoading: boolean;
+  fetchMore: () => void;
+  userId: number;
 }
 
-export default function DataList({ datas, type, onDelete }: DataListProps) {
+export default function DataList({
+  datas,
+  type,
+  onDelete,
+  hasMore,
+  isLoading: isLoadingMore,
+  fetchMore,
+  userId,
+}: DataListProps) {
   const isBook = type === 'book' ? true : false;
   const mainColor = isBook ? '#2656CD' : '#7838AF';
   const subColor = isBook ? 'text-[#3E507D]' : 'text-[#60308C]';
@@ -28,6 +43,12 @@ export default function DataList({ datas, type, onDelete }: DataListProps) {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [isFocused, setIsFocused] = useState(false);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const { listRef, observerRef } = useInfiniteScroll({
+    fetchMore,
+    isLoading: isLoadingMore,
+    hasMore,
+  });
 
   // datas가 변경될 때마다 filteredDatas 업데이트
   useEffect(() => {
@@ -61,9 +82,26 @@ export default function DataList({ datas, type, onDelete }: DataListProps) {
 
   const handleDelete = async () => {
     try {
-      if (isBook && selectedIds.length > 0) {
-        const myBookIds = selectedIds.join(',');
-        await bookAPI.deleteBookFromMyBook('1', myBookIds);
+      if (selectedIds.length > 0) {
+        if (isBook) {
+          // 도서 삭제 로직
+          const myBookIds = selectedIds.join(',');
+          await bookAPI.deleteBookFromMyBook(String(userId), myBookIds);
+        } else {
+          // CD 삭제 로직
+          if (selectedIds.length === 1) {
+            // 단일 CD 삭제
+            await axiosInstance.delete(
+              `/api/my-cd?userId=${userId}&myCdIds=${selectedIds[0]}`,
+            );
+          } else {
+            // 다중 CD 삭제
+            const myCdIds = selectedIds.join(',');
+            await axiosInstance.delete(
+              `/api/my-cd?userId=${userId}&myCdIds=${myCdIds}`,
+            );
+          }
+        }
 
         const updatedDatas = filteredDatas.filter(
           (data) => !selectedIds.includes(data.id),
@@ -96,12 +134,7 @@ export default function DataList({ datas, type, onDelete }: DataListProps) {
     setIsEdit(false);
   };
 
-  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setCurrentInput(event.target.value);
-  // };
-
   useEffect(() => {
-    // 입력값에 대한 디바운싱이 적용됐을때 두 값이 같지않을 경우
     if (currentInput !== debouncedQuery) {
       setIsSearching(true);
     }
@@ -120,7 +153,6 @@ export default function DataList({ datas, type, onDelete }: DataListProps) {
   }, [debouncedQuery]);
 
   useEffect(() => {
-    // 입력값이 입력되기 시작했을때
     if (currentInput !== debouncedQuery) {
       setIsSearching(true);
     }
@@ -180,7 +212,9 @@ export default function DataList({ datas, type, onDelete }: DataListProps) {
           mainColor={mainColor}
           bgColor={inputBgColor}
         />
-        <ul className='flex flex-col h-full gap-6 pr-2 overflow-auto scrollbar'>
+        <ul
+          ref={listRef}
+          className='flex flex-col max-h-[calc(100vh-200px)] gap-6 pr-2 overflow-y-auto scrollbar'>
           {isSearching ? (
             Array(5)
               .fill(0)
@@ -191,23 +225,43 @@ export default function DataList({ datas, type, onDelete }: DataListProps) {
                 />
               ))
           ) : filteredDatas.length > 0 ? (
-            filteredDatas.map((data, index) => {
-              return isEdit ? (
-                <EditStatusItem
-                  key={index}
-                  data={data}
-                  isBook={isBook}
-                  isSelected={selectedIds.includes(data.id)}
-                  onSelect={() => handleItemSelect(data.id)}
-                />
-              ) : (
-                <NoEditStatusItem
-                  key={index}
-                  data={data}
-                  isBook={isBook}
-                />
-              );
-            })
+            <>
+              {filteredDatas.map((data, index) => {
+                return isEdit ? (
+                  <EditStatusItem
+                    key={index}
+                    data={data}
+                    isBook={isBook}
+                    isSelected={selectedIds.includes(data.id)}
+                    onSelect={() => handleItemSelect(data.id)}
+                  />
+                ) : (
+                  <NoEditStatusItem
+                    key={index}
+                    data={data}
+                    isBook={isBook}
+                  />
+                );
+              })}
+              {hasMore && (
+                <div
+                  ref={observerRef}
+                  className='py-2'>
+                  {isLoadingMore && (
+                    <div className='flex flex-col gap-6'>
+                      {Array(3)
+                        .fill(0)
+                        .map((_, index) => (
+                          <SkeletonItem
+                            key={`loading-more-${index}`}
+                            isBook={isBook}
+                          />
+                        ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
           ) : (
             <div className='flex flex-col items-center justify-center h-40 text-gray-500'>
               <p>검색 결과가 없습니다.</p>
