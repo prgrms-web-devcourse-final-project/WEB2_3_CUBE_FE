@@ -9,6 +9,7 @@ import { bookAPI } from '@/apis/book';
 import { deleteCdsFromMyRack } from '@/apis/cd';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import axiosInstance from '@/apis/axiosInstance';
+import { useToastStore } from '@/store/useToastStore';
 
 interface DataListProps {
   datas: DataListInfo[];
@@ -43,6 +44,7 @@ export default function DataList({
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [isFocused, setIsFocused] = useState(false);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  const { showToast } = useToastStore();
 
   const { listRef, observerRef } = useInfiniteScroll({
     fetchMore,
@@ -82,36 +84,52 @@ export default function DataList({
 
   const handleDelete = async () => {
     try {
-      if (selectedIds.length > 0) {
-        if (isBook) {
-          // 도서 삭제 로직
-          const myBookIds = selectedIds.join(',');
-          await bookAPI.deleteBookFromMyBook(String(userId), myBookIds);
-        } else {
-          // CD 삭제 로직
-          if (selectedIds.length === 1) {
-            // 단일 CD 삭제
-            await axiosInstance.delete(
-              `/api/my-cd?userId=${userId}&myCdIds=${selectedIds[0]}`,
-            );
-          } else {
-            // 다중 CD 삭제
-            const myCdIds = selectedIds.join(',');
-            await axiosInstance.delete(
-              `/api/my-cd?userId=${userId}&myCdIds=${myCdIds}`,
-            );
-          }
-        }
-
-        const updatedDatas = filteredDatas.filter(
-          (data) => !selectedIds.includes(data.id),
-        );
-        setFilteredDatas(updatedDatas);
-        onDelete?.(selectedIds);
-        setSelectedIds([]);
+      if (selectedIds.length === 0) {
+        showToast('삭제할 항목을 선택해주세요.', 'error');
+        return;
       }
-    } catch (error) {
+
+      if (isBook) {
+        // 도서 삭제 로직
+        const myBookIds = selectedIds.join(',');
+        await bookAPI.deleteBookFromMyBook(String(userId), myBookIds);
+      } else {
+        // CD 삭제 로직
+        if (selectedIds.length === 1) {
+          // 단일 CD 삭제
+          await axiosInstance.delete(
+            `/api/my-cd?userId=${userId}&myCdIds=${selectedIds[0]}`,
+          );
+        } else {
+          // 다중 CD 삭제
+          const myCdIds = selectedIds.join(',');
+          await axiosInstance.delete(
+            `/api/my-cd?userId=${userId}&myCdIds=${myCdIds}`,
+          );
+        }
+      }
+
+      // UI 업데이트
+      const updatedDatas = datas.filter(
+        (data) => !selectedIds.includes(data.id)
+      );
+      setFilteredDatas(updatedDatas);
+      onDelete?.(selectedIds);
+      setSelectedIds([]);
+      setIsEdit(false);  // 편집 모드 종료
+      
+      // 성공 메시지
+      showToast(
+        `선택한 ${isBook ? '책' : 'CD'}이 삭제되었습니다.`,
+        'success'
+      );
+
+    } catch (error: any) {
       console.error('삭제 중 오류가 발생했습니다:', error);
+      showToast(
+        error.response?.data?.message || '삭제 중 오류가 발생했습니다.',
+        'error'
+      );
     }
   };
 
@@ -160,10 +178,10 @@ export default function DataList({
 
   return (
     <div className='absolute top-0 right-0  w-[444px] h-screen bg-[#FFFAFA] overflow-hidden rounded-tl-3xl rounded-bl-3xl z-10'>
-      <div className='h-full pr-10 pl-11 pt-15 rounded-tl-3xl rounded-bl-3xl '>
+      <div className='pr-10 pl-11 h-full rounded-tl-3xl rounded-bl-3xl pt-15'>
         <span
           className={classNames(
-            `text-center text-4xl  font-bold leading-normal`,
+            `text-4xl font-bold leading-normal text-center`,
             `text-[${mainColor}]`,
           )}>
           PlayList
@@ -171,10 +189,10 @@ export default function DataList({
 
         {/* 총 갯수, 편집 버튼 */}
         <div
-          className={`flex  items-center justify-between gap-4 mt-15 mb-7 font-semibold   `}>
+          className={`flex gap-4 justify-between items-center mb-7 font-semibold mt-15`}>
           <span
             className={classNames(
-              `text-[18px] `,
+              `text-[18px]`,
               `${subColor}`,
               'font-semibold',
             )}>{`총 ${datas.length}개`}</span>
@@ -182,12 +200,12 @@ export default function DataList({
           {isEdit ? (
             <div className='flex items-center gap-4.5'>
               <button
-                className={`text-[${mainColor}]  cursor-pointer`}
+                className={`cursor-pointer text-[${mainColor}]`}
                 onClick={handleDelete}>
                 삭제
               </button>
               <button
-                className={classNames(`cursor-pointer `, `${completeColor}`)}
+                className={classNames(`cursor-pointer`, `${completeColor}`)}
                 onClick={handleComplete}>
                 완료
               </button>
@@ -195,7 +213,7 @@ export default function DataList({
           ) : (
             <button
               className={classNames(
-                `cursor-pointer text-[16px] font-semibold`,
+                `font-semibold cursor-pointer text-[16px]`,
                 `text-[${mainColor}]`,
               )}
               onClick={handleEdit}>
@@ -263,7 +281,7 @@ export default function DataList({
               )}
             </>
           ) : (
-            <div className='flex flex-col items-center justify-center h-40 text-gray-500'>
+            <div className='flex flex-col justify-center items-center h-40 text-gray-500'>
               <p>검색 결과가 없습니다.</p>
             </div>
           )}

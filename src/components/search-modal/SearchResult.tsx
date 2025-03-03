@@ -18,6 +18,7 @@ interface SearchResultProps {
   error: string | null;
   onSelect: (item?: SearchItemType) => void;
   onClose: () => void;
+  onSuccess?: (item: SearchItemType) => void;
 }
 
 export const SearchResult = ({
@@ -27,6 +28,7 @@ export const SearchResult = ({
   error,
   onSelect,
   onClose,
+  onSuccess,
 }: SearchResultProps) => {
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
@@ -55,9 +57,9 @@ export const SearchResult = ({
         await bookAPI.addBookToMyBook(bookData, user.userId);
         onClose();
         showToast('책장에 책이 추가되었어요!', 'success');
+        onSuccess?.(item);
       } else if (type === 'CD') {
         // CD 추가 요청 로직
-
         const cdData: PostCDInfo = {
           title: item.title,
           artist: item.artist,

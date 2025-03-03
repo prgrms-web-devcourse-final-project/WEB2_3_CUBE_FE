@@ -117,17 +117,38 @@ const BookCasePage = () => {
   };
 
   const handleDeleteBooks = (deletedIds: string[]) => {
+    // books 업데이트
     setBooks((prevBooks) =>
-      prevBooks.filter((book) => !deletedIds.includes(book.id.toString())),
+      prevBooks.filter((book) => !deletedIds.includes(book.id.toString()))
     );
+    
+    // dataListItems 업데이트
     setDataListItems((prevItems) =>
-      prevItems.filter((item) => !deletedIds.includes(item.id)),
+      prevItems.filter((item) => !deletedIds.includes(item.id))
     );
+    
+    // 전체 카운트 업데이트
     setTotalCount((prev) => prev - deletedIds.length);
   };
 
   const bookCaseRows =
     books.length <= 45 ? 3 : Math.ceil(books.length / BOOKS_PER_ROW);
+
+  const handleBookAdd = (newBook: BookCaseListType) => {
+    setBooks((prevBooks) => [...prevBooks, newBook]);
+    setDataListItems((prevItems) => [
+      ...prevItems,
+      {
+        id: newBook.id.toString(),
+        title: newBook.title,
+        author: newBook.author,
+        publisher: newBook.publisher,
+        released_year: newBook.publishedDate,
+        imageUrl: newBook.imageURL,
+      },
+    ]);
+    setTotalCount((prev) => prev + 1);
+  };
 
   if (isLoading) {
     return <div>로딩중...</div>;
@@ -199,6 +220,17 @@ const BookCasePage = () => {
           type='BOOK'
           onClose={() => setIsModalOpen(false)}
           onSelect={() => {}}
+          onSuccess={(item) => {
+            handleBookAdd({
+              id: item.id,
+              title: item.title,
+              author: item.author,
+              publisher: item.publisher,
+              publishedDate: new Date(item.date).toISOString().split('T')[0],
+              imageURL: item.imageUrl,
+              genreNames: item.genres,
+            });
+          }}
         />
       )}
 
