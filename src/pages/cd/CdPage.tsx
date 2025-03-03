@@ -24,6 +24,7 @@ export default function CdPage() {
     const fetchCdInfo = async () => {
       try {
         const result = await getCdInfo(myCdId, userId);
+
         setCdInfo(result);
       } catch (error) {
         console.error(error);
