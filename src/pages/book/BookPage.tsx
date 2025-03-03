@@ -5,6 +5,8 @@ import BookReviewViewer from '../book-viewer/BookViewerPage';
 import { bookAPI } from '@/apis/book';
 import { useToastStore } from '@/store/useToastStore';
 import { BookReviewData } from '@/types/book';
+import { LoadingManager } from 'three';
+import Loading from '@components/Loading';
 
 const BookPage = () => {
   const { bookId, userId } = useParams();
@@ -79,7 +81,7 @@ const BookPage = () => {
     fetchData();
   }, [bookId, isMyReview, isEditMode, navigate, showToast]);
 
-  if (isLoading || !bookInfo) return <div>로딩 중...</div>;
+  if (isLoading || !bookInfo) return <Loading />;
 
   // 다른 유저의 서평이면서 수정 모드인 경우 접근 불가
   if (!isMyReview && isEditMode) {

@@ -7,6 +7,7 @@ import DataList from '@components/datalist/DataList';
 import { bookAPI } from '@apis/book';
 import ModalBackground from '@components/ModalBackground';
 import { BookCaseListType } from '@/types/book';
+import Loading from '@components/Loading';
 
 const BookCasePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -119,14 +120,14 @@ const BookCasePage = () => {
   const handleDeleteBooks = (deletedIds: string[]) => {
     // books 업데이트
     setBooks((prevBooks) =>
-      prevBooks.filter((book) => !deletedIds.includes(book.id.toString()))
+      prevBooks.filter((book) => !deletedIds.includes(book.id.toString())),
     );
-    
+
     // dataListItems 업데이트
     setDataListItems((prevItems) =>
-      prevItems.filter((item) => !deletedIds.includes(item.id))
+      prevItems.filter((item) => !deletedIds.includes(item.id)),
     );
-    
+
     // 전체 카운트 업데이트
     setTotalCount((prev) => prev - deletedIds.length);
   };
@@ -144,14 +145,14 @@ const BookCasePage = () => {
         author: newBook.author,
         publisher: newBook.publisher,
         released_year: newBook.publishedDate,
-        imageUrl: newBook.imageURL,
+        imageUrl: newBook.imageUrl,
       },
     ]);
     setTotalCount((prev) => prev + 1);
   };
 
   if (isLoading) {
-    return <div>로딩중...</div>;
+    return <Loading />;
   }
 
   // 책을 각 줄에 분배하는 함수
@@ -190,7 +191,7 @@ const BookCasePage = () => {
   return (
     <div
       ref={containerRef}
-      className='w-full h-screen overflow-auto bg-white select-none cursor-grab active:cursor-grabbing scrollbar-none'
+      className='overflow-auto w-full h-screen bg-white select-none cursor-grab active:cursor-grabbing scrollbar-none'
       onMouseDown={(e) => handleDragStart(e.pageX, e.pageY)}
       onMouseMove={(e) => handleDragMove(e.pageX, e.pageY)}
       onMouseUp={handleDragEnd}
@@ -222,13 +223,14 @@ const BookCasePage = () => {
           onSelect={() => {}}
           onSuccess={(item) => {
             handleBookAdd({
-              id: item.id,
+              id: parseInt(item.id),
               title: item.title,
               author: item.author,
               publisher: item.publisher,
               publishedDate: new Date(item.date).toISOString().split('T')[0],
-              imageURL: item.imageUrl,
+              imageUrl: item.imageUrl,
               genreNames: item.genres,
+              page: 0,
             });
           }}
         />

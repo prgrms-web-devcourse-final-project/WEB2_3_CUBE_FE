@@ -5,6 +5,8 @@ import EmptyStatus from './components/EmptyStatus';
 import { useUserStore } from '@/store/useUserStore';
 import { getCdRack } from '@apis/cd';
 import { useParams } from 'react-router-dom';
+import { Loader } from '@react-three/drei';
+import Loading from '@components/Loading';
 
 export default function CdRackPage() {
   const [cdRackInfo, setCDRackInfo] = useState({ data: [], nextCursor: 0 });
@@ -40,7 +42,7 @@ export default function CdRackPage() {
   }, [page]);
 
   if (isLoading) {
-    return <div>로딩중...</div>;
+    return <Loading />;
   }
 
   return (

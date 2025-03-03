@@ -14,6 +14,7 @@ import YouTube, { YouTubeEvent } from 'react-youtube';
 import { useParams } from 'react-router-dom';
 import { getCdRackSearch } from '@apis/cd';
 import { useUserStore } from '@/store/useUserStore';
+import Loading from '@components/Loading';
 
 export default function CdPlayer({
   cdInfo,
@@ -252,7 +253,7 @@ export default function CdPlayer({
     [cdReady.isLooping],
   );
 
-  if (isLoading) return <div>로딩중...</div>;
+  if (isLoading) return <Loading />;
   return (
     <>
       <YouTube
@@ -288,8 +289,8 @@ export default function CdPlayer({
           />
         </div>
 
-        <div className='relative w-full h-full '>
-          <div className='absolute flex items-center bottom-10 left-10 '>
+        <div className='relative w-full h-full'>
+          <div className='flex absolute bottom-10 left-10 items-center'>
             {/* 앨범 이미지 */}
             <img
               className='w-20 h-20 rounded-[8px]'
@@ -297,14 +298,14 @@ export default function CdPlayer({
               alt='CD 앨범 이미지'
             />
             {/* 음량 */}
-            <div className='flex items-center justify-center gap-2 pl-13'>
+            <div className='flex gap-2 justify-center items-center pl-13'>
               {cdReady.isMuted ? (
                 <button
                   onClick={() =>
                     handleChangeCdVolume(cdStateChangeEvent, '20')
                   }>
                   <img
-                    className='w-8 h-8 cursor-pointer '
+                    className='w-8 h-8 cursor-pointer'
                     src={muteIcon}
                     alt='음량 아이콘'
                   />
@@ -312,7 +313,7 @@ export default function CdPlayer({
               ) : (
                 <button onClick={() => handleMuteCdVolume(cdStateChangeEvent)}>
                   <img
-                    className='w-8 h-8 cursor-pointer '
+                    className='w-8 h-8 cursor-pointer'
                     src={soundIcon}
                     alt='음량 아이콘'
                   />
@@ -344,7 +345,7 @@ export default function CdPlayer({
 
             <button onClick={() => handleOnOffCd(cdStateChangeEvent)}>
               <img
-                className='fill-black w-13 h-13 '
+                className='fill-black w-13 h-13'
                 src={cdReady.isPlaying ? pauseSong : playSong}
                 alt='노래 일시정지 버튼'
               />
