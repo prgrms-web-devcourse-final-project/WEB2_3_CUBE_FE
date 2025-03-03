@@ -7,7 +7,7 @@ import Loading from '@components/Loading';
 
 const CdTemplate = React.memo(() => {
   const [isEdit, setIsEdit] = useState(false);
-  const [templateData, setTemplateData] = useState(null);
+  const [templateData, setTemplateData] = useState<TemplateData>(null);
   const [isLoading, setIsLoading] = useState(true);
   const myCdId = Number(useParams().cdId);
 
@@ -15,15 +15,16 @@ const CdTemplate = React.memo(() => {
     const fetchTemplateData = async () => {
       try {
         const templateData = await getCdTemplate(myCdId);
-        setTemplateData(templateData); // 템플릿 조회
+        setTemplateData(templateData);
       } catch (error) {
         console.error(error, '템플릿을 작성해주세요!');
+        setTemplateData(null);
       } finally {
         setIsLoading(false);
       }
     };
     fetchTemplateData();
-  }, []);
+  }, [myCdId]);
 
   if (isLoading) return <Loading />;
   return (

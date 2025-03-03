@@ -75,8 +75,10 @@ export const SearchResult = ({
           setIsAlertModalOpen(true);
           return;
         }
-        onSelect(item);
-        await addCdToMyRack(cdData);
+        const result = await addCdToMyRack(cdData);
+        onSelect({ ...item, id: result.myCdId });
+        showToast('랙에 cd가 추가되었어요!', 'success');
+        onClose();
       }
     } catch (error: any) {
       if (

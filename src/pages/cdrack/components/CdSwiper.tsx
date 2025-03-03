@@ -14,7 +14,6 @@ interface CdSwiperProps {
 
 const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
   ({ cdRackDatas, onActiveTrackId }, ref) => {
-    const cdData = cdRackDatas;
     const navigate = useNavigate();
     const [rotateX, setRotateX] = useState<{ [key: number]: number }>({});
     const [rotateY, setRotateY] = useState<{ [key: number]: number }>({});
@@ -72,7 +71,7 @@ const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
           onActiveTrackId(activeIndex);
         }}
         className='mySwiper'>
-        {cdData.map((data: CDInfo, index: number) => (
+        {cdRackDatas.map((data: CDInfo, index: number) => (
           <SwiperSlide key={data.myCdId}>
             <div
               className=' cursor-pointer  transition-transform duration-500 ease-linear relative '

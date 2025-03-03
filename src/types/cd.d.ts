@@ -15,7 +15,7 @@ interface CDInfo {
   genres: string[];
   coverUrl: string;
   youtubeUrl: string;
-  album?: string;
+  album: string;
   duration: number;
 }
 
@@ -61,6 +61,12 @@ interface PostCDInfo {
 }
 
 // template type
+interface TemplateData {
+  comment1: string | null;
+  comment2: string | null;
+  comment3: string | null;
+  comment4: string | null;
+}
 
 interface TemplateProps {
   onToggleEdit: () => void;
@@ -72,12 +78,7 @@ interface TemplateProps {
       comment4: string;
     } | null,
   ) => void;
-  templateData: {
-    comment1: string | null;
-    comment2: string | null;
-    comment3: string | null;
-    comment4: string | null;
-  };
+  templateData: TemplateData;
 }
 
 // cd comments
