@@ -27,8 +27,8 @@ export interface BookCaseListType {
   author: string;
   publisher: string;
   publishedDate: string;
-  imageURL: string;
-  category: string;
+  imageUrl: string;
+  genreNames: string[];
   page: number;
 }
 

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { refreshAccessTokenAPI } from '@apis/auth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import Loading from '@components/Loading';
 
 function App() {
   const queryClient = new QueryClient();
@@ -32,7 +33,7 @@ function App() {
     fetchTokenData();
   }, []);
 
-  if (isTokenRefreshing) return <div>로딩중...</div>;
+  if (isTokenRefreshing) return <Loading />;
 
   return (
     <QueryClientProvider client={queryClient}>

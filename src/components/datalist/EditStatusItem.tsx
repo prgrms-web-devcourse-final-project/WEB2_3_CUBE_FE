@@ -2,6 +2,9 @@ import classNames from 'classnames';
 import check_logo from '@assets/datalist/check-logo.svg';
 import { truncateTitle } from '@utils/truncate';
 
+const AUTHOR_MAX_LENGTH = 8;
+
+
 export default function EditStatusItem({
   data,
   isBook,
@@ -26,7 +29,7 @@ export default function EditStatusItem({
             isBook ? 'bg-[#F1F3FA80]' : 'bg-[#f7f1fa]/50 '
           }`,
         )}>
-        <label className='relative flex items-center justify-center w-4 h-4'>
+        <label className='flex relative justify-center items-center w-4 h-4'>
           {/* 체크 박스 */}
           <input
             type='checkbox'
@@ -34,7 +37,7 @@ export default function EditStatusItem({
             checked={isSelected}
             onChange={onSelect}
             className={classNames(
-              'appearance-none w-4 h-4 rounded-full bg-no-repeat bg-center border cursor-pointer',
+              'w-4 h-4 bg-center bg-no-repeat rounded-full border appearance-none cursor-pointer',
             )}
           />
           {isSelected && (
@@ -53,7 +56,9 @@ export default function EditStatusItem({
             <h4 className='text-[18px] font-semibold truncate'>
               {truncateTitle(data.title, TITLE_MAX_LENGTH)}
             </h4>
-            <span className='text-[14px]'>{data.artist || data.author}</span>
+            <span className='text-[14px]'>
+              {data.artist || truncateTitle(data.author, AUTHOR_MAX_LENGTH)}
+            </span>
           </div>
 
           <div>

@@ -349,18 +349,18 @@ export default function CdPlayer({
           style={{ display: 'none' }}
         />
 
-        <section className='relative w-full h-full  flex items-center pr-4'>
+        <section className='flex relative items-center pr-4 w-full h-full'>
           {/* 왼쪽 그룹: 앨범 이미지와 음량 조절 */}
-          <article className='flex items-center gap-14 flex-1 h-full '>
+          <article className='flex flex-1 gap-14 items-center h-full'>
             {/* 앨범 이미지 */}
             <img
-              className='h-full block'
+              className='block h-full'
               src={cdInfo.coverUrl}
               alt='CD 앨범 이미지'
             />
 
             {/* 음량 */}
-            <div className='flex items-center justify-center gap-2'>
+            <div className='flex gap-2 justify-center items-center'>
               {cdReady.isMuted ? (
                 <button
                   onClick={() =>
@@ -390,7 +390,7 @@ export default function CdPlayer({
                 onChange={(e) =>
                   handleChangeCdVolume(cdStateChangeEvent, e.target.value)
                 }
-                className='volume-range w-20'
+                className='w-20 volume-range'
               />
             </div>
           </article>

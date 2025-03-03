@@ -3,6 +3,7 @@ import NotEditTemplate from './NotEditTemplate';
 import EditTemplate from './EditTemplate';
 import { getCdTemplate } from '@apis/cd';
 import { useParams } from 'react-router-dom';
+import Loading from '@components/Loading';
 
 const CdTemplate = React.memo(() => {
   const [isEdit, setIsEdit] = useState(false);
@@ -24,7 +25,7 @@ const CdTemplate = React.memo(() => {
     fetchTemplateData();
   }, []);
 
-  if (isLoading) <div>Loading...</div>;
+  if (isLoading) return <Loading />;
   return (
     <div
       className='w-[32%]  text-white rounded-3xl border-2   border-[#FCF7FD]
