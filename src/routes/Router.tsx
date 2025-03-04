@@ -11,6 +11,7 @@ import RoomPage from '../pages/room/RoomPage';
 import ProfileCardPage from '@pages/profile-card/ProfileCardPage';
 import ProfileCardEditPage from '@pages/profile-card-edit/ProfileCardEditPage';
 import Redirection from '@pages/login/components/Redirection';
+import EventPage from '@pages/event/EventPage';
 
 const Router = () => {
   return (
@@ -63,6 +64,10 @@ const Router = () => {
       <Route
         path='*'
         element={<NotFoundPage />}
+      />
+      <Route
+        path='/event'
+        element={<EventPage />}
       />
       <Route
         path='/login'

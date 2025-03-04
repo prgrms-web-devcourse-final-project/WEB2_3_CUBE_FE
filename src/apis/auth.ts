@@ -59,6 +59,5 @@ export const logoutAPI = async () => {
   localStorage.removeItem('user-storage');
   cookies.remove('accessToken', { path: '/' });
   cookies.remove('refreshToken', { path: '/' });
-  window.location.href = '/login';
   return response.data;
 };
