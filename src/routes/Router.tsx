@@ -8,7 +8,6 @@ import NotFoundPage from '@pages/NotFoundPage';
 import BaseLayout from '@routes/layout/BaseLayout';
 import CdRackPage from '@pages/cdrack/CdRackPage';
 import RoomPage from '../pages/room/RoomPage';
-import RequireAuth from './layout/RequireAuth';
 import ProfileCardPage from '@pages/profile-card/ProfileCardPage';
 import ProfileCardEditPage from '@pages/profile-card-edit/ProfileCardEditPage';
 import Redirection from '@pages/login/components/Redirection';
@@ -20,57 +19,55 @@ const Router = () => {
         path='/oauth/callback'
         element={<Redirection />}
       />
-      <Route element={<RequireAuth />}>
-        {/* 헤더가 필요한 페이지 */}
-        <Route element={<BaseLayout hasHeader={true} />}>
-          <Route
-            path='/'
-            element={<MainPage />}
-          />
-          <Route
-            path='/bookcase/:userId'
-            element={<BookCasePage />}
-          />
-          <Route
-            path='/cdrack/:userId'
-            element={<CdRackPage />}
-          />
-          <Route
-            path='/room/:userId'
-            element={<RoomPage />}
-          />
-          <Route
-            path='/profile/:userId'
-            element={<ProfileCardPage />}
-          />
-          <Route
-            path='/profile/:userId/edit'
-            element={<ProfileCardEditPage />}
-          />
-        </Route>
-        {/* 내 서평 보기/작성/수정 */}
+      {/* 헤더가 필요한 페이지 */}
+      <Route element={<BaseLayout hasHeader={true} />}>
         <Route
-          path='/book/:bookId'
-          element={<BookPage />}
-        />
-        {/* 다른 유저의 서평 보기 */}
-        <Route
-          path='/book/:bookId/user/:userId'
-          element={<BookPage />}
+          path='/'
+          element={<MainPage />}
         />
         <Route
-          path='/cd/:cdId/user/:userId'
-          element={<CdPage />}
+          path='/bookcase/:userId'
+          element={<BookCasePage />}
         />
         <Route
-          path='*'
-          element={<NotFoundPage />}
+          path='/cdrack/:userId'
+          element={<CdRackPage />}
         />
         <Route
-          path='/login'
-          element={<LoginPage />}
+          path='/room/:userId'
+          element={<RoomPage />}
+        />
+        <Route
+          path='/profile/:userId'
+          element={<ProfileCardPage />}
+        />
+        <Route
+          path='/profile/:userId/edit'
+          element={<ProfileCardEditPage />}
         />
       </Route>
+      {/* 내 서평 보기/작성/수정 */}
+      <Route
+        path='/book/:bookId'
+        element={<BookPage />}
+      />
+      {/* 다른 유저의 서평 보기 */}
+      <Route
+        path='/book/:bookId/user/:userId'
+        element={<BookPage />}
+      />
+      <Route
+        path='/cd/:cdId/user/:userId'
+        element={<CdPage />}
+      />
+      <Route
+        path='*'
+        element={<NotFoundPage />}
+      />
+      <Route
+        path='/login'
+        element={<LoginPage />}
+      />
     </Routes>
   );
 };

@@ -57,7 +57,7 @@ export default function SocialTab() {
           onMouseLeave={() => setNaverImage(naver)}
           className='item-middle gap-[14px] bg-[#06BE34] rounded-[40px] p-3 w-[360px]
         shadow-logo cursor-pointer
-        all-200-eio hover:bg-white hover:text-[#06BE34] '>
+        all-200-eio hover:bg-white hover:text-[#06BE34] text-white '>
           <img
             src={naverImage}
             alt='네이버로 로그인'
