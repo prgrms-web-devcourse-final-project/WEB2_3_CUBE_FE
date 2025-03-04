@@ -6,6 +6,8 @@ import { useNotifications } from '../hooks/useNotifications';
 import { NotificationItem } from './components/NotificationItem';
 import NotificationSkeletonItem from './components/NotificationSkeletonItem';
 import { useEffect } from 'react';
+import { notificationAPI } from '@apis/notification';
+import { useUserStore } from '@/store/useUserStore';
 
 type TabType = 'pendingRead' | 'viewed';
 
@@ -43,14 +45,36 @@ const NotificationModal = ({
     hasMore,
   });
 
+  const handleNotificationsUpdate = (hasUnread: boolean) => {
+    console.log('알림 상태 업데이트:', hasUnread);
+    onNotificationStatusChange(hasUnread);
+  };
+
   useEffect(() => {
-    if (!isLoading) {
-      const hasUnreadNotifications = notifications.some(
-        (notification) => !notification.isRead,
-      );
-      onNotificationStatusChange(hasUnreadNotifications);
+    const checkUnreadNotifications = async () => {
+      const user = useUserStore.getState().user;
+      if (!user) return;
+
+      try {
+        const response = await notificationAPI.getNotifications(
+          user.userId,
+          undefined,
+          20,
+          false, // 읽지 않은 알림만 조회
+        );
+        const hasUnread = response.notifications.some(
+          (notification) => !notification.isRead,
+        );
+        handleNotificationsUpdate(hasUnread);
+      } catch (error) {
+        console.error('알림 상태 확인 실패:', error);
+      }
+    };
+
+    if (isOpen) {
+      checkUnreadNotifications();
     }
-  }, [notifications, isLoading, onNotificationStatusChange]);
+  }, [isOpen]);
 
   return (
     <BaseModal

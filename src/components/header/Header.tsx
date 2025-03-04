@@ -39,13 +39,36 @@ const Header = () => {
     };
   }, [isMenuOpen]);
 
+  // 초기 알림 상태 확인
+  useEffect(() => {
+    const checkUnreadNotifications = async () => {
+      const user = useUserStore.getState().user;
+      if (!user) return;
+
+      try {
+        const response = await notificationAPI.getNotifications(
+          user.userId,
+          undefined,
+          20,
+          false, // 읽지 않은 알림만 조회
+        );
+        console.log('읽지 않은 알림:', response.notifications); // 디버깅용 로그 추가
+        setHasUnreadNotifications(response.notifications.length > 0);
+      } catch (error) {
+        console.error('알림 상태 확인 실패:', error);
+      }
+    };
+
+    checkUnreadNotifications();
+  }, [isNotificationModalOpen]); // 모달이 닫힐 때마다 알림 상태 다시 체크
+
   useEffect(() => {
     const handleNewNotification = (event: CustomEvent) => {
-      console.log('Header: 알림 이벤트 수신:', event.detail);
+      console.log('새 알림 수신:', event.detail); // 디버깅용 로그 추가
       setHasUnreadNotifications(true);
       setIsNewNotification(true);
 
-      // 토스트 알림 추가
+      // 토스트 메시지 추가
       showToast('새로운 알림이 있습니다', 'success');
 
       setTimeout(() => {
@@ -110,19 +133,25 @@ const Header = () => {
             <div className='absolute top-[2.5px] right-[5.7px]'>
               {/* 기본 알림 점 */}
               <div
-                className={`w-2 h-2 bg-orange-500 rounded-full z-50
-                  ${isNewNotification ? 'animate-notification-ping' : ''}`}
+                className={`w-2 h-2 bg-orange-500 rounded-full z-50 ${
+                  isNewNotification ? 'animate-notification-ping' : ''}`}
+                style={{
+                  display:
+                    hasUnreadNotifications || isNewNotification
+                      ? 'block'
+                      : 'none',
+                }}
               />
               {/* 네온 효과 */}
-              {isNewNotification && (
-                <div
-                  className={`absolute top-[2.5px] right-[5.7px] w-8 h-8 rounded-full z-50
-                    animate-notification-glow
-                    before:content-[''] before:absolute before:-inset-4
-                    before:bg-gradient-radial before:from-orange-500/40 before:via-orange-500/20 before:to-transparent
-                    before:rounded-full before:blur-sm`}
-                />
-              )}
+              <div
+                className={`absolute top-0 right-0 w-2 h-2 rounded-full z-40
+                  ${
+                    isNewNotification ? 'animate-notification-glow' : ''} before:content-[''] before:absolute before:-inset-4 before:bg-gradient-radial before:from-orange-500/40 before:via-orange-500/20 before:to-transparent before:rounded-full before:blur-sm`}
+                style={{
+                  opacity: isNewNotification ? 1 : 0,
+                  transition: 'opacity 300ms ease-in-out',
+                }}
+              />
             </div>
             <div className='hidden'>
               hasUnread: {hasUnreadNotifications.toString()}, isNew:{' '}
