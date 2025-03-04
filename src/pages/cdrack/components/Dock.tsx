@@ -9,7 +9,6 @@ interface DockProps {
   isEmpty?: boolean;
   cdRackInfo?: CDRackInfo;
   activeIndex?: number;
-
   onPrevPage?: () => void;
   onNextPage?: (cursor: number) => void;
 }
@@ -22,11 +21,11 @@ const Dock = forwardRef<SwiperRef, DockProps>(
     const [isDockOpen, setIsDockOpen] = useState(false);
 
     const isNoPrev = useRef(
-      cdRackInfo.data[0].myCdId === cdRackInfo.firstMyCdId,
+      cdRackInfo?.data[0].myCdId === cdRackInfo?.firstMyCdId,
     );
     const isNoNext = useRef(
-      cdRackInfo.data[cdRackInfo.data.length - 1].myCdId ===
-        cdRackInfo.lastMyCdId,
+      cdRackInfo?.data[cdRackInfo.data.length - 1].myCdId ===
+        cdRackInfo?.lastMyCdId,
     );
 
     // 슬라이드 위치 변경

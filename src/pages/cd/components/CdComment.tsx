@@ -23,7 +23,6 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
     queryKey: [`cdComments ${myCdId}`],
     queryFn: async () => {
       const result = await getCdCommentAll(myCdId);
-      console.log(result);
       return result || [];
     },
     staleTime: 1000 * 10 * 5,
@@ -75,7 +74,7 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
       return { previousComments };
     },
     onError: (error, newComment, context) => {
-      console.error('onError', error, newComment, context);
+      // console.error('onError', error, newComment, context);
       // 변이 실패 시, 낙관적 업데이트 결과를 이전 사용자 목록으로 되돌리기!
       if (context) {
         queryClient.setQueryData(['cdComments'], context.previousComments);
