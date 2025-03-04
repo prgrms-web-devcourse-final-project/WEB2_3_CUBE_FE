@@ -40,6 +40,7 @@ axiosInstance.interceptors.response.use(
 
       if (!refreshToken) {
         console.error('🚨 Refresh Token이 없습니다. 다시 로그인하세요.');
+        window.location.href = '/login';
         await logoutAPI();
         return Promise.reject(error);
       }
@@ -49,6 +50,7 @@ axiosInstance.interceptors.response.use(
         return axiosInstance(originalRequest);
       } catch (error) {
         console.error('🚨 Refresh Token이 만료되었습니다. 다시 로그인하세요.');
+        window.location.href = '/login';
         await logoutAPI();
         return Promise.reject(error);
       }
