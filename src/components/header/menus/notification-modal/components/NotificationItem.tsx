@@ -28,8 +28,7 @@ export const NotificationItem = memo(
           navigate(`/room/${user.userId}`);
           break;
         case 'MUSIC_COMMENT':
-          // navigate(`/cd/${cdId}/user/${notification.targetId}`);
-          navigate(`/cd/1/user/${notification.targetId}`);
+          navigate(`/cd/${user.userId}/user/${notification.targetId}`);
           break;
         case 'HOUSE_MATE':
           navigate(`/profile/${notification.senderId}`);
@@ -62,7 +61,7 @@ export const NotificationItem = memo(
             onClick={handleProfileClick}
           />
           <div aria-label='알림 내용'>
-            <p className='flex items-center gap-1'>
+            <p className='flex gap-1 items-center'>
               <span
                 aria-label='알림 내용'
                 className='text-[#162C63] text-sm'>
