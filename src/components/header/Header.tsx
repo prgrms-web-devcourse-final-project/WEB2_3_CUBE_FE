@@ -9,6 +9,7 @@ import HousemateModal from './menus/housemate-modal/HousemateModal';
 import NotificationModal from './menus/notification-modal/NotificationModal';
 import { notificationAPI } from '../../apis/notification';
 import { useUserStore } from '@/store/useUserStore';
+import { useToastStore } from '@/store/useToastStore';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -19,6 +20,7 @@ const Header = () => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const housemateButtonRef = useRef<HTMLButtonElement>(null);
   const notificationButtonRef = useRef<HTMLButtonElement>(null);
+  const showToast = useToastStore((state) => state.showToast);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -38,36 +40,30 @@ const Header = () => {
   }, [isMenuOpen]);
 
   useEffect(() => {
-    // 새 알림 이벤트 리스너
-    const handleNewNotification = () => {
+    const handleNewNotification = (event: CustomEvent) => {
+      console.log('Header: 알림 이벤트 수신:', event.detail);
       setHasUnreadNotifications(true);
       setIsNewNotification(true);
+
+      // 토스트 알림 추가
+      showToast('새로운 알림이 있습니다', 'success');
+
       setTimeout(() => {
         setIsNewNotification(false);
       }, 3000);
     };
 
-    // 초기 알림 상태 확인
-    const checkUnreadNotifications = async () => {
-      const user = useUserStore.getState().user;
-      if (!user) return;
-
-      const response = await notificationAPI.getNotifications(
-        user.userId,
-        undefined,
-        20,
-        false,
-      );
-      setHasUnreadNotifications(response.notifications.length > 0);
-    };
-
-    window.addEventListener('newNotification', handleNewNotification);
-    checkUnreadNotifications();
-
+    window.addEventListener(
+      'newNotification',
+      handleNewNotification as EventListener,
+    );
     return () => {
-      window.removeEventListener('newNotification', handleNewNotification);
+      window.removeEventListener(
+        'newNotification',
+        handleNewNotification as EventListener,
+      );
     };
-  }, []);
+  }, [showToast]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -111,12 +107,27 @@ const Header = () => {
               alt='알림'
               className='w-8 h-8'
             />
-            {hasUnreadNotifications && (
+            <div className='absolute top-[2.5px] right-[5.7px]'>
+              {/* 기본 알림 점 */}
               <div
-                className={`absolute top-[2.5px] right-[5.7px] w-2 h-2 bg-orange-500 rounded-full
+                className={`w-2 h-2 bg-orange-500 rounded-full z-50
                   ${isNewNotification ? 'animate-notification-ping' : ''}`}
               />
-            )}
+              {/* 네온 효과 */}
+              {isNewNotification && (
+                <div
+                  className={`absolute top-[2.5px] right-[5.7px] w-8 h-8 rounded-full z-50
+                    animate-notification-glow
+                    before:content-[''] before:absolute before:-inset-4
+                    before:bg-gradient-radial before:from-orange-500/40 before:via-orange-500/20 before:to-transparent
+                    before:rounded-full before:blur-sm`}
+                />
+              )}
+            </div>
+            <div className='hidden'>
+              hasUnread: {hasUnreadNotifications.toString()}, isNew:{' '}
+              {isNewNotification.toString()}
+            </div>
           </button>
           <button
             ref={housemateButtonRef}
