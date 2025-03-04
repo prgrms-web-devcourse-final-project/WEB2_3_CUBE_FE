@@ -247,7 +247,6 @@ export const getCdInfo = async (myCdId: number, targetUserId: number) => {
  */
 export const addCdToMyRack = async (cdData: PostCDInfo) => {
   const response = await axiosInstance.post(`/${API_URL}/my-cd`, cdData);
-  console.log(response.data);
   return response.data;
 };
 
@@ -339,7 +338,6 @@ export const addCdComment = async (
     `/${API_URL}/my-cd/${myCdId}/comments`,
     commentInfo,
   );
-  console.log(response.data);
   return response.data;
 };
 
