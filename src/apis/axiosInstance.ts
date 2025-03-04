@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Cookies } from 'react-cookie';
-import { refreshAccessTokenAPI } from './auth';
+import { logoutAPI, refreshAccessTokenAPI } from './auth';
 const cookies = new Cookies();
 
 const axiosInstance = axios.create({
@@ -40,7 +40,7 @@ axiosInstance.interceptors.response.use(
 
       if (!refreshToken) {
         console.error('🚨 Refresh Token이 없습니다. 다시 로그인하세요.');
-        // await logoutAPI();
+        await logoutAPI();
         return Promise.reject(error);
       }
       try {
@@ -49,7 +49,7 @@ axiosInstance.interceptors.response.use(
         return axiosInstance(originalRequest);
       } catch (error) {
         console.error('🚨 Refresh Token이 만료되었습니다. 다시 로그인하세요.');
-        // await logoutAPI();
+        await logoutAPI();
         return Promise.reject(error);
       }
     } else {

@@ -48,5 +48,5 @@ export const agreeItems = [
       `,
   },
 ];
-export const ACCESS_MAX_AGE = 3540; // 실제로는 1분남았을때 만료 예정
+export const ACCESS_MAX_AGE = 15; // 실제로는 1분남았을때 만료 예정
 export const REFRESH_MAX_AGE = 1209600;
