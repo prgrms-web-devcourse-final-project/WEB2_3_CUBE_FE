@@ -86,7 +86,7 @@ export default function CdPlayer({
 
   const progressStyle = useMemo(
     () => ({
-      background: `linear-gradient(to right, white ${cdPlayer.progress}%, #E5E7EB ${cdPlayer.progress}%)`,
+      background: `linear-gradient(to right, white ${cdPlayer.progress}%, #FFFFFF4D ${cdPlayer.progress}%)`,
     }),
     [cdPlayer.progress],
   );
@@ -363,6 +363,7 @@ export default function CdPlayer({
             <div className='flex gap-2 justify-center items-center'>
               {cdReady.isMuted ? (
                 <button
+                  className='w-8 h-8'
                   onClick={() =>
                     handleChangeCdVolume(cdStateChangeEvent, `${VOLUME}`)
                   }>
@@ -373,9 +374,11 @@ export default function CdPlayer({
                   />
                 </button>
               ) : (
-                <button onClick={() => handleMuteCdVolume(cdStateChangeEvent)}>
+                <button
+                  className='w-6 h-6'
+                  onClick={() => handleMuteCdVolume(cdStateChangeEvent)}>
                   <img
-                    className='w-8 h-8 cursor-pointer'
+                    className='w-6 h-6 cursor-pointer'
                     src={soundIcon}
                     alt='음량 아이콘'
                   />
@@ -390,7 +393,7 @@ export default function CdPlayer({
                 onChange={(e) =>
                   handleChangeCdVolume(cdStateChangeEvent, e.target.value)
                 }
-                className='w-20 volume-range'
+                className=' volume-range'
               />
             </div>
           </article>
@@ -412,6 +415,7 @@ export default function CdPlayer({
               onClick={handleToggleLoop}
               className={cdReady.isLooping ? 'opacity-100' : 'opacity-30'}>
               <img
+                className='w-8'
                 src={sufflesong}
                 alt='cd 무한재생 버튼'
               />
@@ -419,6 +423,7 @@ export default function CdPlayer({
 
             <button onClick={() => setIsCdListOpen(true)}>
               <img
+                className='w-8'
                 src={cdList}
                 alt='cd 목록 리스트 보여주는 버튼'
               />

@@ -31,7 +31,6 @@ export default function CdRackPage() {
     setCursorHistory((prev) => [...prev, cursor]);
     setCursor(cursor);
   };
-  console.log(cursorHistory);
 
   // 내 cd 목록 불러오기
   useEffect(() => {
