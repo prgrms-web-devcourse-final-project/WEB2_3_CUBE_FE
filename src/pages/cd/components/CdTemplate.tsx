@@ -17,7 +17,7 @@ const CdTemplate = React.memo(() => {
         const templateData = await getCdTemplate(myCdId);
         setTemplateData(templateData);
       } catch (error) {
-        console.error(error, '템플릿을 작성해주세요!');
+        // console.error(error, '템플릿을 작성해주세요!');
         setTemplateData(null);
       } finally {
         setIsLoading(false);

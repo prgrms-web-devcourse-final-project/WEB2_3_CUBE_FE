@@ -42,7 +42,7 @@ export default function CdPage() {
       className={`flex flex-col justify-between w-full h-screen bg-center bg-no-repeat bg-cover`}
       style={{ backgroundImage: `url(${backgroundIMG})` }}>
       {/* 템플릿, CD이미지, 댓글 */}
-      <div className='flex justify-center items-end gap-22   h-[87vh] px-22  pt-29 pb-19  '>
+      <div className='flex justify-center items-end gap-22   h-[87vh] px-22  pt-17 pb-19  '>
         <CdTemplate />
         <CdInfo
           cdInfo={cdInfo}

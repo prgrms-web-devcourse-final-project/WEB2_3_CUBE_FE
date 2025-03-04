@@ -49,7 +49,6 @@ export const refreshAccessTokenAPI = async (refreshToken: string) => {
     path: '/',
     maxAge: ACCESS_MAX_AGE,
   });
-  console.log(data);
 
   return data;
 };
