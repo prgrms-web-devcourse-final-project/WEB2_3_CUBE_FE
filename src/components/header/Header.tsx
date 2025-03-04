@@ -16,6 +16,7 @@ const Header = () => {
   const [isHousemateModalOpen, setIsHousemateModalOpen] = useState(false);
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
   const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
+  const [isNewNotification, setIsNewNotification] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const housemateButtonRef = useRef<HTMLButtonElement>(null);
   const notificationButtonRef = useRef<HTMLButtonElement>(null);
@@ -44,6 +45,10 @@ const Header = () => {
     // 새로운 알림 이벤트 리스너
     const handleNewNotification = () => {
       setHasUnreadNotifications(true);
+      setIsNewNotification(true);
+      setTimeout(() => {
+        setIsNewNotification(false);
+      }, 3000);
     };
 
     // 초기 알림 상태 확인
@@ -54,7 +59,7 @@ const Header = () => {
       const response = await notificationAPI.getNotifications(
         user.userId,
         undefined,
-        1,
+        20,
         false,
       );
       setHasUnreadNotifications(response.notifications.length > 0);
@@ -107,7 +112,10 @@ const Header = () => {
               className='w-8 h-8'
             />
             {hasUnreadNotifications && (
-              <div className='absolute top-[2.5px] right-[5.7px] w-2 h-2 bg-orange-500 rounded-full' />
+              <div
+                className={`absolute top-[2.5px] right-[5.7px] w-2 h-2 bg-orange-500 rounded-full
+                  ${isNewNotification ? 'animate-notification-ping' : ''}`}
+              />
             )}
           </button>
           <button
