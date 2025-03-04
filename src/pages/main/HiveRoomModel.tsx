@@ -10,9 +10,9 @@ export default function HiveRoomModel({ room, position }: HiveRoomModelProps) {
   const scene = useMemo(() => {
     const clonedScene = originalScene.clone();
 
-    clonedScene.traverse((object) => {
-      if (object.isMesh) {
-        object.material = object.material.clone();
+    clonedScene.traverse((object: THREE.Object3D) => {
+      if (object instanceof THREE.Mesh) {
+        object.material = (object.material as THREE.Material).clone();
         object.geometry = object.geometry.clone();
       }
     });
@@ -23,8 +23,7 @@ export default function HiveRoomModel({ room, position }: HiveRoomModelProps) {
     roomId: parseInt(room.roomId),
     furnitures: room.furnitures,
   });
-
-  // console.log(`Room ${room.roomId} items:`, items);
+  console.log(`Room ${room.roomId} items:`, items);
 
   const roomScale = 0.5;
   const roomRotation = -Math.PI / 4;
@@ -36,12 +35,9 @@ export default function HiveRoomModel({ room, position }: HiveRoomModelProps) {
     const box = new THREE.Box3().setFromObject(scene);
     const center = new THREE.Vector3();
     box.getCenter(center);
-    const size = new THREE.Vector3().subVectors(box.max, box.min);
-    console.log(`Room ${room.roomId} dimensions:`, { center, size });
-    // console.log(`Room ${room.roomId} items:`, items);
 
-    scene.traverse((object) => {
-      if (object.isMesh) {
+    scene.traverse((object: THREE.Object3D) => {
+      if (object instanceof THREE.Mesh) {
         object.castShadow = true;
         object.receiveShadow = true;
       }

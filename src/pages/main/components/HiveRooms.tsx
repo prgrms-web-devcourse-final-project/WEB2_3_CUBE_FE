@@ -3,7 +3,6 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { CAMERA_CONFIG } from '../../../constants/sceneSetting';
 import { RoomLighting } from '../../../components/room-models/RoomLighting';
 import HiveRoomModel from '../HiveRoomModel';
 import useHexagonGrid from '../hooks/useHexagonGrid';
@@ -24,7 +23,7 @@ export default function HiveRooms({myUserId}: HiveRoomsProps) {
 
   return (
     <div className='w-full h-screen relative'>
-      <Canvas camera={CAMERA_CONFIG}>
+      <Canvas camera={{ position: [0, 4, 10], fov: 25 }}>
         <RoomLighting />
         <pointLight position={[10, 10, 10]} />
         {positionedRooms.map(({ room, position }, index) =>

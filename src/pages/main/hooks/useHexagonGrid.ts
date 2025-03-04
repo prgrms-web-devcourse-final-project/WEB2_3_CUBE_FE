@@ -6,12 +6,12 @@ export default function useHexagonGrid(rooms, centerX = 0, centerY = 0) {
     if (!roomCount) return rooms.map(room => ({ room, position: [centerX, centerY, 0] }));
 
     const directions = [
-      [1, 0, -1],    // 1. 오른쪽
       [1, -1, 0],    // 6. 위 오른쪽 대각선 상단
       [0, -1, 1],   // 5. 위 왼쪽 대각선 상단
       [0, 1, 1],    // 4. 아래 왼쪽 대각선 하단
       [-1, 1, 1],    // 3. 아래 오른쪽 대각선 하단
       [-1, 0, 1],    // 2. 왼쪽
+      [1, 0, -1],    // 1. 오른쪽
     ];
 
     const result = [];
@@ -42,7 +42,7 @@ export default function useHexagonGrid(rooms, centerX = 0, centerY = 0) {
         let cubeZ = -currentRing;
 
         for (let side = 0; side < 6 && result.length < roomCount; side++) {
-          const steps = side === 0 ? currentRing : currentRing + 1; 
+          const steps = 1; 
           for (let step = 0; step < steps && result.length < roomCount; step++) {
             const posKey = `${cubeX},${cubeY},${cubeZ}`;
             if (!visited.has(posKey)) {
@@ -68,7 +68,7 @@ export default function useHexagonGrid(rooms, centerX = 0, centerY = 0) {
 
     const finalRooms = result.map(({ position: [q, r, ], room }) => {
       const x = centerX + width * (q + r / 2);
-      const y = centerY - height * (3 / 4) * r;
+      const y = centerY - height * (2.97 / 4.2) * r;
       const z = r * 0.7;
       return { room, position: [x, y, z] };
     });
