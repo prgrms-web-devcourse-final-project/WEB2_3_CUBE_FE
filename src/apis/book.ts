@@ -240,14 +240,13 @@ export const bookAPI = {
 
   // ------------------------------ 책 레벨 업그레이드 ------------------------------
   /**
-   * 책 레벨 업그레이드
-   * @param roomId 방 ID
-   * @param nextLevel 다음 레벨
+   * 책장 업그레이드
+   * @param userId 사용자 ID
    * @returns
    */
-  upgradeBookLevel: async (roomId: string, nextLevel: number) => {
+  upgradeBookLevel: async (userId: string) => {
     const response = await axiosInstance.post(
-      `/${API_URL}/rooms/${roomId}/furniture/bookshelf?level=${nextLevel}`,
+      `/${API_URL}/rooms/${userId}/furniture/bookshelf/upgrade`,
     );
     return response.data;
   },

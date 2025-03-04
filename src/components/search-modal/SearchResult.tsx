@@ -98,25 +98,15 @@ export const SearchResult = ({
 
   const handleUpgrade = async () => {
     try {
-      if (!user?.roomId) {
-        showToast('오류가 발생했습니다.', 'error');
-        return;
-      }
+      const user = useUserStore.getState().user;
+      if (!user) return;
 
-      // await bookAPI.upgradeBookLevel(user.roomId, user.bookLevel + 1);
+      await bookAPI.upgradeBookLevel(String(user.userId));
       showToast('책장이 업그레이드 되었어요!', 'success');
       setIsUpgradeModalOpen(false);
-
-      // 책 추가 재시도
-      if (item) {
-        handleAdd(item);
-      }
-    } catch (error: any) {
-      showToast(
-        error.response?.data?.message || '업그레이드에 실패했습니다.',
-        'error',
-      );
+    } catch (error) {
       console.error('책장 업그레이드 실패:', error);
+      showToast('책장 업그레이드에 실패했습니다.', 'error');
     }
   };
 
