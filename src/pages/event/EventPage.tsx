@@ -7,6 +7,7 @@ import point from '@assets/event/point.svg';
 import LayeredButton from '@components/LayeredButton';
 import { useUserStore } from '@/store/useUserStore';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export default function EventPage() {
   const navigate = useNavigate();
@@ -14,7 +15,12 @@ export default function EventPage() {
 
   const user = useUserStore().user;
 
-  if (!user) navigate('/login', { replace: true });
+  useEffect(() => {
+    if (!user) {
+      navigate('/login', { replace: true });
+      return;
+    }
+  }, [user]);
 
   return (
     <div

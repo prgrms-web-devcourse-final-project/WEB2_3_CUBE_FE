@@ -12,6 +12,7 @@ import ProfileCardPage from '@pages/profile-card/ProfileCardPage';
 import ProfileCardEditPage from '@pages/profile-card-edit/ProfileCardEditPage';
 import Redirection from '@pages/login/components/Redirection';
 import EventPage from '@pages/event/EventPage';
+import PointPage from '@pages/point/PointPage';
 
 const Router = () => {
   return (
@@ -45,6 +46,10 @@ const Router = () => {
         <Route
           path='/profile/:userId/edit'
           element={<ProfileCardEditPage />}
+        />
+        <Route
+          path='/point/:userId'
+          element={<PointPage />}
         />
       </Route>
       {/* 내 서평 보기/작성/수정 */}

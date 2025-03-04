@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { housemateAPI } from '@/apis/housemate';
+import { useUserStore } from '@/store/useUserStore';
 
 type TabType = 'followers' | 'following';
 
@@ -12,6 +13,7 @@ interface Housemate {
 }
 
 export const useHousemates = (isOpen: boolean) => {
+  const user = useUserStore((state) => state.user);
   const [searchValue, setSearchValue] = useState('');
   const [activeTab, setActiveTab] = useState<TabType>('followers');
   const [housemates, setHousemates] = useState<Housemate[]>([]);
@@ -19,8 +21,34 @@ export const useHousemates = (isOpen: boolean) => {
   const [error, setError] = useState<string | null>(null);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
+  const [userStatuses, setUserStatuses] = useState<Record<number, 'ONLINE' | 'OFFLINE'>>({});
 
+  // 웹소켓 상태 변경 이벤트 리스너
+  useEffect(() => {
+    const handleStatusChange = (event: CustomEvent) => {
+      const { userId, status } = event.detail;
+      setUserStatuses(prev => ({
+        ...prev,
+        [userId]: status,
+      }));
+    };
+
+    window.addEventListener(
+      'userStatusChange',
+      handleStatusChange as EventListener,
+    );
+
+    return () => {
+      window.removeEventListener(
+        'userStatusChange',
+        handleStatusChange as EventListener,
+      );
+    };
+  }, []);
+
+  // API 호출 로직
   const fetchHousemates = async (cursor?: string) => {
+    if (!user) return;
     if (!cursor) {
       setIsLoading(true);
     }
@@ -28,22 +56,20 @@ export const useHousemates = (isOpen: boolean) => {
 
     try {
       const response = await (activeTab === 'followers'
-        ? housemateAPI.getFollowers(
-            cursor ? Number(cursor) : undefined,
-            20,
-            searchValue,
-          )
-        : housemateAPI.getFollowing(
-            cursor ? Number(cursor) : undefined,
-            20,
-            searchValue,
-          ));
+        ? housemateAPI.getFollowers(user.userId, 20, searchValue)
+        : housemateAPI.getFollowing(user.userId, 20, searchValue));
 
       if (!cursor) {
         setHousemates(response.housemates || []);
       } else {
         setHousemates((prev) => [...prev, ...(response.housemates || [])]);
       }
+
+      const statuses = response.housemates.reduce((acc, housemate) => ({
+        ...acc,
+        [housemate.userId]: housemate.status,
+      }), {});
+      setUserStatuses(prev => ({ ...prev, ...statuses }));
 
       setNextCursor(response.nextCursor);
       setHasMore(response.hasNext);
@@ -90,5 +116,7 @@ export const useHousemates = (isOpen: boolean) => {
     hasMore,
     fetchHousemates,
     nextCursor,
+    userStatuses,
+    setUserStatuses,
   };
 };
