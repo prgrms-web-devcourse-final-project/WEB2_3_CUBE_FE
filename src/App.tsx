@@ -6,6 +6,7 @@ import { useCookies } from 'react-cookie';
 import { refreshAccessTokenAPI } from '@apis/auth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Loading from '@components/Loading';
+import { webSocketService } from './apis/websocket';
 
 function App() {
   const queryClient = new QueryClient();
@@ -31,6 +32,16 @@ function App() {
       }
     };
     fetchTokenData();
+  }, []);
+
+  useEffect(() => {
+    // 앱이 시작될 때 웹소켓 연결
+    webSocketService.connect();
+
+    // 앱이 종료될 때 웹소켓 연결 해제
+    return () => {
+      webSocketService.disconnect();
+    };
   }, []);
 
   if (isTokenRefreshing) return <Loading />;

@@ -5,6 +5,7 @@ import { useInfiniteScroll } from '../../../../hooks/useInfiniteScroll';
 import { useNotifications } from '../hooks/useNotifications';
 import { NotificationItem } from './components/NotificationItem';
 import NotificationSkeletonItem from './components/NotificationSkeletonItem';
+import { useEffect } from 'react';
 
 type TabType = 'pendingRead' | 'viewed';
 
@@ -12,6 +13,7 @@ interface NotificationModalProps {
   isOpen: boolean;
   onClose: () => void;
   buttonRef: React.RefObject<HTMLButtonElement>;
+  onNotificationStatusChange: (hasUnread: boolean) => void;
 }
 
 const TABS = [
@@ -23,6 +25,7 @@ const NotificationModal = ({
   isOpen,
   onClose,
   buttonRef,
+  onNotificationStatusChange,
 }: NotificationModalProps) => {
   const {
     activeTab,
@@ -39,6 +42,15 @@ const NotificationModal = ({
     isLoading,
     hasMore,
   });
+
+  useEffect(() => {
+    if (!isLoading) {
+      const hasUnreadNotifications = notifications.some(
+        (notification) => !notification.isRead,
+      );
+      onNotificationStatusChange(hasUnreadNotifications);
+    }
+  }, [notifications, isLoading, onNotificationStatusChange]);
 
   return (
     <BaseModal

@@ -6,6 +6,9 @@ import { useInfiniteScroll } from '../../../../hooks/useInfiniteScroll';
 import { useHousemates } from '../hooks/useHousemates';
 import { HousemateItem } from './components/HousemateItem';
 import HousemateSkeletonItem from './components/HousemateSkeletonItem';
+import { useState, useEffect } from 'react';
+import { housemateAPI } from '@apis/housemate';
+import { useUserStore } from '@/store/useUserStore';
 
 type TabType = 'followers' | 'following';
 
@@ -25,6 +28,8 @@ const HousemateModal = ({
   onClose,
   buttonRef,
 }: HousemateModalProps) => {
+  const user = useUserStore((state) => state.user);
+
   const {
     searchValue,
     setSearchValue,
@@ -36,6 +41,7 @@ const HousemateModal = ({
     hasMore,
     fetchHousemates,
     nextCursor,
+    userStatuses,
   } = useHousemates(isOpen);
 
   const { listRef, observerRef } = useInfiniteScroll({
@@ -92,6 +98,7 @@ const HousemateModal = ({
                 key={housemate.userId}
                 {...housemate}
                 onClose={onClose}
+                status={userStatuses[housemate.userId] || 'OFFLINE'}
               />
             ))}
 

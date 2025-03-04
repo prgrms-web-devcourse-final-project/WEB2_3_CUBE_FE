@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 import HiddenMenu from './menus/HiddenMenu';
 import HousemateModal from './menus/housemate-modal/HousemateModal';
 import NotificationModal from './menus/notification-modal/NotificationModal';
-import { webSocketService } from '../../apis/websocket';
 import { notificationAPI } from '../../apis/notification';
 import { useUserStore } from '@/store/useUserStore';
 
@@ -39,10 +38,7 @@ const Header = () => {
   }, [isMenuOpen]);
 
   useEffect(() => {
-    // 웹소켓 연결
-    webSocketService.connect();
-
-    // 새로운 알림 이벤트 리스너
+    // 새 알림 이벤트 리스너
     const handleNewNotification = () => {
       setHasUnreadNotifications(true);
       setIsNewNotification(true);
@@ -70,7 +66,6 @@ const Header = () => {
 
     return () => {
       window.removeEventListener('newNotification', handleNewNotification);
-      webSocketService.disconnect();
     };
   }, []);
 
@@ -84,6 +79,11 @@ const Header = () => {
 
   const toggleNotificationModal = () => {
     setIsNotificationModalOpen(!isNotificationModalOpen);
+  };
+
+  // 알림 읽음 상태 업데이트 함수
+  const updateNotificationStatus = (hasUnread: boolean) => {
+    setHasUnreadNotifications(hasUnread);
   };
 
   return (
@@ -161,6 +161,7 @@ const Header = () => {
         isOpen={isNotificationModalOpen}
         onClose={() => setIsNotificationModalOpen(false)}
         buttonRef={notificationButtonRef}
+        onNotificationStatusChange={updateNotificationStatus}
       />
     </>
   );
