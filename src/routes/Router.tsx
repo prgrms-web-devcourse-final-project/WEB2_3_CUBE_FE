@@ -12,7 +12,6 @@ import RequireAuth from './layout/RequireAuth';
 import ProfileCardPage from '@pages/profile-card/ProfileCardPage';
 import ProfileCardEditPage from '@pages/profile-card-edit/ProfileCardEditPage';
 import Redirection from '@pages/login/components/Redirection';
-import TestPage from '@pages/TestPage';
 
 const Router = () => {
   return (
@@ -48,14 +47,15 @@ const Router = () => {
             path='/profile/:userId/edit'
             element={<ProfileCardEditPage />}
           />
-          <Route
-            path='/test'
-            element={<TestPage />}
-          />
         </Route>
         {/* 내 서평 보기/작성/수정 */}
         <Route
           path='/book/:bookId'
+          element={<BookPage />}
+        />
+        {/* 다른 유저의 서평 보기 */}
+        <Route
+          path='/book/:bookId/user/:userId'
           element={<BookPage />}
         />
         <Route

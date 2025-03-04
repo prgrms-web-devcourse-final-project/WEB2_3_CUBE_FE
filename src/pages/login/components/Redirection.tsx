@@ -1,4 +1,5 @@
 import { loginAPI } from '@apis/auth';
+import Loading from '@components/Loading';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -30,14 +31,14 @@ export default function Redirection() {
   useEffect(() => {
     getAuthData();
   }, [getAuthData]);
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loading />;
 
   if (error) {
     return (
-      <div className='flex flex-col items-center justify-center h-screen'>
+      <div className='flex flex-col justify-center items-center h-screen'>
         <p className='text-red-500'>{error}</p>
         <button
-          className='mt-4 px-4 py-2 bg-blue-500 text-white rounded'
+          className='px-4 py-2 mt-4 text-white bg-blue-500 rounded'
           onClick={() => navigate('/login')}>
           로그인으로 돌아가기
         </button>
@@ -46,7 +47,7 @@ export default function Redirection() {
   }
 
   return (
-    <div className='flex items-center justify-center h-screen'>
+    <div className='flex justify-center items-center h-screen'>
       <div>
         <svg
           className='w-10 h-10 text-blue-500 animate-spin'

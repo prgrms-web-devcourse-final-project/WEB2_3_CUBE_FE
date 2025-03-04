@@ -7,6 +7,7 @@ import DataList from '@components/datalist/DataList';
 import { bookAPI } from '@apis/book';
 import ModalBackground from '@components/ModalBackground';
 import { BookCaseListType } from '@/types/book';
+import Loading from '@components/Loading';
 
 const BookCasePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,8 +43,9 @@ const BookCasePage = () => {
             author: book.author,
             publisher: book.publisher,
             publishedDate: book.publishedDate,
-            imageURL: book.imageUrl,
+            imageUrl: book.imageUrl,
             genreNames: book.genreNames,
+            page: book.page || 0,
           }));
 
           // DataList 컴포넌트용 데이터 변환
@@ -117,28 +119,80 @@ const BookCasePage = () => {
   };
 
   const handleDeleteBooks = (deletedIds: string[]) => {
-    // books state 업데이트
+    // books 업데이트
     setBooks((prevBooks) =>
       prevBooks.filter((book) => !deletedIds.includes(book.id.toString())),
     );
-    // dataListItems state 업데이트
+
+    // dataListItems 업데이트
     setDataListItems((prevItems) =>
       prevItems.filter((item) => !deletedIds.includes(item.id)),
     );
-    // totalCount 감소
+
+    // 전체 카운트 업데이트
     setTotalCount((prev) => prev - deletedIds.length);
   };
 
-  const bookCaseRows = Math.max(3, Math.ceil(books.length / BOOKS_PER_ROW));
+  const bookCaseRows =
+    books.length <= 45 ? 3 : Math.ceil(books.length / BOOKS_PER_ROW);
+
+  const handleBookAdd = (newBook: BookCaseListType) => {
+    setBooks((prevBooks) => [...prevBooks, newBook]);
+    setDataListItems((prevItems) => [
+      ...prevItems,
+      {
+        id: newBook.id.toString(),
+        title: newBook.title,
+        author: newBook.author,
+        publisher: newBook.publisher,
+        released_year: newBook.publishedDate,
+        imageUrl: newBook.imageUrl,
+      },
+    ]);
+    setTotalCount((prev) => prev + 1);
+  };
 
   if (isLoading) {
-    return <div>로딩중...</div>;
+    return <Loading />;
   }
+
+  // 책을 각 줄에 분배하는 함수
+  const distributeBooks = () => {
+    if (books.length <= 45) {
+      // 45권 이하일 때는 3줄에 균등 분배
+      const totalRows = 3;
+      const baseCount = Math.floor(books.length / totalRows);
+      const remainder = books.length - baseCount * totalRows;
+
+      let currentIndex = 0;
+      return Array(totalRows)
+        .fill(null)
+        .map((_, index) => {
+          // 마지막 줄에 나머지 책들을 모두 추가
+          const currentRowCount =
+            index === totalRows - 1 ? baseCount + remainder : baseCount;
+
+          const row = books.slice(currentIndex, currentIndex + currentRowCount);
+          currentIndex += currentRowCount;
+          return row;
+        });
+    } else {
+      // 45권 초과시 15권씩 분배
+      return Array(bookCaseRows)
+        .fill(null)
+        .map((_, index) => {
+          const start = index * BOOKS_PER_ROW;
+          return books.slice(start, start + BOOKS_PER_ROW);
+        });
+    }
+  };
+
+  const bookRows = distributeBooks();
 
   return (
     <div
       ref={containerRef}
-      className='w-full h-screen overflow-auto bg-white select-none cursor-grab active:cursor-grabbing scrollbar-none'
+      className='overflow-auto w-full h-screen bg-white select-none cursor-grab active:cursor-grabbing scrollbar-none'
       onMouseDown={(e) => handleDragStart(e.pageX, e.pageY)}
       onMouseMove={(e) => handleDragMove(e.pageX, e.pageY)}
       onMouseUp={handleDragEnd}
@@ -150,20 +204,13 @@ const BookCasePage = () => {
         handleDragMove(e.touches[0].clientX, e.touches[0].clientY)
       }
       onTouchEnd={handleDragEnd}>
-      {[...Array(bookCaseRows)].map((_, index) => {
-        const startIdx = index * BOOKS_PER_ROW;
-        const endIdx = startIdx + BOOKS_PER_ROW;
-        const rowBooks = books.slice(startIdx, endIdx);
-
-        return (
-          <BookCaseList
-            key={index}
-            page={index + 1}
-            books={rowBooks}
-            showEmptyMessage={books.length === 0 && index === 1}
-          />
-        );
-      })}
+      {bookRows.map((rowBooks, index) => (
+        <BookCaseList
+          key={index}
+          books={rowBooks}
+          showEmptyMessage={books.length === 0 && index === 1}
+        />
+      ))}
       <ToolBoxButton
         onAddBook={() => setIsModalOpen(true)}
         onOpenList={() => setIsListOpen(true)}
@@ -175,6 +222,18 @@ const BookCasePage = () => {
           type='BOOK'
           onClose={() => setIsModalOpen(false)}
           onSelect={() => {}}
+          onSuccess={(item) => {
+            handleBookAdd({
+              id: parseInt(item.id),
+              title: item.title,
+              author: item.author,
+              publisher: item.publisher,
+              publishedDate: new Date(item.date).toISOString().split('T')[0],
+              imageUrl: item.imageUrl,
+              genreNames: item.genres,
+              page: 0,
+            });
+          }}
         />
       )}
 
@@ -188,6 +247,7 @@ const BookCasePage = () => {
             isLoading={isLoading}
             fetchMore={() => {}}
             userId={Number(userId)}
+            count={totalCount}
           />
         </ModalBackground>
       )}

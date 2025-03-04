@@ -1,8 +1,10 @@
 import cd_play_btn from '@/assets/datalist/cd-play-btn.svg';
 import book_go_btn from '@/assets/datalist/book-go-btn.svg';
 import { Link } from 'react-router-dom';
-import { truncateTitle } from '@utils/truncate';
+import { truncateTitle } from '@/utils/truncate';
 import { useUserStore } from '@/store/useUserStore';
+
+const AUTHOR_MAX_LENGTH = 8;
 
 export default function NoEditStatusItem({
   data,
@@ -36,7 +38,9 @@ export default function NoEditStatusItem({
           <h4 className='text-[18px] font-semibold truncate'>
             {truncateTitle(data.title, TITLE_MAX_LENGTH)}
           </h4>
-          <span className='text-[14px]'>{data.artist || data.author}</span>
+          <span className='text-[14px]'>
+            {data.artist || truncateTitle(data.author, AUTHOR_MAX_LENGTH)}
+          </span>
         </div>
         <div>
           <span

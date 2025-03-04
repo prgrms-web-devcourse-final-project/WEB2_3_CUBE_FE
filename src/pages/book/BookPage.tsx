@@ -5,6 +5,8 @@ import BookReviewViewer from '../book-viewer/BookViewerPage';
 import { bookAPI } from '@/apis/book';
 import { useToastStore } from '@/store/useToastStore';
 import { BookReviewData } from '@/types/book';
+import { LoadingManager } from 'three';
+import Loading from '@components/Loading';
 
 const BookPage = () => {
   const { bookId, userId } = useParams();
@@ -23,7 +25,8 @@ const BookPage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const isEditMode = searchParams.get('mode') === 'edit';
-  const isMyReview = !userId; // URL에 userId가 없으면 내 서평
+  // URL에 userId가 있으면 다른 사람의 서평
+  const isMyReview = !userId;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,8 +62,8 @@ const BookPage = () => {
           setHasReview(true);
         } else {
           setHasReview(false);
-          // 내 서평이고 작성 페이지가 아닌 경우에만 리다이렉트
-          if (isMyReview && !isEditMode) {
+          // URL에 userId가 없고(내 서평이고) 작성 페이지가 아닌 경우에만 리다이렉트
+          if (!userId && !isEditMode) {
             showToast('조회된 서평이 없어 작성 페이지로 이동합니다.', 'info');
             navigate(`/book/${bookId}?mode=edit`, { replace: true });
             return;
@@ -78,7 +81,7 @@ const BookPage = () => {
     fetchData();
   }, [bookId, isMyReview, isEditMode, navigate, showToast]);
 
-  if (isLoading || !bookInfo) return <div>로딩 중...</div>;
+  if (isLoading || !bookInfo) return <Loading />;
 
   // 다른 유저의 서평이면서 수정 모드인 경우 접근 불가
   if (!isMyReview && isEditMode) {

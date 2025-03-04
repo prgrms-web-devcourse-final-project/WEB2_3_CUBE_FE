@@ -3,10 +3,11 @@ import NotEditTemplate from './NotEditTemplate';
 import EditTemplate from './EditTemplate';
 import { getCdTemplate } from '@apis/cd';
 import { useParams } from 'react-router-dom';
+import Loading from '@components/Loading';
 
 const CdTemplate = React.memo(() => {
   const [isEdit, setIsEdit] = useState(false);
-  const [templateData, setTemplateData] = useState(null);
+  const [templateData, setTemplateData] = useState<TemplateData>(null);
   const [isLoading, setIsLoading] = useState(true);
   const myCdId = Number(useParams().cdId);
 
@@ -14,17 +15,18 @@ const CdTemplate = React.memo(() => {
     const fetchTemplateData = async () => {
       try {
         const templateData = await getCdTemplate(myCdId);
-        setTemplateData(templateData); // 템플릿 조회
+        setTemplateData(templateData);
       } catch (error) {
         console.error(error, '템플릿을 작성해주세요!');
+        setTemplateData(null);
       } finally {
         setIsLoading(false);
       }
     };
     fetchTemplateData();
-  }, []);
+  }, [myCdId]);
 
-  if (isLoading) <div>Loading...</div>;
+  if (isLoading) return <Loading />;
   return (
     <div
       className='w-[32%]  text-white rounded-3xl border-2   border-[#FCF7FD]
