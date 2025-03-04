@@ -3,9 +3,9 @@ import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
 export default function Furnitures({item, onInteract }:FurnitureProps) {
-  const groupRef = useRef(null);
+  const groupRef = useRef<THREE.Group>(null);
   const { scene } = useGLTF(item.modelPath) as GLTFResult;
-  const [hovered, setHovered] = useState(false);
+  const [hovered, setHovered] = useState<boolean>(false);
 
   useEffect(() => {
     if (scene) {
@@ -48,11 +48,11 @@ export default function Furnitures({item, onInteract }:FurnitureProps) {
     <group
       ref={groupRef}
       position={new THREE.Vector3(...item.position)}
-      scale={0.68}
+      scale={item.scale || 0.68}
       rotation={new THREE.Euler(...item.rotation)}
       onClick={(e) => {
         e.stopPropagation();
-        onInteract(item.type);
+        if (onInteract) onInteract(item.type);
       }}
       onPointerOver={handlePointerOver}
       onPointerOut={handlePointerOut}

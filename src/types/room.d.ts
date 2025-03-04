@@ -43,6 +43,7 @@ interface Housemate {
 interface Room {
   roomId: string;
   userId: number;
+  nickname: string;
   theme: keyof typeof themeData;
   modelPath?: string;
   furnitures?: { furnitureType: FurnitureType; isVisible: boolean }[];

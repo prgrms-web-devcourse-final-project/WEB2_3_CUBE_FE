@@ -10,7 +10,7 @@ export const LIGHT_CONFIG = {
 
   mainLight: {
     position: [3, 8, 8],
-    intensity: 2.5,
+    intensity: 3.2,
     color: '#ffefd5',
     castShadow: true,
     shadowConfig: {
@@ -24,7 +24,7 @@ export const LIGHT_CONFIG = {
   },
 
   ambient: {
-    intensity: 1.5,
+    intensity: 1.7,
     color: '#fff5f8'
   },
 
