@@ -7,11 +7,15 @@ import { Link } from 'react-router-dom';
 import HiddenMenu from './menus/HiddenMenu';
 import HousemateModal from './menus/housemate-modal/HousemateModal';
 import NotificationModal from './menus/notification-modal/NotificationModal';
+import { notificationAPI } from '../../apis/notification';
+import { useUserStore } from '@/store/useUserStore';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHousemateModalOpen, setIsHousemateModalOpen] = useState(false);
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
+  const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
+  const [isNewNotification, setIsNewNotification] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const housemateButtonRef = useRef<HTMLButtonElement>(null);
   const notificationButtonRef = useRef<HTMLButtonElement>(null);
@@ -33,6 +37,38 @@ const Header = () => {
     };
   }, [isMenuOpen]);
 
+  useEffect(() => {
+    // 새 알림 이벤트 리스너
+    const handleNewNotification = () => {
+      setHasUnreadNotifications(true);
+      setIsNewNotification(true);
+      setTimeout(() => {
+        setIsNewNotification(false);
+      }, 3000);
+    };
+
+    // 초기 알림 상태 확인
+    const checkUnreadNotifications = async () => {
+      const user = useUserStore.getState().user;
+      if (!user) return;
+
+      const response = await notificationAPI.getNotifications(
+        user.userId,
+        undefined,
+        20,
+        false,
+      );
+      setHasUnreadNotifications(response.notifications.length > 0);
+    };
+
+    window.addEventListener('newNotification', handleNewNotification);
+    checkUnreadNotifications();
+
+    return () => {
+      window.removeEventListener('newNotification', handleNewNotification);
+    };
+  }, []);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -45,9 +81,14 @@ const Header = () => {
     setIsNotificationModalOpen(!isNotificationModalOpen);
   };
 
+  // 알림 읽음 상태 업데이트 함수
+  const updateNotificationStatus = (hasUnread: boolean) => {
+    setHasUnreadNotifications(hasUnread);
+  };
+
   return (
     <>
-      <header className='fixed top-0 z-50 items-start w-full py-10 pointer-events-none px-21 item-between'>
+      <header className='fixed top-0 z-50 items-start py-10 w-full pointer-events-none px-21 item-between'>
         {/* 로고 */}
         <h1 className='pointer-events-auto'>
           <Link to='/'>
@@ -64,12 +105,18 @@ const Header = () => {
             type='button'
             aria-label='알림'
             onClick={toggleNotificationModal}
-            className='cursor-pointer'>
+            className='relative cursor-pointer'>
             <img
               src={notificationIcon}
               alt='알림'
               className='w-8 h-8'
             />
+            {hasUnreadNotifications && (
+              <div
+                className={`absolute top-[2.5px] right-[5.7px] w-2 h-2 bg-orange-500 rounded-full
+                  ${isNewNotification ? 'animate-notification-ping' : ''}`}
+              />
+            )}
           </button>
           <button
             ref={housemateButtonRef}
@@ -114,6 +161,7 @@ const Header = () => {
         isOpen={isNotificationModalOpen}
         onClose={() => setIsNotificationModalOpen(false)}
         buttonRef={notificationButtonRef}
+        onNotificationStatusChange={updateNotificationStatus}
       />
     </>
   );
