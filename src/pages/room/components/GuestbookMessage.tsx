@@ -1,7 +1,7 @@
 import exProfile from '@assets/rank/exProfile.png';
 import { Link } from 'react-router-dom';
 import { guestbookAPI } from '../../../apis/guestbook';
-import { formatTimeDate } from '../../../utils/dateFormat';
+import { getRelativeTimeString } from '../../../utils/dateFormat';
 import { useUserStore } from '../../../store/useUserStore';
 
 export default function GuestbookMessage({
@@ -62,7 +62,7 @@ export default function GuestbookMessage({
                     ? '작성자'
                     : msg.relation === '지나가던_나그네'
                     ? '지나가던 나그네'
-                    : '하우스메이트'
+                    : '하우스 메이트'
                   }`}
                 </p>
                 {/* 삭제 */}
@@ -88,7 +88,7 @@ export default function GuestbookMessage({
                     <img
                       src={msg.profileImage || exProfile}
                       alt={`${msg.nickname}의 프로필`}
-                      className='w-6 @2xl:w-7 rounded-full'
+                      className='w-6 h-6 @2xl:w-7 @2xl:h-7 rounded-full'
                     />
                     <p className='text-sm @2xl:pb-1 @2xl:text-base font-semibold text-[#292929]'>
                       {msg.nickname}
@@ -97,7 +97,7 @@ export default function GuestbookMessage({
                 </div>
                 {/* 작성 일시 */}
                 <p className='text-[10px] @xl:text-xs text-[#292929]/30 font-medium'>
-                  {formatTimeDate(msg.createdAt)}
+                  {getRelativeTimeString(msg.createdAt)}
                 </p>
               </div>
             </div>

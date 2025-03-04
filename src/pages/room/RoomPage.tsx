@@ -16,8 +16,8 @@ export default function RoomPage() {
   const [activeSettings, setActiveSettings] = useState<string | null>(null);
   const [resetDockMenuState, setResetDockMenuState] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState<
-    'basic' | 'forest' | 'marine'
-  >('basic');
+    'BASIC' | 'FOREST' | 'MARINE'
+  >('BASIC');
   const [visibleFurnitures, setVisibleFurnitures] = useState<Furniture[]>([]);
   const [storageData, setStorageData] = useState<StorageData>({
     maxBooks: 0,
@@ -38,11 +38,11 @@ export default function RoomPage() {
         const roomData: RoomData = await roomAPI.getRoomById(Number(userId));
         if (roomData) {
           setRoomData(roomData);
-          setSelectedTheme(roomData.theme as 'basic' | 'forest' | 'marine');
+          setSelectedTheme(roomData.theme as 'BASIC' | 'FOREST' | 'MARINE');
           setVisibleFurnitures(
             roomData.furnitures.filter((furniture) => furniture.isVisible),
           );
-          console.log(roomData);
+          console.log("roomdata:",roomData);
 
           setStorageData({
             ...roomData.storageLimits,
@@ -56,8 +56,9 @@ export default function RoomPage() {
 
     fetchRoomData();
   }, [userId]);
+  
 
-  const handleThemeChange = (newTheme: 'basic' | 'forest' | 'marine') => {
+  const handleThemeChange = (newTheme: 'BASIC' | 'FOREST' | 'MARINE') => {
     setSelectedTheme(newTheme);
   };
 
@@ -183,6 +184,8 @@ export default function RoomPage() {
             bookshelfLevel={bookshelfLevel}
             cdRackLevel={cdRackLevel}
             furnitures={roomData.furnitures}
+            bookGenres={roomData.topBookGenres}
+            cdGenres={roomData.topCdGenres}
             onClose={handleCloseSettings}
           />
         </motion.div>

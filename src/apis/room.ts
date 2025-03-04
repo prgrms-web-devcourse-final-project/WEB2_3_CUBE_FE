@@ -25,7 +25,7 @@ export const roomAPI = {
     * @param userId 사용자 ID
     * @param themeName 변경할 테마 (basic, forest, marine)
   */
-    updateRoomTheme: async (roomId: number, userId:number, themeName: 'basic' | 'forest' | 'marine') => {
+    updateRoomTheme: async (roomId: number, userId:number, themeName: 'BASIC' | 'FOREST' | 'MARINE') => {
       try{
         const response = await axiosInstance.put(`/${API_URL}/rooms/${roomId}?userId=${userId}`,{
           themeName,

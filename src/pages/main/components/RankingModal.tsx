@@ -48,7 +48,7 @@ export default function RankingModal({ onClose }) {
       transition={{ type: 'spring', stiffness: 130, damping: 18 }}
       className={`@container rank-modal backdrop-blur-2xl rounded-3xl p-2.5 @8xl:p-4 drop-shadow-modal items-center justify-center absolute bottom-10 @8xl:bottom-15 left-10 @2xl:left-20
     `}>
-      <div className='@container w-full h-full bg-[#F9FCFF] rounded-2xl place-content-center px-7 @2xl:p-12 overflow-hidden'>
+      <div className='@container w-full h-full bg-[#FCFDFF] rounded-2xl flex flex-col items-center justify-start px-7 @2xl:p-12 overflow-hidden py-7'>
         <img
           onClick={onClose}
           className='absolute right-6 top-6 @8xl:top-8 @8xl:right-8 @8xl:w-6 opacity-20 hover:opacity-100'
@@ -57,8 +57,8 @@ export default function RankingModal({ onClose }) {
         />
         {/* 랭킹 컨텐츠 */}
         <div className='flex flex-col items-center gap-6 @2xl:gap-6'>
-          {rankingData.length === 0 ? (
-            <div className='flex flex-col items-center '>
+          {rankingData.length < 3 ? (
+            <div className='flex flex-col items-center justify-center mt-30 '>
             <p className='text-[#4B6BBA] text-sm @2xl:text-base font-medium'>
               높은 랭크를 달성할 수록
             </p>
@@ -73,7 +73,7 @@ export default function RankingModal({ onClose }) {
             <h2 className='font-bold text-2xl text-[#162C63]'>RANKING</h2>
               {/* 랭킹 1~3위 */}
               <div className='flex flex-row items-end gap-4 @2xl:gap-5'>
-                {rankingData.slice(0, 3).map((user) => (
+                {rankingData.filter((user) => user.topRank).map((user) => (
                   <TopRankingItem
                     key={user.rank}
                     user={user}
@@ -82,7 +82,7 @@ export default function RankingModal({ onClose }) {
               </div>
               {/* 랭킹 4~10위 */}
               <div className='w-full flex flex-col gap-2.5'>
-                {rankingData.slice(3, 10).map((user) => (
+                {rankingData.filter((user) => !user.topRank).map((user) => (
                   <RankingItem
                     key={user.rank}
                     user={user}

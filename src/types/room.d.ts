@@ -22,10 +22,37 @@ interface RoomData {
   furnitures: Furniture[];
   storageLimits: StorageLimits;
   userStorage: UserStorage;
+  topBookGenres: string[];
+  topCdGenres: string[];
 }
 
 interface DockMenuProps {
   activeSettings: string;
   onSettingsChange: (setting: 'preference' | 'theme' | null) => void;
   resetState: boolean;
+}
+
+interface Housemate {
+  userId: number;
+  nickname: string;
+  profileImage?: string;
+  bio?: string;
+  status: 'ONLINE' | 'OFFLINE';
+}
+
+interface Room {
+  roomId: string;
+  userId: number;
+  nickname: string;
+  theme: keyof typeof themeData;
+  modelPath?: string;
+  furnitures?: { furnitureType: FurnitureType; isVisible: boolean }[];
+}
+interface HiveRoomModelProps {
+  room: Room;
+  position: [number, number, number];
+}
+
+interface HiveRoomsProps {
+  myUserId: number;
 }

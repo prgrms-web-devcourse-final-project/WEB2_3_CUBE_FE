@@ -1,4 +1,4 @@
-import addCheck from "@assets/room/addFurniture-icon.svg";
+import addCheck from '@assets/room/addFurniture-icon.svg';
 
 export default function PreferenceSettingCard({
   title,
@@ -9,6 +9,7 @@ export default function PreferenceSettingCard({
   isAdd,
   onClick,
   level,
+  genres,
 }: PreferenceSettingCardProps) {
   const isMusic = title === '음악';
 
@@ -16,10 +17,16 @@ export default function PreferenceSettingCard({
     <section
       onClick={onClick}
       className={`@container prefer-card backdrop-blur-2xl rounded-3xl drop-shadow-modal items-center justify-center p-2 border-2
-        ${isAdd ? 'border-4 border-[#4983EF]' : 'border-2 border-[#FCF7FD]'} cursor-pointer relative
+        ${
+          isAdd ? 'border-4 border-[#4983EF]' : 'border-2 border-[#FCF7FD]'
+        } cursor-pointer relative
     `}>
       {isAdd && (
-        <img src={addCheck} alt="" className={`absolute top-[-4px] right-6 drop-shadow-logo`} />
+        <img
+          src={addCheck}
+          alt=''
+          className={`absolute top-[-4px] right-6 drop-shadow-logo`}
+        />
       )}
       <article
         className={`@container w-full h-full rounded-2xl bg-[#FCF7FD] p-11 flex place-content-center`}>
@@ -58,15 +65,18 @@ export default function PreferenceSettingCard({
             </ul>
 
             {/* 취향 키워드 */}
-            {/* todo: 장르 api 연동 */}
             <div className='flex flex-row items-center justify-center gap-2 font-medium mt-1 ml-[-2px] text-[10px] @sm:text-xs'>
-              {['힙합', '댄스', '발라드'].map((genre) => (
-                <span
-                  key={genre}
-                  className='px-3 py-0.5 bg-[#4E7ACF]/10 rounded-full text-[#4E7ACF]'>
-                  {genre}
-                </span>
-              ))}
+              {genres.length > 0 ? (
+                genres.map((genre) => (
+                  <span
+                    key={genre}
+                    className='px-1.5 py-0.5 bg-[#4E7ACF]/10 rounded-full text-[#4E7ACF]'>
+                    {genre}
+                  </span>
+                ))
+              ) : (
+                <span className='px-3 py-0.5 bg-[#4E7ACF]/10 rounded-full text-[#4E7ACF]'>딱 맞는 취향을 찾는중 ...</span>
+              )}
             </div>
           </div>
         </div>

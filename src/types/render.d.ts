@@ -12,11 +12,12 @@ interface FurnitureData {
   position: [number, number, number];
   modelPath: string;
   isEditable: boolean;
+  scale?: number
 }
 
 interface FurnitureProps {
   item: FurnitureData;
-  onInteract: (itemType: string) => void;
+  onInteract?: (itemType: string) => void;
 }
 
 interface RoomModelProps {

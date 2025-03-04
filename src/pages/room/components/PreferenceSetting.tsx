@@ -10,6 +10,8 @@ export default function PreferenceSetting({
   bookshelfLevel,
   cdRackLevel,
   furnitures,
+  bookGenres,
+  cdGenres,
   onClose,
 }: PreferenceSettingProps) {
   const modalRef = useRef<HTMLDivElement>(null);
@@ -23,6 +25,7 @@ export default function PreferenceSetting({
         <PreferenceSettingCard
           title={'음악'}
           level={cdRackLevel}
+          genres={cdGenres}
           thumbnail={cdImg}
           maxCount={storageData.maxMusic}
           savedCount={storageData.savedMusic}
@@ -33,6 +36,7 @@ export default function PreferenceSetting({
         <PreferenceSettingCard
           title={'도서'}
           level={bookshelfLevel}
+          genres={bookGenres}
           thumbnail={bookImg}
           maxCount={storageData.maxBooks}
           savedCount={storageData.savedBooks}
