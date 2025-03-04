@@ -48,7 +48,7 @@ export default function TopRankingItem({ user }) {
           <img
             className={`
             ${
-              user.rank === 1 ? 'w-9 @2xl:w-12' : 'w-7.5 @2xl:w-10'
+              user.rank === 1 ? 'w-9 h-9 @2xl:w-12 @2xl:h-12' : 'w-7.5 h-7.5 @2xl:w-10  @2xl:h-10'
             } rounded-full`}
             src={user.profileImage}
             alt={user.nickname}

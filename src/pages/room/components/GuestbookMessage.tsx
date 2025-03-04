@@ -88,7 +88,7 @@ export default function GuestbookMessage({
                     <img
                       src={msg.profileImage || exProfile}
                       alt={`${msg.nickname}의 프로필`}
-                      className='w-6 @2xl:w-7 rounded-full'
+                      className='w-6 h-6 @2xl:w-7 @2xl:h-7 rounded-full'
                     />
                     <p className='text-sm @2xl:pb-1 @2xl:text-base font-semibold text-[#292929]'>
                       {msg.nickname}

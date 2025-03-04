@@ -48,7 +48,7 @@ export default function RankingModal({ onClose }) {
       transition={{ type: 'spring', stiffness: 130, damping: 18 }}
       className={`@container rank-modal backdrop-blur-2xl rounded-3xl p-2.5 @8xl:p-4 drop-shadow-modal items-center justify-center absolute bottom-10 @8xl:bottom-15 left-10 @2xl:left-20
     `}>
-      <div className='@container w-full h-full bg-[#F9FCFF] rounded-2xl flex flex-col items-center justify-start px-7 @2xl:p-12 overflow-hidden py-7'>
+      <div className='@container w-full h-full bg-[#FCFDFF] rounded-2xl flex flex-col items-center justify-start px-7 @2xl:p-12 overflow-hidden py-7'>
         <img
           onClick={onClose}
           className='absolute right-6 top-6 @8xl:top-8 @8xl:right-8 @8xl:w-6 opacity-20 hover:opacity-100'
