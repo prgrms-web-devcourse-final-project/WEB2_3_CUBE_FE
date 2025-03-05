@@ -1,7 +1,5 @@
 import { Center, useGLTF } from '@react-three/drei';
 import { useEffect, useMemo } from 'react';
-import Furnitures from '../../components/room-models/Furnitures';
-import { useRoomItems } from '../../hooks/useRoomItems';
 import * as THREE from 'three';
 
 export default function HiveRoomModel({ room, position }: HiveRoomModelProps) {
@@ -14,19 +12,15 @@ export default function HiveRoomModel({ room, position }: HiveRoomModelProps) {
       if (object instanceof THREE.Mesh) {
         object.material = (object.material as THREE.Material).clone();
         object.geometry = object.geometry.clone();
+
+        object.castShadow = true;
+        object.receiveShadow = true;
       }
     });
     return clonedScene;
   }, [originalScene]);
 
-  const { items } = useRoomItems({
-    roomId: parseInt(room.roomId),
-    furnitures: room.furnitures,
-  });
-  console.log(`Room ${room.roomId} items:`, items);
-
   const roomScale = 0.5;
-  const roomRotation = -Math.PI / 4;
 
   useEffect(() => {
     if (!scene) return;
@@ -35,37 +29,7 @@ export default function HiveRoomModel({ room, position }: HiveRoomModelProps) {
     const box = new THREE.Box3().setFromObject(scene);
     const center = new THREE.Vector3();
     box.getCenter(center);
-
-    scene.traverse((object: THREE.Object3D) => {
-      if (object instanceof THREE.Mesh) {
-        object.castShadow = true;
-        object.receiveShadow = true;
-      }
-    });
   }, [scene, room.roomId, position]);
-
-  const adjustedItems = useMemo(() => {
-    if (!scene || !items.length) return [];
-
-    const scaleRatio = roomScale / 0.68; // 0.7353
-    return items.map((item) => {
-      const itemPos = new THREE.Vector3(...item.position);
-
-      itemPos.applyAxisAngle(new THREE.Vector3(0, 1, 0), roomRotation);
-
-      itemPos.multiplyScalar(scaleRatio);
-
-      console.log(`Room ${room.roomId} Item ${item.id} adjusted position:`, itemPos.toArray());
-
-      return {
-        ...item,
-        position: itemPos.toArray() as [number, number, number],
-      };
-    });
-  }, [scene, items, roomRotation, room.roomId]);
-
-  if (!scene || !adjustedItems.length) return null;
-
 
   return (
       <Center>
@@ -74,12 +38,6 @@ export default function HiveRoomModel({ room, position }: HiveRoomModelProps) {
           scale={roomScale}
           rotation={[0, -Math.PI / 4, 0]}
         />
-        {adjustedItems.map((item) => (
-          <Furnitures
-            key={item.id}
-            item={{ ...item, scale: roomScale }}
-          />
-        ))}
       </Center>
   );
 }

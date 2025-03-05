@@ -1,42 +1,59 @@
 import * as THREE from 'three';
-import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
-import { useNavigate } from 'react-router-dom';
+import { Canvas } from '@react-three/fiber';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { RoomLighting } from '../../../components/room-models/RoomLighting';
+import { useToastStore } from '../../../store/useToastStore';
+import { roomAPI } from '../../../apis/room';
 import HiveRoomModel from '../HiveRoomModel';
 import useHexagonGrid from '../hooks/useHexagonGrid';
 import useRooms from '../hooks/useRooms';
 
-export default function HiveRooms({myUserId}: HiveRoomsProps) {
-  const { rooms, loading, error } = useRooms(30, myUserId);
+export default function HiveRooms({ myUserId }: HiveRoomsProps) {
+  const { rooms } = useRooms(30, myUserId);
+  const { showToast } = useToastStore();
   const positionedRooms = useHexagonGrid(rooms, 0, 0);
   const [hoveredRoom, setHoveredRoom] = useState<number | null>(null);
   const navigate = useNavigate();
 
-  console.log('Rooms:', rooms);
-  console.log('Positioned Rooms:', positionedRooms);
-  console.log('Rooms:', rooms.map(r => ({ roomId: r.roomId, modelPath: r.modelPath })));
-
-  if (loading) return <div>로딩 중...</div>;
-  if (error) return <div>에러 발생: {error.message}</div>;
+  const handleRoomClick = async (hostId: number) => {
+    try {
+      // await roomAPI.visitedRoomByUserId(myUserId, hostId);
+      // console.log(hostId);
+      navigate(`/room/${hostId}`);
+      showToast('방으로 순간 이동 완료! 재미있는 곳일지도?!', 'success');
+    } catch (error) {
+      console.error('방문 처리 중 오류 발생:', error);
+    }
+  };
 
   return (
     <div className='w-full h-screen relative'>
-      <Canvas camera={{ position: [0, 4, 10], fov: 25 }}>
+      <Canvas
+        camera={{ position: [0, 4, 10], fov: 25 }}
+        shadows>
         <RoomLighting />
-        <pointLight position={[10, 10, 10]} />
-        {positionedRooms.map(({ room, position }, index) =>
-            <group
-              key={index}
+        <directionalLight
+          position={[10, 10, 10]}
+          intensity={1.5}
+          castShadow
+          shadow-mapSize-width={1024}
+          shadow-mapSize-height={1024}
+        />
+        {positionedRooms.map(({ room, position }, index:number) => (
+          <group
+            key={index}
+            position={position}
+            onPointerOver={() => setHoveredRoom(index)}
+            onPointerOut={() => setHoveredRoom(null)}
+            onClick={() => handleRoomClick(room.userId)}>
+            <HiveRoomModel
+              room={room}
               position={position}
-              onPointerOver={() => setHoveredRoom(index)}
-              onPointerOut={() => setHoveredRoom(null)}
-              onClick={() => navigate(`/room/${room.userId}`)}
-            >
-              <HiveRoomModel room={room} position={position}/>
-            </group>
-        )}
+            />
+          </group>
+        ))}
         <OrbitControls
           enableRotate={false}
           enableZoom={true}
@@ -47,7 +64,7 @@ export default function HiveRooms({myUserId}: HiveRoomsProps) {
         />
       </Canvas>
       <div
-        className="absolute bottom-22 left-1/2 transform -translate-x-1/2 font-medium"
+        className='absolute bottom-22 left-1/2 transform -translate-x-1/2 font-medium'
         style={{
           padding: '8px 20px',
           background: 'rgba(47, 71, 131, 0.4)',
@@ -55,13 +72,14 @@ export default function HiveRooms({myUserId}: HiveRoomsProps) {
           color: 'white',
           borderRadius: '40px',
           fontSize: '14px',
-          pointerEvents: 'none', 
-          whiteSpace: 'nowrap', 
+          pointerEvents: 'none',
+          whiteSpace: 'nowrap',
           opacity: hoveredRoom !== null ? 1 : 0,
-          transition: 'opacity 0.2s ease-in-out', 
-        }}
-      >
-        {hoveredRoom !== null ? `✊🏻 똑똑! ${rooms[hoveredRoom]?.nickname}의 방에 들어가실래요?` : ''}
+          transition: 'opacity 0.2s ease-in-out',
+        }}>
+        {hoveredRoom !== null
+          ? `✊🏻 똑똑! ${rooms[hoveredRoom]?.nickname}의 방에 들어가실래요?`
+          : ''}
       </div>
     </div>
   );

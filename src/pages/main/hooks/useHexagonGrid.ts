@@ -68,12 +68,11 @@ export default function useHexagonGrid(rooms, centerX = 0, centerY = 0) {
 
     const finalRooms = result.map(({ position: [q, r, ], room }) => {
       const x = centerX + width * (q + r / 2);
-      const y = centerY - height * (2.97 / 4.2) * r;
+      const y = centerY - height * (2.98 / 4.2) * r;
       const z = r * 0.7;
       return { room, position: [x, y, z] };
     });
 
-    console.log(`Generated ${finalRooms.length} room positions for ${roomCount} rooms`);
     return finalRooms;
   }, [rooms, centerX, centerY]);
 
