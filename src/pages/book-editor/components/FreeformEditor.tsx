@@ -3,12 +3,8 @@ import StarterKit from '@tiptap/starter-kit';
 import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
 import Strike from '@tiptap/extension-strike';
-import Link from '@tiptap/extension-link';
-import Image from '@tiptap/extension-image';
 import { useEffect } from 'react';
 import { BookThemeType, BOOK_THEME } from '@/constants/bookTheme';
-
-type Level = 2 | 3 | 4 | 5; // 2-5 레벨 허용
 
 interface FreeformEditorProps {
   value: string;
@@ -27,23 +23,13 @@ const FreeformEditor = ({
     extensions: [
       StarterKit.configure({
         heading: false,
+        blockquote: false,
       }),
       TextAlign.configure({
         types: ['paragraph'],
       }),
       Underline,
       Strike,
-      Link.configure({
-        openOnClick: true,
-        HTMLAttributes: {
-          class: 'text-blue-600 hover:underline',
-        },
-      }),
-      Image.configure({
-        HTMLAttributes: {
-          class: 'max-w-full rounded-lg',
-        },
-      }),
     ],
     content: value,
     editorProps: {
@@ -54,29 +40,13 @@ const FreeformEditor = ({
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
     },
-  }, []);
+  });
 
   useEffect(() => {
     return () => {
       editor?.destroy();
     };
   }, [editor]);
-
-  const headingLevels: Level[] = [2, 3, 4, 5]; // 2-5 레벨 배열
-
-  const addLink = () => {
-    const url = window.prompt('URL을 입력해주세요:');
-    if (url) {
-      editor?.chain().focus().setLink({ href: url }).run();
-    }
-  };
-
-  const addImage = () => {
-    const url = window.prompt('이미지 URL을 입력해주세요:');
-    if (url) {
-      editor?.chain().focus().setImage({ src: url }).run();
-    }
-  };
 
   return (
     <div>
@@ -87,7 +57,7 @@ const FreeformEditor = ({
       </h3>
       {/* 메뉴 바 */}
       <div
-        className='flex items-center gap-2 p-2 rounded-t-lg text-gray-500'
+        className='flex gap-2 items-center p-2 text-gray-500 rounded-t-lg'
         style={{
           borderWidth: '2px',
           borderColor: `${colors.secondary}33`,
@@ -121,29 +91,10 @@ const FreeformEditor = ({
           }`}>
           <span className='line-through'>S</span>
         </button>
-        <button
-          onClick={() => editor?.chain().focus().toggleBlockquote().run()}
-          className={`w-10 h-10 hover:bg-gray-100/50 rounded ${
-            editor?.isActive('blockquote') ? 'bg-gray-200/50' : ''
-          }`}>
-          <span className='font-serif'>"</span>
-        </button>
-        <button
-          onClick={addLink}
-          className={`w-10 h-10 hover:bg-gray-100/50 rounded ${
-            editor?.isActive('link') ? 'bg-gray-200/50' : ''
-          }`}>
-          <span>🔗</span>
-        </button>
-        <button
-          onClick={addImage}
-          className='w-10 h-10 hover:bg-gray-100/50 rounded'>
-          <span>🖼️</span>
-        </button>
       </div>
       {/* 에디터 본문 */}
       <div
-        className='rounded-b-md p-4'
+        className='p-4 rounded-b-md'
         style={{
           borderWidth: '2px',
           borderTopWidth: 0,

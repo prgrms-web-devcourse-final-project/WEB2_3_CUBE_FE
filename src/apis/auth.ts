@@ -2,6 +2,7 @@ import { useUserStore } from '@/store/useUserStore';
 import axiosInstance from './axiosInstance';
 import { Cookies } from 'react-cookie';
 import { ACCESS_MAX_AGE, REFRESH_MAX_AGE } from '@constants/login';
+import { webSocketService } from '@/apis/websocket';
 
 const cookies = new Cookies();
 const API_URL = 'api';
@@ -27,6 +28,9 @@ export const loginAPI = async (token: string) => {
 
     // user 정보 저장
     useUserStore.getState().setUser(user);
+
+    // 웹소켓 서비스 초기화 및 연결
+    webSocketService.handleLogin();
 
     return data;
   } catch (error) {
@@ -54,10 +58,15 @@ export const refreshAccessTokenAPI = async (refreshToken: string) => {
 };
 
 export const logoutAPI = async () => {
+  if (webSocketService.isConnected()) {
+    webSocketService.disconnect(true);
+  }
+
   const response = await axiosInstance.post(`/${API_URL}/auth/logout`);
 
   localStorage.removeItem('user-storage');
   cookies.remove('accessToken', { path: '/' });
   cookies.remove('refreshToken', { path: '/' });
+
   return response.data;
 };

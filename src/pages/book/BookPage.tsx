@@ -5,7 +5,6 @@ import BookReviewViewer from '../book-viewer/BookViewerPage';
 import { bookAPI } from '@/apis/book';
 import { useToastStore } from '@/store/useToastStore';
 import { BookReviewData } from '@/types/book';
-import { LoadingManager } from 'three';
 import Loading from '@components/Loading';
 
 const BookPage = () => {
@@ -79,7 +78,7 @@ const BookPage = () => {
     };
 
     fetchData();
-  }, [bookId, isMyReview, isEditMode, navigate, showToast]);
+  }, [bookId, isMyReview, isEditMode, navigate, showToast, userId]);
 
   if (isLoading || !bookInfo) return <Loading />;
 

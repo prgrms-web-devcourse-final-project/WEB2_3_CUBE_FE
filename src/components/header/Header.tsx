@@ -9,6 +9,9 @@ import HousemateModal from './menus/housemate-modal/HousemateModal';
 import NotificationModal from './menus/notification-modal/NotificationModal';
 import { notificationAPI } from '../../apis/notification';
 import { useUserStore } from '@/store/useUserStore';
+import { useToastStore } from '@/store/useToastStore';
+import { webSocketService } from '@/apis/websocket';
+import { getCookie } from '@/utils/cookie';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,9 +19,11 @@ const Header = () => {
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
   const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
   const [isNewNotification, setIsNewNotification] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(true);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const housemateButtonRef = useRef<HTMLButtonElement>(null);
   const notificationButtonRef = useRef<HTMLButtonElement>(null);
+  const showToast = useToastStore((state) => state.showToast);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -37,37 +42,82 @@ const Header = () => {
     };
   }, [isMenuOpen]);
 
+  // 초기 알림 상태 확인
   useEffect(() => {
-    // 새 알림 이벤트 리스너
-    const handleNewNotification = () => {
+    const checkUnreadNotifications = async () => {
+      const user = useUserStore.getState().user;
+      if (!user) return;
+
+      try {
+        const response = await notificationAPI.getNotifications(
+          user.userId,
+          undefined,
+          20,
+          false, // 읽지 않은 알림만 조회
+        );
+        // console.log('읽지 않은 알림:', response.notifications);
+        setHasUnreadNotifications(response.notifications.length > 0);
+      } catch (error) {
+        console.error('알림 상태 확인 실패:', error);
+      }
+    };
+
+    checkUnreadNotifications();
+  }, [isNotificationModalOpen]); // 모달이 닫힐 때마다 알림 상태 다시 체크
+
+  useEffect(() => {
+    const handleNewNotification = (event: CustomEvent) => {
+      console.log('새 알림 수신:', event.detail); // 디버깅용 로그 추가
       setHasUnreadNotifications(true);
       setIsNewNotification(true);
+
+      // 토스트 메시지 추가
+      showToast('새로운 알림이 있습니다', 'success');
+
       setTimeout(() => {
         setIsNewNotification(false);
       }, 3000);
     };
 
-    // 초기 알림 상태 확인
-    const checkUnreadNotifications = async () => {
-      const user = useUserStore.getState().user;
-      if (!user) return;
-
-      const response = await notificationAPI.getNotifications(
-        user.userId,
-        undefined,
-        20,
-        false,
+    window.addEventListener(
+      'newNotification',
+      handleNewNotification as EventListener,
+    );
+    return () => {
+      window.removeEventListener(
+        'newNotification',
+        handleNewNotification as EventListener,
       );
-      setHasUnreadNotifications(response.notifications.length > 0);
+    };
+  }, [showToast]);
+
+  // 웹소켓 연결 시도
+  useEffect(() => {
+    const connectWebSocket = async () => {
+      const token = getCookie('accessToken');
+      if (!token) {
+        console.error('웹소켓 연결 실패: 토큰이 없음');
+        return;
+      }
+
+      // console.log('웹소켓 연결 시도 전 토큰 확인:', token);
+
+      try {
+        await webSocketService.connect();
+      } catch (error) {
+        console.error('웹소켓 연결 실패:', error);
+        showToast('알림 서비스 연결에 실패했습니다.', 'error');
+      } finally {
+        setIsConnecting(false);
+      }
     };
 
-    window.addEventListener('newNotification', handleNewNotification);
-    checkUnreadNotifications();
+    connectWebSocket();
 
     return () => {
-      window.removeEventListener('newNotification', handleNewNotification);
+      webSocketService.disconnect();
     };
-  }, []);
+  }, []); // 컴포넌트 마운트 시 한 번만 실행
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -84,6 +134,33 @@ const Header = () => {
   // 알림 읽음 상태 업데이트 함수
   const updateNotificationStatus = (hasUnread: boolean) => {
     setHasUnreadNotifications(hasUnread);
+  };
+
+  // 웹소켓 연결 중일 때 알림 아이콘에 로딩 표시
+  const renderNotificationIcon = () => {
+    if (isConnecting) {
+      return (
+        <div className='relative'>
+          <img
+            src={notificationIcon}
+            alt='알림'
+            className='w-8 h-8 opacity-50' // 연결 중일 때 흐리게 표시
+          />
+          <div className='flex absolute inset-0 justify-center items-center'>
+            {/* 로딩 스피너나 다른 로딩 표시 */}
+            <div className='w-4 h-4 rounded-full border-2 border-gray-300 animate-spin border-t-blue-500' />
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <img
+        src={notificationIcon}
+        alt='알림'
+        className='w-8 h-8'
+      />
+    );
   };
 
   return (
@@ -105,18 +182,36 @@ const Header = () => {
             type='button'
             aria-label='알림'
             onClick={toggleNotificationModal}
-            className='relative cursor-pointer'>
-            <img
-              src={notificationIcon}
-              alt='알림'
-              className='w-8 h-8'
-            />
-            {hasUnreadNotifications && (
+            className='relative cursor-pointer'
+            disabled={isConnecting}>
+            {renderNotificationIcon()}
+            <div className='absolute top-[2.5px] right-[5.7px]'>
+              {/* 기본 알림 점 */}
               <div
-                className={`absolute top-[2.5px] right-[5.7px] w-2 h-2 bg-orange-500 rounded-full
-                  ${isNewNotification ? 'animate-notification-ping' : ''}`}
+                className={`w-2 h-2 bg-orange-500 rounded-full z-50 ${
+                  isNewNotification ? 'animate-notification-ping' : ''}`}
+                style={{
+                  display:
+                    hasUnreadNotifications || isNewNotification
+                      ? 'block'
+                      : 'none',
+                }}
               />
-            )}
+              {/* 네온 효과 */}
+              <div
+                className={`absolute top-0 right-0 w-2 h-2 rounded-full z-40
+                  ${
+                    isNewNotification ? 'animate-notification-glow' : ''} before:content-[''] before:absolute before:-inset-4 before:bg-gradient-radial before:from-orange-500/40 before:via-orange-500/20 before:to-transparent before:rounded-full before:blur-sm`}
+                style={{
+                  opacity: isNewNotification ? 1 : 0,
+                  transition: 'opacity 300ms ease-in-out',
+                }}
+              />
+            </div>
+            <div className='hidden'>
+              hasUnread: {hasUnreadNotifications.toString()}, isNew:{' '}
+              {isNewNotification.toString()}
+            </div>
           </button>
           <button
             ref={housemateButtonRef}
@@ -145,10 +240,7 @@ const Header = () => {
                 className='w-8 h-8'
               />
             </button>
-            <HiddenMenu
-              isOpen={isMenuOpen}
-              onClose={() => setIsMenuOpen(false)}
-            />
+            <HiddenMenu isOpen={isMenuOpen} />
           </div>
         </nav>
       </header>

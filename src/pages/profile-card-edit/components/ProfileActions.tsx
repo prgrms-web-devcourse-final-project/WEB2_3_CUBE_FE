@@ -23,12 +23,12 @@ export const ProfileActions = ({
       await profileAPI.withdraw();
       navigate('/login');
     } catch (error) {
-      showToast('회원 탈퇴에 실패했어요. 잠시 후 다시 시도해주세요.', 'error');
+      showToast('회원 탈퇴에 실패했어요. 잠시 후 다시 시도해주세요.', error);
     }
   };
 
   return (
-    <div className='flex flex-col items-center gap-4'>
+    <div className='flex flex-col gap-4 items-center'>
       <LayeredButton
         theme='purple'
         className='py-1.5 px-10'

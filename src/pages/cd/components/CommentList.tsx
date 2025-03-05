@@ -9,7 +9,7 @@ import { formatDate } from '@utils/dateFormat';
 import { useDebounce } from '@hooks/useDebounce';
 import SkeletonItem from '@components/SkeletonItem';
 import { useUserStore } from '@/store/useUserStore';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
   const [currentInput, setCurrentInput] = useState('');
@@ -119,7 +119,7 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
                   key={comment.id}
                   className={`flex justify-between items-center bg-[#F7F1FA80] rounded-[12px]  `}>
                   <div className='flex flex-col gap-1 py-4 pl-7'>
-                    <div className='flex items-baseline gap-2 '>
+                    <div className='flex gap-2 items-baseline'>
                       <span className='text-[#401D5F] text-[16px] font-bold line-clamp-1'>
                         {comment.nickname}
                       </span>
@@ -135,7 +135,7 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
                   {isAccessible(comment.userId) && (
                     <button
                       onClick={() => handleDeleteComment(comment.id)}
-                      className='pr-8 py-7 hover:opacity-50 '>
+                      className='py-7 pr-8 hover:opacity-50'>
                       <img
                         src={trashIcon}
                         alt='댓글 삭제버튼'
@@ -145,7 +145,7 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
                 </li>
               ))
             ) : (
-              <div className='flex flex-col items-center justify-center h-40 text-gray-500'>
+              <div className='flex flex-col justify-center items-center h-40 text-gray-500'>
                 <p>검색 결과가 없습니다.</p>
               </div>
             )}

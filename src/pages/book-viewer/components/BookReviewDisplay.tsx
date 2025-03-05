@@ -1,5 +1,5 @@
 import { bookAPI } from '@apis/book';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { BOOK_THEME, BookThemeType } from '@/constants/bookTheme';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToastStore } from '@/store/useToastStore';
@@ -63,7 +63,7 @@ const BookReviewDisplay = ({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   // view 모드일 때 사용할 데이터 fetch 로직
-  const [reviewData, setReviewData] = useState<BookReviewData | null>(null);
+  // const [reviewData, setReviewData] = useState<BookReviewData | null>(null);
 
   useEffect(() => {
     if (mode === 'view' && userId && bookId) {
@@ -117,7 +117,7 @@ const BookReviewDisplay = ({
 
   return (
     <div
-      className='relative h-full overflow-x-hidden overflow-y-auto'
+      className='overflow-y-auto overflow-x-hidden relative h-full'
       style={{ scrollBehavior: 'smooth' }}>
       <BookHeader
         title={displayData.title}

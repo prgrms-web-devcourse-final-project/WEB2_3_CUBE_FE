@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import commentEdit from '@assets/cd/comment-edit.svg';
 import commentSubmit from '@assets/cd/comment-submit.svg';
 import CommentList from './CommentList';
@@ -127,15 +127,15 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
           type='button'
           onClick={() => setIsCommentListOpen(true)}>
           <img
-            className=' hover:opacity-50 '
+            className='hover:opacity-50'
             src={commentEdit}
             alt='댓글 목록 버튼'
           />
         </button>
 
-        <div className='w-full h-full py-14  px-7 flex flex-col justify-end items-end gap-6'>
+        <div className='flex flex-col gap-6 justify-end items-end px-7 py-14 w-full h-full'>
           {/* 댓글 목록 */}
-          <ul className='flex flex-col justify-end items-end gap-4 overflow-hidden'>
+          <ul className='flex overflow-hidden flex-col gap-4 justify-end items-end'>
             {/* 댓글  */}
             {currentComments.map((comment, index) => (
               <motion.li
@@ -171,7 +171,7 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
               type='button'
               disabled={isPending}
               onClick={handleSubmitComment}
-              className='absolute bottom-5 right-4 hover:opacity-50'>
+              className='absolute right-4 bottom-5 hover:opacity-50'>
               <img
                 src={commentSubmit}
                 alt='댓글 제출 버튼'

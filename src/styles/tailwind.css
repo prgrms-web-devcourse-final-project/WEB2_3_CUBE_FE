@@ -82,7 +82,7 @@
     @apply drop-shadow-[10px_4px_10px_rgba(78,122,207,0.15)];
   }
 
-  /* 새로운 알림 깜빡임 애니메이션 */
+  /* 깜빡임 애니메이션 */
   .animate-notification-ping {
     animation: notification-ping 1s ease-in-out infinite;
   }
@@ -97,5 +97,31 @@
     100% {
       opacity: 1;
     }
+  }
+
+  /* 네온 글로우 효과 애니메이션 */
+  .animate-notification-glow {
+    animation: notification-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes notification-glow {
+    0%,
+    100% {
+      opacity: 0.6;
+      transform: scale(1.2);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(2);
+    }
+  }
+
+  /* 방사형 그라데이션 */
+  .bg-gradient-radial {
+    background-image: radial-gradient(
+      circle,
+      var(--tw-gradient-from),
+      var(--tw-gradient-to)
+    );
   }
 }

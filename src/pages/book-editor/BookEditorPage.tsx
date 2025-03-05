@@ -1,14 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { useEditor, EditorContent } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import TextAlign from '@tiptap/extension-text-align';
-import Underline from '@tiptap/extension-underline';
-import Heading from '@tiptap/extension-heading';
 import ReviewTextField from './components/ReviewTextField';
 import FreeformEditor from './components/FreeformEditor';
 import BookReviewDisplay from '@pages/book-viewer/components/BookReviewDisplay';
-import { BOOK_THEME, BookThemeType } from '@/constants/bookTheme';
+import { BOOK_THEME } from '@/constants/bookTheme';
 import ThemeSelector from './components/ThemeSelector';
 import { useToastStore } from '@/store/useToastStore';
 import { bookAPI } from '@/apis/book';
@@ -29,7 +24,6 @@ const BookEditorPage = ({
   genreNames,
   publishedDate,
   imageUrl,
-  onComplete,
 }: BookEditorPageProps) => {
   const { bookId } = useParams();
   const navigate = useNavigate();
@@ -174,30 +168,12 @@ const BookEditorPage = ({
     }
   };
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      TextAlign.configure({
-        types: ['heading', 'paragraph'],
-      }),
-      Underline,
-      Heading.configure({
-        levels: [1, 2, 3],
-      }),
-    ],
-    content: '',
-    editorProps: {
-      attributes: {
-        class: 'prose prose-sm focus:outline-none min-h-[200px] px-4 py-2',
-      },
-    },
-  });
 
   return (
-    <section className='flex w-full h-screen overflow-x-hidden'>
+    <section className='flex overflow-x-hidden w-full h-screen'>
       {/* 에디터 영역 */}
       <article className='w-1/2 h-full p-8 overflow-y-auto bg-[#FDFEFF] scrollbar-none'>
-        <div className='flex flex-col gap-8 py-12 overflow-auto px-14 scrollbar-none'>
+        <div className='flex overflow-auto flex-col gap-8 px-14 py-12 scrollbar-none'>
           {/* 제목 입력 영역 */}
           <input
             type='text'
@@ -205,7 +181,7 @@ const BookEditorPage = ({
             placeholder='제목을 입력해주세요...'
             value={reviewFields.title}
             onChange={(e) => handleFieldChange('title')(e.target.value)}
-            className={`w-full py-4 text-4xl font-semibold focus:outline-none placeholder:text-opacity-40 overflow-hidden text-ellipsis`}
+            className={`overflow-hidden py-4 w-full text-4xl font-semibold focus:outline-none placeholder:text-opacity-40 text-ellipsis`}
             style={{
               borderBottomWidth: '2px',
               borderBottomColor: `${
@@ -260,7 +236,7 @@ const BookEditorPage = ({
               theme={reviewFields.theme}
             />
 
-            <div className='flex justify-end gap-4'>
+            <div className='flex gap-4 justify-end'>
               <button
                 onClick={handleTempSave}
                 className='px-7 py-2 text-gray-600 bg-gray-200 rounded-[10px] drop-shadow-logo'>
@@ -288,7 +264,7 @@ const BookEditorPage = ({
       </article>
 
       {/* 실시간 뷰어 영역 */}
-      <article className='w-1/2 h-full overflow-x-hidden'>
+      <article className='overflow-x-hidden w-1/2 h-full'>
         <BookReviewDisplay
           mode='preview'
           previewData={reviewFields}
