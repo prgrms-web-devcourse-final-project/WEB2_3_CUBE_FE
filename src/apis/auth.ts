@@ -72,7 +72,9 @@ export const logoutAPI = async () => {
 };
 
 export const initStatus = () => {
-  // webSocketService.disconnect();
+  if (webSocketService.isConnected()) {
+    webSocketService.disconnect(true);
+  }
 
   localStorage.removeItem('user-storage');
   cookies.remove('accessToken', { path: '/' });

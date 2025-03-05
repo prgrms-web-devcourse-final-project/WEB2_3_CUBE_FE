@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Cookies } from 'react-cookie';
-import { initStatus, logoutAPI, refreshAccessTokenAPI } from './auth';
+import { initStatus, refreshAccessTokenAPI } from './auth';
 const cookies = new Cookies();
 
 const axiosInstance = axios.create({
