@@ -14,7 +14,8 @@ const PAYMENT_OPTIONS: PaymentOption[] = [
   { points: 4000, amount: 30000 },
 ];
 
-const TOSS_CLIENT_KEY = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
+// const TOSS_CLIENT_KEY = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
+const TOSS_CLIENT_KEY = import.meta.env.VITE_TOSS_CLIENT_KEY;
 const CUSTOMER_KEY = 'XmkftbSBcZJXPNRb0sd5D'; // 테스트용 임시 키
 
 const TestPage = () => {
