@@ -11,6 +11,7 @@ import GenreCard from './components/GenreCard';
 import RecommendedUserList from './components/RecommendedUserList';
 import ProfileButtons from './components/ProfileButtons';
 import { useToastStore } from '@/store/useToastStore';
+import Loading from '@components/Loading';
 
 const ProfileCardPage = () => {
   const { userId } = useParams();
@@ -86,7 +87,7 @@ const ProfileCardPage = () => {
   };
 
   if (!profile) {
-    return <div>로딩 중...</div>;
+    return <Loading />;
   }
 
   const isMyProfile = user?.userId === Number(userId);
@@ -94,7 +95,9 @@ const ProfileCardPage = () => {
   return (
     <ProfileCardLayout onClickOutside={handleClickOutside}>
       {/* 포인트 */}
-      <button className='flex items-center gap-2 bg-[#B5B5B5]/10 rounded-full px-3 py-1.5 absolute top-10 left-10'>
+      <button
+        onClick={() => navigate(`/point/${userId}`)}
+        className='flex items-center gap-2 bg-[#B5B5B5]/10 rounded-full px-3 py-1.5 absolute top-10 left-10'>
         <img
           src={pointIcon}
           alt='사용자 현재 포인트'
@@ -126,7 +129,7 @@ const ProfileCardPage = () => {
       {/* 취향 카드 */}
       <div
         aria-label='취향 카드'
-        className='w-full gap-2 item-between'>
+        className='gap-2 w-full item-between'>
         <GenreCard
           title='음악 감성'
           genres={profile.musicGenres}

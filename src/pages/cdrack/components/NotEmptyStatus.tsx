@@ -9,9 +9,9 @@ import { useUserStore } from '@/store/useUserStore';
 import { useParams } from 'react-router-dom';
 
 interface NotEmptyStatusProps {
-  cdRackInfo: { data: CDInfo[]; nextCursor: number };
+  cdRackInfo: CDRackInfo;
   onPrevPage: () => void;
-  onNextPage: () => void;
+  onNextPage: (cursor: number) => void;
 }
 
 export default function NotEmptyStatus({
@@ -23,13 +23,20 @@ export default function NotEmptyStatus({
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [newItem, setNewItem] = useState(null);
-  const [cdRackDatas, setcdRackDatas] = useState<CDInfo[]>(cdRackInfo.data);
+  const [cdRackDatas, setcdRackDatas] = useState<CDRackInfo>(cdRackInfo);
 
-  console.log(cdRackDatas);
+  const swiperRef = useRef<SwiperRef | null>(null);
+  const myUserId = useUserStore().user.userId;
+  const userId = Number(useParams().userId);
+
+  const activeTrack = cdRackDatas.data.find(
+    (track: CDInfo) => track.myCdId === cdRackDatas.data[activeIndex]?.myCdId,
+  );
 
   useEffect(() => {
     if (!newItem) return;
     const newCdDatas = {
+      myCdId: newItem.id,
       title: newItem.title,
       artist: newItem.artist,
       album: newItem.album_title,
@@ -39,16 +46,17 @@ export default function NotEmptyStatus({
       duration: newItem.duration,
       releaseDate: newItem.date,
     };
-    setcdRackDatas((prev) => [...prev, newCdDatas]);
+    const pageLength = cdRackDatas.data.length;
+
+    if (pageLength === 15) return;
+    setcdRackDatas((prev) => ({
+      ...prev,
+      data: [...prev.data, newCdDatas],
+      nextCursor: newCdDatas.myCdId,
+      lastMyCdId: newCdDatas.myCdId,
+      totalCount: prev.totalCount + 1,
+    }));
   }, [newItem]);
-
-  const swiperRef = useRef<SwiperRef | null>(null);
-  const myUserId = useUserStore().user.userId;
-  const userId = Number(useParams().userId);
-
-  const activeTrack = cdRackDatas.find(
-    (track: CDInfo) => track.myCdId === cdRackDatas[activeIndex]?.myCdId,
-  );
 
   return (
     <div className='flex h-full flex-col gap-19 items-center'>
@@ -64,7 +72,7 @@ export default function NotEmptyStatus({
       {/* Swiper */}
       <CdSwiper
         ref={swiperRef}
-        cdRackDatas={cdRackDatas}
+        cdRackDatas={cdRackDatas.data}
         onActiveTrackId={(activeIndex: number) => setActiveIndex(activeIndex)}
       />
 
@@ -72,7 +80,7 @@ export default function NotEmptyStatus({
       <Dock
         ref={swiperRef}
         isEmpty={false}
-        cdRackInfo={cdRackInfo}
+        cdRackInfo={cdRackDatas}
         activeIndex={activeIndex}
         onPrevPage={onPrevPage}
         onNextPage={onNextPage}

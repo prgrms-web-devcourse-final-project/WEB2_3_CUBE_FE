@@ -2,6 +2,7 @@ import { useUserStore } from '@/store/useUserStore';
 import axiosInstance from './axiosInstance';
 import { Cookies } from 'react-cookie';
 import { ACCESS_MAX_AGE, REFRESH_MAX_AGE } from '@constants/login';
+import { webSocketService } from './websocket';
 
 const cookies = new Cookies();
 const API_URL = 'api';
@@ -49,13 +50,14 @@ export const refreshAccessTokenAPI = async (refreshToken: string) => {
     path: '/',
     maxAge: ACCESS_MAX_AGE,
   });
-  console.log(data);
 
   return data;
 };
 
 export const logoutAPI = async () => {
   const response = await axiosInstance.post(`/${API_URL}/auth/logout`);
+
+  webSocketService.disconnect();
 
   localStorage.removeItem('user-storage');
   cookies.remove('accessToken', { path: '/' });

@@ -2,24 +2,34 @@ import { useEffect, useState } from 'react';
 import backgroundIMG from '@/assets/roome-background-img.png';
 import NotEmptyStatus from './components/NotEmptyStatus';
 import EmptyStatus from './components/EmptyStatus';
-import { useUserStore } from '@/store/useUserStore';
 import { getCdRack } from '@apis/cd';
 import { useParams } from 'react-router-dom';
+import Loading from '@components/Loading';
 
 export default function CdRackPage() {
-  const [cdRackInfo, setCDRackInfo] = useState({ data: [], nextCursor: 0 });
-  const [page, setPage] = useState(1);
+  const [cdRackInfo, setCDRackInfo] = useState<CDRackInfo>({
+    data: [],
+    nextCursor: 0,
+    firstMyCdId: 0,
+    lastMyCdId: 0,
+    totalCount: 0,
+  });
   const [isLoading, setIsLoading] = useState(true);
-  const user = useUserStore((state) => state.user);
-
-  const myUserId = user.userId;
+  const [cursor, setCursor] = useState(0);
+  const [cursorHistory, setCursorHistory] = useState<number[]>([0]);
   const userId = Number(useParams().userId);
 
   const handlePrevPage = () => {
-    setPage((prev) => prev - 1);
+    if (cursorHistory.length > 1) {
+      cursorHistory.pop();
+      const prevCursor = cursorHistory[cursorHistory.length - 1];
+      setCursorHistory(cursorHistory);
+      setCursor(prevCursor);
+    }
   };
-  const handleNextPage = () => {
-    setPage((prev) => prev + 1);
+  const handleNextPage = (cursor: number) => {
+    setCursorHistory((prev) => [...prev, cursor]);
+    setCursor(cursor);
   };
 
   // 내 cd 목록 불러오기
@@ -28,7 +38,7 @@ export default function CdRackPage() {
       try {
         setIsLoading(true);
 
-        const result = await getCdRack(myUserId, userId, 15, 0); // 아.. cursor에 뭔 값을 줘야 페이지네이션이 되려나..
+        const result = await getCdRack(userId, 15, cursor);
         setCDRackInfo(result);
       } catch (error) {
         console.error('cd 목록을 가져오는데 실패했습니다:', error);
@@ -37,10 +47,10 @@ export default function CdRackPage() {
       }
     };
     fetchCds();
-  }, [page]);
+  }, [cursor, userId]);
 
   if (isLoading) {
-    return <div>로딩중...</div>;
+    return <Loading />;
   }
 
   return (

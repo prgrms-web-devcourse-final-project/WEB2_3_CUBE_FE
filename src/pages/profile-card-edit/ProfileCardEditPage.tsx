@@ -111,14 +111,15 @@ const ProfileCardEditPage = () => {
         bio: formData.bio.trim(),
       });
     } catch (error) {
-      // 에러는 useProfileEdit에서 처리됨
+      console.error('프로필 수정 실패:', error);
+      showToast('프로필 수정에 실패했어요. 잠시 후 다시 시도해주세요.', 'error');
     }
   };
 
   if (isLoading) {
     return (
       <ProfileCardLayout onClickOutside={handleClickOutside}>
-        <div className='flex items-center justify-center h-full'>
+        <div className='flex justify-center items-center h-full'>
           <p className='text-lg text-[#3E507D]'>프로필 정보를 불러오는 중...</p>
         </div>
       </ProfileCardLayout>

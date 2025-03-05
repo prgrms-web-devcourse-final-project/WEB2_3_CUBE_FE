@@ -9,6 +9,7 @@ import { formatDate } from '@utils/dateFormat';
 import { useDebounce } from '@hooks/useDebounce';
 import SkeletonItem from '@components/SkeletonItem';
 import { useUserStore } from '@/store/useUserStore';
+import { motion } from 'framer-motion';
 
 const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
   const [currentInput, setCurrentInput] = useState('');
@@ -28,6 +29,8 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
     [],
   );
 
+  console.log(cdComments);
+
   useEffect(() => {
     const fetchCdComments = async () => {
       try {
@@ -39,6 +42,7 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
             ? await getCdComment(myCdId, currentPage, 5)
             : await getCdComment(myCdId, currentPage, 5, currentInput);
         totalPage.current = result.totalPages;
+
         setCdComments(result.data);
       } catch (error) {
         console.error(error);
@@ -60,13 +64,13 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
     setCurrentPage(page);
   }, []);
 
-  const handleDeleteComment = async (userId: number, commentId: number) => {
+  const handleDeleteComment = async (commentId: number) => {
     const previousComments = [...cdComments];
 
     try {
       // 낙관적 업데이트
       setCdComments(cdComments.filter((comments) => comments.id !== commentId));
-      await deleteCdComment(userId, commentId);
+      await deleteCdComment(myCdId, commentId);
     } catch (error) {
       setCdComments(previousComments);
       console.error(error);
@@ -75,7 +79,15 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
 
   return (
     <ModalBackground onClose={onClose}>
-      <div className='w-[662px] rounded-3xl border-2 border-[#FCF7FD] shadow-box  backdrop-blur-[15px] p-4 '>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, x: 20 }}
+        animate={{ opacity: 1, scale: 1, x: 0 }}
+        exit={{ opacity: 0, scale: 0.95, x: 20 }}
+        transition={{
+          duration: 0.2,
+          ease: 'easeOut',
+        }}
+        className='w-[662px] rounded-3xl border-2 border-[#FCF7FD] shadow-box  backdrop-blur-[15px] p-4 '>
         <div className='w-full h-full bg-[#FCF7FD] rounded-[16px]  backdrop-blur-[15px] pt-10 px-27'>
           <h1 className='text-[#7838AF]  text-2xl font-bold text-center mb-7'>
             댓글 목록 편집
@@ -107,7 +119,7 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
                   key={comment.id}
                   className={`flex justify-between items-center bg-[#F7F1FA80] rounded-[12px]  `}>
                   <div className='flex flex-col gap-1 py-4 pl-7'>
-                    <div className='flex items-baseline gap-2 '>
+                    <div className='flex gap-2 items-baseline'>
                       <span className='text-[#401D5F] text-[16px] font-bold line-clamp-1'>
                         {comment.nickname}
                       </span>
@@ -120,15 +132,10 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
                     </p>
                   </div>
 
-                  {isAccessible(comment.userI) && (
+                  {isAccessible(comment.userId) && (
                     <button
-                      onClick={() =>
-                        handleDeleteComment(
-                          userId === myUserId ? userId : comment.userId,
-                          comment.id,
-                        )
-                      }
-                      className='pr-8 py-7 hover:opacity-50 '>
+                      onClick={() => handleDeleteComment(comment.id)}
+                      className='py-7 pr-8 hover:opacity-50'>
                       <img
                         src={trashIcon}
                         alt='댓글 삭제버튼'
@@ -138,7 +145,7 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
                 </li>
               ))
             ) : (
-              <div className='flex flex-col items-center justify-center h-40 text-gray-500'>
+              <div className='flex flex-col justify-center items-center h-40 text-gray-500'>
                 <p>검색 결과가 없습니다.</p>
               </div>
             )}
@@ -152,7 +159,7 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
             color='#7838AF'
           />
         </div>
-      </div>
+      </motion.div>
     </ModalBackground>
   );
 });

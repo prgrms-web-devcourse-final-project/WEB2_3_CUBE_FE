@@ -11,7 +11,7 @@ export const Toast = () => {
   return (
     <div
       className={`
-      fixed top-4 left-1/2 -translate-x-1/2 z-50
+      fixed top-4 left-1/2 -translate-x-1/2 z-[500]
       py-4 px-8 rounded-lg
       flex items-center gap-4
       border-2 ${style.bg} ${style.border}

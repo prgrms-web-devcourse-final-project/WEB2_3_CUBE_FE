@@ -12,6 +12,7 @@ interface SearchModalProps {
   onClose: () => void;
   type: 'CD' | 'BOOK';
   onSelect: (item?: SearchItemType) => void;
+  onSuccess?: (item: SearchItemType) => void;
 }
 
 export const SearchModal = ({
@@ -19,6 +20,7 @@ export const SearchModal = ({
   onClose,
   type,
   onSelect,
+  onSuccess,
 }: SearchModalProps) => {
   const { query, setQuery, results, isLoading, error } = useSearch(type);
   const [selectedItem, setSelectedItem] = React.useState<SearchItemType | null>(
@@ -61,7 +63,7 @@ export const SearchModal = ({
             />
           </div>
           {/* 검색 결과 */}
-          <div className='w-1/2 pl-8'>
+          <div className='pl-8 w-1/2'>
             <SearchResult
               item={selectedItem}
               type={type}
@@ -70,6 +72,7 @@ export const SearchModal = ({
               items={results}
               onSelect={onSelect}
               onClose={onClose}
+              onSuccess={onSuccess}
             />
           </div>
         </div>

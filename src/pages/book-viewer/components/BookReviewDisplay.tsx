@@ -1,5 +1,5 @@
 import { bookAPI } from '@apis/book';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { BOOK_THEME, BookThemeType } from '@/constants/bookTheme';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToastStore } from '@/store/useToastStore';
@@ -63,7 +63,7 @@ const BookReviewDisplay = ({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   // view 모드일 때 사용할 데이터 fetch 로직
-  const [reviewData, setReviewData] = useState<BookReviewData | null>(null);
+  // const [reviewData, setReviewData] = useState<BookReviewData | null>(null);
 
   useEffect(() => {
     if (mode === 'view' && userId && bookId) {
@@ -82,8 +82,7 @@ const BookReviewDisplay = ({
     : [];
 
   const handleEdit = () => {
-    // 로그인한 유저와 서평 작성자가 다른 경우
-    if (userId && user.userId.toString() !== userId) {
+    if (!isMyReview) {
       showToast('작성된 서평이 없습니다.', 'error');
       return;
     }
@@ -93,8 +92,7 @@ const BookReviewDisplay = ({
   const handleDelete = async () => {
     if (!urlBookId) return;
 
-    // 로그인한 유저와 서평 작성자가 다른 경우
-    if (userId && user.userId.toString() !== userId) {
+    if (!isMyReview) {
       showToast('작성된 서평이 없습니다.', 'error');
       return;
     }
@@ -102,7 +100,7 @@ const BookReviewDisplay = ({
     try {
       await bookAPI.deleteReview(urlBookId);
       showToast('서평이 삭제되었습니다.', 'success');
-      navigate(`/bookCase/${userId}`);
+      navigate(`/bookCase/${user.userId}`);
     } catch (error) {
       console.error('서평 삭제 중 오류 발생:', error);
       showToast('서평 삭제에 실패했습니다.', 'error');
@@ -111,12 +109,15 @@ const BookReviewDisplay = ({
     }
   };
 
-  // 로그인한 유저와 서평 작성자가 같은지 여부
-  const isMyReview = !userId || user.userId.toString() === userId;
+  // URL 패턴으로 내 서평인지 판단
+  const pathParts = window.location.pathname.split('/');
+  const isMyReview = !(
+    pathParts.includes('book') && pathParts.includes('user')
+  );
 
   return (
     <div
-      className='relative h-full overflow-x-hidden overflow-y-auto'
+      className='overflow-y-auto overflow-x-hidden relative h-full'
       style={{ scrollBehavior: 'smooth' }}>
       <BookHeader
         title={displayData.title}

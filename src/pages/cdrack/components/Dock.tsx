@@ -1,4 +1,4 @@
-import { forwardRef, useState } from 'react';
+import { forwardRef, useRef, useState } from 'react';
 import show_next_cd from '@assets/cd/show-next-cd.svg';
 import show_prev_cd from '@assets/cd/show-prev-cd.svg';
 import show_cd_list from '@assets/cd/show-cd-list.svg';
@@ -7,10 +7,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 interface DockProps {
   isEmpty?: boolean;
-  cdRackInfo?: { data: CDInfo[]; nextCursor: number };
+  cdRackInfo?: CDRackInfo;
   activeIndex?: number;
   onPrevPage?: () => void;
-  onNextPage?: () => void;
+  onNextPage?: (cursor: number) => void;
 }
 
 const Dock = forwardRef<SwiperRef, DockProps>(
@@ -19,6 +19,14 @@ const Dock = forwardRef<SwiperRef, DockProps>(
     ref,
   ) => {
     const [isDockOpen, setIsDockOpen] = useState(false);
+
+    const isNoPrev = useRef(
+      cdRackInfo?.data[0].myCdId === cdRackInfo?.firstMyCdId,
+    );
+    const isNoNext = useRef(
+      cdRackInfo?.data[cdRackInfo.data.length - 1].myCdId ===
+        cdRackInfo?.lastMyCdId,
+    );
 
     // 슬라이드 위치 변경
     const handleSlideChange = (index: number) => {
@@ -37,7 +45,7 @@ const Dock = forwardRef<SwiperRef, DockProps>(
             className='fixed bottom-10 left-30 z-[5] h-[122px] rounded-2xl border-2 border-[#fff] bg-[#FFFFFF33] backdrop-blur-[20px] overflow-hidden'
             animate={{
               width: isDockOpen ? 'auto' : 0,
-              maxWidth: isDockOpen ? '80vw' : 0,
+              maxWidth: isDockOpen ? '85vw' : 0,
               opacity: isDockOpen ? 1 : 0,
             }}>
             {isEmpty ? (
@@ -48,13 +56,13 @@ const Dock = forwardRef<SwiperRef, DockProps>(
               <div className='h-full flex justify-center items-center gap-2 px-2'>
                 {/* 이전 cd목록 버튼 */}
                 <motion.button
-                  onClick={onPrevPage}
+                  onClick={() => onPrevPage()}
                   className='h-full overflow-hidden'
-                  whileHover={{ opacity: 0.8 }}
                   animate={{
-                    opacity: cdRackInfo.nextCursor <= 15 ? 0.15 : 1,
+                    opacity: isNoPrev.current ? 0.15 : 1,
+                    pointerEvents: isNoPrev.current ? 'none' : 'auto',
                   }}
-                  disabled={cdRackInfo.nextCursor <= 15}>
+                  disabled={isNoPrev.current}>
                   <img
                     className='w-13 h-13'
                     src={show_prev_cd}
@@ -62,7 +70,7 @@ const Dock = forwardRef<SwiperRef, DockProps>(
                   />
                 </motion.button>
 
-                <ul className='flex justify-center items-center gap-7 max-xl:gap-2 w-full h-full'>
+                <ul className='flex justify-center items-center gap-2  xl:gap-4  2xl:gap-6  w-full h-full'>
                   {cdRackInfo.data.map((data: CDInfo, index: number) => (
                     <motion.li
                       onClick={() => handleSlideChange(index)}
@@ -91,7 +99,7 @@ const Dock = forwardRef<SwiperRef, DockProps>(
                             }
                       }>
                       <img
-                        className='rounded-[6.4px] w-20 h-20 max-2xl:w-15 max-2xl:h-15'
+                        className='rounded-[6.4px] aspect-square  w-10 h-10 xl:w-15 xl:h-15  2xl:w-17 2xl:h-17'
                         src={data.coverUrl}
                         alt='CD 이미지'
                       />
@@ -101,15 +109,14 @@ const Dock = forwardRef<SwiperRef, DockProps>(
 
                 {/* 이후 cd목록 버튼 */}
                 <motion.button
-                  onClick={onNextPage}
+                  onClick={() => onNextPage(cdRackInfo.nextCursor)}
                   className='h-full overflow-hidden'
                   whileHover={{ opacity: 0.8 }}
                   animate={{
-                    opacity:
-                      cdRackInfo.nextCursor - 15 === cdRackInfo.data.length
-                        ? 0.15
-                        : 1,
-                  }}>
+                    opacity: isNoNext.current ? 0.15 : 1,
+                    pointerEvents: isNoNext.current ? 'none' : 'auto',
+                  }}
+                  disabled={isNoNext.current}>
                   <img
                     className='w-13 h-13'
                     src={show_next_cd}

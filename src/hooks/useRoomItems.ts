@@ -18,7 +18,7 @@ const defaultItems: FurnitureData[] = [
     apiType: "CD_RACK",
     rotation: [0, Math.PI / -4.4, 0],
     position: [-0.09, -0.58, -0.03],
-    modelPath: "/models/cdplayer.glb",
+    modelPath: "/models/cdrack.glb",
     isEditable: true,
   },
   {
@@ -27,7 +27,7 @@ const defaultItems: FurnitureData[] = [
     apiType: "PIGGY_BANK",
     rotation: [0, Math.PI / -4.4, 0],
     position: [-0.15, -0.55, -0.15],
-    modelPath: "/models/piggycash.glb",
+    modelPath: "/models/piggybank.glb",
     isEditable: false,
   },
   {
@@ -47,17 +47,22 @@ export function useRoomItems(roomData: { roomId: number; furnitures?: { furnitur
       return defaultItems;
     }
 
-    const visibleItems = defaultItems.filter((item) => {
-      if (!item.isEditable) return true;
+    const fixedItems = defaultItems.filter((item) => !item.isEditable);
 
-      const apiItem = roomData.furnitures.find(
-        (furniture) => furniture.furnitureType === item.apiType
-      );
+    const editableItems = defaultItems
+      .filter((item) => item.isEditable)
+      .map((item) => {
+        const apiItem = roomData.furnitures.find(
+          (furniture) => furniture.furnitureType === item.apiType
+        );
+        return {
+          ...item,
+          isVisible: apiItem?.isVisible ?? true,
+        };
+      })
+      .filter((item) => item.isVisible);
 
-      return apiItem?.isVisible;
-    });
-
-    return visibleItems.map((item) => ({
+    return [...fixedItems, ...editableItems].map((item) => ({
       ...item,
       id: `${item.id}-${roomData.roomId}`,
     }));

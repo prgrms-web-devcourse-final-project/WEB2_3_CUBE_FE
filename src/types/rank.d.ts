@@ -4,4 +4,5 @@ interface RankData {
   nickname: string;
   profileImage: string;
   score: number;
+  topRank: boolean;
 }

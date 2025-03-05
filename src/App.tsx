@@ -1,38 +1,34 @@
 import { BrowserRouter } from 'react-router-dom';
 import Router from './routes/Router';
 import { Toast } from '@components/Toast';
-import { useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie';
-import { refreshAccessTokenAPI } from '@apis/auth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { webSocketService } from './apis/websocket';
+import { useEffect, useState } from 'react';
 
 function App() {
   const queryClient = new QueryClient();
-
-  const [cookies] = useCookies(['accessToken', 'refreshToken']);
-  const [isTokenRefreshing, setIsTokenRefreshing] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(true);
 
   useEffect(() => {
-    const accessToken = cookies.accessToken;
-    const refreshToken = cookies.refreshToken;
-
-    const fetchTokenData = async () => {
-      // 엑세스 토큰 재발급 로직
-      if (!accessToken && refreshToken) {
-        setIsTokenRefreshing(true);
-        try {
-          await refreshAccessTokenAPI(refreshToken);
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setIsTokenRefreshing(false);
-        }
+    const connectWebSocket = async () => {
+      try {
+        await webSocketService.connect();
+      } catch (error) {
+        console.error('웹소켓 연결 실패:', error);
+      } finally {
+        setIsConnecting(false);
       }
     };
-    fetchTokenData();
+
+    connectWebSocket();
+
+    return () => {
+      webSocketService.disconnect();
+    };
   }, []);
 
-  if (isTokenRefreshing) return <div>로딩중...</div>;
+  // 초기 연결 중에는 로딩 표시
+  if (isConnecting) return <div>연결 중...</div>;
 
   return (
     <QueryClientProvider client={queryClient}>

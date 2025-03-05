@@ -3,6 +3,8 @@ interface PreferenceSettingProps {
   onFurnitureToggle: (furniture: 'CD_RACK' | 'BOOKSHELF') => void;
   bookshelfLevel: number;
   cdRackLevel: number;
+  bookGenres: string[];
+  cdGenres: string[];
   furnitures: Furniture[];
   onClose: () => void;
 }
@@ -25,6 +27,7 @@ interface PreferenceSettingCardProps {
   savedCount: number;
   writtenCount: number;
   isAdd: boolean;
+  genres: string[];
   onClick: MouseEventHandler<HTMLSectionElement>;
   level: number;
 }

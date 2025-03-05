@@ -8,6 +8,8 @@ import { useToastStore } from '@/store/useToastStore';
 import AlertModal from '@components/AlertModal';
 import { useState } from 'react';
 import { BookType } from '@/types/book';
+import ConfirmModal from '@/components/ConfirmModal';
+import { ApiError } from '@/hooks/useSearch';
 
 interface SearchResultProps {
   item: SearchItemType | null;
@@ -17,6 +19,7 @@ interface SearchResultProps {
   error: string | null;
   onSelect: (item?: SearchItemType) => void;
   onClose: () => void;
+  onSuccess?: (item: SearchItemType) => void;
 }
 
 export const SearchResult = ({
@@ -26,8 +29,10 @@ export const SearchResult = ({
   error,
   onSelect,
   onClose,
+  onSuccess,
 }: SearchResultProps) => {
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
   const theme = SEARCH_THEME[type];
   const { user } = useUserStore();
   const { showToast } = useToastStore();
@@ -51,9 +56,11 @@ export const SearchResult = ({
           page: 0,
         };
         await bookAPI.addBookToMyBook(bookData, user.userId);
+        onClose();
+        showToast('책장에 책이 추가되었어요!', 'success');
+        onSuccess?.(item);
       } else if (type === 'CD') {
         // CD 추가 요청 로직
-
         const cdData: PostCDInfo = {
           title: item.title,
           artist: item.artist,
@@ -69,20 +76,45 @@ export const SearchResult = ({
           setIsAlertModalOpen(true);
           return;
         }
-        onSelect(item);
-
-        await addCdToMyRack(user.userId, cdData);
+        const result = await addCdToMyRack(cdData);
+        onSelect({ ...item, id: result.myCdId });
+        showToast('랙에 cd가 추가되었어요!', 'success');
+        onClose();
       }
-      onClose();
-    } catch (error) {
-      onSelect(null);
+    } catch (error: any) {
+      if (
+        error.response?.data?.message ===
+        '책장에 더 이상 책을 추가할 수 없습니다. 책장을 업그레이드 해주세요.'
+      ) {
+        setIsUpgradeModalOpen(true);
+      } else {
+        showToast(
+          error.response?.data?.message || '오류가 발생했습니다.',
+          'error',
+        );
+      }
       console.error(`${type} 추가 실패:`, error);
+    }
+  };
+
+  const handleUpgrade = async () => {
+    try {
+      const user = useUserStore.getState().user;
+      if (!user) return;
+
+      await bookAPI.upgradeBookLevel(String(user.userId));
+      showToast('책장이 업그레이드 되었어요!', 'success');
+      setIsUpgradeModalOpen(false);
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
+      console.error('책장 업그레이드 실패:', apiError);
+      showToast('책장 업그레이드에 실패했습니다.', 'error');
     }
   };
 
   if (isLoading) {
     return (
-      <div className='flex items-center justify-center h-full text-gray-400'>
+      <div className='flex justify-center items-center h-full text-gray-400'>
         검색 중...
       </div>
     );
@@ -90,7 +122,7 @@ export const SearchResult = ({
 
   if (error) {
     return (
-      <div className='flex items-center justify-center h-full text-gray-400'>
+      <div className='flex justify-center items-center h-full text-gray-400'>
         {error}
       </div>
     );
@@ -98,16 +130,16 @@ export const SearchResult = ({
 
   if (!item) {
     return (
-      <div className='flex items-center justify-center h-full text-gray-400'>
+      <div className='flex justify-center items-center h-full text-gray-400'>
         검색 결과를 선택해주세요
       </div>
     );
   }
 
   return (
-    <div className='flex flex-col items-center justify-center gap-4'>
+    <div className='flex flex-col gap-4 justify-center items-center'>
       {/* 출판일 / 발매일 */}
-      <div className='flex flex-col items-center justify-center gap-1'>
+      <div className='flex flex-col gap-1 justify-center items-center'>
         <p className={`${theme.searchResultDate} font-mono tabular-nums`}>
           {toKoreanDate(item.date)}
         </p>
@@ -117,7 +149,7 @@ export const SearchResult = ({
         </h3>
       </div>
       {/* 표지 / 앨범 커버 */}
-      <div className='relative w-auto mb-4 h-70'>
+      <div className='relative mb-4 w-auto h-70'>
         <img
           src={item.imageUrl}
           className='object-contain w-full h-full rounded-lg book-shadow'
@@ -149,6 +181,15 @@ export const SearchResult = ({
           onConfirm={() => setIsAlertModalOpen(false)}
           title='추가할 수 없는 CD에요!'
           subTitle='다른 CD를 선택해주세요.'
+        />
+      )}
+
+      {isUpgradeModalOpen && (
+        <ConfirmModal
+          onClose={() => setIsUpgradeModalOpen(false)}
+          onConfirm={handleUpgrade}
+          title='책장이 꽉 찼어요!'
+          subTitle='400 포인트를 소모해 책장을 업그레이드 할 수 있어요.'
         />
       )}
     </div>

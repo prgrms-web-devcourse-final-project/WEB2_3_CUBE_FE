@@ -1,4 +1,5 @@
 import { logoutAPI, refreshAccessTokenAPI } from '@apis/auth';
+import Loading from '@components/Loading';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -51,7 +52,7 @@ export default function RequireAuth() {
   }, [location.pathname]);
 
   if (isLoading) {
-    return <div>로딩 중...</div>; // 로딩 상태 표시
+    return <Loading />; // 로딩 상태 표시
   }
   return <Outlet />;
 }

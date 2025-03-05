@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import commentEdit from '@assets/cd/comment-edit.svg';
 import commentSubmit from '@assets/cd/comment-submit.svg';
 import CommentList from './CommentList';
@@ -23,7 +23,6 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
     queryKey: [`cdComments ${myCdId}`],
     queryFn: async () => {
       const result = await getCdCommentAll(myCdId);
-      console.log(result);
       return result || [];
     },
     staleTime: 1000 * 10 * 5,
@@ -34,7 +33,7 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
   // 새 댓글 낙관적 업데이트 적용
   const { mutate, error, isPending, isError } = useMutation({
     mutationFn: async (newComment: CdCommentPost) => {
-      const result = await addCdComment(user.userId, myCdId, newComment);
+      const result = await addCdComment(myCdId, newComment);
       return result;
     },
     onMutate: async () => {
@@ -75,7 +74,7 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
       return { previousComments };
     },
     onError: (error, newComment, context) => {
-      console.error('onError', error, newComment, context);
+      // console.error('onError', error, newComment, context);
       // 변이 실패 시, 낙관적 업데이트 결과를 이전 사용자 목록으로 되돌리기!
       if (context) {
         queryClient.setQueryData(['cdComments'], context.previousComments);
@@ -128,15 +127,15 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
           type='button'
           onClick={() => setIsCommentListOpen(true)}>
           <img
-            className=' hover:opacity-50 '
+            className='hover:opacity-50'
             src={commentEdit}
             alt='댓글 목록 버튼'
           />
         </button>
 
-        <div className='w-full h-full py-14  px-7 flex flex-col justify-end items-end gap-6'>
+        <div className='flex flex-col gap-6 justify-end items-end px-7 py-14 w-full h-full'>
           {/* 댓글 목록 */}
-          <ul className='flex flex-col justify-end items-end gap-4 overflow-hidden'>
+          <ul className='flex overflow-hidden flex-col gap-4 justify-end items-end'>
             {/* 댓글  */}
             {currentComments.map((comment, index) => (
               <motion.li
@@ -172,7 +171,7 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
               type='button'
               disabled={isPending}
               onClick={handleSubmitComment}
-              className='absolute bottom-5 right-4 hover:opacity-50'>
+              className='absolute right-4 bottom-5 hover:opacity-50'>
               <img
                 src={commentSubmit}
                 alt='댓글 제출 버튼'

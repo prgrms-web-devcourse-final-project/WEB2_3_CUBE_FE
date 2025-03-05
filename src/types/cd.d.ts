@@ -1,6 +1,13 @@
+interface CDRackInfo {
+  data: CDInfo[];
+  nextCursor: number;
+  totalCount: number;
+  firstMyCdId: number;
+  lastMyCdId: number;
+}
+
 // cd response body type
 interface CDInfo {
-  cdId?: string;
   myCdId?: number;
   title: string;
   artist: string;
@@ -8,7 +15,7 @@ interface CDInfo {
   genres: string[];
   coverUrl: string;
   youtubeUrl: string;
-  album?: string;
+  album: string;
   duration: number;
 }
 
@@ -54,15 +61,24 @@ interface PostCDInfo {
 }
 
 // template type
+interface TemplateData {
+  comment1: string | null;
+  comment2: string | null;
+  comment3: string | null;
+  comment4: string | null;
+}
 
 interface TemplateProps {
-  isEditable: () => void;
-  templateData: {
-    comment1: string | null;
-    comment2: string | null;
-    comment3: string | null;
-    comment4: string | null;
-  };
+  onToggleEdit: () => void;
+  changeTemplateData: (
+    value: {
+      comment1: string;
+      comment2: string;
+      comment3: string;
+      comment4: string;
+    } | null,
+  ) => void;
+  templateData: TemplateData;
 }
 
 // cd comments

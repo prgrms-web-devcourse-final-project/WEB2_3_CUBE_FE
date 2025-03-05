@@ -41,7 +41,7 @@ export const HousemateItem = ({
           className='object-cover w-10 h-10 rounded-full'
         />
         <div aria-label='닉네임 및 상태'>
-          <p className='flex items-center gap-2'>
+          <p className='flex gap-2 items-center'>
             <span className='font-bold text-[#503A44] text-sm'>{nickname}</span>
             <i
               aria-label={`${status === 'ONLINE' ? '온라인' : '오프라인'} 상태`}
@@ -59,7 +59,7 @@ export const HousemateItem = ({
           )}
         </div>
       </div>
-      <button className='flex items-center justify-center w-8 h-8'>
+      <button className='flex justify-center items-center w-8 h-8'>
         <img
           src={rightIcon}
           alt='하우스메이트 페이지 바로가기'
