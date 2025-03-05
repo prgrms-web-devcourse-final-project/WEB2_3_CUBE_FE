@@ -4,7 +4,7 @@ import gameOver from '@assets/event/game-over.svg';
 import gameSuccess from '@assets/event/game-success.svg';
 
 import LayeredButton from '@components/LayeredButton';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { addEventJoin, getOngoingEvent } from '@apis/event';
 import { useToastStore } from '@/store/useToastStore';
 
@@ -40,7 +40,7 @@ export default function EventPage() {
         setShowResult(true);
       } catch (error) {
         showToast(
-          error.response.data.message || '알 수 없는 오류가 발생했습니다.',
+          error.response?.data.message || '알 수 없는 오류가 발생했습니다.',
           'error',
         );
         setShowResult(false);
