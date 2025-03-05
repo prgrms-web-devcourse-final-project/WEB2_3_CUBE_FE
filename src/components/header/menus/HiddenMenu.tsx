@@ -5,9 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useUserStore } from '../../../store/useUserStore';
 interface HiddenMenuProps {
   isOpen: boolean;
-  onClose: () => void;
 }
-const HiddenMenu = ({ isOpen, onClose }: HiddenMenuProps) => {
+const HiddenMenu = ({ isOpen }: HiddenMenuProps) => {
   const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { user } = useUserStore();
@@ -28,7 +27,7 @@ const HiddenMenu = ({ isOpen, onClose }: HiddenMenuProps) => {
             duration: 0.2,
             ease: 'easeOut',
           }}>
-          <ul className='px-5 py-4 overflow-hidden text-lg bg-white shadow-lg rounded-xl'>
+          <ul className='overflow-hidden px-5 py-4 text-lg bg-white rounded-xl shadow-lg'>
             <li>
               <Link
                 to='/'

@@ -9,6 +9,7 @@ import AlertModal from '@components/AlertModal';
 import { useState } from 'react';
 import { BookType } from '@/types/book';
 import ConfirmModal from '@/components/ConfirmModal';
+import { ApiError } from '@/hooks/useSearch';
 
 interface SearchResultProps {
   item: SearchItemType | null;
@@ -104,8 +105,9 @@ export const SearchResult = ({
       await bookAPI.upgradeBookLevel(String(user.userId));
       showToast('책장이 업그레이드 되었어요!', 'success');
       setIsUpgradeModalOpen(false);
-    } catch (error) {
-      console.error('책장 업그레이드 실패:', error);
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
+      console.error('책장 업그레이드 실패:', apiError);
       showToast('책장 업그레이드에 실패했습니다.', 'error');
     }
   };

@@ -3,6 +3,15 @@ import { bookAPI } from '@apis/book';
 import { useDebounce } from './useDebounce';
 import { searchSpotifyCds } from '@apis/cd';
 
+// 에러 타입 정의
+export type ApiError = {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+};
+
 export const useSearch = (type: 'CD' | 'BOOK') => {
   const [query, setQuery] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
@@ -37,9 +46,10 @@ export const useSearch = (type: 'CD' | 'BOOK') => {
           type: 'BOOK' as const,
           genres: book.categoryName.split('>').slice(1),
         }));
-    } catch (error: any) {
-      console.error(error);
-      setError(`검색 중 오류가 발생했습니다`);
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
+      console.error(apiError);
+      setError('검색 중 오류가 발생했습니다');
       return [];
     } finally {
       setIsLoading(false);
@@ -70,9 +80,10 @@ export const useSearch = (type: 'CD' | 'BOOK') => {
         youtubeUrl: cd.youtubeUrl,
         duration: cd.duration,
       }));
-    } catch (error: any) {
-      console.error(error);
-      setError(`검색 중 오류가 발생했습니다`);
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
+      console.error(apiError);
+      setError('검색 중 오류가 발생했습니다');
       return [];
     } finally {
       setIsLoading(false);

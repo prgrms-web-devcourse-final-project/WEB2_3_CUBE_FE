@@ -3,23 +3,18 @@ import { Client, Message } from '@stomp/stompjs';
 import { getCookie } from '../utils/cookie';
 import { useUserStore } from '@/store/useUserStore';
 
-interface NotificationMessage {
-  notificationId: number;
-  type: string;
-  timestamp: string;
-  receiverId: number;
-}
+// 타입 정의 추가
+type ConnectionStatus = 'CONNECTING' | 'CONNECTED' | 'DISCONNECTED';
 
-class WebSocketService {
-  private client: Client;
+export class WebSocketService {
+  private client: Client | null = null;
   private subscriptions: { [key: string]: () => void } = {};
   private inactivityTimeout: NodeJS.Timeout | null = null;
   private readonly INACTIVE_THRESHOLD = 10 * 60 * 1000; // 10분
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
   private reconnectTimeout: NodeJS.Timeout | null = null;
-  private connectionStatus: 'CONNECTING' | 'CONNECTED' | 'DISCONNECTED' =
-    'DISCONNECTED';
+  private connectionStatus: ConnectionStatus = 'DISCONNECTED';
 
   constructor() {
     this.client = new Client({
@@ -35,7 +30,7 @@ class WebSocketService {
         // 연결 직후 구독 상태 확인
         setTimeout(() => {
           console.log('구독 상태:', {
-            isConnected: this.client.connected,
+            isConnected: this.client?.connected,
             connectionStatus: this.connectionStatus,
           });
         }, 1000);
@@ -73,7 +68,7 @@ class WebSocketService {
       }
 
       // 연결이 끊어진 상태였다면 다시 연결
-      if (!this.client.connected) {
+      if (!this.client?.connected) {
         this.connect();
       }
 
@@ -115,7 +110,7 @@ class WebSocketService {
 
   connect() {
     try {
-      this.client.activate();
+      this.client?.activate();
     } catch (error) {
       console.error('웹소켓 연결 실패:', error);
       this.handleConnectionError();
@@ -127,9 +122,12 @@ class WebSocketService {
       clearTimeout(this.reconnectTimeout);
     }
     this.reconnectAttempts = 0;
-    if (this.client.connected) {
+    if (this.client) {
       this.sendUserStatus('OFFLINE');
       this.client.deactivate();
+      this.client = null;
+      this.connectionStatus = 'DISCONNECTED';
+      console.log('웹소켓 연결이 해제되었습니다.');
     }
   }
 
@@ -144,7 +142,7 @@ class WebSocketService {
     console.log('알림 구독 시작:', subscriptionPath);
 
     try {
-      const subscription = this.client.subscribe(
+      const subscription = this.client?.subscribe(
         subscriptionPath,
         (message: Message) => {
           console.log('메시지 수신 시도');
@@ -174,7 +172,7 @@ class WebSocketService {
   }
 
   private subscribeToUserStatus() {
-    this.client.subscribe('/topic/status', (message) => {
+    this.client?.subscribe('/topic/status', (message) => {
       const statusUpdate = JSON.parse(message.body);
       window.dispatchEvent(
         new CustomEvent('userStatusChange', {
@@ -188,7 +186,7 @@ class WebSocketService {
     const user = useUserStore.getState().user;
     if (!user) return;
 
-    this.client.publish({
+    this.client?.publish({
       destination: '/app/status',
       body: JSON.stringify({
         userId: user.userId,
