@@ -2,7 +2,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useUserStore } from '../../../store/useUserStore';
 import { BookCaseListType } from '@/types/book';
 import { truncateTitle } from '@/utils/truncate';
-import { useMemo } from 'react';
 
 interface BookCaseListProps {
   books: BookCaseListType[];

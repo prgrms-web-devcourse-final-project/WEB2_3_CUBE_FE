@@ -1,4 +1,3 @@
-import React from 'react';
 import LayeredButton from './LayeredButton';
 import ModalBackground from './ModalBackground';
 

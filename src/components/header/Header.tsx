@@ -187,7 +187,6 @@ const Header = () => {
             </button>
             <HiddenMenu
               isOpen={isMenuOpen}
-              onClose={() => setIsMenuOpen(false)}
             />
           </div>
         </nav>

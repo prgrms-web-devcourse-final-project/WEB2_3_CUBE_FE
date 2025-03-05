@@ -1,4 +1,3 @@
-import React from 'react';
 import LayeredButton from './LayeredButton';
 import ModalBackground from './ModalBackground';
 
@@ -17,7 +16,7 @@ export default function AlertModal({
         <div className='w-[446px] h-[216px] shrink-0 rounded-2xl bg-[#FCF7FD] flex flex-col items-center justify-center '>
           <h1 className='text-[#162C63] text-2xl mb-1'>{title}</h1>
           <h2 className='text-[#162C63B2] text-[16px] mb-9'>{subTitle}</h2>
-          <div className='flex justify-center items-center gap-10'>
+          <div className='flex gap-10 justify-center items-center'>
             <div onClick={onConfirm}>
               <LayeredButton
                 theme='blue'
