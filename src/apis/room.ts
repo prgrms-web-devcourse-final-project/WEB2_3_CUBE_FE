@@ -79,7 +79,7 @@ export const roomAPI = {
     hostId: number,
   ) => {
     try {
-      const response = await axiosInstance.put(
+      const response = await axiosInstance.post(
         `/${API_URL}/rooms/visit?visitorId=${visitorId}&hostId=${hostId}`
       );
       return response.data;
@@ -99,7 +99,7 @@ export const roomAPI = {
     roomId: number,
   ) => {
     try {
-      const response = await axiosInstance.put(
+      const response = await axiosInstance.post(
         `/${API_URL}/rooms/visit/${roomId}?visitorId=${visitorId}
 `
       );
