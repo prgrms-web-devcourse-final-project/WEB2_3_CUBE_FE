@@ -70,3 +70,11 @@ export const logoutAPI = async () => {
 
   return response.data;
 };
+
+export const initStatus = () => {
+  // webSocketService.disconnect();
+
+  localStorage.removeItem('user-storage');
+  cookies.remove('accessToken', { path: '/' });
+  cookies.remove('refreshToken', { path: '/' });
+};

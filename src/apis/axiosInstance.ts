@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Cookies } from 'react-cookie';
-import { logoutAPI, refreshAccessTokenAPI } from './auth';
+import { initStatus, logoutAPI, refreshAccessTokenAPI } from './auth';
 const cookies = new Cookies();
 
 const axiosInstance = axios.create({
@@ -38,10 +38,12 @@ axiosInstance.interceptors.response.use(
 
       const refreshToken = cookies.get('refreshToken');
 
+      // 비로그인 상태일 경우
       if (!refreshToken) {
         console.error('🚨 Refresh Token이 없습니다. 다시 로그인하세요.');
         window.location.href = '/login';
-        await logoutAPI();
+        initStatus();
+        // await logoutAPI();
         return Promise.reject(error);
       }
       try {
@@ -49,9 +51,11 @@ axiosInstance.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${response.accessToken}`;
         return axiosInstance(originalRequest);
       } catch (error) {
+        // 리프레시 토큰이 만료된 경우
         console.error('🚨 Refresh Token이 만료되었습니다. 다시 로그인하세요.');
         window.location.href = '/login';
-        await logoutAPI();
+        initStatus();
+        // await logoutAPI();
         return Promise.reject(error);
       }
     } else {

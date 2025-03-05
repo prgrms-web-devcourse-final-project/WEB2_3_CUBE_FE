@@ -1,26 +1,65 @@
 import backgroundImg from '@assets/roome-background-img.png';
 import gameMachine from '@assets/event/game-machine.svg';
 import gameOver from '@assets/event/game-over.svg';
-import time from '@assets/event/time.svg';
-import point from '@assets/event/point.svg';
+import gameSuccess from '@assets/event/game-success.svg';
 
 import LayeredButton from '@components/LayeredButton';
-import { useUserStore } from '@/store/useUserStore';
-import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { addEventJoin, getOngoingEvent } from '@apis/event';
+import { useToastStore } from '@/store/useToastStore';
+
+interface EventInfo {
+  eventName: string;
+  eventTime: string;
+  id: number;
+  maxParticipants: number;
+  rewardPoints: number;
+}
 
 export default function EventPage() {
-  const navigate = useNavigate();
-  const isSuccess = true;
+  const showToast = useToastStore((state) => state.showToast);
 
-  const user = useUserStore().user;
+  const [eventInfo, setEventInfo] = useState<EventInfo | null>(null);
+  const [showResult, setShowResult] = useState<boolean | null>(null);
+
+  // 현재 시간이 이벤트 열리는 시간보다 크거나 같을경우 true
+  const isEventInProgress =
+    new Date(eventInfo?.eventTime).getTime() + 9 * 60 * 60 * 1000 <= Date.now();
+
+  console.log(isEventInProgress);
+
+  // 이벤트 정보 조회 API 이벤트 열리는 시간 받아오기
+  const handleJoinEvent = () => {
+    const joinEvent = async () => {
+      try {
+        await addEventJoin(eventInfo.id);
+        showToast(
+          `${eventInfo.rewardPoints} 포인트를 획득했습니다!`,
+          'success',
+        );
+        setShowResult(true);
+      } catch (error) {
+        showToast(
+          error.response.data.message || '알 수 없는 오류가 발생했습니다.',
+          'error',
+        );
+        setShowResult(false);
+      }
+    };
+    joinEvent();
+  };
 
   useEffect(() => {
-    if (!user) {
-      navigate('/login', { replace: true });
-      return;
-    }
-  }, [user]);
+    const fetchData = async () => {
+      try {
+        const result = await getOngoingEvent();
+        setEventInfo(result);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div
@@ -32,41 +71,48 @@ export default function EventPage() {
           alt='오락 기계 이미지'
         />
         {/* 보여줄 화면 */}
-        {isSuccess ? (
-          <div className='absolute  top-34  left-48 flex flex-col items-center gap-4.5'>
+
+        {typeof showResult === 'boolean' && showResult === false && (
+          <div className='absolute  top-44  left-49 flex flex-col items-center gap-4.5'>
             <div className='flex flex-col items-center'>
               <img
-                className='w-39 mb-8'
-                src={time}
-                alt='이벤트 시각 이미지'
-              />
-              <img
-                className='w-72'
-                src={point}
-                alt='획득 포인트 이미지'
+                src={gameOver}
+                alt='게임 실패 이미지'
               />
             </div>
 
-            <p className='text-white  w-[170px] text-center text-[18px] font-bold '>
-              선착순 5명 500 포인트 지급 이벤트
+            <p className='text-white   text-center text-[18px] font-bold '>
+              다음 이벤트에 참여해주세요
             </p>
           </div>
-        ) : (
-          <div className='absolute  top-34  left-48 flex flex-col items-center justify-center gap-11 '>
-            <img
-              src={gameOver}
-              alt='게임오버 이미지'
-            />
-            <span className='text-white text-[18px] font-bold '>
-              다음 이벤트에 참여해주세요
-            </span>
+        )}
+        {typeof showResult === 'boolean' && showResult === true && (
+          <div className='absolute  top-54  left-42 flex flex-col items-center gap-4.5'>
+            <div className='flex flex-col items-center'>
+              <img
+                src={gameSuccess}
+                alt='게임 성공 이미지'
+              />
+            </div>
+
+            <div className='font-bold'>
+              <p className='text-white   text-center text-[18px]  '>
+                {`선착순 ${eventInfo?.maxParticipants}명`}
+              </p>
+              <p className='text-white   text-center text-[18px] '>
+                {` ${eventInfo?.rewardPoints} 포인트 지급 이벤트`}
+              </p>
+            </div>
           </div>
         )}
-        <div className='absolute bottom-23 right-33'>
+
+        <div
+          className={`absolute bottom-23 right-33 `}
+          onClick={handleJoinEvent}>
           <LayeredButton
             theme='red'
-            className='py-8 px-9 rounded-[10px] font-bold'>
-            포인트 받기
+            className={`py-8 px-9 rounded-[10px] font-bold `}>
+            {isEventInProgress ? '포인트 받기' : '이벤트 준비중'}
           </LayeredButton>
         </div>
       </div>
