@@ -2,7 +2,7 @@ name: Deploy Frontend to S3 and CloudFront
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main ]  # 원하는 브랜치로 변경하세요 (예: main, master, dev)
 
 jobs:
   deploy:
@@ -15,7 +15,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'  # 프로젝트에 맞는 Node.js 버전 선택
+          node-version: '20'  # react-router 요구사항에 맞게 Node.js 20으로 변경
           cache: 'npm'  # 또는 yarn, pnpm 등 사용 중인 패키지 매니저
 
       - name: Create .env file
@@ -37,7 +37,7 @@ jobs:
           echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> .env
 
       - name: Install dependencies
-        run: npm ci  # 또는 yarn install --frozen-lockfile
+        run: npm install  # package-lock.json을 업데이트 및 의존성 설치
 
       - name: Build
         run: npm run build  # React 프로젝트 빌드
@@ -47,11 +47,12 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-          aws-region: ap-northeast-2
+          aws-region: ap-northeast-2  # 사용 중인 AWS 리전으로 변경하세요
 
       - name: Deploy to S3
         run: |
           aws s3 sync ./dist s3://${{ secrets.AWS_BUCKET_NAME }}/ --delete
+          # dist는 빌드 결과물 디렉토리입니다. 프로젝트 설정에 맞게 조정하세요.
 
       - name: Invalidate CloudFront cache
         run: |
