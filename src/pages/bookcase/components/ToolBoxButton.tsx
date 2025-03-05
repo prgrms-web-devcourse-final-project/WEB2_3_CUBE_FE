@@ -42,10 +42,10 @@ const ToolBoxButton = ({ onAddBook, onOpenList }: ToolBoxButtonProps) => {
       className={`bottom-menu bottom-20 right-21 drop-shadow-logo ${
         isOpen ? 'h-[202px]' : 'h-16'
       }`}>
-      <div className='relative flex flex-col-reverse items-center w-full h-full gap-5'>
+      <div className='flex relative flex-col-reverse gap-5 items-center w-full h-full'>
         {/* 메인 토글 버튼 */}
         <button
-          className={`bottom-menu-icon group ${getMainButtonBackground()} w-16 h-16 p-4 flex items-center justify-center`}
+          className={`flex justify-center items-center p-4 w-16 h-16 bottom-menu-icon group ${getMainButtonBackground()}`}
           aria-label='도구 메뉴 열기'
           onClick={() => setIsOpen(!isOpen)}>
           <img
