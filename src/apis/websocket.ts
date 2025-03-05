@@ -1,137 +1,193 @@
+import { Client, Message, StompSubscription } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
-import { Client, Message } from '@stomp/stompjs';
-import { getCookie } from '../utils/cookie';
 import { useUserStore } from '@/store/useUserStore';
+import { getCookie } from '@/utils/cookie';
 
-// 타입 정의 추가
-type ConnectionStatus = 'CONNECTING' | 'CONNECTED' | 'DISCONNECTED';
+type ConnectionStatus = 'CONNECTED' | 'CONNECTING' | 'DISCONNECTED';
+type UserStatus = 'ONLINE' | 'OFFLINE' | 'AWAY';
 
 export class WebSocketService {
   private client: Client | null = null;
-  private subscriptions: { [key: string]: () => void } = {};
+  private subscriptions = new Map<string, StompSubscription>();
+  private activityListeners = new Set<() => void>();
   private inactivityTimeout: NodeJS.Timeout | null = null;
-  private readonly INACTIVE_THRESHOLD = 10 * 60 * 1000; // 10분
-  private reconnectAttempts = 0;
-  private maxReconnectAttempts = 5;
   private reconnectTimeout: NodeJS.Timeout | null = null;
+  private readonly INACTIVE_THRESHOLD = 10 * 60 * 1000; // 10분
+  private readonly MAX_RECONNECT_ATTEMPTS = 5;
+  private reconnectAttempts = 0;
   private connectionStatus: ConnectionStatus = 'DISCONNECTED';
+  private isManualLogout = false;
 
   constructor() {
-    this.client = new Client({
-      webSocketFactory: () => new SockJS(`${import.meta.env.VITE_API_URL}/ws`),
-      connectHeaders: {
-        Authorization: `Bearer ${getCookie('accessToken')}`,
-      },
-      onConnect: () => {
-        console.log('웹소켓 연결 성공');
-        console.log('현재 사용자:', useUserStore.getState().user);
-        this.connectionStatus = 'CONNECTED';
-
-        // 연결 직후 구독 상태 확인
-        setTimeout(() => {
-          console.log('구독 상태:', {
-            isConnected: this.client?.connected,
-            connectionStatus: this.connectionStatus,
-          });
-        }, 1000);
-
-        this.reconnectAttempts = 0;
-        this.sendUserStatus('ONLINE');
-        this.subscribeToNotifications();
-        this.subscribeToUserStatus();
-      },
-      onDisconnect: () => {
-        console.log('웹소켓 연결 해제');
-        this.connectionStatus = 'DISCONNECTED';
-      },
-      onStompError: (frame) => {
-        console.error('Stomp 에러:', frame);
-        this.handleConnectionError();
-      },
-      onWebSocketError: (event) => {
-        console.error('웹소켓 에러:', event);
-        this.handleConnectionError();
-      },
-      debug: (msg: string) => {
-        console.log('STOMP Debug:', msg); // STOMP 디버그 메시지 추가
-      },
-    });
-
     this.setupActivityListeners();
   }
 
-  private setupActivityListeners() {
+  private setupActivityListeners(): void {
     const handleActivity = () => {
-      // 활동이 감지되면 기존 타이머를 리셋
-      if (this.inactivityTimeout) {
-        clearTimeout(this.inactivityTimeout);
-      }
+      if (this.isManualLogout) return;
 
-      // 연결이 끊어진 상태였다면 다시 연결
-      if (!this.client?.connected) {
-        this.connect();
-      }
-
-      // 새로운 비활성 타이머 시작
-      this.inactivityTimeout = setTimeout(() => {
-        this.disconnect(); // 일정 시간 활동 없으면 연결 해제
-      }, this.INACTIVE_THRESHOLD);
+      this.resetInactivityTimer();
+      this.attemptReconnectIfNeeded();
     };
 
-    // 사용자 활동 감지
-    window.addEventListener('mousemove', handleActivity);
-    window.addEventListener('keydown', handleActivity);
-    window.addEventListener('click', handleActivity);
-    window.addEventListener('scroll', handleActivity);
-
-    // 탭 전환 감지
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        this.disconnect();
-      } else {
-        this.connect();
-      }
+    const activityEvents = ['mousemove', 'keydown', 'click', 'scroll'];
+    activityEvents.forEach((event) => {
+      const listener = () => handleActivity();
+      window.addEventListener(event, listener);
+      this.activityListeners.add(() =>
+        window.removeEventListener(event, listener),
+      );
     });
+
+    const visibilityListener = () => {
+      if (this.isManualLogout) return;
+
+      if (document.hidden) {
+        this.handleVisibilityHidden();
+      } else {
+        this.handleVisibilityVisible();
+      }
+    };
+
+    document.addEventListener('visibilitychange', visibilityListener);
+    this.activityListeners.add(() =>
+      document.removeEventListener('visibilitychange', visibilityListener),
+    );
   }
 
-  private handleConnectionError() {
-    if (this.reconnectAttempts < this.maxReconnectAttempts) {
-      this.reconnectTimeout = setTimeout(() => {
-        console.log(
-          `재연결 시도 ${this.reconnectAttempts + 1}/${
-            this.maxReconnectAttempts
-          }`,
-        );
-        this.reconnectAttempts++;
-        this.connect();
-      }, 2000 * Math.pow(2, this.reconnectAttempts)); // 지수 백오프
+  private resetInactivityTimer(): void {
+    if (this.inactivityTimeout) {
+      clearTimeout(this.inactivityTimeout);
+    }
+
+    this.inactivityTimeout = setTimeout(() => {
+      if (this.connectionStatus === 'CONNECTED') {
+        this.disconnect();
+      }
+    }, this.INACTIVE_THRESHOLD);
+  }
+
+  private attemptReconnectIfNeeded(): void {
+    if (this.connectionStatus === 'DISCONNECTED') {
+      console.log('연결이 끊어진 상태에서 사용자 활동 감지. 재연결 시도');
+      this.connect();
     }
   }
 
-  connect() {
+  private handleVisibilityHidden(): void {
+    if (this.connectionStatus === 'CONNECTED') {
+      this.disconnect();
+    }
+  }
+
+  private handleVisibilityVisible(): void {
+    if (this.connectionStatus === 'DISCONNECTED') {
+      this.connect();
+    }
+  }
+
+  private async handleConnectionError(): Promise<void> {
+    if (this.isManualLogout) {
+      console.log('명시적 로그아웃 상태: 재연결 시도 무시');
+      return;
+    }
+
+    if (this.reconnectAttempts >= this.MAX_RECONNECT_ATTEMPTS) {
+      console.log('최대 재연결 시도 횟수 초과');
+      this.cleanupConnection();
+      return;
+    }
+
+    this.reconnectAttempts++;
+    console.log(
+      `재연결 시도 ${this.reconnectAttempts}/${this.MAX_RECONNECT_ATTEMPTS}`,
+    );
+
+    if (this.reconnectTimeout) {
+      clearTimeout(this.reconnectTimeout);
+    }
+
+    const backoffDelay = 2000 * Math.pow(2, this.reconnectAttempts - 1);
+    this.reconnectTimeout = setTimeout(() => {
+      this.connect();
+    }, backoffDelay);
+  }
+
+  private cleanupConnection(): void {
+    this.connectionStatus = 'DISCONNECTED';
+    if (this.client) {
+      this.client.deactivate();
+      this.client = null;
+    }
+    this.unsubscribeAll();
+  }
+
+  async connect(): Promise<void> {
+    if (this.isManualLogout || this.connectionStatus === 'CONNECTING') {
+      return;
+    }
+
+    const token = getCookie('accessToken');
+    if (!token) {
+      console.error('웹소켓 연결 실패: 토큰이 없음');
+      return;
+    }
+
     try {
-      this.client?.activate();
+      this.connectionStatus = 'CONNECTING';
+      await this.initializeClient(token);
     } catch (error) {
       console.error('웹소켓 연결 실패:', error);
       this.handleConnectionError();
     }
   }
 
-  disconnect() {
-    if (this.reconnectTimeout) {
-      clearTimeout(this.reconnectTimeout);
-    }
-    this.reconnectAttempts = 0;
-    if (this.client) {
-      this.sendUserStatus('OFFLINE');
-      this.client.deactivate();
-      this.client = null;
-      this.connectionStatus = 'DISCONNECTED';
-      console.log('웹소켓 연결이 해제되었습니다.');
-    }
+  private async initializeClient(token: string): Promise<void> {
+    this.client = new Client({
+      webSocketFactory: () => new SockJS(`${import.meta.env.VITE_API_URL}/ws`),
+      connectHeaders: { Authorization: `Bearer ${token}` },
+      onConnect: this.handleConnect.bind(this),
+      onDisconnect: this.handleDisconnect.bind(this),
+      onStompError: this.handleStompError.bind(this),
+      onWebSocketError: this.handleWebSocketError.bind(this),
+      // debug: (msg: string) => console.log('STOMP Debug:', msg),
+    });
+
+    await this.client.activate();
   }
 
-  private subscribeToNotifications() {
+  private handleConnect(): void {
+    console.log('웹소켓 연결 성공');
+    this.connectionStatus = 'CONNECTED';
+    this.reconnectAttempts = 0;
+    this.setupSubscriptions();
+    this.sendUserStatus('ONLINE');
+  }
+
+  private handleDisconnect(): void {
+    console.log('웹소켓 연결 해제');
+    if (!this.isManualLogout) {
+      this.handleConnectionError();
+    }
+    this.connectionStatus = 'DISCONNECTED';
+  }
+
+  private handleStompError(frame: any): void {
+    console.error('Stomp 에러:', frame);
+    this.handleConnectionError();
+  }
+
+  private handleWebSocketError(event: Event): void {
+    console.error('웹소켓 에러:', event);
+    this.handleConnectionError();
+  }
+
+  private setupSubscriptions(): void {
+    this.subscribeToNotifications();
+    this.subscribeToUserStatus();
+  }
+
+  private subscribeToNotifications(): void {
     const user = useUserStore.getState().user;
     if (!user) {
       console.error('사용자 정보 없음');
@@ -139,68 +195,95 @@ export class WebSocketService {
     }
 
     const subscriptionPath = `/user/${user.userId}/notification`;
-    console.log('알림 구독 시작:', subscriptionPath);
-
     try {
       const subscription = this.client?.subscribe(
         subscriptionPath,
-        (message: Message) => {
-          console.log('메시지 수신 시도');
-          console.log('원본 메시지:', message);
-
-          try {
-            const notification = JSON.parse(message.body);
-            console.log('파싱된 알림:', notification);
-
-            // 구독 정보 저장 추가
-            this.subscriptions['notifications'] = () =>
-              subscription.unsubscribe();
-
-            window.dispatchEvent(
-              new CustomEvent('newNotification', {
-                detail: notification,
-              }),
-            );
-          } catch (error) {
-            console.error('알림 처리 실패:', error);
-          }
-        },
+        this.handleNotification.bind(this),
       );
+      if (subscription) {
+        this.subscriptions.set('notifications', subscription);
+      }
     } catch (error) {
-      console.error('구독 실패:', error);
+      console.error('알림 구독 실패:', error);
     }
   }
 
-  private subscribeToUserStatus() {
-    this.client?.subscribe('/topic/status', (message) => {
-      const statusUpdate = JSON.parse(message.body);
+  private handleNotification(message: Message): void {
+    try {
+      const notification = JSON.parse(message.body);
       window.dispatchEvent(
-        new CustomEvent('userStatusChange', {
-          detail: statusUpdate,
-        }),
+        new CustomEvent('newNotification', { detail: notification }),
       );
-    });
+    } catch (error) {
+      console.error('알림 처리 실패:', error);
+    }
   }
 
-  private sendUserStatus(status: 'ONLINE' | 'OFFLINE' | 'AWAY') {
+  private subscribeToUserStatus(): void {
+    const subscription = this.client?.subscribe(
+      '/topic/status',
+      (message: Message) => {
+        const statusUpdate = JSON.parse(message.body);
+        window.dispatchEvent(
+          new CustomEvent('userStatusChange', { detail: statusUpdate }),
+        );
+      },
+    );
+    if (subscription) {
+      this.subscriptions.set('userStatus', subscription);
+    }
+  }
+
+  disconnect(isManualLogout = false): void {
+    this.isManualLogout = isManualLogout;
+    this.clearTimeouts();
+
+    if (this.client?.connected) {
+      this.sendUserStatus('OFFLINE');
+    }
+
+    this.cleanupConnection();
+    this.removeActivityListeners();
+  }
+
+  private clearTimeouts(): void {
+    if (this.reconnectTimeout) {
+      clearTimeout(this.reconnectTimeout);
+      this.reconnectTimeout = null;
+    }
+    if (this.inactivityTimeout) {
+      clearTimeout(this.inactivityTimeout);
+      this.inactivityTimeout = null;
+    }
+  }
+
+  private removeActivityListeners(): void {
+    this.activityListeners.forEach((removeListener) => removeListener());
+    this.activityListeners.clear();
+  }
+
+  private sendUserStatus(status: UserStatus): void {
     const user = useUserStore.getState().user;
-    if (!user) return;
+    if (!user || !this.client?.connected) return;
 
-    this.client?.publish({
+    this.client.publish({
       destination: '/app/status',
-      body: JSON.stringify({
-        userId: user.userId,
-        status,
-      }),
+      body: JSON.stringify({ userId: user.userId, status }),
     });
   }
 
-  unsubscribeAll() {
-    Object.values(this.subscriptions).forEach((unsubscribe) => unsubscribe());
+  private unsubscribeAll(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+    this.subscriptions.clear();
   }
 
-  isConnected() {
+  isConnected(): boolean {
     return this.connectionStatus === 'CONNECTED';
+  }
+
+  handleLogin(): void {
+    this.isManualLogout = false;
+    this.connect();
   }
 }
 

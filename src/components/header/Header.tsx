@@ -10,6 +10,8 @@ import NotificationModal from './menus/notification-modal/NotificationModal';
 import { notificationAPI } from '../../apis/notification';
 import { useUserStore } from '@/store/useUserStore';
 import { useToastStore } from '@/store/useToastStore';
+import { webSocketService } from '@/apis/websocket';
+import { getCookie } from '@/utils/cookie';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,6 +19,7 @@ const Header = () => {
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
   const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
   const [isNewNotification, setIsNewNotification] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(true);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const housemateButtonRef = useRef<HTMLButtonElement>(null);
   const notificationButtonRef = useRef<HTMLButtonElement>(null);
@@ -52,7 +55,7 @@ const Header = () => {
           20,
           false, // 읽지 않은 알림만 조회
         );
-        console.log('읽지 않은 알림:', response.notifications); // 디버깅용 로그 추가
+        // console.log('읽지 않은 알림:', response.notifications);
         setHasUnreadNotifications(response.notifications.length > 0);
       } catch (error) {
         console.error('알림 상태 확인 실패:', error);
@@ -88,6 +91,34 @@ const Header = () => {
     };
   }, [showToast]);
 
+  // 웹소켓 연결 시도
+  useEffect(() => {
+    const connectWebSocket = async () => {
+      const token = getCookie('accessToken');
+      if (!token) {
+        console.error('웹소켓 연결 실패: 토큰이 없음');
+        return;
+      }
+
+      // console.log('웹소켓 연결 시도 전 토큰 확인:', token);
+
+      try {
+        await webSocketService.connect();
+      } catch (error) {
+        console.error('웹소켓 연결 실패:', error);
+        showToast('알림 서비스 연결에 실패했습니다.', 'error');
+      } finally {
+        setIsConnecting(false);
+      }
+    };
+
+    connectWebSocket();
+
+    return () => {
+      webSocketService.disconnect();
+    };
+  }, []); // 컴포넌트 마운트 시 한 번만 실행
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -103,6 +134,33 @@ const Header = () => {
   // 알림 읽음 상태 업데이트 함수
   const updateNotificationStatus = (hasUnread: boolean) => {
     setHasUnreadNotifications(hasUnread);
+  };
+
+  // 웹소켓 연결 중일 때 알림 아이콘에 로딩 표시
+  const renderNotificationIcon = () => {
+    if (isConnecting) {
+      return (
+        <div className='relative'>
+          <img
+            src={notificationIcon}
+            alt='알림'
+            className='w-8 h-8 opacity-50' // 연결 중일 때 흐리게 표시
+          />
+          <div className='flex absolute inset-0 justify-center items-center'>
+            {/* 로딩 스피너나 다른 로딩 표시 */}
+            <div className='w-4 h-4 rounded-full border-2 border-gray-300 animate-spin border-t-blue-500' />
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <img
+        src={notificationIcon}
+        alt='알림'
+        className='w-8 h-8'
+      />
+    );
   };
 
   return (
@@ -124,12 +182,9 @@ const Header = () => {
             type='button'
             aria-label='알림'
             onClick={toggleNotificationModal}
-            className='relative cursor-pointer'>
-            <img
-              src={notificationIcon}
-              alt='알림'
-              className='w-8 h-8'
-            />
+            className='relative cursor-pointer'
+            disabled={isConnecting}>
+            {renderNotificationIcon()}
             <div className='absolute top-[2.5px] right-[5.7px]'>
               {/* 기본 알림 점 */}
               <div
@@ -185,9 +240,7 @@ const Header = () => {
                 className='w-8 h-8'
               />
             </button>
-            <HiddenMenu
-              isOpen={isMenuOpen}
-            />
+            <HiddenMenu isOpen={isMenuOpen} />
           </div>
         </nav>
       </header>
