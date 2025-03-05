@@ -45,7 +45,6 @@ export default function RoomPage() {
           setVisibleFurnitures(
             roomData.furnitures.filter((furniture) => furniture.isVisible),
           );
-
           setStorageData({
             ...roomData.storageLimits,
             ...roomData.userStorage,

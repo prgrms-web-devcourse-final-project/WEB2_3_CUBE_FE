@@ -21,6 +21,7 @@
     "@tiptap/pm": "^2.11.5",
     "@tiptap/react": "^2.11.5",
     "@tiptap/starter-kit": "^2.11.5",
+    "@tosspayments/payment-widget-sdk": "^0.12.0",
     "@types/three": "^0.173.0",
     "axios": "^1.7.9",
     "classnames": "^2.5.1",

@@ -13,6 +13,9 @@ import ProfileCardEditPage from '@pages/profile-card-edit/ProfileCardEditPage';
 import Redirection from '@pages/login/components/Redirection';
 import EventPage from '@pages/event/EventPage';
 import PointPage from '@pages/point/PointPage';
+import TestPage from '@pages/TestPage';
+import PaymentSuccessPage from '@pages/PaymentSuccessPage';
+import PaymentFailPage from '@pages/PaymentFailPage';
 
 const Router = () => {
   return (
@@ -51,6 +54,10 @@ const Router = () => {
           path='/point/:userId'
           element={<PointPage />}
         />
+        <Route
+          path='/test'
+          element={<TestPage />}
+        />
       </Route>
       {/* 내 서평 보기/작성/수정 */}
       <Route
@@ -77,6 +84,14 @@ const Router = () => {
       <Route
         path='/login'
         element={<LoginPage />}
+      />
+      <Route
+        path='/payment/success'
+        element={<PaymentSuccessPage />}
+      />
+      <Route
+        path='/payment/fail'
+        element={<PaymentFailPage />}
       />
     </Routes>
   );
