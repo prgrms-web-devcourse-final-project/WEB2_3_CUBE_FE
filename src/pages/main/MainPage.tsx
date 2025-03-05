@@ -14,10 +14,10 @@ export default function MainPage() {
     <main className='@container main-background w-full min-h-screen relative overflow-hidden'>
       {/* 메인 벌집 구조의 방 */}
       <HiveRooms myUserId={user?.userId} />
-      
+
       {/* 하단 버튼 */}
       <RankMenu onOpen={() => setIsRankingOpen(true)} />
-      <MyRoomBtn  roomId={user?.roomId} />
+      <MyRoomBtn roomId={user?.roomId} />
 
       {/* 랭킹 모달 */}
       <AnimatePresence>
