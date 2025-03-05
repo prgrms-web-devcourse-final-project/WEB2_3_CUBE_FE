@@ -1,12 +1,14 @@
 import { motion } from 'framer-motion';
 import React, { useCallback, useEffect, useState } from 'react';
 import { guestbookAPI } from '../../../apis/guestbook';
+import { useToastStore } from '../../../store/useToastStore';
+import { useUserStore } from '../../../store/useUserStore';
+import Pagination from '../../../components/Pagination';
 import GuestbookMessage from '@pages/room/components/GuestbookMessage';
 import GusetbookInput from '@pages/room/components/GusetbookInput';
-import Pagination from '../../../components/Pagination';
-import { useUserStore } from '../../../store/useUserStore';
 
 export default function Guestbook({ onClose, ownerName, ownerId }: GuestbookProps) {
+  const { showToast } = useToastStore();
   const [guestbookData, setGuestbookData] = useState<GuestbookMessageType[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPage, setTotalPage] = useState<number>(1);
@@ -15,7 +17,6 @@ export default function Guestbook({ onClose, ownerName, ownerId }: GuestbookProp
   const fetchGuestbookData = useCallback(async (page: number) => {
     try {
       const response = await guestbookAPI.getGuestbook(ownerId, page, 2);
-      console.log('API 응답:', response);
       setGuestbookData(response.guestbook);
       setTotalPage(response.pagination.totalPages);
     } catch (error) {
@@ -36,13 +37,15 @@ export default function Guestbook({ onClose, ownerName, ownerId }: GuestbookProp
         user.userId,
         guestMessage,
       );
-      console.log('방명록 등록 성공:', response);
+      showToast('방명록 등록 완료! 멋진 한마디, 잘 전달되었어요!', 'success');
       setGuestbookData(response.guestbook);
       setTotalPage(response.pagination.totalPages);
 
       setCurrentPage(1);
     } catch (error) {
       console.error('방명록 등록 중 오류 발생:', error);
+      showToast('방명록을 등록하는 데 실패했어요. 다시 시도해 주세요!', 'error');
+
     }
   };
 
