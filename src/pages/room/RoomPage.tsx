@@ -11,6 +11,7 @@ import DockMenu from './components/DockMenu';
 import PreferenceSetting from './components/PreferenceSetting';
 import RoomModel from './components/RoomModel';
 import ThemeSetting from './components/ThemeSetting';
+import { rankAPI } from '../../apis/ranking';
 
 export default function RoomPage() {
   const { showToast } = useToastStore();
@@ -38,6 +39,10 @@ export default function RoomPage() {
 
     const fetchRoomData = async () => {
       try {
+        if (user && userId !== String(user.userId)) {
+          await rankAPI.visitByUserId(String(user.userId), userId);
+        }
+
         const roomData: RoomData = await roomAPI.getRoomById(Number(userId));
         if (roomData) {
           setRoomData(roomData);
@@ -57,8 +62,7 @@ export default function RoomPage() {
     };
 
     fetchRoomData();
-  }, [userId]);
-  
+  }, [userId, user]);
 
   const handleThemeChange = (newTheme: 'BASIC' | 'FOREST' | 'MARINE') => {
     setSelectedTheme(newTheme);
@@ -72,11 +76,9 @@ export default function RoomPage() {
         selectedTheme,
       );
       showToast('테마가 업데이트됐어요! 새로운 느낌, 어떠세요?', 'success');
-
     } catch (error) {
       console.error('방 테마 변경 실패:', error);
       showToast('테마 변경에 실패했어요. 다시 시도해볼까요?', 'error');
-
     }
   };
 
@@ -116,10 +118,9 @@ export default function RoomPage() {
         furnitures: prev.furnitures.map((f) =>
           f.furnitureType === furnitureType
             ? { ...f, isVisible: updatedFurniture.furniture.isVisible }
-            : f
+            : f,
         ),
       }));
-
     } catch (error) {
       console.error('가구 설정 변경 실패:', error);
     }
@@ -146,31 +147,30 @@ export default function RoomPage() {
   };
 
   return (
-    <main className='relative w-full min-h-screen overflow-hidden main-background'>
+    <main className='overflow-hidden relative w-full min-h-screen main-background'>
       {roomData && (
         <>
-        <RoomModel
-          ownerId={roomData.userId}
-          ownerName={roomData.nickname}
-          roomId={roomData.roomId}
-          modelPath={themeData[selectedTheme]?.modelPath}
-          activeSettings={activeSettings}
-          furnitures={visibleFurnitures}
+          <RoomModel
+            ownerId={roomData.userId}
+            ownerName={roomData.nickname}
+            roomId={roomData.roomId}
+            modelPath={themeData[selectedTheme]?.modelPath}
+            activeSettings={activeSettings}
+            furnitures={visibleFurnitures}
           />
-        {/* 표지판 */}
-        <motion.div
-            className="absolute bottom-18 left-[-2px] z-20"
-            initial="hidden"
-            animate="visible"
-            variants={SIGN_VARIANTS}
-          >
+          {/* 표지판 */}
+          <motion.div
+            className='absolute bottom-18 left-[-2px] z-20'
+            initial='hidden'
+            animate='visible'
+            variants={SIGN_VARIANTS}>
             <div className='bg-white/20 rounded-tr-[80px] rounded-br-[80px] p-1.5 pl-0 border-2 border-white '>
-            <div className="bg-white text-[#162C63] py-4 px-18 rounded-tr-[80px] rounded-br-[80px] font-semibold text-base 2xl:text-xl text-center">
-              {roomData.nickname}님의 방
-            </div>
+              <div className='bg-white text-[#162C63] py-4 px-18 rounded-tr-[80px] rounded-br-[80px] font-semibold text-base 2xl:text-xl text-center'>
+                {roomData.nickname}님의 방
+              </div>
             </div>
           </motion.div>
-          </>
+        </>
       )}
       {userId === String(user?.userId) && (
         <DockMenu
@@ -184,7 +184,7 @@ export default function RoomPage() {
           initial='hidden'
           animate='visible'
           variants={ANIMATION_VARIANTS}
-          className='w-full absolute top-0 left-0 z-30'>
+          className='absolute top-0 left-0 z-30 w-full'>
           <ThemeSetting
             selectedTheme={selectedTheme}
             onThemeSelect={handleThemeChange}
@@ -197,7 +197,7 @@ export default function RoomPage() {
           initial='hidden'
           animate='visible'
           variants={ANIMATION_VARIANTS}
-          className='w-full absolute top-0 left-0 z-30'>
+          className='absolute top-0 left-0 z-30 w-full'>
           <PreferenceSetting
             storageData={storageData}
             onFurnitureToggle={handleFurnitureToggle}
