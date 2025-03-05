@@ -1,21 +1,28 @@
+import * as THREE from 'three';
 import { OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import * as THREE from 'three';
 import { RoomLighting } from '../../../components/room-models/RoomLighting';
+import { roomAPI } from '../../../apis/room';
 import HiveRoomModel from '../HiveRoomModel';
 import useHexagonGrid from '../hooks/useHexagonGrid';
 import useRooms from '../hooks/useRooms';
 
 export default function HiveRooms({ myUserId }: HiveRoomsProps) {
-  const { rooms, loading, error } = useRooms(30, myUserId);
+  const { rooms } = useRooms(30, myUserId);
   const positionedRooms = useHexagonGrid(rooms, 0, 0);
   const [hoveredRoom, setHoveredRoom] = useState<number | null>(null);
   const navigate = useNavigate();
 
-  if (loading) return <div>로딩 중...</div>;
-  if (error) return <div>에러 발생: {error.message}</div>;
+  const handleRoomClick = async (hostId: number) => {
+    try {
+      await roomAPI.visitedRoomByUserId(myUserId, hostId);
+      navigate(`/room/${hostId}`);
+    } catch (error) {
+      console.error('방문 처리 중 오류 발생:', error);
+    }
+  };
 
   return (
     <div className='w-full h-screen relative'>
@@ -36,7 +43,7 @@ export default function HiveRooms({ myUserId }: HiveRoomsProps) {
             position={position}
             onPointerOver={() => setHoveredRoom(index)}
             onPointerOut={() => setHoveredRoom(null)}
-            onClick={() => navigate(`/room/${room.userId}`)}>
+            onClick={() => handleRoomClick(room.userId)}>
             <HiveRoomModel
               room={room}
               position={position}
