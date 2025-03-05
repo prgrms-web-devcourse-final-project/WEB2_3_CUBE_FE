@@ -1,8 +1,11 @@
 import exProfile from '@assets/rank/exProfile.png';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { guestbookAPI } from '../../../apis/guestbook';
-import { getRelativeTimeString } from '../../../utils/dateFormat';
+import ConfirmModal from '../../../components/ConfirmModal';
+import { useToastStore } from '../../../store/useToastStore';
 import { useUserStore } from '../../../store/useUserStore';
+import { getRelativeTimeString } from '../../../utils/dateFormat';
 
 export default function GuestbookMessage({
   messages = [],
@@ -11,12 +14,14 @@ export default function GuestbookMessage({
   refetchGuestbook,
   onDelete,
 }: GuestbookMessageProps) {
+  const { showToast } = useToastStore();
+  const [modalState, setModalState] = useState<{ [key: number]: boolean }>({})
   const user = useUserStore((state) => state.user);
 
   const handleDelete = async (guestbookId: number) => {
     try {
       await guestbookAPI.deleteGuestbook(guestbookId, userId);
-      console.log('삭제 완료', guestbookId);
+      showToast('방명록 삭제 완료! 깔끔하게 정리됐어요', 'success');
 
       if (refetchGuestbook) {
         refetchGuestbook();
@@ -25,7 +30,21 @@ export default function GuestbookMessage({
       onDelete();
     } catch (error) {
       console.log('삭제 중 오류 발생', error);
+      showToast('삭제하지 못했어요. 다시 시도해 주세요!', 'error');
     }
+  };
+
+  const openModal = (guestbookId: number) => {
+    setModalState((prev) => ({ ...prev, [guestbookId]: true }));
+  };
+
+  const closeModal = (guestbookId: number) => {
+    setModalState((prev) => ({ ...prev, [guestbookId]: false }));
+  };
+
+  const handleConfirm = (guestbookId: number) => {
+    closeModal(guestbookId); 
+    handleDelete(guestbookId);
   };
 
   return (
@@ -59,19 +78,28 @@ export default function GuestbookMessage({
                     }`}>
                   {`${
                     msg.userId === user.userId
-                    ? '작성자'
-                    : msg.relation === '지나가던_나그네'
-                    ? '지나가던 나그네'
-                    : '하우스 메이트'
+                      ? '작성자'
+                      : msg.relation === '지나가던_나그네'
+                      ? '지나가던 나그네'
+                      : '하우스 메이트'
                   }`}
                 </p>
                 {/* 삭제 */}
                 {(msg.userId === user.userId || ownerId === user.userId) && (
-                <button
-                  onClick={() => handleDelete(msg.guestbookId)}
-                  className='text-[#3E507D] opacity-50 text-[10px] @xl:text-xs font-semibold hover:opacity-100'>
-                  삭제
-                </button>)}
+                  <button
+                    onClick={() => openModal(msg.guestbookId)}
+                    className='text-[#3E507D] opacity-50 text-[10px] @xl:text-xs font-semibold hover:opacity-100'>
+                    삭제
+                  </button>
+                )}
+                {modalState[msg.guestbookId] && (
+                  <ConfirmModal
+                    onClose={() => closeModal(msg.guestbookId)}
+                    onConfirm={() => handleConfirm(msg.guestbookId)}
+                    title='삭제하시겠습니까? 🗑️'
+                    subTitle='사라지면 다시는 돌아오지 않아요...'
+                  />
+                )}
               </div>
 
               {/* 방명록 본문 */}

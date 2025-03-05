@@ -1,16 +1,19 @@
-import { themeData } from '@constants/roomTheme';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { roomAPI } from '../../apis/room';
-import { ANIMATION_VARIANTS } from '../../constants/animation';
 import { useUserStore } from '../../store/useUserStore';
+import { useToastStore } from '../../store/useToastStore';
+import { roomAPI } from '../../apis/room';
+import { themeData } from '@constants/roomTheme';
+import { ANIMATION_VARIANTS } from '../../constants/animation';
+import { SIGN_VARIANTS } from '../../constants/sign';
 import DockMenu from './components/DockMenu';
 import PreferenceSetting from './components/PreferenceSetting';
 import RoomModel from './components/RoomModel';
 import ThemeSetting from './components/ThemeSetting';
 
 export default function RoomPage() {
+  const { showToast } = useToastStore();
   const { userId } = useParams<{ userId: string }>();
   const [roomData, setRoomData] = useState<RoomData>(null);
   const [activeSettings, setActiveSettings] = useState<string | null>(null);
@@ -42,7 +45,6 @@ export default function RoomPage() {
           setVisibleFurnitures(
             roomData.furnitures.filter((furniture) => furniture.isVisible),
           );
-          console.log("roomdata:",roomData);
 
           setStorageData({
             ...roomData.storageLimits,
@@ -69,9 +71,12 @@ export default function RoomPage() {
         roomData.userId,
         selectedTheme,
       );
-      console.log('방 테마 변경 성공');
+      showToast('테마가 업데이트됐어요! 새로운 느낌, 어떠세요?', 'success');
+
     } catch (error) {
       console.error('방 테마 변경 실패:', error);
+      showToast('테마 변경에 실패했어요. 다시 시도해볼까요?', 'error');
+
     }
   };
 
@@ -143,6 +148,7 @@ export default function RoomPage() {
   return (
     <main className='relative w-full min-h-screen overflow-hidden main-background'>
       {roomData && (
+        <>
         <RoomModel
           ownerId={roomData.userId}
           ownerName={roomData.nickname}
@@ -150,7 +156,21 @@ export default function RoomPage() {
           modelPath={themeData[selectedTheme]?.modelPath}
           activeSettings={activeSettings}
           furnitures={visibleFurnitures}
-        />
+          />
+        {/* 표지판 */}
+        <motion.div
+            className="absolute bottom-18 left-[-2px] z-20"
+            initial="hidden"
+            animate="visible"
+            variants={SIGN_VARIANTS}
+          >
+            <div className='bg-white/20 rounded-tr-[80px] rounded-br-[80px] p-1.5 pl-0 border-2 border-white '>
+            <div className="bg-white text-[#162C63] py-4 px-18 rounded-tr-[80px] rounded-br-[80px] font-semibold text-base 2xl:text-xl text-center">
+              {roomData.nickname}님의 방
+            </div>
+            </div>
+          </motion.div>
+          </>
       )}
       {userId === String(user?.userId) && (
         <DockMenu

@@ -4,6 +4,7 @@ import { Canvas } from '@react-three/fiber';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RoomLighting } from '../../../components/room-models/RoomLighting';
+import { useToastStore } from '../../../store/useToastStore';
 import { roomAPI } from '../../../apis/room';
 import HiveRoomModel from '../HiveRoomModel';
 import useHexagonGrid from '../hooks/useHexagonGrid';
@@ -11,14 +12,17 @@ import useRooms from '../hooks/useRooms';
 
 export default function HiveRooms({ myUserId }: HiveRoomsProps) {
   const { rooms } = useRooms(30, myUserId);
+  const { showToast } = useToastStore();
   const positionedRooms = useHexagonGrid(rooms, 0, 0);
   const [hoveredRoom, setHoveredRoom] = useState<number | null>(null);
   const navigate = useNavigate();
 
   const handleRoomClick = async (hostId: number) => {
     try {
-      await roomAPI.visitedRoomByUserId(myUserId, hostId);
+      // await roomAPI.visitedRoomByUserId(myUserId, hostId);
+      // console.log(hostId);
       navigate(`/room/${hostId}`);
+      showToast('방으로 순간 이동 완료! 재미있는 곳일지도?!', 'success');
     } catch (error) {
       console.error('방문 처리 중 오류 발생:', error);
     }
