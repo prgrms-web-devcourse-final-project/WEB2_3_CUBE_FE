@@ -25,3 +25,19 @@ export const themeData = {
     thumbnail: marineImg,
   },
 } as const;
+
+export const FullThemeData = {
+  FULL_BASIC: {
+    title: '베이직',
+    modelPath: '/models/basicRoomFull.glb',
+  },
+  FULL_FOREST: {
+    title: '포레스트',
+    modelPath: '/models/forestRoomFull.glb',
+  },
+  FULL_MARINE: {
+    title: '마린',
+    modelPath: '/models/marineRoomFull.glb',
+  },
+} as const
+

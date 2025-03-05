@@ -1,7 +1,17 @@
 import { useEffect, useState } from 'react'
 import { housemateAPI } from '../../../apis/housemate';
 import { roomAPI } from '../../../apis/room';
-import { themeData } from '../../../constants/roomTheme';
+import { FullThemeData } from '../../../constants/roomTheme';
+
+function mapThemeKeyToFullThemeKey(themeKey: string): keyof typeof FullThemeData {
+  const themeMapping = {
+    'BASIC': 'FULL_BASIC',
+    'FOREST': 'FULL_FOREST',
+    'MARINE': 'FULL_MARINE',
+  };
+
+  return (themeMapping[themeKey as keyof typeof themeMapping] || 'FULL_BASIC') as keyof typeof FullThemeData;
+}
 
 export default function useRooms(limit=30, myUserId:number) {
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -14,8 +24,8 @@ export default function useRooms(limit=30, myUserId:number) {
         let myRoom = null;
         if (typeof myUserId === 'number') {
           const myRoomData = await roomAPI.getRoomById(myUserId);
-          const myThemeKey = myRoomData.theme as keyof typeof themeData;
-          const myTheme = themeData[myThemeKey] || themeData.BASIC;
+          const myThemeKey = mapThemeKeyToFullThemeKey(myRoomData.theme);
+          const myTheme = FullThemeData[myThemeKey] || FullThemeData.FULL_BASIC;
           myRoom = { ...myRoomData, modelPath: myTheme.modelPath };
         } else {
           console.warn('myUserId가 유효하지 않음:', myUserId);
@@ -28,8 +38,8 @@ export default function useRooms(limit=30, myUserId:number) {
         );
 
         const modelRooms = roomData.map((room) => {
-          const themeKey = room.theme as keyof typeof themeData;
-          const theme = themeData[themeKey] || themeData.BASIC; 
+          const themeKey = room.theme as keyof typeof FullThemeData;
+          const theme = FullThemeData[themeKey] || FullThemeData.FULL_BASIC; 
           return {
             ...room,
             modelPath: theme.modelPath,
@@ -38,8 +48,6 @@ export default function useRooms(limit=30, myUserId:number) {
 
         const allRooms = myRoom ? [myRoom, ...modelRooms] : modelRooms;
         setRooms(allRooms);
-
-        console.log('allRooms:', allRooms);
       } catch (error){
         setError(error);
         console.error('방 정보 패치 실패:', error);
