@@ -1,0 +1,59 @@
+name: Deploy Frontend to S3 and CloudFront
+
+on:
+  push:
+    branches: [ main ]  # 원하는 브랜치로 변경하세요 (예: main, master, dev)
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'  # react-router 요구사항에 맞게 Node.js 20으로 변경
+          cache: 'npm'  # 또는 yarn, pnpm 등 사용 중인 패키지 매니저
+
+      - name: Create .env file
+        run: |
+          echo "VITE_SPOTIFY_ID=${{ secrets.VITE_SPOTIFY_ID }}" >> .env
+          echo "VITE_SPOTIFY_SECRET_KEY=${{ secrets.VITE_SPOTIFY_SECRET_KEY }}" >> .env
+          echo "VITE_YOUTUBE_KEY=${{ secrets.VITE_YOUTUBE_KEY }}" >> .env
+          echo "VITE_ALADIN_KEY=${{ secrets.VITE_ALADIN_KEY }}" >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          echo "VITE_GOOGLE_CLIENT_ID=${{ secrets.VITE_GOOGLE_CLIENT_ID }}" >> .env
+          echo "VITE_GOOGLE_CLIENT_SECRET=${{ secrets.VITE_GOOGLE_CLIENT_SECRET }}" >> .env
+          echo "VITE_GOOGLE_REDIRECT_URI=${{ secrets.VITE_GOOGLE_REDIRECT_URI }}" >> .env
+          echo "VITE_NAVER_CLIENT_ID=${{ secrets.VITE_NAVER_CLIENT_ID }}" >> .env
+          echo "VITE_NAVER_CLIENT_SECRET=${{ secrets.VITE_NAVER_CLIENT_SECRET }}" >> .env
+          echo "VITE_NAVER_REDIRECT_URI=${{ secrets.VITE_NAVER_REDIRECT_URI }}" >> .env
+          echo "VITE_KAKAO_CLIENT_ID=${{ secrets.VITE_KAKAO_CLIENT_ID }}" >> .env
+          echo "VITE_KAKAO_CLIENT_SECRET=${{ secrets.VITE_KAKAO_CLIENT_SECRET }}" >> .env
+          echo "VITE_KAKAO_REDIRECT_URI=${{ secrets.VITE_KAKAO_REDIRECT_URI }}" >> .env
+          echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> .env
+
+      - name: Install dependencies
+        run: npm install  # package-lock.json을 업데이트 및 의존성 설치
+
+      - name: Build
+        run: npm run build  # React 프로젝트 빌드
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ap-northeast-2  # 사용 중인 AWS 리전으로 변경하세요
+
+      - name: Deploy to S3
+        run: |
+          aws s3 sync ./dist s3://${{ secrets.AWS_BUCKET_NAME }}/ --delete
+          # dist는 빌드 결과물 디렉토리입니다. 프로젝트 설정에 맞게 조정하세요.
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"

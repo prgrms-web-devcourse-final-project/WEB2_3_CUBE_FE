@@ -1,6 +1,6 @@
 import backgroundIMG from '@/assets/roome-background-img.png';
 import errorStatus from '@/assets/error/404.svg';
-import oops from '@/assets/error/oops.svg';
+import oops from '@assets/error/oops.svg';
 import doubleArrow from '@/assets/error/double-arrow-icon.svg';
 import logo from '@/assets/header-logo.svg';
 import { Link } from 'react-router-dom';
