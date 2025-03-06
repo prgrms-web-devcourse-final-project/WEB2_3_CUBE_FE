@@ -78,6 +78,11 @@ export default function PointPage() {
   if (userId !== myUserId) {
     navigate(`/profile/${userId}`);
   }
+  const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      navigate(-1);
+    }
+  };
 
   return (
     <div className='w-full h-screen main-background'>
@@ -87,6 +92,7 @@ export default function PointPage() {
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: '100vh', opacity: 0 }}
         transition={{ type: 'spring', stiffness: 130, damping: 18 }}
+        onClick={handleClickOutside}
         className='fixed inset-0 z-10 flex items-center justify-center'>
         {/* 영수증 */}
         <div className=' relative w-[501px] h-[760px]'>
