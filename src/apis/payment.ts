@@ -13,7 +13,7 @@ interface PaymentVerifyRequest {
 interface PaymentRequestBody {
   orderId: string;
   amount: number;
-  purchasePoints: number;
+  purchasedPoints: number;
 }
 
 interface PaymentResponse {
@@ -47,7 +47,7 @@ export const paymentAPI = {
    * const result = await paymentAPI.requestPayment({
    *   orderId: "order_123",
    *   amount: 10000,
-   *   purchasePoints: 1000
+   *   purchasedPoints: 1000
    * });
    */
   requestPayment: (data: PaymentRequestBody) =>
@@ -57,9 +57,9 @@ export const paymentAPI = {
    * 결제 실패 처리 API
    * @param orderId - 실패 처리할 주문 ID
    * @example
-   * await paymentAPI.failPayment("order_123");
+   * await paymentAPI.canclePayment("order_123");
    */
-  failPayment: (orderId: string) =>
+  canclePayment: (orderId: string) =>
     axiosInstance.post<void>(`/${API_URL}/payments/fail/${orderId}`),
 
   /**

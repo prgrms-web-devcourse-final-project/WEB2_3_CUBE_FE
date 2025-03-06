@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import LayeredButton from '@components/LayeredButton';
 import { loadPaymentWidget } from '@tosspayments/payment-widget-sdk';
+import { paymentAPI } from '@apis/payment';
 
 interface PaymentOption {
   points: number;
@@ -14,9 +15,9 @@ const PAYMENT_OPTIONS: PaymentOption[] = [
   { points: 4000, amount: 30000 },
 ];
 
-// const TOSS_CLIENT_KEY = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
-const TOSS_CLIENT_KEY = import.meta.env.VITE_TOSS_CLIENT_KEY;
-const CUSTOMER_KEY = 'XmkftbSBcZJXPNRb0sd5D'; // 테스트용 임시 키
+const TOSS_CLIENT_KEY = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
+// const TOSS_CLIENT_KEY = import.meta.env.VITE_TOSS_CLIENT_KEY;
+const CUSTOMER_KEY = '5bwe_UyPru_naK0XAgYqS'; // 테스트용 임시 키
 
 const TestPage = () => {
   const [selectedOption, setSelectedOption] = useState<PaymentOption | null>(
@@ -45,8 +46,19 @@ const TestPage = () => {
     if (!selectedOption || !paymentWidget) return;
 
     try {
+      // 주문 ID 생성
+      const orderId = `order-${Date.now()}`;
+
+      // 결제 전 서버에 주문 정보 저장
+      await paymentAPI.requestPayment({
+        orderId,
+        amount: selectedOption.amount,
+        purchasedPoints: selectedOption.points,
+      });
+
+      // 결제 요청
       await paymentWidget.requestPayment({
-        orderId: `order-${Date.now()}`,
+        orderId,
         orderName: `${selectedOption.points} 포인트 충전`,
         successUrl: `${window.location.origin}/payment/success`,
         failUrl: `${window.location.origin}/payment/fail`,

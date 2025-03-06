@@ -1,9 +1,13 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { paymentAPI } from '@apis/payment';
+import { useNavigate } from 'react-router-dom';
+import { useUserStore } from '@/store/useUserStore';
 
 const PaymentSuccessPage = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const { user } = useUserStore();
 
   useEffect(() => {
     const verifyPayment = async () => {
@@ -19,7 +23,7 @@ const PaymentSuccessPage = () => {
             amount: Number(amount),
           });
           alert('결제가 완료되었습니다!');
-          // 메인 페이지로 리다이렉트
+          navigate(`/point/${user.userId}`);
         } catch (error) {
           console.error('결제 검증 실패:', error);
           alert('결제 검증에 실패했습니다.');

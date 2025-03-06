@@ -13,7 +13,7 @@ const PaymentFailPage = () => {
 
       if (orderId) {
         try {
-          await paymentAPI.failPayment(orderId);
+          await paymentAPI.canclePayment(orderId);
           alert(`결제 실패: ${message}`);
           navigate('/test'); // 테스트 페이지로 돌아가기
         } catch (error) {
@@ -33,4 +33,4 @@ const PaymentFailPage = () => {
   );
 };
 
-export default PaymentFailPage; 
+export default PaymentFailPage;

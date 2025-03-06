@@ -16,6 +16,7 @@ import PointPage from '@pages/point/PointPage';
 import TestPage from '@pages/TestPage';
 import PaymentSuccessPage from '@pages/PaymentSuccessPage';
 import PaymentFailPage from '@pages/PaymentFailPage';
+import {TossTest} from '@pages/TossTest';
 
 const Router = () => {
   return (
@@ -57,6 +58,10 @@ const Router = () => {
         <Route
           path='/test'
           element={<TestPage />}
+        />
+        <Route
+          path='/toss-test'
+          element={<TossTest />}
         />
       </Route>
       {/* 내 서평 보기/작성/수정 */}
