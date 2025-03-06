@@ -188,7 +188,7 @@ const Header = () => {
             <div className='absolute top-[2.5px] right-[5.7px]'>
               {/* 기본 알림 점 */}
               <div
-                className={`w-8 h-8 bg-[#FF4A9E] rounded-full z-50 ${
+                className={`w-2 h-2 bg-[#FF4A9E] rounded-full z-50 ${
                   isNewNotification ? 'animate-notification-ping' : ''
                 }`}
                 style={{
