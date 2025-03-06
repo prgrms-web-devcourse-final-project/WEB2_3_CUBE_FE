@@ -102,7 +102,7 @@ export const SearchResult = ({
       const user = useUserStore.getState().user;
       if (!user) return;
 
-      await bookAPI.upgradeBookLevel(String(user.userId));
+      await bookAPI.upgradeBookLevel(String(user.roomId));
       showToast('책장이 업그레이드 되었어요!', 'success');
       setIsUpgradeModalOpen(false);
     } catch (error: unknown) {
