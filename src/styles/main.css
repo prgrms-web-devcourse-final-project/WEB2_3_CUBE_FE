@@ -8,7 +8,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   padding: 4px;
-  z-index: 70;
+  z-index: 40;
 }
 
 .bottom-menu-icon {
