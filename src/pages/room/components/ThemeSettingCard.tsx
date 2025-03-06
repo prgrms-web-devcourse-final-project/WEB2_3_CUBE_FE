@@ -11,7 +11,7 @@ export default function ThemeSettingCard({
 }:ThemeSettingCardProps) {
   return (
     <div
-      onClick={!isLocked ? onClick : undefined}
+      onClick={onClick}
       className={`theme-card border-2 border-[#FCF7FD]
     bg-[#FCF7FD]/20 backdrop-blur-2xl rounded-2xl relative @container
       drop-shadow-modal items-center justify-center p-1.5 transition-all duration-300 ease-in-out
@@ -19,7 +19,7 @@ export default function ThemeSettingCard({
       isSelected
         ? 'scale-100 opacity-100'
         : isLocked
-        ? 'scale-90 hover:scale-98 hover:opacity-90'
+        ? 'scale-90 hover:scale-98 hover:opacity-90 cursor-pointer'
         : 'scale-90 opacity-70 hover:scale-98 hover:opacity-90'
     }
   `}>

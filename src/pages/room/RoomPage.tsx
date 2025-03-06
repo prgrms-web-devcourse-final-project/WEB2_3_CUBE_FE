@@ -87,6 +87,7 @@ export default function RoomPage() {
         roomData.userId,
         selectedTheme,
       );
+      
       showToast('테마가 업데이트됐어요! 새로운 느낌, 어떠세요?', 'success');
     } catch (error) {
       console.error('방 테마 변경 실패:', error);

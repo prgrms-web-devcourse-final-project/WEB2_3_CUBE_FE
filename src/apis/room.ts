@@ -68,14 +68,12 @@ export const roomAPI = {
       throw error;
     }
   },
-    // ----------------------- 잠금 해제한 테마 목록 조회 ------------------------------
+  // ----------------------- 잠금 해제한 테마 목록 조회 ------------------------------
   /**
    * 해당 사용자가 잠금 헤자한 방 테마 목록을 반환한다.
    * @param userId 사용자 ID
    */
-  getUnlockThemes: async (
-    userId: number,
-  ) => {
+  getUnlockThemes: async (userId: number) => {
     try {
       const response = await axiosInstance.get(
         `/${API_URL}/rooms/${userId}/unlocked-themes`,
@@ -83,6 +81,24 @@ export const roomAPI = {
       return response.data;
     } catch (error) {
       console.error('잠금 해제 테마 조회 API 호출 오류:', error);
+      throw error;
+    }
+  },
+  // ----------------------- 테마 구매 ------------------------------
+  /**
+   * 해당 사용자가 잠금 헤자한 방 테마 목록을 반환한다.
+   * @param userId 사용자 ID
+   */
+  purchaseThemes: async (roomId: number, themeName: string) => {
+    try {
+      const response = await axiosInstance.post(
+        `/${API_URL}/rooms/${roomId}/purchase-theme`,{
+          themeName,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('테마 구매 API 호출 오류:', error);
       throw error;
     }
   },
