@@ -15,6 +15,7 @@ const ModalBackground = React.memo(
       event.stopPropagation();
       onClose();
     };
+
     const modalContent = (
       <div
         className={`fixed inset-0 z-[99] w-full h-full flex justify-center items-center bg-[#1E3675CC] backdrop-blur-xs`}
@@ -25,6 +26,7 @@ const ModalBackground = React.memo(
         </div>
       </div>
     );
+
     return createPortal(
       modalContent,
       document.body,
