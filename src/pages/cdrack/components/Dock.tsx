@@ -21,10 +21,10 @@ const Dock = forwardRef<SwiperRef, DockProps>(
     const [isDockOpen, setIsDockOpen] = useState(false);
 
     const isNoPrev = useRef(
-      cdRackInfo?.data[0].myCdId === cdRackInfo?.firstMyCdId,
+      cdRackInfo?.data[0]?.myCdId === cdRackInfo?.firstMyCdId,
     );
     const isNoNext = useRef(
-      cdRackInfo?.data[cdRackInfo.data.length - 1].myCdId ===
+      cdRackInfo?.data[cdRackInfo.data.length - 1]?.myCdId ===
         cdRackInfo?.lastMyCdId,
     );
 
