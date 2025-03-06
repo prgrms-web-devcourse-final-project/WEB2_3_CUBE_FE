@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import Furnitures from '../../../components/room-models/Furnitures';
 import { RoomLighting } from '../../../components/room-models/RoomLighting';
 import { CAMERA_CONFIG } from '../../../constants/sceneSetting';
-import { useRoomItems } from '../../../hooks/useRoomItems';
+import { useRoomItems } from '../hooks/useRoomItems';
 import Guestbook from './Guestbook';
 
 export default function RoomModel({
