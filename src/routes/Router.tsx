@@ -16,6 +16,7 @@ import PointPage from '@pages/point/PointPage';
 import PaymentPage from '@pages/payment/PaymentPage';
 import PaymentSuccessPage from '@pages/payment/PaymentSuccessPage';
 import PaymentFailPage from '@pages/payment/PaymentFailPage';
+import RefundPage from '@pages/payment/RefundPage';
 
 const Router = () => {
   return (
@@ -58,7 +59,10 @@ const Router = () => {
           path='/payment'
           element={<PaymentPage />}
         />
-
+        <Route
+          path='/payment/refund'
+          element={<RefundPage />}
+        />
       </Route>
       {/* 내 서평 보기/작성/수정 */}
       <Route

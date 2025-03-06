@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { paymentAPI } from '@apis/payment';
 import { useUserStore } from '@/store/useUserStore';
+import AlertModal from '@components/AlertModal';
 
 import backgroundIMG from '@/assets/roome-background-img.png';
 import oops from '@assets/error/oops.svg';
@@ -12,6 +13,14 @@ const PaymentFailPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { user } = useUserStore();
+  
+  const [alert, setAlert] = useState<AlertState>({
+    isOpen: false,
+    title: '',
+    subTitle: '',
+    onConfirm: () => {},
+  });
+
   useEffect(() => {
     const handlePaymentFail = async () => {
       const orderId = searchParams.get('orderId');
@@ -19,11 +28,21 @@ const PaymentFailPage = () => {
 
       if (orderId) {
         try {
-          await paymentAPI.canclePayment(orderId);
-          alert(`결제 실패: ${message}`);
-          navigate('/payment');
+          await paymentAPI.failedPayment(orderId);
+          setAlert({
+            isOpen: true,
+            title: '결제 실패',
+            subTitle: message || '결제에 실패했습니다.',
+            onConfirm: () => navigate('/payment'),
+          });
         } catch (error) {
           console.error('결제 실패 처리 오류:', error);
+          setAlert({
+            isOpen: true,
+            title: '오류 발생',
+            subTitle: '결제 실패 처리 중 오류가 발생했습니다.',
+            onConfirm: () => navigate('/payment'),
+          });
         }
       }
     };
@@ -53,6 +72,13 @@ const PaymentFailPage = () => {
           포인트 내역으로 돌아가기
         </Link>
       </div>
+      {alert.isOpen && (
+        <AlertModal
+          title={alert.title}
+          subTitle={alert.subTitle}
+          onConfirm={alert.onConfirm}
+        />
+      )}
     </section>
   );
 };

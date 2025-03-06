@@ -5,13 +5,6 @@ import { paymentAPI } from '@apis/payment';
 import { ProfileCardLayout } from '@pages/profile-card/components/ProfileCardLayout';
 import PaymentOptionCard from './components/PaymentOptionCard';
 
-import pointIcon from '@/assets/toast/coin.png';
-
-interface PaymentOption {
-  points: number;
-  amount: number;
-}
-
 const PAYMENT_OPTIONS: PaymentOption[] = [
   { points: 100, amount: 1000 },
   { points: 550, amount: 5000 },
@@ -76,7 +69,6 @@ const PaymentPage = () => {
       containerClassName='w-[1200px] h-[800px]'
       backgroundClassName='w-[1200px] h-[800px]'
       className='w-[1200px] h-[800px] overflow-y-auto scrollbar'>
-
       <h1 className='mb-4 text-[40px] font-bold text-[#162C63]'>포인트 충전</h1>
 
       <ul className='flex gap-4 mb-4 w-full'>

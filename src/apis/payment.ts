@@ -26,6 +26,13 @@ interface PaymentResponse {
 
 export const paymentAPI = {
   /**
+   * 결제 내역 조회 API
+   * @returns 결제 내역 목록
+   */
+  getPaymentHistory: () =>
+    axiosInstance.get<PaymentResponse[]>(`/${API_URL}/payments/history`),
+
+  /**
    * 결제 검증 API
    * @param data - 결제 검증에 필요한 데이터
    * @returns 결제 검증 결과 및 상태 정보
@@ -57,9 +64,9 @@ export const paymentAPI = {
    * 결제 실패 처리 API
    * @param orderId - 실패 처리할 주문 ID
    * @example
-   * await paymentAPI.canclePayment("order_123");
+   * await paymentAPI.failedPayment("order_123");
    */
-  canclePayment: (orderId: string) =>
+  failedPayment: (orderId: string) =>
     axiosInstance.post<void>(`/${API_URL}/payments/fail/${orderId}`),
 
   /**
