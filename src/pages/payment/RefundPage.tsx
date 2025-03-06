@@ -13,6 +13,7 @@ const RefundPage = () => {
     null,
   );
   const [paymentHistory, setPaymentHistory] = useState<PaymentHistory[]>([]);
+  const [isRefunding, setIsRefunding] = useState(false);
   const [page, setPage] = useState(1);
   const [size] = useState(10);
   const [alert, setAlert] = useState<AlertState>({
@@ -53,9 +54,10 @@ const RefundPage = () => {
   }, [navigate, user.userId, page, size]);
 
   const handleRefund = async () => {
-    if (!selectedPayment) return;
+    if (!selectedPayment || isRefunding) return;
 
     try {
+      setIsRefunding(true);
       await paymentAPI.cancelPayment(
         selectedPayment.orderId,
         '전액 취소',
@@ -76,6 +78,8 @@ const RefundPage = () => {
         subTitle: error.response.data.message,
         onConfirm: () => setAlert((prev) => ({ ...prev, isOpen: false })),
       });
+    } finally {
+      setIsRefunding(false);
     }
   };
 
@@ -128,8 +132,16 @@ const RefundPage = () => {
               theme='gray'
               containerClassName='w-fit'
               className='px-40 text-white'
-              onClick={handleRefund}>
-              {selectedPayment.amount.toLocaleString()}원 환불하기
+              onClick={handleRefund}
+              disabled={isRefunding}>
+              {isRefunding ? (
+                <div className='flex items-center gap-2'>
+                  <div className='w-5 h-5 border-t-2 border-white rounded-full animate-spin' />
+                  환불 처리중...
+                </div>
+              ) : (
+                `${selectedPayment.amount.toLocaleString()}원 환불하기`
+              )}
             </LayeredButton>
           </div>
         )}
