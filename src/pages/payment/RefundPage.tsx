@@ -88,7 +88,7 @@ const RefundPage = () => {
       // containerClassName='w-[1200px] h-[800px]'
       // backgroundClassName='w-[1200px] h-[800px]'
       className=' overflow-hidden'>
-      <div className='w-full h-full overflow-y-auto scrollbar px-4'>
+      <div className='w-full h-full '>
         <h1 className='mb-4 text-[40px] font-bold text-[#162C63] w-full text-center'>
           포인트 환불
         </h1>
@@ -97,7 +97,7 @@ const RefundPage = () => {
           <h3 className='text-lg text-[#162C63] mb-4 w-full text-center'>
             결제 내역 확인 후 환불을 원하는 내역을 선택해 환불을 진행해주세요.
           </h3>
-          <ul className='item-row gap-4 w-full'>
+          <ul className='flex flex-col gap-4 w-full h-[350px] overflow-y-auto scrollbar px-4'>
             {paymentHistory.map((payment) => (
               <li
                 key={payment.orderId}
