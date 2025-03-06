@@ -20,7 +20,7 @@ export default function SocialTab() {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = 'https://desqb38rc2v50.cloudfront.net';
+    window.location.href = 'http://3.39.182.150/oauth2/authorization/google';
   };
   return (
     <div className='flex flex-col  items-center rounded-3xl h-full bg-[#FCF7FD66] backdrop-blur-lg'>
