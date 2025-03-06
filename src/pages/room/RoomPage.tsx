@@ -11,6 +11,7 @@ import DockMenu from './components/DockMenu';
 import PreferenceSetting from './components/PreferenceSetting';
 import RoomModel from './components/RoomModel';
 import ThemeSetting from './components/ThemeSetting';
+import { rankAPI } from '../../apis/ranking';
 
 export default function RoomPage() {
   const { showToast } = useToastStore();
@@ -38,6 +39,10 @@ export default function RoomPage() {
 
     const fetchRoomData = async () => {
       try {
+        if (user && userId !== String(user.userId)) {
+          await rankAPI.visitByUserId(String(user.userId), userId);
+        }
+
         const roomData: RoomData = await roomAPI.getRoomById(Number(userId));
         if (roomData) {
           setRoomData(roomData);
@@ -57,7 +62,8 @@ export default function RoomPage() {
     };
 
     fetchRoomData();
-  }, [userId]);
+  }, [userId, user]);
+  
 
   const handleThemeChange = (newTheme: 'BASIC' | 'FOREST' | 'MARINE') => {
     setSelectedTheme(newTheme);
@@ -142,7 +148,7 @@ export default function RoomPage() {
   };
 
   return (
-    <main className='relative w-full min-h-screen overflow-hidden main-background'>
+    <main className='overflow-hidden relative w-full min-h-screen main-background'>
       {roomData && (
         <>
           <RoomModel
@@ -181,7 +187,7 @@ export default function RoomPage() {
           initial='hidden'
           animate='visible'
           variants={ANIMATION_VARIANTS}
-          className='w-full absolute top-0 left-0 z-30'>
+          className='absolute top-0 left-0 z-30 w-full'>
           <ThemeSetting
             selectedTheme={selectedTheme}
             onThemeSelect={handleThemeChange}
@@ -194,7 +200,7 @@ export default function RoomPage() {
           initial='hidden'
           animate='visible'
           variants={ANIMATION_VARIANTS}
-          className='w-full absolute top-0 left-0 z-30'>
+          className='absolute top-0 left-0 z-30 w-full'>
           <PreferenceSetting
             storageData={storageData}
             onFurnitureToggle={handleFurnitureToggle}

@@ -100,6 +100,13 @@ const BookPage = () => {
     );
   }
 
+  // 다른 사람의 서평인데 서평이 없는 경우
+  if (!hasReview && userId) {
+    showToast('작성된 서평이 없습니다.', 'error');
+    navigate(-1);
+    return null; // 리다이렉트 전에 빈 화면 표시
+  }
+
   // 서평이 있는 경우에만 뷰어 표시
   if (hasReview && reviewData) {
     return (
@@ -109,9 +116,6 @@ const BookPage = () => {
       />
     );
   }
-
-  // 다른 사람의 서평인데 서평이 없는 경우
-  return <div>존재하지 않는 서평입니다.</div>;
 };
 
 export default BookPage;
