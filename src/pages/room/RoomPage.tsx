@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { roomAPI } from '../../apis/room';
+import { rankAPI } from '../../apis/ranking';
 import { ANIMATION_VARIANTS } from '../../constants/animation';
 import { SIGN_VARIANTS } from '../../constants/sign';
 import { useToastStore } from '../../store/useToastStore';
@@ -11,7 +12,6 @@ import DockMenu from './components/DockMenu';
 import PreferenceSetting from './components/PreferenceSetting';
 import RoomModel from './components/RoomModel';
 import ThemeSetting from './components/ThemeSetting';
-import { rankAPI } from '../../apis/ranking';
 
 export default function RoomPage() {
   const { showToast } = useToastStore();
@@ -34,34 +34,45 @@ export default function RoomPage() {
 
   const user = useUserStore((state) => state.user);
 
+  const recordVisit = async (visitorId:number, hostId:number) =>{
+    try {
+      await rankAPI.visitByUserId(visitorId, hostId);
+    } catch (error){
+      console.error('방문 기록 실패:',error);
+    }
+  }
+
+  const fetchRoomData = async (id:number) => {
+    try {
+      const roomData: RoomData = await roomAPI.getRoomById(id);
+      if (roomData) {
+        setRoomData(roomData);
+        setSelectedTheme(roomData.theme as 'BASIC' | 'FOREST' | 'MARINE');
+        setVisibleFurnitures(
+          roomData.furnitures.filter((furniture) => furniture.isVisible),
+        );
+
+        setStorageData({
+          ...roomData.storageLimits,
+          ...roomData.userStorage,
+        });
+      }
+    } catch (error) {
+      console.error('방 정보 불러오기 실패:', error);
+    }
+  };
+
   useEffect(() => {
     if (!userId) return;
 
-    const fetchRoomData = async () => {
-      try {
-        if (user && userId !== String(user.userId)) {
-          await rankAPI.visitByUserId(String(user.userId), userId);
-        }
-
-        const roomData: RoomData = await roomAPI.getRoomById(Number(userId));
-        if (roomData) {
-          setRoomData(roomData);
-          setSelectedTheme(roomData.theme as 'BASIC' | 'FOREST' | 'MARINE');
-          setVisibleFurnitures(
-            roomData.furnitures.filter((furniture) => furniture.isVisible),
-          );
-
-          setStorageData({
-            ...roomData.storageLimits,
-            ...roomData.userStorage,
-          });
-        }
-      } catch (error) {
-        console.error('방 정보 불러오기 실패:', error);
+    const loadRoom = async () => {
+      if(user && Number(userId) !== user.userId){
+        await recordVisit(user.userId, Number(userId));
       }
+      await fetchRoomData(Number(userId))
     };
 
-    fetchRoomData();
+    loadRoom();
   }, [userId, user]);
   
 

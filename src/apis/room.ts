@@ -68,45 +68,4 @@ export const roomAPI = {
       throw error;
     }
   },
-  // ------------------------------ 방문(랭킹 집계) By userId ------------------------------
-  /**
-   * 다른 사용자의 방을 방문하고 랭킹 점수 부여 (userId 기준)
-   * @param visitorId 방문하는 유저의 ID
-   * @param hostId 방의 소유자 ID
-   */
-  visitedRoomByUserId: async (
-    visitorId: number,
-    hostId: number,
-  ) => {
-    try {
-      const response = await axiosInstance.post(
-        `/${API_URL}/rooms/visit?visitorId=${visitorId}&hostId=${hostId}`
-      );
-      return response.data;
-    } catch (error) {
-      console.error('방문 API 호출 오류:', error);
-      throw error;
-    }
-  },
-    // ------------------------------ 방문(랭킹 집계) By roomId ------------------------------
-  /**
-   * 다른 사용자의 방을 방문하고 랭킹 점수 부여 (roomId 기준)
-   * @param visitorId 방문하는 유저의 ID
-   * @param roomId 사용자 ID
-   */
-  visitedRoomByRoomId: async (
-    visitorId: number,
-    roomId: number,
-  ) => {
-    try {
-      const response = await axiosInstance.post(
-        `/${API_URL}/rooms/visit/${roomId}?visitorId=${visitorId}
-`
-      );
-      return response.data;
-    } catch (error) {
-      console.error('방문 API 호출 오류:', error);
-      throw error;
-    }
-  },
 };
