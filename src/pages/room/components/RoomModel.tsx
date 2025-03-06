@@ -3,10 +3,10 @@ import { Canvas } from '@react-three/fiber';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Suspense, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Furnitures from '../../../components/room-models/Furnitures';
 import { RoomLighting } from '../../../components/room-models/RoomLighting';
 import { CAMERA_CONFIG } from '../../../constants/sceneSetting';
 import { useRoomItems } from '../hooks/useRoomItems';
+import Furnitures from '../../../components/room-models/Furnitures';
 import Guestbook from './Guestbook';
 
 export default function RoomModel({
