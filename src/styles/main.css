@@ -8,7 +8,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   padding: 4px;
-  z-index: 70;
+  z-index: 40;
 }
 
 .bottom-menu-icon {
@@ -98,4 +98,22 @@
   @apply placeholder:font-medium placeholder:text-xs @2xl:placeholder:text-sm placeholder:text-[#A2A2A2]/70;
   @apply bg-[#EDE6EE]/25 border-2 border-[#A2A2A2]/30 rounded-[8px] @2xl:rounded-xl;
   @apply text-sm text-[#292929] font-medium @2xl:text-base;
+}
+
+/* 포인트 말풍선 */
+.speech-bubble {
+  position: relative;
+}
+
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -8px; 
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid rgba(255, 255, 255, 0.7); 
 }
