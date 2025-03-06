@@ -4,6 +4,7 @@ import CdSwiper from './CdSwiper';
 import { SwiperRef } from 'swiper/react';
 import SlidingTitle from './SlidingTitle';
 import { SearchModal } from '@components/search-modal/SearchModal';
+import cd from '@assets/cd/cd.png';
 import cd_add_icon from '@assets/cd/cd-add-icon.svg';
 import { useUserStore } from '@/store/useUserStore';
 import { useParams } from 'react-router-dom';
@@ -14,7 +15,7 @@ interface NotEmptyStatusProps {
   onNextPage: (cursor: number) => void;
 }
 
-export default function NotEmptyStatus({
+export default function CdStatus({
   cdRackInfo,
   onPrevPage,
   onNextPage,
@@ -61,21 +62,35 @@ export default function NotEmptyStatus({
   return (
     <div className='flex h-full flex-col gap-19 items-center'>
       {/* 상단 정보 */}
-      {activeTrack && (
+
+      {cdRackDatas.data.length > 0 ? (
         <div className='text-center mt-20 '>
           <span className='text-white  opacity-70   text-[14px] xl:text-[16px] 2xl:text-xl'>
-            {activeTrack.artist} | {activeTrack.releaseDate.split('-')[0]}
+            {activeTrack?.artist} | {activeTrack?.releaseDate.split('-')[0]}
           </span>
-          <SlidingTitle text={activeTrack.title} />
+          <SlidingTitle text={activeTrack?.title} />
+        </div>
+      ) : (
+        <div className=' text-white h-full '>
+          <h1 className='text-[40px] font-bold  text-center pt-46 mb-12'>
+            꽂을 CD가 없네요...
+          </h1>
+          <img
+            className='max-w-[472px] max-h-[472px] shrink-0 drop-shadow-book aspect-square m-auto'
+            src={cd}
+            alt='cd 실사 이미지'
+          />
         </div>
       )}
-      {/* Swiper */}
-      <CdSwiper
-        ref={swiperRef}
-        cdRackDatas={cdRackDatas.data}
-        onActiveTrackId={(activeIndex: number) => setActiveIndex(activeIndex)}
-      />
 
+      {/* Swiper */}
+      {cdRackDatas.data.length > 0 && (
+        <CdSwiper
+          ref={swiperRef}
+          cdRackDatas={cdRackDatas.data}
+          onActiveTrackId={(activeIndex: number) => setActiveIndex(activeIndex)}
+        />
+      )}
       {/* Dock  */}
       <Dock
         ref={swiperRef}

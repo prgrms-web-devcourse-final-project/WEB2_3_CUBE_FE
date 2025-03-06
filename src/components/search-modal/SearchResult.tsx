@@ -2,7 +2,7 @@ import { bookAPI } from '@/apis/book';
 import addIcon from '@/assets/add-icon.svg';
 import { SEARCH_THEME } from '@/constants/searchTheme';
 import { toKoreanDate } from '@utils/dateFormat';
-import { addCdToMyRack } from '@apis/cd';
+import { addCdToMyRack, upgradeCdLevel } from '@apis/cd';
 import { useUserStore } from '@/store/useUserStore';
 import { useToastStore } from '@/store/useToastStore';
 import AlertModal from '@components/AlertModal';
@@ -82,9 +82,12 @@ export const SearchResult = ({
         onClose();
       }
     } catch (error: any) {
+      console.log(error.response?.data?.response);
+
       if (
         error.response?.data?.message ===
-        '책장에 더 이상 책을 추가할 수 없습니다. 책장을 업그레이드 해주세요.'
+          '책장에 더 이상 책을 추가할 수 없습니다. 책장을 업그레이드 해주세요.' ||
+        error.response?.data?.message === 'CD 랙의 저장 용량을 초과하였습니다.'
       ) {
         setIsUpgradeModalOpen(true);
       } else {
@@ -97,18 +100,23 @@ export const SearchResult = ({
     }
   };
 
-  const handleUpgrade = async () => {
+  const handleUpgrade = async (type: string) => {
     try {
       const user = useUserStore.getState().user;
       if (!user) return;
 
-      await bookAPI.upgradeBookLevel(String(user.roomId));
-      showToast('책장이 업그레이드 되었어요!', 'success');
+      if (type === 'BOOK') {
+        await bookAPI.upgradeBookLevel(String(user.roomId));
+        showToast('책장이 업그레이드 되었어요!', 'success');
+      } else {
+        await upgradeCdLevel(user.roomId);
+        showToast('CD랙이 업그레이드 되었어요!', 'success');
+      }
       setIsUpgradeModalOpen(false);
     } catch (error: unknown) {
       const apiError = error as ApiError;
-      console.error('책장 업그레이드 실패:', apiError);
-      showToast('책장 업그레이드에 실패했습니다.', 'error');
+      console.error('업그레이드 실패:', apiError);
+      showToast('업그레이드에 실패했습니다.', 'error');
     }
   };
 
@@ -187,9 +195,9 @@ export const SearchResult = ({
       {isUpgradeModalOpen && (
         <ConfirmModal
           onClose={() => setIsUpgradeModalOpen(false)}
-          onConfirm={handleUpgrade}
-          title='책장이 꽉 찼어요!'
-          subTitle='400 포인트를 소모해 책장을 업그레이드 할 수 있어요.'
+          onConfirm={() => handleUpgrade(type)}
+          title={type === 'BOOK' ? `책장이 꽉 찼어요!` : 'CD랙이 꽉 찼어요!'}
+          subTitle='400 포인트를 소모해 업그레이드 할 수 있어요.'
         />
       )}
     </div>
