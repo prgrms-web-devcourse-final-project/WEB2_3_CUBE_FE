@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useUserStore } from '@/store/useUserStore';
 import { useUserProfile } from '@/hooks/useUserProfile';
@@ -12,6 +12,7 @@ import RecommendedUserList from './components/RecommendedUserList';
 import ProfileButtons from './components/ProfileButtons';
 import { useToastStore } from '@/store/useToastStore';
 import Loading from '@components/Loading';
+import { getPointBalance } from '@/apis/point';
 
 const ProfileCardPage = () => {
   const { userId } = useParams();
@@ -19,6 +20,7 @@ const ProfileCardPage = () => {
   const { user } = useUserStore();
   const { profile, updateProfile } = useUserProfile(userId || undefined);
   const { showToast } = useToastStore();
+  const [pointBalance, setPointBalance] = useState<number>(0);
 
   useEffect(() => {
     if (!userId) {
@@ -26,7 +28,22 @@ const ProfileCardPage = () => {
       return;
     }
     updateProfile();
-  }, [userId, navigate, updateProfile]);
+
+    // 포인트 잔액 조회
+    const fetchPointBalance = async () => {
+      try {
+        const response = await getPointBalance();
+        setPointBalance(response.balance);
+      } catch (error) {
+        console.error('포인트 잔액 조회 실패:', error);
+        setPointBalance(0);
+      }
+    };
+
+    if (user?.userId === Number(userId)) {
+      fetchPointBalance();
+    }
+  }, [userId, navigate, updateProfile, user?.userId]);
 
   const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -103,7 +120,9 @@ const ProfileCardPage = () => {
           alt='사용자 현재 포인트'
           className='w-4 h-4'
         />
-        <span className='text-[#162C63] text-xs'>100P</span>
+        <span className='text-[#162C63] text-xs'>
+          {pointBalance.toLocaleString('ko-KR')}P
+        </span>
       </button>
 
       {/* 공유 버튼 */}
