@@ -11,7 +11,7 @@ const PointHistory = forwardRef<HTMLDivElement, PointHistoryProps>(
   ({ data, isFetching }, ref) => {
     return (
       <section
-        className='absolute top-33  pl-14 pr-17 w-full h-[440px] overflow-y-auto  point-scrollbar
+        className='translate-y-10 w-full h-[440px] overflow-y-auto  point-scrollbar
       flex flex-col gap-11'>
         {/* 날짜별 적립, 차감 */}
         {data?.pages.map((page: Points, index: number) => (
