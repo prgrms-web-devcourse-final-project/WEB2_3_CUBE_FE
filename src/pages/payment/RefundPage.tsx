@@ -12,7 +12,6 @@ const RefundPage = () => {
   const [selectedPayment, setSelectedPayment] = useState<PaymentHistory | null>(
     null,
   );
-  const [refundReason, setRefundReason] = useState('');
   const [paymentHistory, setPaymentHistory] = useState<PaymentHistory[]>([]);
   const [page, setPage] = useState(1);
   const [size] = useState(10);
@@ -28,18 +27,16 @@ const RefundPage = () => {
     const fetchPaymentHistory = async () => {
       try {
         const response = await paymentAPI.getPaymentHistory({ page, size });
-        const filteredHistory = response.data
-          .filter(
-            (payment) =>
-              payment.status === 'SUCCESS' || payment.status === 'CANCELED',
-          )
-          .map((payment) => ({
-            orderId: payment.orderId,
+        console.log('Payment history response:', response.data); // 디버깅을 위한 로그 추가
+        const filteredHistory = response.data.map(
+          (payment: PaymentResponse) => ({
+            orderId: payment.paymentKey,
             amount: payment.amount,
-            purchasedPoints: payment.purchasedPoints,
-            status: payment.status as 'SUCCESS' | 'CANCELED',
+            purchasedPoints: payment.earnedPoints,
             createdAt: payment.createdAt,
-          }));
+          }),
+        );
+        console.log('Filtered history:', filteredHistory); // 디버깅을 위한 로그 추가
         setPaymentHistory(filteredHistory);
       } catch (error) {
         console.error('결제 내역 조회 실패:', error);
@@ -56,20 +53,12 @@ const RefundPage = () => {
   }, [navigate, user.userId, page, size]);
 
   const handleRefund = async () => {
-    if (!selectedPayment || !refundReason.trim()) {
-      setAlert({
-        isOpen: true,
-        title: '입력 오류',
-        subTitle: '환불 사유를 입력해주세요.',
-        onConfirm: () => setAlert((prev) => ({ ...prev, isOpen: false })),
-      });
-      return;
-    }
+    if (!selectedPayment) return;
 
     try {
       await paymentAPI.cancelPayment(
         selectedPayment.orderId,
-        refundReason,
+        '전액 취소',
         selectedPayment.amount,
       );
 
@@ -77,14 +66,14 @@ const RefundPage = () => {
         isOpen: true,
         title: '환불 신청 완료',
         subTitle: '환불이 정상적으로 처리되었습니다.',
-        onConfirm: () => navigate('/point'),
+        onConfirm: () => navigate(`/point/${user.userId}`),
       });
     } catch (error) {
       console.error('환불 요청 실패:', error);
       setAlert({
         isOpen: true,
         title: '환불 신청 실패',
-        subTitle: '환불 처리 중 오류가 발생했습니다.',
+        subTitle: error.response.data.message,
         onConfirm: () => setAlert((prev) => ({ ...prev, isOpen: false })),
       });
     }
@@ -105,55 +94,43 @@ const RefundPage = () => {
             환불 가능한 결제 내역
           </h2>
           <ul className='grid grid-cols-2 gap-4 w-full'>
-            {paymentHistory
-              .filter((payment) => payment.status === 'SUCCESS')
-              .map((payment) => (
-                <li
-                  key={payment.orderId}
-                  className={`p-6 rounded-lg border-2 transition-colors cursor-pointer ${
-                    selectedPayment?.orderId === payment.orderId
-                      ? 'bg-[#73A1F7]/10 border-[#2656CD]'
-                      : 'bg-[#95B2EA]/10 border-transparent'
-                  }`}
-                  onClick={() => setSelectedPayment(payment)}>
-                  <div className='flex justify-between items-center mb-2'>
-                    <span className='text-xl font-bold text-[#2656CD]'>
-                      {payment.purchasedPoints}P
-                    </span>
-                    <span className='text-gray-600 font-semibold'>
-                      {payment.amount.toLocaleString()}원
-                    </span>
+            {paymentHistory.map((payment) => (
+              <li
+                key={payment.orderId}
+                className={`p-6 rounded-lg border-2 transition-colors cursor-pointer ${
+                  selectedPayment?.orderId === payment.orderId
+                    ? 'bg-[#73A1F7]/10 border-[#2656CD]'
+                    : 'bg-[#95B2EA]/10 border-transparent'
+                }`}
+                onClick={() => setSelectedPayment(payment)}>
+                <div className='flex justify-between items-center mb-2'>
+                  <span className='text-xl font-bold text-[#2656CD]'>
+                    {payment.purchasedPoints}P
+                  </span>
+                  <span className='text-gray-600 font-semibold'>
+                    {payment.amount.toLocaleString()}원
+                  </span>
+                </div>
+                <div className='text-sm text-gray-500'>
+                  <div>주문번호: {payment.orderId}</div>
+                  <div>
+                    결제일: {new Date(payment.createdAt).toLocaleDateString()}
                   </div>
-                  <div className='text-sm text-gray-500'>
-                    <div>주문번호: {payment.orderId}</div>
-                    <div>
-                      결제일: {new Date(payment.createdAt).toLocaleDateString()}
-                    </div>
-                  </div>
-                </li>
-              ))}
+                </div>
+              </li>
+            ))}
           </ul>
         </div>
 
         {selectedPayment && (
-          <div className='mt-8 w-full flex flex-col gap-4'>
-            <div className='p-4 rounded-lg border border-[#2656CD]/20 w-full'>
-              <textarea
-                className='w-full h-32 p-4 rounded-lg border border-[#2656CD]/20 resize-none focus:outline-none focus:border-[#2656CD]'
-                placeholder='환불 사유를 입력해주세요.'
-                value={refundReason}
-                onChange={(e) => setRefundReason(e.target.value)}
-              />
-            </div>
-            <div className='flex justify-center'>
-              <LayeredButton
-                theme='gray'
-                containerClassName='w-fit'
-                className='px-40 text-white'
-                onClick={handleRefund}>
-                {selectedPayment.amount.toLocaleString()}원 환불하기
-              </LayeredButton>
-            </div>
+          <div className='mt-8 w-full flex justify-center'>
+            <LayeredButton
+              theme='gray'
+              containerClassName='w-fit'
+              className='px-40 text-white'
+              onClick={handleRefund}>
+              {selectedPayment.amount.toLocaleString()}원 환불하기
+            </LayeredButton>
           </div>
         )}
       </div>

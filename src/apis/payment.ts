@@ -4,32 +4,6 @@ const API_URL = 'api';
 
 export type PaymentStatus = 'PENDING' | 'SUCCESS' | 'FAILED' | 'CANCELED';
 
-interface PaymentVerifyRequest {
-  paymentKey: string;
-  orderId: string;
-  amount: number;
-}
-
-interface PaymentRequestBody {
-  orderId: string;
-  amount: number;
-  purchasedPoints: number;
-}
-
-interface PaymentResponse {
-  orderId: string;
-  paymentKey: string;
-  amount: number;
-  purchasedPoints: number;
-  status: PaymentStatus;
-  createdAt: string;
-}
-
-interface PaymentHistoryParams {
-  page?: number;
-  size?: number;
-}
-
 export const paymentAPI = {
   /**
    * 결제 내역 조회 API
@@ -80,25 +54,25 @@ export const paymentAPI = {
 
   /**
    * 결제 취소 API
-   * @param orderId - 취소할 주문 ID
+   * @param paymentKey - 취소할 결제 키
    * @param cancelReason - 취소 사유 (기본값: '전액 취소')
    * @param cancelAmount - 취소 금액 (선택사항)
    * @returns 취소된 결제 정보
    * @example
    * const result = await paymentAPI.cancelPayment(
-   *   "order_123",
+   *   "payment_key_xxx",
    *   "고객 변심",
    *   10000
    * );
    */
   cancelPayment: (
-    orderId: string,
+    paymentKey: string,
     cancelReason: string = '전액 취소',
     cancelAmount?: number,
   ) =>
     axiosInstance.post<PaymentResponse>(
-      `/${API_URL}/payments/cancel/${orderId}`,
+      `/${API_URL}/payments/cancel`,
       undefined,
-      { params: { cancelReason, cancelAmount } },
+      { params: { paymentKey, cancelReason, cancelAmount } },
     ),
 };

@@ -21,8 +21,32 @@ interface PaymentHistory {
   orderId: string;
   amount: number;
   purchasedPoints: number;
-  status: 'SUCCESS' | 'CANCELED';
   createdAt: string;
+}
+
+interface PaymentVerifyRequest {
+  paymentKey: string;
+  orderId: string;
+  amount: number;
+}
+
+interface PaymentRequestBody {
+  orderId: string;
+  amount: number;
+  purchasedPoints: number;
+}
+
+interface PaymentResponse {
+  id: number;
+  amount: number;
+  earnedPoints: number;
+  paymentKey: string;
+  createdAt: string;
+}
+
+interface PaymentHistoryParams {
+  page?: number;
+  size?: number;
 }
 
 interface Window {
