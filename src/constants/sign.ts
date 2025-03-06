@@ -1,7 +1,7 @@
 export const SIGN_VARIANTS = {
   hidden: {
     opacity: 0,
-    x: -100, 
+    x: 100, 
     rotateX: -30, 
     rotateY: -20, 
   },
