@@ -68,4 +68,22 @@ export const roomAPI = {
       throw error;
     }
   },
+    // ----------------------- 잠금 해제한 테마 목록 조회 ------------------------------
+  /**
+   * 해당 사용자가 잠금 헤자한 방 테마 목록을 반환한다.
+   * @param userId 사용자 ID
+   */
+  getUnlockThemes: async (
+    userId: number,
+  ) => {
+    try {
+      const response = await axiosInstance.get(
+        `/${API_URL}/rooms/${userId}/unlocked-themes`,
+      );
+      return response.data;
+    } catch (error) {
+      console.error('잠금 해제 테마 조회 API 호출 오류:', error);
+      throw error;
+    }
+  },
 };
