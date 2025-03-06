@@ -124,7 +124,8 @@ export default function PointPage() {
             <LayeredButton
               theme='blue'
               className=' text-[18px] font-bold w-[202px] h-[50px]'
-              disabled={isLoading}>
+              disabled={isLoading}
+              onClick={() => navigate('/payment')}>
               포인트 충전하기
             </LayeredButton>
           </div>

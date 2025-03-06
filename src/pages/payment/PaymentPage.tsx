@@ -3,6 +3,9 @@ import LayeredButton from '@components/LayeredButton';
 import { loadPaymentWidget } from '@tosspayments/payment-widget-sdk';
 import { paymentAPI } from '@apis/payment';
 
+import pointIcon from '@/assets/toast/coin.png';
+import { ProfileCardLayout } from '@pages/profile-card/components/ProfileCardLayout';
+
 interface PaymentOption {
   points: number;
   amount: number;
@@ -15,11 +18,10 @@ const PAYMENT_OPTIONS: PaymentOption[] = [
   { points: 4000, amount: 30000 },
 ];
 
-const TOSS_CLIENT_KEY = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
-// const TOSS_CLIENT_KEY = import.meta.env.VITE_TOSS_CLIENT_KEY;
-const CUSTOMER_KEY = '5bwe_UyPru_naK0XAgYqS'; // 테스트용 임시 키
+const TOSS_CLIENT_KEY = import.meta.env.VITE_TOSS_CLIENT_KEY;
+const CUSTOMER_KEY = import.meta.env.VITE_TOSS_CUSTOMER_KEY;
 
-const TestPage = () => {
+const PaymentPage = () => {
   const [selectedOption, setSelectedOption] = useState<PaymentOption | null>(
     null,
   );
@@ -69,40 +71,55 @@ const TestPage = () => {
   };
 
   return (
-    <div className='p-4'>
-      <h1 className='mb-4 text-2xl font-bold'>포인트 충전</h1>
-      <div className='grid grid-cols-2 gap-4 mb-4'>
+    <ProfileCardLayout
+      containerClassName='w-[1200px] h-[800px] '
+      backgroundClassName='w-[1200px] h-[800px]'
+      className='w-[1200px] h-[800px] overflow-y-auto'>
+      <h1 className='mb-4 text-[40px] font-bold text-[#162C63]'>포인트 충전</h1>
+      <ul className='flex gap-4 mb-4 w-full'>
         {PAYMENT_OPTIONS.map((option) => (
-          <div
+          <li
             key={option.points}
-            className='p-4 rounded border'>
-            <h2 className='text-xl font-bold'>{option.points} 포인트</h2>
-            <p className='text-gray-600'>{option.amount.toLocaleString()}원</p>
+            className='py-6 px-12 rounded-lg bg-[#95B2EA]/10 w-full item-row gap-4'>
+            <h2 className='text-2xl font-bold text-[#2656CD] w-full text-center bg-white rounded-full p-2'>
+              {option.points}P
+            </h2>
+            <img
+              src={pointIcon}
+              alt='point'
+              className='w-18 h-18'
+            />
+            <p className='text-gray-600 font-semibold'>
+              {option.amount.toLocaleString()}원
+            </p>
             <LayeredButton
               theme='blue'
-              className='mt-2'
+              containerClassName='w-full'
+              className='mt-2 w-full py-1.5'
               onClick={() => setSelectedOption(option)}>
               선택하기
             </LayeredButton>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
 
       {selectedOption && (
-        <div className='mt-8'>
-          <div className='p-4 mb-4 rounded-lg border'>
+        <div className='mt-8 w-full'>
+          <div className='p-4 mb-4 rounded-lg border border-[#2656CD]/20 w-full'>
             <div id='payment-widget' />
             <div id='agreement' />
           </div>
-          <button
+          <LayeredButton
+            theme='red'
+            containerClassName='w-full'
             className='p-4 w-full text-white bg-blue-500 rounded-lg hover:bg-blue-600'
             onClick={handlePayment}>
             {selectedOption.amount.toLocaleString()}원 결제하기
-          </button>
+          </LayeredButton>
         </div>
       )}
-    </div>
+    </ProfileCardLayout>
   );
 };
 
-export default TestPage;
+export default PaymentPage;

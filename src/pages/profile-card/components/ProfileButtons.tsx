@@ -81,6 +81,7 @@ export const ProfileButtons = ({
       <LayeredButton
         theme='purple'
         className='py-1.5 px-8'
+        containerClassName='w-fit'
         onClick={handleEditProfile}>
         프로필 수정
       </LayeredButton>
@@ -92,12 +93,14 @@ export const ProfileButtons = ({
       <LayeredButton
         theme={isMatched ? 'gray' : 'red'}
         className='py-1.5 px-8'
+        containerClassName='w-fit'
         onClick={handleMateAction}>
         메이트 {isMatched ? '취소' : '맺기'}
       </LayeredButton>
       <LayeredButton
         theme='blue'
         className='py-1.5 px-8'
+        containerClassName='w-fit'
         onClick={handleRoomVisit}>
         방 구경하기
       </LayeredButton>

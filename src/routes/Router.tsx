@@ -13,10 +13,9 @@ import ProfileCardEditPage from '@pages/profile-card-edit/ProfileCardEditPage';
 import Redirection from '@pages/login/components/Redirection';
 import EventPage from '@pages/event/EventPage';
 import PointPage from '@pages/point/PointPage';
-import TestPage from '@pages/TestPage';
-import PaymentSuccessPage from '@pages/PaymentSuccessPage';
-import PaymentFailPage from '@pages/PaymentFailPage';
-import {TossTest} from '@pages/TossTest';
+import PaymentPage from '@pages/payment/PaymentPage';
+import PaymentSuccessPage from '@pages/payment/PaymentSuccessPage';
+import PaymentFailPage from '@pages/payment/PaymentFailPage';
 
 const Router = () => {
   return (
@@ -56,13 +55,10 @@ const Router = () => {
           element={<PointPage />}
         />
         <Route
-          path='/test'
-          element={<TestPage />}
+          path='/payment'
+          element={<PaymentPage />}
         />
-        <Route
-          path='/toss-test'
-          element={<TossTest />}
-        />
+
       </Route>
       {/* 내 서평 보기/작성/수정 */}
       <Route
