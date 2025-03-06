@@ -104,15 +104,15 @@ const PaymentPage = () => {
       </ul>
 
       {selectedOption && (
-        <div className='mt-8 w-full'>
+        <div className='mt-8 w-full item-row gap-8'>
           <div className='p-4 mb-4 rounded-lg border border-[#2656CD]/20 w-full'>
             <div id='payment-widget' />
             <div id='agreement' />
           </div>
           <LayeredButton
             theme='red'
-            containerClassName='w-full'
-            className='p-4 w-full text-white bg-blue-500 rounded-lg hover:bg-blue-600'
+            containerClassName='w-fit'
+            className='px-40 w-full text-white bg-blue-500 rounded-lg hover:bg-blue-600'
             onClick={handlePayment}>
             {selectedOption.amount.toLocaleString()}원 결제하기
           </LayeredButton>

@@ -21,7 +21,7 @@ const PaymentFailPage = () => {
         try {
           await paymentAPI.canclePayment(orderId);
           alert(`결제 실패: ${message}`);
-          navigate('/test');
+          navigate('/payment');
         } catch (error) {
           console.error('결제 실패 처리 오류:', error);
         }
