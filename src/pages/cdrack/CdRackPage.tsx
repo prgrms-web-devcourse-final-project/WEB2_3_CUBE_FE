@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import backgroundIMG from '@/assets/roome-background-img.png';
-import NotEmptyStatus from './components/NotEmptyStatus';
-import EmptyStatus from './components/EmptyStatus';
 import { getCdRack } from '@apis/cd';
 import { useParams } from 'react-router-dom';
 import Loading from '@components/Loading';
+import CdStatus from './components/CdStatus';
 
 export default function CdRackPage() {
   const [cdRackInfo, setCDRackInfo] = useState<CDRackInfo>({
@@ -59,15 +58,11 @@ export default function CdRackPage() {
       className='w-full h-screen bg-center bg-no-repeat bg-cover'
       style={{ backgroundImage: `url(${backgroundIMG})` }}>
       <div className=' w-full h-screen bg-[#3E507DCC] backdrop-blur-[35px] '>
-        {cdRackInfo.data.length > 0 ? (
-          <NotEmptyStatus
-            cdRackInfo={cdRackInfo}
-            onPrevPage={handlePrevPage}
-            onNextPage={handleNextPage}
-          />
-        ) : (
-          <EmptyStatus />
-        )}
+        <CdStatus
+          cdRackInfo={cdRackInfo}
+          onPrevPage={handlePrevPage}
+          onNextPage={handleNextPage}
+        />
       </div>
     </div>
   );
