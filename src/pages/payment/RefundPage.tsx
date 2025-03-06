@@ -28,16 +28,16 @@ const RefundPage = () => {
     const fetchPaymentHistory = async () => {
       try {
         const response = await paymentAPI.getPaymentHistory({ page, size });
-        console.log('Payment history response:', response.data); // 디버깅을 위한 로그 추가
         const filteredHistory = response.data.map(
           (payment: PaymentResponse) => ({
             orderId: payment.paymentKey,
             amount: payment.amount,
             purchasedPoints: payment.earnedPoints,
             createdAt: payment.createdAt,
+            status: payment.status,
           }),
         );
-        console.log('Filtered history:', filteredHistory); // 디버깅을 위한 로그 추가
+
         setPaymentHistory(filteredHistory);
       } catch (error) {
         console.error('결제 내역 조회 실패:', error);
@@ -85,30 +85,41 @@ const RefundPage = () => {
 
   return (
     <ProfileCardLayout
-      containerClassName='w-[1200px] h-[800px]'
-      backgroundClassName='w-[1200px] h-[800px]'
-      className='w-[1200px] h-[800px] overflow-hidden'>
-      <div className='w-full h-full overflow-y-auto scrollbar'>
-        <h1 className='mb-4 text-[40px] font-bold text-[#162C63]'>
+      // containerClassName='w-[1200px] h-[800px]'
+      // backgroundClassName='w-[1200px] h-[800px]'
+      className=' overflow-hidden'>
+      <div className='w-full h-full overflow-y-auto scrollbar px-4'>
+        <h1 className='mb-4 text-[40px] font-bold text-[#162C63] w-full text-center'>
           포인트 환불
         </h1>
 
         <div className='mb-8'>
-          <h2 className='text-xl font-bold text-[#162C63] mb-4'>
-            환불 가능한 결제 내역
-          </h2>
-          <ul className='grid grid-cols-2 gap-4 w-full'>
+          <h3 className='text-lg text-[#162C63] mb-4 w-full text-center'>
+            결제 내역 확인 후 환불을 원하는 내역을 선택해 환불을 진행해주세요.
+          </h3>
+          <ul className='item-row gap-4 w-full'>
             {paymentHistory.map((payment) => (
               <li
                 key={payment.orderId}
-                className={`p-6 rounded-lg border-2 transition-colors cursor-pointer ${
-                  selectedPayment?.orderId === payment.orderId
-                    ? 'bg-[#73A1F7]/10 border-[#2656CD]'
-                    : 'bg-[#95B2EA]/10 border-transparent'
+                className={`p-6 rounded-lg border-2 transition-colors w-full ${
+                  payment.status === 'CANCELED'
+                    ? 'bg-[#000]/2 border-[#000]/3 cursor-not-allowed'
+                    : selectedPayment?.orderId === payment.orderId
+                    ? 'bg-[#73A1F7]/10 border-[#2656CD] cursor-pointer'
+                    : 'bg-[#95B2EA]/10 border-transparent cursor-pointer'
                 }`}
-                onClick={() => setSelectedPayment(payment)}>
+                onClick={() => {
+                  if (payment.status !== 'CANCELED') {
+                    setSelectedPayment(payment);
+                  }
+                }}>
                 <div className='flex justify-between items-center mb-2'>
-                  <span className='text-xl font-bold text-[#2656CD]'>
+                  <span
+                    className={`text-xl font-bold ${
+                      payment.status === 'CANCELED'
+                        ? 'text-gray-500'
+                        : 'text-[#2656CD]'
+                    }`}>
                     {payment.purchasedPoints}P
                   </span>
                   <span className='text-gray-600 font-semibold'>
@@ -121,6 +132,11 @@ const RefundPage = () => {
                     결제일: {new Date(payment.createdAt).toLocaleDateString()}
                   </div>
                 </div>
+                {payment.status === 'CANCELED' && (
+                  <strong className='mt-4 text-gray-800 font-medium text-md w-full text-right inline-block'>
+                    환불 완료
+                  </strong>
+                )}
               </li>
             ))}
           </ul>
@@ -129,9 +145,9 @@ const RefundPage = () => {
         {selectedPayment && (
           <div className='mt-8 w-full flex justify-center'>
             <LayeredButton
-              theme='gray'
+              theme='red'
               containerClassName='w-fit'
-              className='px-40 text-white'
+              className='px-20 text-white'
               onClick={handleRefund}
               disabled={isRefunding}>
               {isRefunding ? (

@@ -22,6 +22,7 @@ interface PaymentHistory {
   amount: number;
   purchasedPoints: number;
   createdAt: string;
+  status: 'SUCCESS' | 'CANCELED';
 }
 
 interface PaymentVerifyRequest {
@@ -42,6 +43,7 @@ interface PaymentResponse {
   earnedPoints: number;
   paymentKey: string;
   createdAt: string;
+  status: 'SUCCESS' | 'CANCELED';
 }
 
 interface PaymentHistoryParams {
