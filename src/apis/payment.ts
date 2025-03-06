@@ -22,15 +22,24 @@ interface PaymentResponse {
   amount: number;
   purchasedPoints: number;
   status: PaymentStatus;
+  createdAt: string;
+}
+
+interface PaymentHistoryParams {
+  page?: number;
+  size?: number;
 }
 
 export const paymentAPI = {
   /**
    * 결제 내역 조회 API
+   * @param params - 페이지네이션 파라미터 (page, size)
    * @returns 결제 내역 목록
    */
-  getPaymentHistory: () =>
-    axiosInstance.get<PaymentResponse[]>(`/${API_URL}/payments/history`),
+  getPaymentHistory: (params: PaymentHistoryParams = { page: 1, size: 10 }) =>
+    axiosInstance.get<PaymentResponse[]>(`/${API_URL}/payments/history`, {
+      params,
+    }),
 
   /**
    * 결제 검증 API

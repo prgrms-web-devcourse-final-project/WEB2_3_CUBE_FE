@@ -6,8 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import AlertModal from '@components/AlertModal';
 import { useUserStore } from '@/store/useUserStore';
 
-
-
 const RefundPage = () => {
   const navigate = useNavigate();
   const { user } = useUserStore();
@@ -16,7 +14,9 @@ const RefundPage = () => {
   );
   const [refundReason, setRefundReason] = useState('');
   const [paymentHistory, setPaymentHistory] = useState<PaymentHistory[]>([]);
-  const [alert, setAlert] = useState({
+  const [page, setPage] = useState(1);
+  const [size] = useState(10);
+  const [alert, setAlert] = useState<AlertState>({
     isOpen: false,
     title: '',
     subTitle: '',
@@ -27,8 +27,20 @@ const RefundPage = () => {
   useEffect(() => {
     const fetchPaymentHistory = async () => {
       try {
-        const response = await paymentAPI.getPaymentHistory();
-        setPaymentHistory(response.data);
+        const response = await paymentAPI.getPaymentHistory({ page, size });
+        const filteredHistory = response.data
+          .filter(
+            (payment) =>
+              payment.status === 'SUCCESS' || payment.status === 'CANCELED',
+          )
+          .map((payment) => ({
+            orderId: payment.orderId,
+            amount: payment.amount,
+            purchasedPoints: payment.purchasedPoints,
+            status: payment.status as 'SUCCESS' | 'CANCELED',
+            createdAt: payment.createdAt,
+          }));
+        setPaymentHistory(filteredHistory);
       } catch (error) {
         console.error('결제 내역 조회 실패:', error);
         setAlert({
@@ -41,7 +53,7 @@ const RefundPage = () => {
     };
 
     fetchPaymentHistory();
-  }, []);
+  }, [navigate, user.userId, page, size]);
 
   const handleRefund = async () => {
     if (!selectedPayment || !refundReason.trim()) {

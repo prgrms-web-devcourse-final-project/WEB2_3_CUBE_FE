@@ -25,7 +25,7 @@ export default function GusetbookInput({ onSubmitMessage }) {
       e.preventDefault();
 
       formRef.current?.dispatchEvent(
-        new Event('submit', { cancelable: true, bubbles: true })
+        new Event('submit', { cancelable: true, bubbles: true }),
       );
     }
   };
@@ -59,6 +59,7 @@ export default function GusetbookInput({ onSubmitMessage }) {
       />
       {/* 확인 버튼 */}
       <LayeredButton
+        containerClassName='w-fit'
         onClick={() => handleSubmit()}
         aria-label='방명록 작성 완료'
         type='button'
