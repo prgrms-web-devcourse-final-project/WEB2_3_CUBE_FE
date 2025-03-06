@@ -143,14 +143,14 @@ export default function RoomPage() {
   };
 
   const handleCloseSettings = () => {
-    if (activeSettings === 'theme') {
+    if (activeSettings === 'theme'&& selectedTheme !== roomData?.theme) {
       handleSaveTheme();
     }
     setActiveSettings(null);
   };
 
   const handleModalOutsideClick = () => {
-    if (activeSettings === 'theme') {
+    if (activeSettings === 'theme'&& selectedTheme !== roomData?.theme) {
       handleSaveTheme();
     }
     setActiveSettings(null);
