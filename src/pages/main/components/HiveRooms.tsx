@@ -4,34 +4,15 @@ import { Canvas } from '@react-three/fiber';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RoomLighting } from '../../../components/room-models/RoomLighting';
-import { useToastStore } from '../../../store/useToastStore';
-import { roomAPI } from '../../../apis/room';
-import HiveRoomModel from '../HiveRoomModel';
+import HiveRoomModel from './HiveRoomModel';
 import useHexagonGrid from '../hooks/useHexagonGrid';
 import useRooms from '../hooks/useRooms';
 
 export default function HiveRooms({ myUserId }: HiveRoomsProps) {
   const { rooms } = useRooms(30, myUserId);
-  const { showToast } = useToastStore();
   const positionedRooms = useHexagonGrid(rooms, 0, 0);
   const [hoveredRoom, setHoveredRoom] = useState<number | null>(null);
   const navigate = useNavigate();
-
-  const handleRoomClick = async (hostId: number) => {
-    console.log('visitorId:', myUserId, 'hostId:', hostId);
-    try {
-      await roomAPI.visitedRoomByUserId(myUserId, hostId);
-      navigate(`/room/${hostId}`);
-      showToast('방으로 순간 이동 완료! 재미있는 곳일지도?!', 'success');
-    } catch (error) {
-      console.error('방문 처리 중 오류 발생:', error);
-      if (error.response) {
-        console.log('서버 응답:', error.response.data); // 오류 상세 메시지
-        console.log('상태 코드:', error.response.status);
-      }
-    }
-  };
-  console.log('Rooms data:', rooms);
 
   return (
     <div className='w-full h-screen relative'>
@@ -52,7 +33,7 @@ export default function HiveRooms({ myUserId }: HiveRoomsProps) {
             position={position}
             onPointerOver={() => setHoveredRoom(index)}
             onPointerOut={() => setHoveredRoom(null)}
-            onClick={() => handleRoomClick(room.userId)}>
+            onClick={() => navigate(`/room/${room.userId}`)}>
             <HiveRoomModel
               room={room}
               position={position}

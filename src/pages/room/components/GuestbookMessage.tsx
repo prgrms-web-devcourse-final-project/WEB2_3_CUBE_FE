@@ -72,13 +72,19 @@ export default function GuestbookMessage({
                 <p
                   className={`ml-[-2px] @xl:pt-1.5 rounded-full text-center @xl:px-4 px-2.5 py-1 text-[10px] @xl:text-xs font-semibold @xl:font-semibold text-white inline-block self-start whitespace-nowrap
                     ${
-                      msg.relation === '지나가던_나그네'
-                        ? 'bg-[#B5B5B5]'
-                        : 'bg-[#FF4A9E]'
+                      msg.userId === user.userId
+                        ? 'bg-[#B5B5B5]' // 작성자
+                        : msg.userId === ownerId
+                        ? 'bg-[#8DB2F8]' // 방 주인
+                        : msg.relation === '지나가던_나그네'
+                        ? 'bg-[#B5B5B5]' // 나그네
+                        : 'bg-[#FF4A9E]' // 하우스 메이트
                     }`}>
                   {`${
                     msg.userId === user.userId
                       ? '작성자'
+                      : msg.userId === ownerId
+                      ? '방 주인'
                       : msg.relation === '지나가던_나그네'
                       ? '지나가던 나그네'
                       : '하우스 메이트'

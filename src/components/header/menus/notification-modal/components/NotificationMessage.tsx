@@ -16,7 +16,7 @@ export const NotificationMessage = ({
     case 'MUSIC_COMMENT':
       return <>{nickName}님이 내 음악에 댓글을 남겼어요!</>;
     case 'EVENT':
-      return <>새로운 이벤트가 있습니다!</>;
+      return <>내일 저녁 6시에 타임어택 이벤트가 있습니다!</>;
     case 'HOUSE_MATE':
       return <>{nickName}님이 하우스 메이트로 추가했어요!</>;
     default:

@@ -18,6 +18,7 @@ interface FurnitureData {
 interface FurnitureProps {
   item: FurnitureData;
   onInteract?: (itemType: string) => void;
+  onHover?: (type: string, isHovering: boolean) => void;
 }
 
 interface RoomModelProps {
