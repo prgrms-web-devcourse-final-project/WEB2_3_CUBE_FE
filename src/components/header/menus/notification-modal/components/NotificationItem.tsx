@@ -33,7 +33,9 @@ export const NotificationItem = memo(
         case 'HOUSE_MATE':
           navigate(`/profile/${notification.senderId}`);
           break;
-        // EVENT는 별도 처리 없음
+        case 'EVENT':
+          navigate(`/event`);
+          break;
         default:
           break;
       }
