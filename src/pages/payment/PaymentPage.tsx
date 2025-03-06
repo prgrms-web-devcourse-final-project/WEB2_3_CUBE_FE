@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import LayeredButton from '@components/LayeredButton';
 import { loadPaymentWidget } from '@tosspayments/payment-widget-sdk';
 import { paymentAPI } from '@apis/payment';
+import { ProfileCardLayout } from '@pages/profile-card/components/ProfileCardLayout';
+import PaymentOptionCard from './components/PaymentOptionCard';
 
 import pointIcon from '@/assets/toast/coin.png';
-import { ProfileCardLayout } from '@pages/profile-card/components/ProfileCardLayout';
 
 interface PaymentOption {
   points: number;
@@ -72,34 +73,20 @@ const PaymentPage = () => {
 
   return (
     <ProfileCardLayout
-      containerClassName='w-[1200px] h-[800px] '
+      containerClassName='w-[1200px] h-[800px]'
       backgroundClassName='w-[1200px] h-[800px]'
-      className='w-[1200px] h-[800px] overflow-y-auto'>
+      className='w-[1200px] h-[800px] overflow-y-auto scrollbar'>
+
       <h1 className='mb-4 text-[40px] font-bold text-[#162C63]'>포인트 충전</h1>
+
       <ul className='flex gap-4 mb-4 w-full'>
         {PAYMENT_OPTIONS.map((option) => (
-          <li
+          <PaymentOptionCard
             key={option.points}
-            className='py-6 px-12 rounded-lg bg-[#95B2EA]/10 w-full item-row gap-4'>
-            <h2 className='text-2xl font-bold text-[#2656CD] w-full text-center bg-white rounded-full p-2'>
-              {option.points}P
-            </h2>
-            <img
-              src={pointIcon}
-              alt='point'
-              className='w-18 h-18'
-            />
-            <p className='text-gray-600 font-semibold'>
-              {option.amount.toLocaleString()}원
-            </p>
-            <LayeredButton
-              theme='blue'
-              containerClassName='w-full'
-              className='mt-2 w-full py-1.5'
-              onClick={() => setSelectedOption(option)}>
-              선택하기
-            </LayeredButton>
-          </li>
+            option={option}
+            isSelected={selectedOption?.points === option.points}
+            onSelect={setSelectedOption}
+          />
         ))}
       </ul>
 
