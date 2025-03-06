@@ -112,7 +112,10 @@ const ProfileCardEditPage = () => {
       });
     } catch (error) {
       console.error('프로필 수정 실패:', error);
-      showToast('프로필 수정에 실패했어요. 잠시 후 다시 시도해주세요.', 'error');
+      showToast(
+        error.response.data.message || '프로필 수정에 실패했어요.',
+        'error',
+      );
     }
   };
 
