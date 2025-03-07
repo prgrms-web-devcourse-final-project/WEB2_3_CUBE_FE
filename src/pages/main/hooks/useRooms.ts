@@ -34,13 +34,10 @@ export default function useRooms(limit = 30, myUserId: number) {
           console.warn('myUserId가 유효하지 않음:', myUserId);
         }
 
-        const houseMateUsers = await housemateAPI.getFollowing(
-          undefined,
-          limit,
-        );
+        const houseMateUsers = await housemateAPI.getFollowing(0, limit);
 
         const roomData = await Promise.all(
-          houseMateUsers.housemates.map((mate: Housemate) =>
+          houseMateUsers?.housemates?.map((mate: Housemate) =>
             roomAPI.getRoomById(mate.userId),
           ),
         );
