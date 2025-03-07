@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import type { RecommendedUser } from '@/types/profile';
 
 interface RecommendedUsersProps {
   users: RecommendedUser[];
