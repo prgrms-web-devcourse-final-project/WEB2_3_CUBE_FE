@@ -19,6 +19,7 @@ export const useSearch = (type: 'CD' | 'BOOK') => {
   const [results, setResults] = useState<SearchItemType[]>([]);
 
   const debouncedQuery = useDebounce(query, 1500);
+  const GENRE_MAX_LENGTH = 8;
 
   // 책 검색 API 호출
   const searchBooks = async (
@@ -44,7 +45,10 @@ export const useSearch = (type: 'CD' | 'BOOK') => {
           date: book.pubDate,
           imageUrl: book.cover,
           type: 'BOOK' as const,
-          genres: book.categoryName.split('>').slice(1),
+          genres: book.categoryName
+            .split('>')
+            .slice(1)
+            .filter((genre) => genre.trim().length < GENRE_MAX_LENGTH),
         }));
     } catch (error: unknown) {
       const apiError = error as ApiError;
