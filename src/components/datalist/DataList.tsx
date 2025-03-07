@@ -191,7 +191,7 @@ export default function DataList({
                 `${subColor}`,
                 'font-semibold',
               )}>
-              {`총 ${filteredDatas.length}개`}
+              {`총 ${isBook ? count : totalCount}개`}
             </span>
 
             {isEdit ? (
