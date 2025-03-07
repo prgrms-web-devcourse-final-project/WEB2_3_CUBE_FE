@@ -3,6 +3,7 @@ import logo from '@/assets/header/header-logo.svg';
 import humburgerIcon from '@/assets/header/hamburger-icon.svg';
 import notificationIcon from '@/assets/header/notification-icon.svg';
 import housemateIcon from '@/assets/header/housemate-list-icon.svg';
+import OnNotificationIcon from '@assets/header/notification-on-icon.svg'
 import { Link } from 'react-router-dom';
 import HiddenMenu from './menus/HiddenMenu';
 import HousemateModal from './menus/housemate-modal/HousemateModal';
@@ -154,6 +155,16 @@ const Header = () => {
       );
     }
 
+    if (isNewNotification) {
+      return (
+        <img
+          src={OnNotificationIcon}
+          alt="새 알림"
+          className="w-8 h-8"
+        />
+      );
+    }
+
     return (
       <img
         src={notificationIcon}
@@ -189,7 +200,7 @@ const Header = () => {
               {/* 기본 알림 점 */}
               <div
                 className={`w-2 h-2 bg-[#FF4A9E] rounded-full z-50 ${
-                  isNewNotification ? 'animate-notification-ping' : ''
+                  isNewNotification ? 'animate-ping' : ''
                 }`}
                 style={{
                   display:
