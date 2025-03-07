@@ -3,7 +3,7 @@ import logo from '@/assets/header/header-logo.svg';
 import humburgerIcon from '@/assets/header/hamburger-icon.svg';
 import notificationIcon from '@/assets/header/notification-icon.svg';
 import housemateIcon from '@/assets/header/housemate-list-icon.svg';
-import OnNotificationIcon from '@assets/header/notification-on-icon.svg'
+import OnNotificationIcon from '@assets/header/notification-on-icon.svg';
 import { Link } from 'react-router-dom';
 import HiddenMenu from './menus/HiddenMenu';
 import HousemateModal from './menus/housemate-modal/HousemateModal';
@@ -56,7 +56,7 @@ const Header = () => {
           20,
           false, // 읽지 않은 알림만 조회
         );
-        // console.log('읽지 않은 알림:', response.notifications);
+        // // console.log('읽지 않은 알림:', response.notifications);
         setHasUnreadNotifications(response.notifications.length > 0);
       } catch (error) {
         console.error('알림 상태 확인 실패:', error);
@@ -68,7 +68,7 @@ const Header = () => {
 
   useEffect(() => {
     const handleNewNotification = (event: CustomEvent) => {
-      console.log('새 알림 수신:', event.detail);
+      // // console.log('새 알림 수신:', event.detail);
       setHasUnreadNotifications(true);
       setIsNewNotification(true);
 
@@ -93,16 +93,16 @@ const Header = () => {
     const connectWebSocket = async () => {
       const token = getCookie('accessToken');
       if (!token) {
-        console.error('웹소켓 연결 실패: 토큰이 없음');
+        // console.error('웹소켓 연결 실패: 토큰이 없음');
         return;
       }
 
-      // console.log('웹소켓 연결 시도 전 토큰 확인:', token);
+      // // console.log('웹소켓 연결 시도 전 토큰 확인:', token);
 
       try {
         await webSocketService.connect();
       } catch (error) {
-        console.error('웹소켓 연결 실패:', error);
+        // console.error('웹소켓 연결 실패:', error);
         showToast('알림 서비스 연결에 실패했습니다.', 'error');
       } finally {
         setIsConnecting(false);
@@ -159,8 +159,8 @@ const Header = () => {
       return (
         <img
           src={OnNotificationIcon}
-          alt="새 알림"
-          className="w-8 h-8"
+          alt='새 알림'
+          className='w-8 h-8'
         />
       );
     }

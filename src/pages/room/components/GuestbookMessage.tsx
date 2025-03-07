@@ -15,7 +15,7 @@ export default function GuestbookMessage({
   onDelete,
 }: GuestbookMessageProps) {
   const { showToast } = useToastStore();
-  const [modalState, setModalState] = useState<{ [key: number]: boolean }>({})
+  const [modalState, setModalState] = useState<{ [key: number]: boolean }>({});
   const user = useUserStore((state) => state.user);
 
   const handleDelete = async (guestbookId: number) => {
@@ -29,7 +29,7 @@ export default function GuestbookMessage({
 
       onDelete();
     } catch (error) {
-      console.log('삭제 중 오류 발생', error);
+      // console.log('삭제 중 오류 발생', error);
       showToast('삭제하지 못했어요. 다시 시도해 주세요!', 'error');
     }
   };
@@ -43,12 +43,12 @@ export default function GuestbookMessage({
   };
 
   const handleConfirm = (guestbookId: number) => {
-    closeModal(guestbookId); 
+    closeModal(guestbookId);
     handleDelete(guestbookId);
   };
 
   return (
-    <div className='@container w-full flex flex-col gap-2 @2xl:gap-4 @2xl:mt-1 mt-4 mb-2 @2xl:mb-6 max-h-80 min-h-[300px] '>
+    <div className='@container w-full flex flex-col gap-2 @2xl:gap-6 mt-4 mb-2 @2xl:mb-8 max-h-80 min-h-[300px] '>
       {/* 방명록 글 0개일 경우 */}
       {messages.length === 0 ? (
         <div className='flex flex-col justify-center items-center text-gray-500/50 h-74 @xl:h-96 font-medium'>

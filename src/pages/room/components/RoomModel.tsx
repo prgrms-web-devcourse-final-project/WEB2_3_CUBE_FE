@@ -69,7 +69,7 @@ export default function RoomModel({
         }
         break;
       default:
-        console.log(`None`);
+      // console.log(`None`);
     }
   };
 

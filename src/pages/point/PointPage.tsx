@@ -56,7 +56,7 @@ export default function PointPage() {
   const fetchPointsHistory = async (cursor: number) => {
     const result = await getPointHistory(5, cursor);
 
-    console.log(result);
+    // console.log(result);
 
     const history = result.history;
 

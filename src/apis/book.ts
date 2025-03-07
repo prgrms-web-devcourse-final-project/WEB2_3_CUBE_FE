@@ -49,6 +49,7 @@ export const bookAPI = {
    * @param userId 사용자 ID
    * @param pageSize 페이지 크기
    * @param lastBookId 마지막으로 조회한 책 ID (첫 페이지 조회 시 제외)
+   * @param keyword 검색 키워드
    * @returns 책장 목록
    * {
    * "myBooks": [
@@ -85,10 +86,17 @@ export const bookAPI = {
     userId: number,
     pageSize: number,
     lastBookId?: number,
+    keyword?: string,
   ) => {
-    const url = lastBookId
-      ? `/${API_URL}/mybooks?userId=${userId}&pageSize=${pageSize}&lastBookId=${lastBookId}`
-      : `/${API_URL}/mybooks?userId=${userId}&pageSize=${pageSize}`;
+    let url = `/${API_URL}/mybooks?userId=${userId}&pageSize=${pageSize}`;
+
+    if (lastBookId) {
+      url += `&lastBookId=${lastBookId}`;
+    }
+
+    if (keyword) {
+      url += `&keyword=${encodeURIComponent(keyword)}`;
+    }
 
     const response = await axiosInstance.get(url);
     return response.data;
@@ -169,7 +177,7 @@ export const bookAPI = {
    * }
    * @example
    * const review = await bookAPI.getReview('1');
-   * console.log(review);
+   * // console.log(review);
    */
   getReview: async (myBookId: string) => {
     const response = await axiosInstance.get(

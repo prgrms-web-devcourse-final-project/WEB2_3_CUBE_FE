@@ -48,10 +48,10 @@ export default function DataList({
   const navigate = useNavigate();
   const myCdId = Number(useParams().cdId);
   const [isEdit, setIsEdit] = useState(false);
-  const [filteredDatas, setFilteredDatas] = useState<DataListInfo[]>(datas);
   const [currentInput, setCurrentInput] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [filteredDatas, setFilteredDatas] = useState<DataListInfo[]>(datas);
   const { showToast } = useToastStore();
   const myUserId = useUserStore().user.userId;
 
@@ -61,27 +61,51 @@ export default function DataList({
     hasMore,
   });
 
-  const debouncedQuery = useDebounce(currentInput, 1000);
+  const debouncedQuery = useDebounce(currentInput, 800);
 
-  // 검색 관련 useEffect
+  // 검색어가 변경될 때마다 로컬에서 필터링
   useEffect(() => {
     if (currentInput !== debouncedQuery) {
       setIsSearching(true);
     }
-    setSearchInput?.(debouncedQuery);
+
+    if (type === 'book') {
+      if (debouncedQuery) {
+        const filtered = datas.filter(
+          (item) =>
+            item.title.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
+            item.author.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
+            item.publisher.toLowerCase().includes(debouncedQuery.toLowerCase()),
+        );
+        setFilteredDatas(filtered);
+      } else {
+        setFilteredDatas(datas);
+      }
+    } else {
+      setSearchInput?.(debouncedQuery);
+    }
+
     setIsSearching(false);
-  }, [debouncedQuery]);
+  }, [debouncedQuery, datas, type, setSearchInput]);
 
+  // datas가 변경될 때 필터링된 데이터도 업데이트
   useEffect(() => {
-    if (currentInput !== debouncedQuery) {
-      setIsSearching(true);
+    if (type === 'book') {
+      if (!currentInput) {
+        setFilteredDatas(datas);
+      } else {
+        const filtered = datas.filter(
+          (item) =>
+            item.title.toLowerCase().includes(currentInput.toLowerCase()) ||
+            item.author.toLowerCase().includes(currentInput.toLowerCase()) ||
+            item.publisher.toLowerCase().includes(currentInput.toLowerCase()),
+        );
+        setFilteredDatas(filtered);
+      }
+    } else {
+      setFilteredDatas(datas);
     }
-  }, [currentInput, debouncedQuery]);
-
-  // datas가 변경될 때마다 filteredDatas 업데이트
-  useEffect(() => {
-    setFilteredDatas(datas);
-  }, [datas]);
+  }, [datas, currentInput, type]);
 
   const handleDelete = async () => {
     try {
@@ -209,7 +233,7 @@ export default function DataList({
           {/* 리스트 */}
           <ul
             ref={listRef}
-            className='flex flex-col max-h-[calc(100vh-200px)] gap-6 pr-2 overflow-y-auto scrollbar'>
+            className='flex flex-col max-h-[calc(100vh-350px)] gap-6 pr-2 overflow-y-auto scrollbar'>
             {isSearching ? (
               Array(5)
                 .fill(0)
