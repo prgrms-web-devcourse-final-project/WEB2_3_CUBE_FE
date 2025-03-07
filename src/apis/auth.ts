@@ -19,11 +19,9 @@ export const loginAPI = async (token: string) => {
     // 토큰 정보 저장
     cookies.set('accessToken', accessToken, {
       path: '/',
-      maxAge: ACCESS_MAX_AGE,
     });
     cookies.set('refreshToken', refreshToken, {
       path: '/',
-      maxAge: REFRESH_MAX_AGE,
     });
 
     // user 정보 저장
@@ -51,7 +49,6 @@ export const refreshAccessTokenAPI = async (refreshToken: string) => {
   const { accessToken } = data;
   cookies.set('accessToken', accessToken, {
     path: '/',
-    maxAge: ACCESS_MAX_AGE,
   });
 
   return data;
