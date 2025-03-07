@@ -1,4 +1,8 @@
 import axiosInstance from './axiosInstance';
+import { webSocketService } from '@/apis/websocket';
+import { Cookies } from 'react-cookie';
+
+const cookies = new Cookies();
 
 const API_URL = 'api';
 
@@ -121,7 +125,18 @@ export const profileAPI = {
    * // true
    */
   withdraw: async () => {
+    if (webSocketService.isConnected()) {
+      webSocketService.disconnect(true);
+    }
+  
+
     const { data } = await axiosInstance.delete(`${API_URL}/auth/withdraw`);
+
+    localStorage.removeItem('user-storage');
+    cookies.remove('accessToken', { path: '/' });
+    cookies.remove('refreshToken', { path: '/' });
+
     return data;
+
   },
 };
