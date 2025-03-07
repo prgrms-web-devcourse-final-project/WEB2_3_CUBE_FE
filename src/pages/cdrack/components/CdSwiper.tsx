@@ -10,10 +10,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 interface CdSwiperProps {
   cdRackDatas: CDInfo[];
   onActiveTrackId: (index: number) => void;
+  setSlideWidth: (width: number) => void;
 }
 
 const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
-  ({ cdRackDatas, onActiveTrackId }, ref) => {
+  ({ cdRackDatas, onActiveTrackId, setSlideWidth }, ref) => {
     const navigate = useNavigate();
     const [rotateX, setRotateX] = useState<{ [key: number]: number }>({});
     const [rotateY, setRotateY] = useState<{ [key: number]: number }>({});
@@ -70,6 +71,12 @@ const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
           const activeIndex = swiper.realIndex;
           onActiveTrackId(activeIndex);
         }}
+        onSwiper={(swiper) =>
+          setSlideWidth(swiper.slides[swiper.activeIndex].offsetWidth)
+        }
+        onResize={(swiper) => {
+          setSlideWidth(swiper.slides[swiper.activeIndex].offsetWidth);
+        }}
         className='mySwiper'>
         {cdRackDatas.map((data: CDInfo, index: number) => (
           <SwiperSlide key={data.myCdId}>
@@ -81,7 +88,7 @@ const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
                 }deg)`,
                 filter: `drop-shadow(${rotateY[index] || 0}px ${
                   rotateX[index] || 0
-                }px 20px rgba(0, 0, 0, 0.5))`, // 그림자 방향 조정
+                }px 20px rgba(0, 0, 0, 0.2))`, // 그림자 방향 조정
               }}
               onClick={() => navigate(`/cd/${data.myCdId}/user/${userId}`)}
               onMouseMove={(e) => handleMouseMove(e, index)}
@@ -92,10 +99,10 @@ const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
                 alt='앨범 이미지'
               />
               {/* 장르 */}
-              <ul className='flex absolute bottom-18 left-1/2 transform -translate-x-1/2 justify-center items-center gap-5 '>
+              <ul className='flex absolute bottom-9 left-1/2 transform -translate-x-1/2 justify-center items-center gap-5 '>
                 {data.genres.map((genre, index) => (
                   <li
-                    className=' py-1.5 px-5 rounded-[80px] bg-[#FFFFFF1A] backdrop-blur-[20px] flex items-center justify-center '
+                    className='w-17 y-8  rounded-[80px] bg-[#FFFFFF1A] backdrop-blur-[20px] flex items-center justify-center '
                     key={index}>
                     <span className='text-[14px] text-white w-full text-center'>
                       {genre}

@@ -78,14 +78,12 @@ export const SearchResult = ({
           releaseDate: item.date,
         };
 
-        if (!youtubeUrl || !duration) {
+        // CD를 추가할 수 없는 경우
+        if (!youtubeUrl || !duration || item.genres.length === 0) {
           setIsAlertModalOpen(true);
           return;
         }
-        console.log('request body', cdData);
         const result = await addCdToMyRack(cdData);
-        console.log('response body', result);
-
         onSelect({ ...item, youtubeUrl, duration, id: result.myCdId });
         showToast('랙에 cd가 추가되었어요!', 'success');
         onClose();
@@ -105,7 +103,7 @@ export const SearchResult = ({
           'error',
         );
       }
-      onSelect(null);
+      onSelect(null); // 낙관적 업데이트 실패시 되돌리기
       console.error(`${type} 추가 실패:`, error);
     }
   };
