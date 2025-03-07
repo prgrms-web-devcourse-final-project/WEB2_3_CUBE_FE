@@ -38,10 +38,17 @@ jobs:
           echo "VITE_AUTH_URL=${{ secrets.VITE_AUTH_URL }}" >> .env
 
       - name: Install dependencies
+<<<<<<< HEAD
+        run: pnpm install  # package-lock.json을 업데이트 및 의존성 설치
+
+      - name: Build
+        run: pnpm run build  # React 프로젝트 빌드
+=======
         run: pnpm install # package-lock.json을 업데이트 및 의존성 설치
 
       - name: Build
         run: pnpm run build # React 프로젝트 빌드
+>>>>>>> dev
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2

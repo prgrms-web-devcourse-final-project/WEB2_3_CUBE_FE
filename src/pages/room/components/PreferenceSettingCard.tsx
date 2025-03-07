@@ -34,7 +34,7 @@ export default function PreferenceSettingCard({
         <div className='flex flex-row items-center gap-7 @sm:gap-12'>
           <img
             src={thumbnail}
-            className='w-24 @xs:w-40 drop-shadow-logo'
+            className='w-24 @xs:w-34 drop-shadow-logo'
             alt={`${title}`}
           />
           <div className='flex flex-col items-start gap-3 @sm:gap-4'>
@@ -65,15 +65,19 @@ export default function PreferenceSettingCard({
             </ul>
 
             {/* 취향 키워드 */}
-            <div className='flex flex-row items-center justify-center gap-2 font-medium mt-1 ml-[-2px] text-[10px] @sm:text-xs'>
+            <div className='flex flex-wrap items-center gap-2 font-medium mt-1 ml-[-5px] text-[10px] @sm:text-xs min-w-[180px]'>
               {genres.length > 0 ? (
-                genres.map((genre) => (
+                genres.map((genre) => {
+                  const isLongText = genre.length >= 3;
+                  return (
                   <span
-                    key={genre}
-                    className='px-1.5 py-0.5 bg-[#4E7ACF]/10 rounded-full text-[#4E7ACF]'>
+                  key={genre}
+                  className={`px-1.5 py-0.5 bg-[#4E7ACF]/10 rounded-full text-[#4E7ACF] ${
+                    isLongText ? 'line-clamp-2 break-words' : ''}`}>
                     {genre}
                   </span>
-                ))
+                )
+              })
               ) : (
                 <span className='px-3 py-0.5 bg-[#4E7ACF]/10 rounded-full text-[#4E7ACF]'>딱 맞는 취향을 찾는중 ...</span>
               )}

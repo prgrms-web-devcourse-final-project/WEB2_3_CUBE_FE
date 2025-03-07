@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 export default function AnimationGuide({ titleText, subText, onClose }) {
   return (
     <motion.div
-      className='fixed bottom-47 left-1/2 transform -translate-x-1/2 z-50 w-80 h-80 rounded-2xl  backdrop-blur-sm border-3 border-white bg-white/60 flex flex-col items-center justify-center gap-15 pointer-events-auto'
+      className='fixed top-1/2 -translate-y-1/2 left-1/2 transform -translate-x-1/2 z-50 w-80 h-80 rounded-2xl  backdrop-blur-sm border-3 border-white bg-white/60 flex flex-col items-center justify-center gap-15 pointer-events-auto'
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.3 } }}

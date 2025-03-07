@@ -75,7 +75,7 @@ export default function Guestbook({ onClose, ownerName, ownerId }: GuestbookProp
       transition={{ type: 'spring', stiffness: 130, damping: 18 }}
       onClick={handleClickOutside}
       className='fixed inset-0 z-10 flex items-center justify-center'>
-      <div className='@container relative w-[calc(100vw*0.3966)] max-w-[819px] h-[calc(100vw*0.3611)] max-h-[822px] min-w-[600px] min-h-[550px]'>
+      <div className='@container relative w-[calc(100vw*0.3966)] max-w-[800px] h-[calc(100vw*0.3611)] max-h-[700px] min-w-[600px] min-h-[550px]'>
         {/* 뒤 배경 */}
         <div
           className='absolute w-full h-full bg-[#73A1F7] rounded-[60px] border-2 border-[#2656CD]'
