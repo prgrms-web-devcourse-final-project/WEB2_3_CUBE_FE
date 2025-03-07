@@ -81,7 +81,7 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
       }
     },
     onSettled(data, error, newComment, context) {
-      console.log('onSettled', data, error, newComment, context);
+      // console.log('onSettled', data, error, newComment, context);
     },
   });
 

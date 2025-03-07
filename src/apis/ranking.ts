@@ -12,7 +12,7 @@ export const rankAPI = {
     try {
       const response = await axiosInstance.get(`/${API_URL}/rankings`);
       return response.data;
-      console.log(response.data);
+      // console.log(response.data);
     } catch (error) {
       console.error('랭킹 조회 API 호출 오류:', error);
       throw error;
