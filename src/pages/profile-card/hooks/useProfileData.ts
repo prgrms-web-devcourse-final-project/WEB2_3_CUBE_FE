@@ -17,11 +17,6 @@ export const useProfileData = (
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const isMyProfile = useMemo(
-    () => userId === String(user?.userId),
-    [userId, user?.userId],
-  );
-
   const fetchProfileData = async () => {
     try {
       setIsLoading(true);
@@ -29,20 +24,10 @@ export const useProfileData = (
 
       const [profile] = await Promise.all([profileAPI.getUserProfile(userId)]);
 
-      let isMatched = false;
-      if (!isMyProfile) {
-        const following = await housemateAPI.getFollowing(
-          undefined,
-          undefined,
-          profile.nickname,
-        );
-        isMatched = following.length > 0;
-      }
-
       const userProfileData: UserProfile = {
         ...profile,
         userId: profile.id,
-        isMatched,
+        isFollowing: profile.following,
       };
 
       setUserProfile(userProfileData);
@@ -65,7 +50,7 @@ export const useProfileData = (
   return {
     userProfile,
     isLoading,
-    isMyProfile,
+    isMyProfile: userProfile?.myProfile ?? false,
     handleProfileUpdate,
   };
 };

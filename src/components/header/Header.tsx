@@ -3,6 +3,7 @@ import logo from '@/assets/header/header-logo.svg';
 import humburgerIcon from '@/assets/header/hamburger-icon.svg';
 import notificationIcon from '@/assets/header/notification-icon.svg';
 import housemateIcon from '@/assets/header/housemate-list-icon.svg';
+import OnNotificationIcon from '@assets/header/notification-on-icon.svg'
 import { Link } from 'react-router-dom';
 import HiddenMenu from './menus/HiddenMenu';
 import HousemateModal from './menus/housemate-modal/HousemateModal';
@@ -67,16 +68,12 @@ const Header = () => {
 
   useEffect(() => {
     const handleNewNotification = (event: CustomEvent) => {
-      console.log('새 알림 수신:', event.detail); // 디버깅용 로그 추가
+      console.log('새 알림 수신:', event.detail);
       setHasUnreadNotifications(true);
       setIsNewNotification(true);
 
       // 토스트 메시지 추가
       showToast('새로운 알림이 있습니다', 'success');
-
-      setTimeout(() => {
-        setIsNewNotification(false);
-      }, 3000);
     };
 
     window.addEventListener(
@@ -129,6 +126,10 @@ const Header = () => {
 
   const toggleNotificationModal = () => {
     setIsNotificationModalOpen(!isNotificationModalOpen);
+    if (!isNotificationModalOpen) {
+      // 모달을 열 때
+      setIsNewNotification(false); // 깜빡임 애니메이션 중지
+    }
   };
 
   // 알림 읽음 상태 업데이트 함수
@@ -151,6 +152,16 @@ const Header = () => {
             <div className='w-4 h-4 rounded-full border-2 border-gray-300 animate-spin border-t-blue-500' />
           </div>
         </div>
+      );
+    }
+
+    if (isNewNotification) {
+      return (
+        <img
+          src={OnNotificationIcon}
+          alt="새 알림"
+          className="w-8 h-8"
+        />
       );
     }
 
@@ -188,8 +199,9 @@ const Header = () => {
             <div className='absolute top-[2.5px] right-[5.7px]'>
               {/* 기본 알림 점 */}
               <div
-                className={`w-2 h-2 bg-orange-500 rounded-full z-50 ${
-                  isNewNotification ? 'animate-notification-ping' : ''}`}
+                className={`w-2 h-2 bg-[#FF4A9E] rounded-full z-50 ${
+                  isNewNotification ? 'animate-ping' : ''
+                }`}
                 style={{
                   display:
                     hasUnreadNotifications || isNewNotification
@@ -198,7 +210,7 @@ const Header = () => {
                 }}
               />
               {/* 네온 효과 */}
-              <div
+              {/* <div
                 className={`absolute top-0 right-0 w-2 h-2 rounded-full z-40
                   ${
                     isNewNotification ? 'animate-notification-glow' : ''} before:content-[''] before:absolute before:-inset-4 before:bg-gradient-radial before:from-orange-500/40 before:via-orange-500/20 before:to-transparent before:rounded-full before:blur-sm`}
@@ -206,7 +218,7 @@ const Header = () => {
                   opacity: isNewNotification ? 1 : 0,
                   transition: 'opacity 300ms ease-in-out',
                 }}
-              />
+              /> */}
             </div>
             <div className='hidden'>
               hasUnread: {hasUnreadNotifications.toString()}, isNew:{' '}

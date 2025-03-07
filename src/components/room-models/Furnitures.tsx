@@ -1,11 +1,10 @@
 import { useGLTF } from '@react-three/drei';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-export default function Furnitures({item, onInteract }:FurnitureProps) {
+export default function Furnitures({item, onInteract, onHover }:FurnitureProps) {
   const groupRef = useRef<THREE.Group>(null);
   const { scene } = useGLTF(item.modelPath) as GLTFResult;
-  const [hovered, setHovered] = useState<boolean>(false);
 
   useEffect(() => {
     if (scene) {
@@ -16,16 +15,14 @@ export default function Furnitures({item, onInteract }:FurnitureProps) {
         }
       });
     }
-    document.body.style.cursor = hovered ? 'pointer' : 'auto';
-
-    return () => {
-      document.body.style.cursor= 'auto';
-    }
-  }, [scene, hovered]);
+  }, [scene]);
 
   const handlePointerOver = (e: MouseEvent) => {
     e.stopPropagation();
-    setHovered(true);
+    if (onHover) onHover(item.type, true);
+    if (onHover) {
+      onHover(item.type, true);
+    }
     scene.traverse((object) => {
       if (object.isMesh) {
         object.material.emissive = object.material.color;
@@ -36,7 +33,10 @@ export default function Furnitures({item, onInteract }:FurnitureProps) {
 
   const handlePointerOut = (e: MouseEvent) => {
     e.stopPropagation();
-    setHovered(false);
+    if (onHover) onHover(item.type, false);
+    if (onHover) {
+      onHover(item.type, false);
+    }
     scene.traverse((object) => {
       if (object.isMesh) {
         object.material.emissiveIntensity = 0;

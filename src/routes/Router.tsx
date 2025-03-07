@@ -13,6 +13,10 @@ import ProfileCardEditPage from '@pages/profile-card-edit/ProfileCardEditPage';
 import Redirection from '@pages/login/components/Redirection';
 import EventPage from '@pages/event/EventPage';
 import PointPage from '@pages/point/PointPage';
+import PaymentPage from '@pages/payment/PaymentPage';
+import PaymentSuccessPage from '@pages/payment/PaymentSuccessPage';
+import PaymentFailPage from '@pages/payment/PaymentFailPage';
+import RefundPage from '@pages/payment/RefundPage';
 
 const Router = () => {
   return (
@@ -51,6 +55,14 @@ const Router = () => {
           path='/point/:userId'
           element={<PointPage />}
         />
+        <Route
+          path='/payment'
+          element={<PaymentPage />}
+        />
+        <Route
+          path='/payment/refund'
+          element={<RefundPage />}
+        />
       </Route>
       {/* 내 서평 보기/작성/수정 */}
       <Route
@@ -77,6 +89,14 @@ const Router = () => {
       <Route
         path='/login'
         element={<LoginPage />}
+      />
+      <Route
+        path='/payment/success'
+        element={<PaymentSuccessPage />}
+      />
+      <Route
+        path='/payment/fail'
+        element={<PaymentFailPage />}
       />
     </Routes>
   );

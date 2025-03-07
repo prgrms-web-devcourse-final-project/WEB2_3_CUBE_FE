@@ -47,22 +47,17 @@ export function useRoomItems(roomData: { roomId: number; furnitures?: { furnitur
       return defaultItems;
     }
 
-    const fixedItems = defaultItems.filter((item) => !item.isEditable);
+    const visibleItems = defaultItems.filter((item) => {
+      if (!item.isEditable) return true;
 
-    const editableItems = defaultItems
-      .filter((item) => item.isEditable)
-      .map((item) => {
-        const apiItem = roomData.furnitures.find(
-          (furniture) => furniture.furnitureType === item.apiType
-        );
-        return {
-          ...item,
-          isVisible: apiItem?.isVisible ?? true,
-        };
-      })
-      .filter((item) => item.isVisible);
+      const apiItem = roomData.furnitures.find(
+        (furniture) => furniture.furnitureType === item.apiType
+      );
 
-    return [...fixedItems, ...editableItems].map((item) => ({
+      return apiItem?.isVisible;
+    });
+
+    return visibleItems.map((item) => ({
       ...item,
       id: `${item.id}-${roomData.roomId}`,
     }));

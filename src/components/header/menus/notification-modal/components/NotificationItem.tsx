@@ -33,7 +33,9 @@ export const NotificationItem = memo(
         case 'HOUSE_MATE':
           navigate(`/profile/${notification.senderId}`);
           break;
-        // EVENT는 별도 처리 없음
+        case 'EVENT':
+          navigate(`/event`);
+          break;
         default:
           break;
       }
@@ -54,12 +56,14 @@ export const NotificationItem = memo(
         <div
           aria-label='프로필 정보'
           className='gap-2 item-middle'>
-          <img
-            src={notification.senderProfileImage}
-            alt={`${notification.senderNickName}님의 프로필`}
-            className='object-cover w-10 h-10 rounded-full cursor-pointer hover:opacity-80'
-            onClick={handleProfileClick}
-          />
+          {notification.type !== 'EVENT' && (
+            <img
+              src={notification.senderProfileImage}
+              alt={`${notification.senderNickName}님의 프로필`}
+              className='object-cover w-10 h-10 rounded-full cursor-pointer hover:opacity-80'
+              onClick={handleProfileClick}
+            />
+          )}
           <div aria-label='알림 내용'>
             <p className='flex gap-1 items-center'>
               <span

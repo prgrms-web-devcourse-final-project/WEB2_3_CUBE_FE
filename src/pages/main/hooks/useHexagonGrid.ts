@@ -42,7 +42,7 @@ export default function useHexagonGrid(rooms, centerX = 0, centerY = 0) {
         let cubeZ = -currentRing;
 
         for (let side = 0; side < 6 && result.length < roomCount; side++) {
-          const steps = 1; 
+          const steps = currentRing; 
           for (let step = 0; step < steps && result.length < roomCount; step++) {
             const posKey = `${cubeX},${cubeY},${cubeZ}`;
             if (!visited.has(posKey)) {

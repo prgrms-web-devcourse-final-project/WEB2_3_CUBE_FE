@@ -68,44 +68,37 @@ export const roomAPI = {
       throw error;
     }
   },
-  // ------------------------------ 방문(랭킹 집계) By userId ------------------------------
+  // ----------------------- 잠금 해제한 테마 목록 조회 ------------------------------
   /**
-   * 다른 사용자의 방을 방문하고 랭킹 점수 부여 (userId 기준)
-   * @param visitorId 방문하는 유저의 ID
-   * @param hostId 방의 소유자 ID
+   * 해당 사용자가 잠금 헤자한 방 테마 목록을 반환한다.
+   * @param userId 사용자 ID
    */
-  visitedRoomByUserId: async (
-    visitorId: number,
-    hostId: number,
-  ) => {
+  getUnlockThemes: async (userId: number) => {
     try {
-      const response = await axiosInstance.put(
-        `/${API_URL}/rooms/visit?visitorId=${visitorId}&hostId=${hostId}`
+      const response = await axiosInstance.get(
+        `/${API_URL}/rooms/${userId}/unlocked-themes`,
       );
       return response.data;
     } catch (error) {
-      console.error('방문 API 호출 오류:', error);
+      console.error('잠금 해제 테마 조회 API 호출 오류:', error);
       throw error;
     }
   },
-    // ------------------------------ 방문(랭킹 집계) By roomId ------------------------------
+  // ----------------------- 테마 구매 ------------------------------
   /**
-   * 다른 사용자의 방을 방문하고 랭킹 점수 부여 (roomId 기준)
-   * @param visitorId 방문하는 유저의 ID
-   * @param roomId 사용자 ID
+   * 해당 사용자가 잠금 헤자한 방 테마 목록을 반환한다.
+   * @param userId 사용자 ID
    */
-  visitedRoomByRoomId: async (
-    visitorId: number,
-    roomId: number,
-  ) => {
+  purchaseThemes: async (roomId: number, themeName: string) => {
     try {
-      const response = await axiosInstance.put(
-        `/${API_URL}/rooms/visit/${roomId}?visitorId=${visitorId}
-`
+      const response = await axiosInstance.post(
+        `/${API_URL}/rooms/${roomId}/purchase-theme`,{
+          themeName,
+        }
       );
       return response.data;
     } catch (error) {
-      console.error('방문 API 호출 오류:', error);
+      console.error('테마 구매 API 호출 오류:', error);
       throw error;
     }
   },

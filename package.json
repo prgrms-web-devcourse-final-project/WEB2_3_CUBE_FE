@@ -21,6 +21,8 @@
     "@tiptap/pm": "^2.11.5",
     "@tiptap/react": "^2.11.5",
     "@tiptap/starter-kit": "^2.11.5",
+    "@tosspayments/payment-widget-sdk": "^0.12.0",
+    "@tosspayments/tosspayments-sdk": "^2.3.4",
     "@types/three": "^0.173.0",
     "axios": "^1.7.9",
     "classnames": "^2.5.1",
@@ -51,7 +53,6 @@
     "eslint-plugin-react-refresh": "^0.4.18",
     "globals": "^15.14.0",
     "postcss": "^8.5.2",
-    "tailwind-scrollbar-hide": "^2.0.0",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.22.0",
     "vite": "^6.1.0"

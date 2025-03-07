@@ -12,7 +12,7 @@ const UserProfileSection = ({ profile }: UserProfileSectionProps) => {
       <img
         src={profileImage}
         alt='사용자 프로필'
-        className='rounded-full h-25 w-25'
+        className='rounded-full h-25 w-25 object-cover'
       />
       <h2 className='text-2xl font-bold text-[#3E507D] mt-2'>{nickname}</h2>
       <p className='text-sm font-medium text-[#AFAFAF] mt-1'>

@@ -7,11 +7,11 @@ interface BaseLayoutProps {
 
 const BaseLayout = ({ hasHeader = true }: BaseLayoutProps) => {
   return (
-    <div className='min-h-screen'>
-      {hasHeader && <Header />}
-      <main className={`${hasHeader ? 'pt-[header높이값]' : ''}`}>
+    <div className='min-h-screen relative'>
+      <main className={`${hasHeader ? 'pt-[header높이값]' : ''} relative`}>
         <Outlet />
       </main>
+      {hasHeader && <Header />}
     </div>
   );
 };

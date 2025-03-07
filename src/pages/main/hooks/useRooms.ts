@@ -38,13 +38,16 @@ export default function useRooms(limit=30, myUserId:number) {
         );
 
         const modelRooms = roomData.map((room) => {
-          const themeKey = room.theme as keyof typeof FullThemeData;
+          const themeKey = mapThemeKeyToFullThemeKey(room.theme);
           const theme = FullThemeData[themeKey] || FullThemeData.FULL_BASIC; 
+          console.log('Room theme:', room.theme);
           return {
             ...room,
             modelPath: theme.modelPath,
           };
         });
+
+        
 
         const allRooms = myRoom ? [myRoom, ...modelRooms] : modelRooms;
         setRooms(allRooms);

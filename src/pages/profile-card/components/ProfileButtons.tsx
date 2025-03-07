@@ -7,14 +7,14 @@ import { AxiosError } from 'axios';
 interface ProfileButtonsProps {
   userId: string;
   isMyProfile: boolean;
-  isMatched?: boolean;
+  isFollowing?: boolean;
   onProfileUpdate?: () => void;
 }
 
 export const ProfileButtons = ({
   userId,
   isMyProfile,
-  isMatched = false,
+  isFollowing = false,
   onProfileUpdate,
 }: ProfileButtonsProps) => {
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ export const ProfileButtons = ({
 
   const handleMateAction = async () => {
     try {
-      if (isMatched) {
+      if (isFollowing) {
         await housemateAPI.unfollowHousemate(Number(userId));
         showToast('하우스메이트 취소 완료!', 'success');
       } else {
@@ -54,7 +54,7 @@ export const ProfileButtons = ({
               break;
             default:
               showToast(
-                isMatched
+                isFollowing
                   ? '하우스메이트 취소에 실패했어요.'
                   : '하우스메이트 추가에 실패했어요.',
                 'error',
@@ -63,7 +63,7 @@ export const ProfileButtons = ({
         }
       } else {
         showToast(
-          isMatched
+          isFollowing
             ? '하우스메이트 취소에 실패했어요.'
             : '하우스메이트 추가에 실패했어요.',
           'error',
@@ -81,6 +81,7 @@ export const ProfileButtons = ({
       <LayeredButton
         theme='purple'
         className='py-1.5 px-8'
+        containerClassName='w-fit'
         onClick={handleEditProfile}>
         프로필 수정
       </LayeredButton>
@@ -90,14 +91,16 @@ export const ProfileButtons = ({
   return (
     <div className='gap-10 mt-5 item-middle'>
       <LayeredButton
-        theme={isMatched ? 'gray' : 'red'}
+        theme={isFollowing ? 'gray' : 'red'}
         className='py-1.5 px-8'
+        containerClassName='w-fit'
         onClick={handleMateAction}>
-        메이트 {isMatched ? '취소' : '맺기'}
+        메이트 {isFollowing ? '취소' : '맺기'}
       </LayeredButton>
       <LayeredButton
         theme='blue'
         className='py-1.5 px-8'
+        containerClassName='w-fit'
         onClick={handleRoomVisit}>
         방 구경하기
       </LayeredButton>

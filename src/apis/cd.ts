@@ -4,7 +4,7 @@ import axiosInstance from './axiosInstance';
 const API_URL = 'api';
 const SPOTIFY_API_KEY = import.meta.env.VITE_SPOTIFY_ID;
 const SPOTIFY_SECRET_KEY = import.meta.env.VITE_SPOTIFY_SECRET_KEY;
-const YOUTUBE_API_KEY = import.meta.env.VITE_YOUTUBE_KEY;
+const YOUTUBE_API_KEYS = import.meta.env.VITE_YOUTUBE_KEY.split(',');
 
 // ------------------------------  SPOTIFY & YOUTUBE 검색  API ------------------------------
 
@@ -37,6 +37,121 @@ const parseDurationToSeconds = (isoDuration: string): number => {
   return hours * 3600 + minutes * 60 + seconds;
 };
 
+// 해당 노래의 제목과 관련된 youtube api의 ㅊofficial, lyrics 영상 url 가져오기
+export const getYoutubeUrl = async (trackTitle: string, artistName: string) => {
+  console.log(trackTitle, artistName);
+
+  const encodedQuery = encodeURIComponent(
+    `${trackTitle} ${artistName} "official audio" OR "lyrics" `,
+  );
+  let apiKeyIndex = 0; //  API 키 인덱스 관리
+
+  while (apiKeyIndex < YOUTUBE_API_KEYS.length) {
+    const currentApiKey = YOUTUBE_API_KEYS[apiKeyIndex];
+    try {
+      const response = await axios.get(
+        `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodedQuery}&type=video&videoCategoryId=10&key=${currentApiKey}`,
+      );
+      const videos = response.data.items;
+
+      if (!videos || videos.length === 0) {
+        console.error('유튜브에서 관련 영상을 찾지 못함.');
+        return { youtubeUrl: '', duration: 0 }; // 에러 시 기본값 반환
+      }
+
+      // 좀더 테스트해봐야할듯..정확성이 부족함
+      const videosOnlySong = videos.find((video: any) => {
+        const title = video.snippet.title
+          .replace(/[^a-zA-Z0-9\s]/g, '')
+          .toLowerCase();
+        const channelTitle = video.snippet.channelTitle
+          .replace(/[^a-zA-Z0-9\s]/g, '')
+          .toLowerCase();
+        const description = video.snippet.description
+          .replace(/[^a-zA-Z0-9\s]/g, '')
+          .toLowerCase();
+        //  목소리 없는 노래만 나오는 영상 제외하기 위한 키워드
+        const instrumentalKeywords = [
+          'instrumental',
+          'no vocals',
+          'karaoke',
+          'backing track',
+          'instrumental version',
+          'no voice',
+          'music only',
+        ];
+        // 제목이나 설명에 instrumental 관련 키워드가 있는지 확인
+        const isInstrumental = instrumentalKeywords.some(
+          (keyword) => title.includes(keyword) || description.includes(keyword),
+        );
+
+        //영상 필터링 처리
+        return (
+          title.includes('official audio') ||
+          title.includes('lyrics') ||
+          channelTitle.includes('topic') ||
+          channelTitle.includes('vevo') ||
+          channelTitle.includes('official') ||
+          (title.includes(trackTitle.toLowerCase()) &&
+            channelTitle.includes(artistName.toLowerCase()) &&
+            !title.includes('live') &&
+            !title.includes('performance') &&
+            !title.includes('mv') &&
+            !isInstrumental) // 목소리 없는 노래만 나오는 영상 제외
+        );
+      });
+
+      // console.log(videosOnlySong);
+
+      // 노래만 나오는 영상이 없는 경우
+      if (!videosOnlySong) {
+        console.error(' 적합한 영상을 찾지 못함. 하지만 API 키 변경 안 함.');
+        return { youtubeUrl: '', duration: 0 }; // 에러 시 기본값 반환
+      }
+
+      // 영상 재생시간 가져오기
+      const videoDetailsResponse = await axios.get(
+        `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videosOnlySong.id.videoId}&key=${currentApiKey}`,
+      );
+
+      const duration =
+        videoDetailsResponse.data.items[0]?.contentDetails?.duration || 'PT0S';
+
+      // ISO 8601 duration 형식 (예: PT3M15S)을 초 단위로 변환
+      const durationInSeconds = parseDurationToSeconds(duration);
+
+      //  특정 길이 이상(예: 30초 미만)일 경우 신뢰도 낮다고 판단
+      if (durationInSeconds < 30) {
+        console.error('❌ 영상 길이가 너무 짧아서 제외됨.');
+        return { youtubeUrl: '', duration: 0 };
+      }
+
+      return {
+        youtubeUrl: `https://www.youtube.com/watch?v=${videosOnlySong.id.videoId}`,
+        duration: durationInSeconds,
+      };
+    } catch (error) {
+      console.error(`🚨 ${apiKeyIndex}번째 API키 실패:`, error);
+      apiKeyIndex++; // 다음 API 키로 변경
+    }
+  }
+  console.error('🚨 모든 YouTube API 키가 실패했습니다.');
+  return { youtubeUrl: '', duration: 0 }; // 에러 시 기본값 반환
+};
+
+// spotify api의 가수와 관련된 장르 가져오기
+const getArtistsGenres = async (artistId: string, token: string) => {
+  const response = await axios.get(
+    `https://api.spotify.com/v1/artists/${artistId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  return response.data.genres || [];
+};
+
 /**
  *
  * @param searchQuery 입력된 값
@@ -51,108 +166,19 @@ export const searchSpotifyCds = async (
     // spotify api로 검색어와 관련된 기본 정보 가져오기
     const token = await getSpotifyToken();
     const encodedQuery = encodeURIComponent(searchQuery);
-    const url = `https://api.spotify.com/v1/search?q=${encodedQuery}&type=track&market=KR&limit=3`;
+    const url = `https://api.spotify.com/v1/search?q=${encodedQuery}&type=track&market=KR&limit=10`;
     const { data } = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-
-    // spotify api의 가수와 관련된 장르 가져오기
-    const getArtistsGenres = async (artistId: string) => {
-      const response = await axios.get(
-        `https://api.spotify.com/v1/artists/${artistId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-      return response.data.genres || [];
-    };
-
-    // youtube api의 해당 노래의 제목과 관련된 official, lyrics 영상 url 가져오기
-    const getYoutubeUrl = async (trackTitle: string, artistName: string) => {
-      const encodedQuery = encodeURIComponent(
-        `${trackTitle} ${artistName} official audio OR lyrics `,
-      );
-      try {
-        const response = await axios.get(
-          `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodedQuery}&type=video&videoCategoryId=10&key=${YOUTUBE_API_KEY}`,
-        );
-        const videos = response.data.items;
-
-        if (!videos || videos.length === 0) {
-          throw new Error('❌ 유튜브에서 관련 영상을 찾을 수 없음.');
-        }
-
-        // 좀더 테스트해봐야할듯..정확성이 부족함
-        const videosOnlySong = videos.find((video: any) => {
-          const title = video.snippet.title
-            .replace(/[^a-zA-Z0-9\s]/g, '')
-            .toLowerCase();
-          const channelTitle = video.snippet.channelTitle
-            .replace(/[^a-zA-Z0-9\s]/g, '')
-            .toLowerCase();
-
-          //영상 필터링 처리
-          return (
-            // ✅ "official audio", "lyrics", "topic" 키워드 포함 → 신뢰도 높음
-            title.includes('official audio') ||
-            title.includes('lyrics') ||
-            channelTitle.includes('topic') ||
-            channelTitle.includes('vevo') ||
-            channelTitle.includes('official') ||
-            // ✅ 아티스트 이름이 채널 제목 또는 영상 제목에 포함된 경우
-            (title.includes(trackTitle.toLowerCase()) &&
-              channelTitle.includes(artistName.toLowerCase()) &&
-              // ❌ "live", "performance", "mv" 포함된 영상 제거
-              !title.includes('live') &&
-              !title.includes('performance') &&
-              !title.includes('mv'))
-          );
-        });
-        // 적합한 영상이 없는 경우
-        if (!videosOnlySong) {
-          throw new Error('❌ 공식 오디오 영상 찾기 실패.');
-        }
-        console.log(videosOnlySong);
-
-        // 영상의 재생시간 가져오기
-        const videoDetailsResponse = await axios.get(
-          `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videosOnlySong.id.videoId}&key=${YOUTUBE_API_KEY}`,
-        );
-
-        const duration =
-          videoDetailsResponse.data.items[0]?.contentDetails?.duration ||
-          'PT0S';
-
-        // ISO 8601 duration 형식 (예: PT3M15S)을 초 단위로 변환
-        const durationInSeconds = parseDurationToSeconds(duration);
-
-        // 🎯 특정 길이 이상(예: 30초 미만)일 경우 신뢰도 낮다고 판단
-        if (durationInSeconds < 30) {
-          throw new Error('❌ 영상 길이가 너무 짧아서 제외됨.');
-        }
-
-        return {
-          youtubeUrl: `https://www.youtube.com/watch?v=${videosOnlySong.id.videoId}`,
-          duration: durationInSeconds,
-        };
-      } catch (error) {
-        console.error('🚨 YouTube API 호출 실패:', error);
-        return { youtubeUrl: '', duration: 0 }; // 에러 시 기본값 반환
-      }
-    };
-
-    const trackInfo = await Promise.all(
+    const searchedCdInfo = await Promise.all(
       data.tracks.items.map(async (music: CDSearch) => {
         const artistId = music.artists[0]?.id;
-        const genres = artistId ? await getArtistsGenres(artistId) : [];
-        const { youtubeUrl, duration } = await getYoutubeUrl(
-          music.name,
-          music.artists[0]?.name,
-        );
+
+        const genres = artistId
+          ? await getArtistsGenres(artistId, token)
+          : await Promise.resolve([]);
 
         return {
           id: music.id,
@@ -164,12 +190,10 @@ export const searchSpotifyCds = async (
             music.album.images?.[0]?.url || music.album.images?.[1]?.url || '',
           type: 'CD' as const,
           genres: genres,
-          youtubeUrl: youtubeUrl || '유튜브 영상이 없을때 보여줄 url',
-          duration: duration,
         };
       }),
     );
-    return trackInfo;
+    return searchedCdInfo;
   } catch (error) {
     console.error('스포티파이 API 호출 오류:', error);
     throw error;
@@ -367,4 +391,19 @@ export const deleteCdComment = async (myCdId: number, commentId: number) => {
     `/${API_URL}/my-cd/${myCdId}/comments/${commentId}`,
   );
   return response;
+};
+
+// ------------ CD  레벨 업그레이드 -----------------
+
+/**
+ * CD 업그레이드
+ * @param roomId 방 ID
+ * @returns
+ */
+
+export const upgradeCdLevel = async (roomId: number) => {
+  const response = await axiosInstance.patch(
+    `/${API_URL}/rooms/${roomId}/furniture/cd-rack/upgrade`,
+  );
+  return response.data;
 };

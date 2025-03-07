@@ -8,7 +8,7 @@ const axiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true,
+  // withCredentials: true,
 });
 
 // 요청 인터셉터
@@ -37,6 +37,7 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true; // 무한 루프 방지
 
       const refreshToken = cookies.get('refreshToken');
+      console.log(refreshToken);
 
       // 비로그인 상태일 경우
       if (!refreshToken) {
@@ -55,7 +56,6 @@ axiosInstance.interceptors.response.use(
         console.error('🚨 Refresh Token이 만료되었습니다. 다시 로그인하세요.');
         window.location.href = '/login';
         initStatus();
-        // await logoutAPI();
         return Promise.reject(error);
       }
     } else {

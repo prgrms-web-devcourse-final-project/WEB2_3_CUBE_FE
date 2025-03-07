@@ -5,7 +5,7 @@ import TypingText from './TypingText';
 const Loading = () => {
   return (
     <div
-      className='gap-4 w-full h-screen item-row'
+      className='gap-4 w-full h-screen item-row object-cover no-repeat'
       style={{ backgroundImage: `url(${backgroundIMG})` }}>
       <img
         src={logo}
