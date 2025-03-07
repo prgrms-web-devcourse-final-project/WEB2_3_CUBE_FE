@@ -13,7 +13,7 @@ export default function NotEditTemplate({
   const myCdId = Number(useParams().cdId) || 0;
   const userId = Number(useParams().userId) || 0;
 
-  console.log(templateData);
+  // console.log(templateData);
 
   // 방주인이 아니면 템플릿 작성 버튼은 있을 수 없음
   const user = useUserStore((state) => state.user);

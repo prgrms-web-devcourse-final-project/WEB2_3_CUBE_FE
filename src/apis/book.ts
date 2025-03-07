@@ -177,7 +177,7 @@ export const bookAPI = {
    * }
    * @example
    * const review = await bookAPI.getReview('1');
-   * console.log(review);
+   * // console.log(review);
    */
   getReview: async (myBookId: string) => {
     const response = await axiosInstance.get(
