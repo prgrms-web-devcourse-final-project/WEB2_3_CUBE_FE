@@ -58,8 +58,8 @@
   height: calc(100vw * 0.143);
   max-width: 509px;
   max-height: 275px;
-  min-width: 384px;
-  min-height: 212px;
+  min-width: 399px;
+  min-height: 222px;
   background-color: #FCF7FD/20;
   display: flex;
 }
@@ -82,8 +82,8 @@
 .guest-book {
   width: calc(100vw * 0.3966);
   height: calc(100vw * 0.3611);
-  max-width: 819px;
-  max-height: 822px;
+  max-width: 800px;
+  max-height: 700px;
   min-width: 600px;
   min-height: 550px;
   background-color: #fcf7fd;
