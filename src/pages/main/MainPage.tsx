@@ -1,14 +1,26 @@
 import { AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
-import MyRoomBtn from './components/MyRoomBtn';
+import { useEffect, useState } from 'react';
+import { useUserStore } from '../../store/useUserStore';
+import AnimationGuide from '../../components/AnimationGuide';
 import RankingModal from './components/RankingModal';
+import MyRoomBtn from './components/MyRoomBtn';
 import RankMenu from './components/RankMenu';
 import HiveRooms from './components/HiveRooms';
-import { useUserStore } from '../../store/useUserStore';
 
 export default function MainPage() {
   const [isRankingOpen, setIsRankingOpen] = useState(false);
+  const [isGuideOpen, setIsGuideOpen] = useState(true);
   const user = useUserStore((state) => state.user);
+
+  useEffect(() => {
+    if(isGuideOpen){
+      const timer = setTimeout(() => {
+        setIsGuideOpen(false);
+      }, 2500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isGuideOpen]);
 
   return (
     <main className='@container main-background w-full min-h-screen relative overflow-hidden'>
@@ -27,6 +39,18 @@ export default function MainPage() {
           </div>
         )}
       </AnimatePresence>
+
+      {/* 드래그 가이드 */}
+      <AnimatePresence>
+        {isGuideOpen && 
+        <AnimationGuide 
+          titleText={'마우스 오른쪽 버튼으로 드래그하고'} 
+          subText={'휠로 줌 인/아웃을 해보세요!'}
+          onClose={() => setIsGuideOpen(false)}
+        />
+        }
+      </AnimatePresence>
+
     </main>
   );
 }
