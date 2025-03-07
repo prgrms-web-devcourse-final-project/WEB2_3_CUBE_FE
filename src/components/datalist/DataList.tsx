@@ -61,7 +61,7 @@ export default function DataList({
     hasMore,
   });
 
-  const debouncedQuery = useDebounce(currentInput, 1000);
+  const debouncedQuery = useDebounce(currentInput, 800);
 
   // 검색어가 변경될 때마다 로컬에서 필터링
   useEffect(() => {
@@ -233,7 +233,7 @@ export default function DataList({
           {/* 리스트 */}
           <ul
             ref={listRef}
-            className='flex flex-col max-h-[calc(100vh-200px)] gap-6 pr-2 overflow-y-auto scrollbar'>
+            className='flex flex-col max-h-[calc(100vh-350px)] gap-6 pr-2 overflow-y-auto scrollbar'>
             {isSearching ? (
               Array(5)
                 .fill(0)

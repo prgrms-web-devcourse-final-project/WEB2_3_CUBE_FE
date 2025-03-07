@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20'  # react-router 요구사항에 맞게 Node.js 20으로 변경
-          cache: 'npm'  # 또는 yarn, pnpm 등 사용 중인 패키지 매니저
+          cache: 'pnpm'  # 또는 yarn, pnpm 등 사용 중인 패키지 매니저
 
       - name: Create .env file
         run: |
@@ -38,10 +38,10 @@ jobs:
           echo "VITE_AUTH_URL=${{ secrets.VITE_AUTH_URL }}" >> .env
 
       - name: Install dependencies
-        run: npm install  # package-lock.json을 업데이트 및 의존성 설치
+        run: pnpm install  # package-lock.json을 업데이트 및 의존성 설치
 
       - name: Build
-        run: npm run build  # React 프로젝트 빌드
+        run: pnpm run build  # React 프로젝트 빌드
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
