@@ -19,15 +19,17 @@ export const useHousemates = (isOpen: boolean) => {
   const [housemates, setHousemates] = useState<Housemate[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [nextCursor, setNextCursor] = useState<number>(0);
   const [hasMore, setHasMore] = useState(true);
-  const [userStatuses, setUserStatuses] = useState<Record<number, 'ONLINE' | 'OFFLINE'>>({});
+  const [userStatuses, setUserStatuses] = useState<
+    Record<number, 'ONLINE' | 'OFFLINE'>
+  >({});
 
   // 웹소켓 상태 변경 이벤트 리스너
   useEffect(() => {
     const handleStatusChange = (event: CustomEvent) => {
       const { userId, status } = event.detail;
-      setUserStatuses(prev => ({
+      setUserStatuses((prev) => ({
         ...prev,
         [userId]: status,
       }));
@@ -47,29 +49,32 @@ export const useHousemates = (isOpen: boolean) => {
   }, []);
 
   // API 호출 로직
-  const fetchHousemates = async (cursor?: string) => {
+  const fetchHousemates = async (cursor?: number) => {
     if (!user) return;
-    if (!cursor) {
+    if (cursor === 0) {
       setIsLoading(true);
     }
     setError(null);
 
     try {
       const response = await (activeTab === 'followers'
-        ? housemateAPI.getFollowers(user.userId, 20, searchValue)
-        : housemateAPI.getFollowing(user.userId, 20, searchValue));
+        ? housemateAPI.getFollowers(cursor || 0, 20, searchValue)
+        : housemateAPI.getFollowing(cursor || 0, 20, searchValue));
 
-      if (!cursor) {
+      if (cursor === 0) {
         setHousemates(response.housemates || []);
       } else {
         setHousemates((prev) => [...prev, ...(response.housemates || [])]);
       }
 
-      const statuses = response.housemates.reduce((acc, housemate) => ({
-        ...acc,
-        [housemate.userId]: housemate.status,
-      }), {});
-      setUserStatuses(prev => ({ ...prev, ...statuses }));
+      const statuses = response.housemates.reduce(
+        (acc, housemate) => ({
+          ...acc,
+          [housemate.userId]: housemate.status,
+        }),
+        {},
+      );
+      setUserStatuses((prev) => ({ ...prev, ...statuses }));
 
       setNextCursor(response.nextCursor);
       setHasMore(response.hasNext);
@@ -85,7 +90,7 @@ export const useHousemates = (isOpen: boolean) => {
   useEffect(() => {
     if (isOpen) {
       setHousemates([]);
-      setNextCursor(null);
+      setNextCursor(0);
       setHasMore(true);
       fetchHousemates();
     }
@@ -96,7 +101,7 @@ export const useHousemates = (isOpen: boolean) => {
     const timer = setTimeout(() => {
       if (isOpen) {
         setHousemates([]);
-        setNextCursor(null);
+        setNextCursor(0);
         setHasMore(true);
         fetchHousemates();
       }

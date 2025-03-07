@@ -7,7 +7,7 @@ interface UserProfile {
   musicGenres: string[];
   bookGenres: string[];
   myProfile: boolean;
-  isMatched: boolean;
+  isFollowing: boolean;
 }
 
 interface RecommendedUser {
@@ -22,9 +22,10 @@ interface GenreCardProps {
 }
 
 interface ProfileButtonsProps {
+  userId: string;
   isMyProfile: boolean;
-  onMateButtonClick: () => void;
-  onRoomButtonClick: () => void;
+  isFollowing: boolean;
+  onProfileUpdate?: () => void;
 }
 
 interface UserProfileResponse {
@@ -36,7 +37,7 @@ interface UserProfileResponse {
   bookGenres: string[];
   recommendedUsers: RecommendedUser[];
   myProfile: boolean;
-  isMatched: boolean;
+  isFollowing: boolean;
 }
 
 interface ProfileSectionProps {
@@ -50,12 +51,6 @@ interface GenreCardProps {
 
 interface RecommendedUserListProps {
   users: RecommendedUser[];
-}
-
-interface ProfileButtonsProps {
-  userId: string;
-  isMyProfile: boolean;
-  onProfileUpdate?: () => void;
 }
 
 interface UpdateProfileRequest {

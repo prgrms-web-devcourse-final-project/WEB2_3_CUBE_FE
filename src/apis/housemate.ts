@@ -5,7 +5,7 @@ const API_URL = 'api';
 export const housemateAPI = {
   /**
    * 하우스메이트 팔로잉 목록 조회
-   * @param cursor - 페이지네이션 커서 (마지막으로 받은 userId)
+   * @param cursor - 페이지네이션 커서 (마지막으로 받은 housemateId) + 첫번째 요청일 때는 0
    * @param limit - 한 페이지당 조회할 메이트 수 (1-100)
    * @param nickname - 닉네임으로 검색
    * @returns 팔로잉 목록 조회 결과
@@ -30,7 +30,7 @@ export const housemateAPI = {
 
   /**
    * 하우스메이트 팔로워 목록 조회
-   * @param cursor - 페이지네이션 커서 (마지막으로 받은 userId)
+   * @param cursor - 페이지네이션 커서 (마지막으로 받은 housemateId) + 첫번째 요청일 때는 0
    * @param limit - 한 페이지당 조회할 메이트 수 (1-100)
    * @param nickname - 닉네임으로 검색
    * @returns 팔로워 목록 조회 결과
