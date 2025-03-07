@@ -87,49 +87,12 @@
     animation: drag 2s ease-in-out infinite
   }
 
-  .animate-drag-trail {
-    animation: drag-trail 2s ease-in-out infinite;
-  }
-
-  .animate-arrow-drag {
-    animation: arrow-drag 2s ease-in-out infinite;
-  }
-
   @keyframes drag {
     0%, 100% {
       transform: translateX(-20px);
     }
     50% {
       transform: translateX(20px);
-    }
-  }
-
-  @keyframes drag-trail {
-    0%, 100% {
-      transform: translateX(0);
-      opacity: 0.8;
-    }
-    50% {
-      transform: translateX(20px); 
-      opacity: 0.3;
-    }
-  }
-
-  @keyframes arrow-drag {
-    0%, 100% {
-      transform: translate(0, 0);
-    }
-    25% {
-      transform: translate(20px, 0); /* 오른쪽 */
-    }
-    50% {
-      transform: translate(0, -20px); /* 위 */
-    }
-    75% {
-      transform: translate(-20px, 0); /* 왼쪽 */
-    }
-    100% {
-      transform: translate(0, 20px); /* 아래 */
     }
   }
 }
