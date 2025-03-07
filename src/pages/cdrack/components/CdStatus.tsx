@@ -8,6 +8,7 @@ import cd from '@assets/cd/cd.png';
 import cd_add_icon from '@assets/cd/cd-add-icon.svg';
 import { useUserStore } from '@/store/useUserStore';
 import { useParams } from 'react-router-dom';
+import TypingText from '@components/TypingText';
 
 interface NotEmptyStatusProps {
   cdRackInfo: CDRackInfo;
@@ -86,10 +87,11 @@ export default function CdStatus({
           />
         </>
       ) : (
-        <div className=' text-white h-full '>
-          <h1 className='text-[40px] font-bold  text-center pt-46 mb-12'>
-            꽂을 CD가 없네요...
-          </h1>
+        <div className=' h-full '>
+          <TypingText
+            text='  꽂을 CD가 없네요...'
+            className='h-[250px] text-[40px] font-bold text-white  text-center pt-46 mb-12'
+          />
           <img
             className='max-w-[472px] max-h-[472px] shrink-0 drop-shadow-book aspect-square m-auto hover:animate-spin'
             src={cd}
