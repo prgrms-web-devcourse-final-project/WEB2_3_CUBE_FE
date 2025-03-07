@@ -13,19 +13,20 @@ export default function SocialTab() {
 
   const handleKakaoLogin = () => {
     window.location.href = `${
-      import.meta.env.VITE_AUTH_URL
+      import.meta.env.VITE_API_URL
     }/oauth2/authorization/kakao`;
   };
 
   const handleNaverLogin = () => {
     window.location.href = `${
-      import.meta.env.VITE_AUTH_URL
+      import.meta.env.VITE_API_URL
     }/oauth2/authorization/naver`;
   };
 
   const handleGoogleLogin = () => {
     window.location.href =
-      'http://ec2-3-39-182-150.ap-northeast-2.compute.amazonaws.com/oauth/callback/google';
+      'http://ec2-3-39-182-150.ap-northeast-2.compute.amazonaws.com/oauth2/authorization/google';
+    // 'http://ec2-3-39-182-150.ap-northeast-2.compute.amazonaws.com/oauth/callback/google';
     // 'http://3.39.182.150/oauth2/authorization/google';
   };
   return (
