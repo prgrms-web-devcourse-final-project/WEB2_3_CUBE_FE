@@ -15,7 +15,7 @@ export default function GuestbookMessage({
   onDelete,
 }: GuestbookMessageProps) {
   const { showToast } = useToastStore();
-  const [modalState, setModalState] = useState<{ [key: number]: boolean }>({})
+  const [modalState, setModalState] = useState<{ [key: number]: boolean }>({});
   const user = useUserStore((state) => state.user);
 
   const handleDelete = async (guestbookId: number) => {
@@ -29,7 +29,7 @@ export default function GuestbookMessage({
 
       onDelete();
     } catch (error) {
-      console.log('삭제 중 오류 발생', error);
+      // console.log('삭제 중 오류 발생', error);
       showToast('삭제하지 못했어요. 다시 시도해 주세요!', 'error');
     }
   };
@@ -43,7 +43,7 @@ export default function GuestbookMessage({
   };
 
   const handleConfirm = (guestbookId: number) => {
-    closeModal(guestbookId); 
+    closeModal(guestbookId);
     handleDelete(guestbookId);
   };
 

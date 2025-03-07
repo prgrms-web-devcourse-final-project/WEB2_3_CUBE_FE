@@ -73,7 +73,7 @@ const BookReviewDisplay = ({
 
   // 실제 표시할 데이터 (preview 모드면 previewData 사용)
   const displayData = previewData; // mode와 상관없이 previewData 사용
-  console.log(displayData);
+  // console.log(displayData);
   if (!displayData) return null;
 
   const colors = BOOK_THEME[(displayData.theme as BookThemeType) || 'BLUE'];

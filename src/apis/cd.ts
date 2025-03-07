@@ -39,7 +39,7 @@ const parseDurationToSeconds = (isoDuration: string): number => {
 
 // 해당 노래의 제목과 관련된 youtube api의 ㅊofficial, lyrics 영상 url 가져오기
 export const getYoutubeUrl = async (trackTitle: string, artistName: string) => {
-  console.log(trackTitle, artistName);
+  // console.log(trackTitle, artistName);
 
   const encodedQuery = encodeURIComponent(
     `${trackTitle} ${artistName} "official audio" OR "lyrics" `,
@@ -101,7 +101,7 @@ export const getYoutubeUrl = async (trackTitle: string, artistName: string) => {
         );
       });
 
-      // console.log(videosOnlySong);
+      // // console.log(videosOnlySong);
 
       // 노래만 나오는 영상이 없는 경우
       if (!videosOnlySong) {

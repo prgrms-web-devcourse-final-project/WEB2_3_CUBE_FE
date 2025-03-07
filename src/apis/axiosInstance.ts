@@ -37,7 +37,7 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true; // 무한 루프 방지
 
       const refreshToken = cookies.get('refreshToken');
-      console.log(refreshToken);
+      // console.log(refreshToken);
 
       // 비로그인 상태일 경우
       if (!refreshToken) {

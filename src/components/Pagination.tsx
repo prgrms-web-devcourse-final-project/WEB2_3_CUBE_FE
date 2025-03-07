@@ -13,7 +13,7 @@ interface Pagination {
 
 const Pagination = React.memo(
   ({ currentPage, totalPage, onChangePage, color }: Pagination) => {
-    console.log('Pagination 컴포넌트 props:', {
+    // console.log('Pagination 컴포넌트 props:', {
       currentPage,
       totalPage,
       color,
@@ -26,7 +26,7 @@ const Pagination = React.memo(
       (_, index) => startNum + index,
     );
 
-    console.log('계산된 페이지 범위:', { startNum, endNum, pageNumberArr });
+    // console.log('계산된 페이지 범위:', { startNum, endNum, pageNumberArr });
 
   return (
     <div className='@container w-full gap-3 py-4 item-middle '>

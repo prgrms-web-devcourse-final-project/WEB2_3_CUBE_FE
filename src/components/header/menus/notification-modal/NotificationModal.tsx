@@ -46,7 +46,7 @@ const NotificationModal = ({
   });
 
   const handleNotificationsUpdate = (hasUnread: boolean) => {
-    console.log('알림 상태 업데이트:', hasUnread);
+    // // console.log('알림 상태 업데이트:', hasUnread);
     onNotificationStatusChange(hasUnread);
   };
 

@@ -29,7 +29,7 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
     [],
   );
 
-  console.log(cdComments);
+  // console.log(cdComments);
 
   useEffect(() => {
     const fetchCdComments = async () => {

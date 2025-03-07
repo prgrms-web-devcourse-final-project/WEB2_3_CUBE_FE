@@ -26,7 +26,7 @@ export default function EventPage() {
   const isEventInProgress =
     new Date(eventInfo?.eventTime).getTime() + 9 * 60 * 60 * 1000 <= Date.now();
 
-  console.log(isEventInProgress);
+  // console.log(isEventInProgress);
 
   // 이벤트 정보 조회 API 이벤트 열리는 시간 받아오기
   const handleJoinEvent = () => {

@@ -8,6 +8,7 @@ import cd from '@assets/cd/cd.png';
 import cd_add_icon from '@assets/cd/cd-add-icon.svg';
 import { useUserStore } from '@/store/useUserStore';
 import { useParams } from 'react-router-dom';
+import TypingText from '@components/TypingText';
 
 interface NotEmptyStatusProps {
   cdRackInfo: CDRackInfo;
@@ -21,17 +22,18 @@ export default function CdStatus({
   onNextPage,
 }: NotEmptyStatusProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSearchModalOpen, setIsSerarchModalOpen] = useState(false);
 
   const [newItem, setNewItem] = useState(null);
   const [cdRackDatas, setcdRackDatas] = useState<CDRackInfo>(cdRackInfo);
 
+  const [slideWidth, setSlideWidth] = useState<number | null>(null);
   const swiperRef = useRef<SwiperRef | null>(null);
   const myUserId = useUserStore().user.userId;
   const userId = Number(useParams().userId);
 
-  const activeTrack = cdRackDatas.data.find(
-    (track: CDInfo) => track.myCdId === cdRackDatas.data[activeIndex]?.myCdId,
+  const activeTrack = cdRackDatas?.data?.find(
+    (track: CDInfo) => track.myCdId === cdRackDatas?.data[activeIndex]?.myCdId,
   );
 
   useEffect(() => {
@@ -63,38 +65,45 @@ export default function CdStatus({
     <div className='flex h-full flex-col gap-19 items-center'>
       {/* 상단 정보 */}
 
-      {cdRackDatas.data.length > 0 ? (
-        <div className='text-center mt-20 '>
-          <span className='text-white  opacity-70   text-[14px] xl:text-[16px] 2xl:text-xl'>
-            {activeTrack?.artist} | {activeTrack?.releaseDate.split('-')[0]}
-          </span>
-          <SlidingTitle text={activeTrack?.title} />
-        </div>
+      {cdRackDatas?.data.length > 0 ? (
+        <>
+          <div className='text-center mt-20 '>
+            <span className='text-white  opacity-70   text-[14px] xl:text-[16px] 2xl:text-xl'>
+              {activeTrack?.artist} | {activeTrack?.releaseDate.split('-')[0]}
+            </span>
+            <SlidingTitle
+              text={activeTrack?.title}
+              width={slideWidth}
+            />
+          </div>
+          {/* Swiper */}
+          <CdSwiper
+            ref={swiperRef}
+            cdRackDatas={cdRackDatas?.data}
+            onActiveTrackId={(activeIndex: number) =>
+              setActiveIndex(activeIndex)
+            }
+            setSlideWidth={setSlideWidth}
+          />
+        </>
       ) : (
-        <div className=' text-white h-full '>
-          <h1 className='text-[40px] font-bold  text-center pt-46 mb-12'>
-            꽂을 CD가 없네요...
-          </h1>
+        <div className=' h-full '>
+          <TypingText
+            text='  꽂을 CD가 없네요...'
+            className='h-[250px] text-[40px] font-bold text-white  text-center pt-46 mb-12'
+          />
           <img
-            className='max-w-[472px] max-h-[472px] shrink-0 drop-shadow-book aspect-square m-auto'
+            className='max-w-[472px] max-h-[472px] shrink-0 drop-shadow-book aspect-square m-auto hover:animate-spin'
             src={cd}
             alt='cd 실사 이미지'
           />
         </div>
       )}
 
-      {/* Swiper */}
-      {cdRackDatas.data.length > 0 && (
-        <CdSwiper
-          ref={swiperRef}
-          cdRackDatas={cdRackDatas.data}
-          onActiveTrackId={(activeIndex: number) => setActiveIndex(activeIndex)}
-        />
-      )}
       {/* Dock  */}
       <Dock
         ref={swiperRef}
-        isEmpty={false}
+        isEmpty={cdRackDatas?.data.length > 0 ? false : true}
         cdRackInfo={cdRackDatas}
         activeIndex={activeIndex}
         onPrevPage={onPrevPage}
@@ -103,8 +112,8 @@ export default function CdStatus({
 
       {myUserId === userId && (
         <div
-          onClick={() => setIsModalOpen((prev) => !prev)}
-          className='hover:animate-spin fixed bottom-17 right-15 z-[5] bg-[#FFFFFF33] backdrop-blur-[35px] rounded-full w-16 h-16 cursor-pointer 
+          onClick={() => setIsSerarchModalOpen((prev) => !prev)}
+          className='hover:animate-pulse fixed bottom-17 right-15 z-[5] bg-[#FFFFFF33] backdrop-blur-[35px] rounded-full w-16 h-16 cursor-pointer 
        item-middle border-2 border-[#FFFFFFB2]'>
           <img
             className='w-5 h-5'
@@ -115,10 +124,10 @@ export default function CdStatus({
       )}
 
       {/* 검색 모달 */}
-      {isModalOpen && (
+      {isSearchModalOpen && (
         <SearchModal
           title='CD 랙에 담을 음악 찾기'
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => setIsSerarchModalOpen(false)}
           type='CD'
           onSelect={(cdItem) => setNewItem(cdItem)}
         />
