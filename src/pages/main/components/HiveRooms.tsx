@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RoomLighting } from '../../../components/room-models/RoomLighting';
 import HiveRoomModel from './HiveRoomModel';
@@ -13,10 +13,51 @@ export default function HiveRooms({ myUserId }: HiveRoomsProps) {
   const positionedRooms = useHexagonGrid(rooms, 0, 0);
   const [hoveredRoom, setHoveredRoom] = useState<number | null>(null);
   const navigate = useNavigate();
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    let isRightMouseDown = false;
+
+    const handleMouseDown = (e: MouseEvent) => {
+      if (e.button === 2) { 
+        isRightMouseDown = true;
+        canvas.style.cursor = 'grab';
+      }
+    };
+
+    const handleMouseMove = () => {
+      if (isRightMouseDown) {
+        canvas.style.cursor = 'grabbing';
+      }
+    };
+
+    const handleMouseUp = (e: MouseEvent) => {
+      if (e.button === 2) { 
+        isRightMouseDown = false;
+        canvas.style.cursor = 'default';
+      }
+    };
+
+    canvas.addEventListener('mousedown', handleMouseDown);
+    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('mouseup', handleMouseUp);
+    canvas.addEventListener('contextmenu', (e) => e.preventDefault()); 
+
+    return () => {
+      canvas.removeEventListener('mousedown', handleMouseDown);
+      canvas.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener('mouseup', handleMouseUp);
+      canvas.removeEventListener('contextmenu', (e) => e.preventDefault());
+    };
+  }, []);
 
   return (
     <div className='w-full h-screen relative'>
       <Canvas
+        ref={canvasRef}
         camera={{ position: [0, 4, 10], fov: 25 }}
         shadows>
         <RoomLighting />
