@@ -95,38 +95,47 @@ export default function PointPage() {
         onClick={handleClickOutside}
         className='fixed inset-0 z-10 flex items-center justify-center'>
         {/* 영수증 */}
-        <div className=' relative w-[501px] h-[760px]'>
-          <img
-            src={receipt}
-            className=' inset-0 w-full h-full m-auto block text-center'
-            alt='포인트 내역 영수증 '
-          />
-          <h1 className='absolute top-10 left-38 text-[#3E507D] text-[30px] font-bold'>
-            Point Receipt
-          </h1>
-          <PointHistory
-            data={data}
-            isFetching={isFetching}
-            ref={ref}
-          />
+        <div className='relative w-[501px] h-[760px]'>
+          <div
+            style={{ backgroundImage: `url(${receipt})` }}
+            className='w-full h-full bg-contain bg-no-repeat bg-center flex flex-col items-center px-8'>
+            <h1 className='mt-10 text-[#3E507D] text-[30px] font-bold'>
+              Point Receipt
+            </h1>
 
-          <p className='absolute bottom-33 left-12 text-[#162C63] text-[16px]'>
-            포인트 잔고
-          </p>
+            <div className='flex-1 w-full px-8'>
+              <PointHistory
+                data={data}
+                isFetching={isFetching}
+                ref={ref}
+              />
+            </div>
 
-          {/* 포인트 */}
-          <p className='absolute bottom-33 right-17 text-[#162C63] text-[16px]'>
-            {pointBalance}
-          </p>
-          {/* 충전 버튼 */}
+            <div className='mb-8 w-full px-4'>
+              <div className='flex justify-between items-center mb-4 pr-4'>
+                <p className='text-[#162C63] text-[16px]'>포인트 잔고</p>
+                <p className='text-[#162C63] text-[16px]'>
+                  {pointBalance.toLocaleString('ko-KR')}P
+                </p>
+              </div>
 
-          <div className='absolute bottom-13 left-1/2 -translate-x-1/2'>
-            <LayeredButton
-              theme='blue'
-              className=' text-[18px] font-bold w-[202px] h-[50px]'
-              disabled={isLoading}>
-              포인트 충전하기
-            </LayeredButton>
+              <div className='flex flex-col items-center gap-2'>
+                <LayeredButton
+                  theme='blue'
+                  containerClassName='w-fit'
+                  className='text-[18px] font-bold w-[202px] h-[50px] py-1.5'
+                  disabled={isLoading}
+                  onClick={() => navigate('/payment')}>
+                  포인트 충전하기
+                </LayeredButton>
+
+                <button
+                  className='text-sm text-[#3E507D]/30 mt-2'
+                  onClick={() => navigate('/payment/refund')}>
+                  포인트 환불하기
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </motion.div>

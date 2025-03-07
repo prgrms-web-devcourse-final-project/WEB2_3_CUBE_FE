@@ -68,7 +68,6 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
     const previousComments = [...cdComments];
 
     try {
-      // 낙관적 업데이트
       setCdComments(cdComments.filter((comments) => comments.id !== commentId));
       await deleteCdComment(myCdId, commentId);
     } catch (error) {

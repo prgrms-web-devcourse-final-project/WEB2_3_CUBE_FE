@@ -24,17 +24,26 @@ const BUTTON_THEMES = {
   },
 };
 
+interface LayeredButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  theme?: keyof typeof BUTTON_THEMES;
+  className?: string;
+  containerClassName?: string;
+  children: React.ReactNode;
+}
+
 const LayeredButton = ({
   children,
   theme = 'red',
   className = '',
+  containerClassName = '',
   ...props
-}) => {
+}: LayeredButtonProps) => {
   const [isPressed, setIsPressed] = useState(false);
   const colorTheme = BUTTON_THEMES[theme];
 
   return (
-    <div className='relative'>
+    <div className={twMerge('relative w-full', containerClassName)}>
       {/* 그림자 레이어 */}
       <div
         className='absolute w-full h-full rounded-lg'
