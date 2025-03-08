@@ -349,12 +349,12 @@ export default function CdPlayer({
           style={{ display: 'none' }}
         />
 
-        <section className='flex relative items-center pr-4 w-full h-full'>
+        <section className='flex relative items-center pr-10 w-full h-full'>
           {/* 왼쪽 그룹: 앨범 이미지와 음량 조절 */}
           <article className='flex flex-1 gap-14 items-center h-full'>
             {/* 앨범 이미지 */}
             <img
-              className='block h-full'
+              className='block h-full aspect-square'
               src={cdInfo.coverUrl}
               alt='CD 앨범 이미지'
             />
@@ -410,7 +410,7 @@ export default function CdPlayer({
           </article>
 
           {/* 오른쪽 그룹: 부가 기능 */}
-          <article className='flex items-center gap-2.5 flex-1 justify-end'>
+          <article className='flex items-center gap-4 flex-1 justify-end'>
             <button
               onClick={handleToggleLoop}
               className={cdReady.isLooping ? 'opacity-100' : 'opacity-30'}>

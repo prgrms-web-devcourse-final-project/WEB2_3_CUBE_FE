@@ -78,87 +78,91 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
 
   return (
     <ModalBackground onClose={onClose}>
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95, x: 20 }}
-        animate={{ opacity: 1, scale: 1, x: 0 }}
-        exit={{ opacity: 0, scale: 0.95, x: 20 }}
-        transition={{
-          duration: 0.2,
-          ease: 'easeOut',
-        }}
-        className='w-[662px] rounded-3xl border-2 border-[#FCF7FD] shadow-box  backdrop-blur-[15px] p-4 '>
-        <div className='w-full h-full bg-[#FCF7FD] rounded-[16px]  backdrop-blur-[15px] pt-10 px-27'>
-          <h1 className='text-[#7838AF]  text-2xl font-bold text-center mb-7'>
-            댓글 목록 편집
-          </h1>
+      <div className=''>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, x: 20 }}
+          animate={{ opacity: 1, scale: 1, x: 0 }}
+          exit={{ opacity: 0, scale: 0.95, x: 20 }}
+          transition={{
+            duration: 0.2,
+            ease: 'easeOut',
+          }}
+          className='w-[662px] h-[690px] rounded-3xl border-2 border-[#FCF7FD] shadow-box  backdrop-blur-[15px] p-4  '>
+          <div className='w-full  h-full bg-[#FCF7FD] rounded-[16px]  backdrop-blur-[15px] py-10 px-27'>
+            <h1 className='text-[#7838AF]  text-2xl font-bold text-center mb-7'>
+              댓글 목록 편집
+            </h1>
 
-          {/*  입력 창 */}
-          <SearchInput
-            value={currentInput}
-            onChange={setCurrentInput}
-            placeholder='어떤 댓글을 삭제할까요?'
-            mainColor='#7838AF'
-          />
+            {/*  입력 창 */}
+            <SearchInput
+              value={currentInput}
+              onChange={setCurrentInput}
+              placeholder='어떤 댓글을 삭제할까요?'
+              mainColor='#7838AF'
+            />
 
-          {/* 댓글 목록 */}
+            {/* 댓글 목록 */}
 
-          <ul className='flex flex-col  gap-3 mt-6 mb-5 min-h-[500px]'>
-            {isSearching ? (
-              Array(5)
-                .fill(0)
-                .map((_, index) => (
-                  <SkeletonItem
-                    key={`skeleton-${index}`}
-                    isBook={false}
-                  />
-                ))
-            ) : cdComments.length > 0 ? (
-              cdComments.map((comment) => (
-                <li
-                  key={comment.id}
-                  className={`flex justify-between items-center bg-[#F7F1FA80] rounded-[12px]  `}>
-                  <div className='flex flex-col gap-1 py-4 pl-7'>
-                    <div className='flex gap-2 items-baseline'>
-                      <span className='text-[#401D5F] text-[16px] font-bold line-clamp-1'>
-                        {comment.nickname}
-                      </span>
-                      <span className='text-[#401D5F80] text-[10px] '>
-                        {formatDate(new Date(comment.createdAt + 'Z'))}
-                      </span>
+            <ul className='flex flex-col  gap-3 mt-6 mb-5 overflow-auto h-[390px]  '>
+              {isSearching ? (
+                Array(5)
+                  .fill(0)
+                  .map((_, index) => (
+                    <SkeletonItem
+                      key={`skeleton-${index}`}
+                      isBook={false}
+                    />
+                  ))
+              ) : cdComments.length > 0 ? (
+                cdComments.map((comment) => (
+                  <li
+                    key={comment.id}
+                    className={`flex justify-between items-center bg-[#F7F1FA80] rounded-[12px]  `}>
+                    <div className='flex flex-col gap-1 py-4 pl-7'>
+                      <div className='flex gap-2 items-baseline'>
+                        <span className='text-[#401D5F] text-[16px] font-bold line-clamp-1'>
+                          {comment.nickname}
+                        </span>
+                        <span className='text-[#401D5F80] text-[10px] '>
+                          {formatDate(new Date(comment.createdAt + 'Z'))}
+                        </span>
+                      </div>
+                      <p className='text-[#401D5FB2] text-[14px] line-clamp-1'>
+                        {comment.content}
+                      </p>
                     </div>
-                    <p className='text-[#401D5FB2] text-[14px] line-clamp-1'>
-                      {comment.content}
-                    </p>
-                  </div>
 
-                  {isAccessible(comment.userId) && (
-                    <button
-                      onClick={() => handleDeleteComment(comment.id)}
-                      className='py-7 pr-8 hover:opacity-50'>
-                      <img
-                        src={trashIcon}
-                        alt='댓글 삭제버튼'
-                      />
-                    </button>
-                  )}
-                </li>
-              ))
-            ) : (
-              <div className='flex flex-col justify-center items-center h-40 text-gray-500'>
-                <p>검색 결과가 없습니다.</p>
-              </div>
+                    {isAccessible(comment.userId) && (
+                      <button
+                        onClick={() => handleDeleteComment(comment.id)}
+                        className='py-7 pr-8 hover:opacity-50'>
+                        <img
+                          src={trashIcon}
+                          alt='댓글 삭제버튼'
+                        />
+                      </button>
+                    )}
+                  </li>
+                ))
+              ) : (
+                <div className='flex flex-col justify-center items-center h-40 text-gray-500'>
+                  <p>검색 결과가 없습니다.</p>
+                </div>
+              )}
+            </ul>
+
+            {/* 페이지네이션 */}
+            {cdComments.length > 0 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPage={totalPage.current}
+                onChangePage={handleChangePage}
+                color='#7838AF'
+              />
             )}
-          </ul>
-
-          {/* 페이지네이션 */}
-          <Pagination
-            currentPage={currentPage}
-            totalPage={totalPage.current}
-            onChangePage={handleChangePage}
-            color='#7838AF'
-          />
-        </div>
-      </motion.div>
+          </div>
+        </motion.div>
+      </div>
     </ModalBackground>
   );
 });
