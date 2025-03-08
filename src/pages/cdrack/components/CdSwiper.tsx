@@ -78,7 +78,7 @@ const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
           setSlideWidth(swiper.slides[swiper.activeIndex].offsetWidth);
         }}
         className='mySwiper'>
-        {cdRackDatas.map((data: CDInfo, index: number) => (
+        {cdRackDatas?.map((data: CDInfo, index: number) => (
           <SwiperSlide key={data.myCdId}>
             <div
               className=' cursor-pointer  transition-transform duration-500 ease-linear relative '
