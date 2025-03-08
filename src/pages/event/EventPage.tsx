@@ -35,9 +35,9 @@ export default function EventPage() {
   const handleJoinEvent = () => {
     const joinEvent = async () => {
       try {
-        await addEventJoin(eventInfo.id);
+        await addEventJoin(eventInfo?.id);
         showToast(
-          `${eventInfo.rewardPoints} 포인트를 획득했습니다!`,
+          `${eventInfo?.rewardPoints} 포인트를 획득했습니다!`,
           'success',
         );
         setShowResult(true);
