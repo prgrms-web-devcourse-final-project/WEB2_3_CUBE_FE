@@ -12,17 +12,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20' # react-router 요구사항에 맞게 Node.js 20으로 변경
-          cache: 'pnpm' # 또는 yarn, pnpm 등 사용 중인 패키지 매니저
-
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 10
-          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'pnpm'
 
       - name: Create .env file
         run: |
