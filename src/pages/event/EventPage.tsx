@@ -25,8 +25,6 @@ export default function EventPage() {
   const [showResult, setShowResult] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  console.log(eventInfo);
-
   // 현재 시간이 이벤트 열리는 시간보다 크거나 같을경우 true
   const isEventInProgress =
     new Date(eventInfo?.eventTime).getTime() + 9 * 60 * 60 * 1000 <= Date.now();
