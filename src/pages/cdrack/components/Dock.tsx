@@ -75,7 +75,7 @@ const Dock = React.memo(
                   </motion.button>
 
                   <ul className='flex justify-center items-center gap-2  xl:gap-4  2xl:gap-6  w-full h-full'>
-                    {cdRackInfo.data.map((data: CDInfo, index: number) => (
+                    {cdRackInfo?.data.map((data: CDInfo, index: number) => (
                       <motion.li
                         onClick={() => handleSlideChange(index)}
                         key={index}
@@ -110,7 +110,7 @@ const Dock = React.memo(
 
                   {/* 이후 cd목록 버튼 */}
                   <motion.button
-                    onClick={() => onNextPage(cdRackInfo.nextCursor)}
+                    onClick={() => onNextPage(cdRackInfo?.nextCursor)}
                     className='h-full overflow-hidden'
                     whileHover={{ translateX: 5 }}
                     animate={{

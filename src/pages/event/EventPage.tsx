@@ -1,12 +1,14 @@
 import backgroundImg from '@assets/roome-background-img.png';
 import gameMachine from '@assets/event/game-machine.svg';
-import gameOver from '@assets/event/game-over.svg';
-import gameSuccess from '@assets/event/game-success.svg';
 
 import LayeredButton from '@components/LayeredButton';
 import { useEffect, useState } from 'react';
 import { addEventJoin, getOngoingEvent } from '@apis/event';
 import { useToastStore } from '@/store/useToastStore';
+import FailScreen from './components/FailScreen';
+import SuccessScreen from './components/SuccessScreen';
+import TypingText from '@components/TypingText';
+import Loading from '@components/Loading';
 
 interface EventInfo {
   eventName: string;
@@ -21,6 +23,7 @@ export default function EventPage() {
 
   const [eventInfo, setEventInfo] = useState<EventInfo | null>(null);
   const [showResult, setShowResult] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // 현재 시간이 이벤트 열리는 시간보다 크거나 같을경우 true
   const isEventInProgress =
@@ -32,9 +35,9 @@ export default function EventPage() {
   const handleJoinEvent = () => {
     const joinEvent = async () => {
       try {
-        await addEventJoin(eventInfo.id);
+        await addEventJoin(eventInfo?.id);
         showToast(
-          `${eventInfo.rewardPoints} 포인트를 획득했습니다!`,
+          `${eventInfo?.rewardPoints} 포인트를 획득했습니다!`,
           'success',
         );
         setShowResult(true);
@@ -56,11 +59,14 @@ export default function EventPage() {
         setEventInfo(result);
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchData();
   }, []);
 
+  if (isLoading) return <Loading />;
   return (
     <div
       style={{ backgroundImage: `url(${backgroundImg})` }}
@@ -71,39 +77,21 @@ export default function EventPage() {
           alt='오락 기계 이미지'
         />
         {/* 보여줄 화면 */}
-
-        {typeof showResult === 'boolean' && showResult === false && (
-          <div className='absolute  top-44  left-49 flex flex-col items-center gap-4.5'>
-            <div className='flex flex-col items-center'>
-              <img
-                src={gameOver}
-                alt='게임 실패 이미지'
-              />
-            </div>
-
-            <p className='text-white   text-center text-[18px] font-bold '>
-              다음 이벤트에 참여해주세요
-            </p>
+        {showResult === null && (
+          <div className='absolute top-30  w-full'>
+            <TypingText
+              speed={150}
+              pauseTime={1200}
+              text={'큰거온다...'}
+              className='h-[250px] text-[35px] font-bold text-white  text-center pt-20 '
+            />
           </div>
         )}
+        {typeof showResult === 'boolean' && showResult === false && (
+          <FailScreen />
+        )}
         {typeof showResult === 'boolean' && showResult === true && (
-          <div className='absolute  top-54  left-42 flex flex-col items-center gap-4.5'>
-            <div className='flex flex-col items-center'>
-              <img
-                src={gameSuccess}
-                alt='게임 성공 이미지'
-              />
-            </div>
-
-            <div className='font-bold'>
-              <p className='text-white   text-center text-[18px]  '>
-                {`선착순 ${eventInfo?.maxParticipants}명`}
-              </p>
-              <p className='text-white   text-center text-[18px] '>
-                {` ${eventInfo?.rewardPoints} 포인트 지급 이벤트`}
-              </p>
-            </div>
-          </div>
+          <SuccessScreen eventInfo={eventInfo} />
         )}
 
         <div
