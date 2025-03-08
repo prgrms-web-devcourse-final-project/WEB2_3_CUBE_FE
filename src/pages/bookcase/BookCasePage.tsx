@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ToolBoxButton from './components/ToolBoxButton';
 import { SearchModal } from '@components/search-modal/SearchModal';
@@ -8,40 +8,19 @@ import { bookAPI } from '@apis/book';
 import ModalBackground from '@components/ModalBackground';
 import { BookCaseListType } from '@/types/book';
 import Loading from '@components/Loading';
-<<<<<<< Updated upstream
 import AnimationGuide from '@components/AnimationGuide';
 import { useToastStore } from '@/store/useToastStore';
-=======
-import { useDebounce } from '@/hooks/useDebounce';
-
-interface BookState {
-  books: BookCaseListType[];
-  dataListItems: DataListInfo[];
-  totalCount: number;
-  lastBookId?: number;
-}
->>>>>>> Stashed changes
 
 const BookCasePage = () => {
   const { showToast } = useToastStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isListOpen, setIsListOpen] = useState(false);
-  const [bookState, setBookState] = useState<BookState>({
-    books: [],
-    dataListItems: [],
-    totalCount: 0,
-    lastBookId: undefined,
-  });
+  const [books, setBooks] = useState<BookCaseListType[]>([]);
+  const [dataListItems, setDataListItems] = useState<DataListInfo[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-<<<<<<< Updated upstream
   const [isGuideOpen, setIsGuideOpen] = useState(true);
 
-=======
-  const [searchInput, setSearchInput] = useState('');
-  const [isSearching, setIsSearching] = useState(false);
-  const debouncedSearchInput = useDebounce(searchInput);
-  const BOOKS_PER_PAGE = 45;
->>>>>>> Stashed changes
   const BOOKS_PER_ROW = 15;
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -51,27 +30,16 @@ const BookCasePage = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { userId } = useParams();
-  const [shouldResetScroll, setShouldResetScroll] = useState(true);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  const fetchBooks = useCallback(
-    async (keyword?: string, lastId?: number) => {
+  useEffect(() => {
+    const fetchBooks = async () => {
       try {
         setIsLoading(true);
         if (!userId) return;
 
-<<<<<<< Updated upstream
         const response = await bookAPI.getBookCaseList(Number(userId), 45);
 
         // console.log('API Response:', response);
-=======
-        const response = await bookAPI.getBookCaseList(
-          Number(userId),
-          BOOKS_PER_PAGE,
-          lastId,
-          keyword,
-        );
->>>>>>> Stashed changes
 
         if (response?.myBooks) {
           const formattedBooks = response.myBooks.map((book: any) => ({
@@ -85,6 +53,7 @@ const BookCasePage = () => {
             page: book.page || 0,
           }));
 
+          // DataList 컴포넌트용 데이터 변환
           const dataListFormat = response.myBooks.map((book: any) => ({
             id: book.id.toString(),
             title: book.title,
@@ -94,68 +63,28 @@ const BookCasePage = () => {
             imageUrl: book.imageUrl,
           }));
 
-<<<<<<< Updated upstream
           // console.log('Formatted DataList Items:', dataListFormat);
-=======
-          // 상태 업데이트를 일괄 처리
-          setBookState((prev) => {
-            const newState = {
-              books: lastId
-                ? [...prev.books, ...formattedBooks]
-                : formattedBooks,
-              dataListItems: lastId
-                ? [...prev.dataListItems, ...dataListFormat]
-                : dataListFormat,
-              totalCount: response.count,
-              lastBookId:
-                response.myBooks.length > 0
-                  ? response.myBooks[response.myBooks.length - 1].id
-                  : undefined,
-            };
-            return newState;
-          });
->>>>>>> Stashed changes
 
-          // 최초 로딩 시에만 스크롤 리셋
-          if (isInitialLoad) {
-            setShouldResetScroll(true);
-            setIsInitialLoad(false);
-          }
+          setBooks(formattedBooks);
+          setDataListItems(dataListFormat);
+          setTotalCount(response.count);
         }
       } catch (error) {
         console.error('책 목록을 가져오는데 실패했습니다:', error);
       } finally {
         setIsLoading(false);
-        setIsSearching(false);
       }
-    },
-    [userId, isInitialLoad],
-  );
-
-  // 검색어가 변경될 때마다 새로운 검색 실행
-  useEffect(() => {
-    if (debouncedSearchInput !== undefined) {
-      setIsSearching(true);
-      fetchBooks(debouncedSearchInput);
-    }
-  }, [debouncedSearchInput, fetchBooks]);
-
-  // 초기 데이터 로딩
-  useEffect(() => {
-    setIsInitialLoad(true);
+    };
     fetchBooks();
-  }, [userId, fetchBooks]);
+  }, [userId, navigate]);
 
   // 초기 스크롤 위치 설정
   useEffect(() => {
-    if (
-      containerRef.current &&
-      !isLoading &&
-      shouldResetScroll &&
-      isInitialLoad
-    ) {
+    if (containerRef.current && !isLoading) {
       const container = containerRef.current;
+      // 가로 중앙
       const scrollX = (container.scrollWidth - container.clientWidth) / 2;
+      // 세로 중앙
       const scrollY = (container.scrollHeight - container.clientHeight) / 2;
 
       container.scrollTo({
@@ -163,43 +92,8 @@ const BookCasePage = () => {
         top: scrollY,
         behavior: 'smooth',
       });
-      setShouldResetScroll(false);
     }
-  }, [isLoading, shouldResetScroll, isInitialLoad]);
-
-  const handleFetchMore = useCallback(() => {
-    if (bookState.lastBookId) {
-      fetchBooks(searchInput, bookState.lastBookId);
-    }
-  }, [bookState.lastBookId, searchInput, fetchBooks]);
-
-  // 도서 분배 로직을 useMemo로 최적화
-  const bookRows = useMemo(() => {
-    const { books } = bookState;
-    if (books.length <= 45) {
-      const totalRows = 3;
-      const baseCount = Math.floor(books.length / totalRows);
-      const remainder = books.length - baseCount * totalRows;
-
-      let currentIndex = 0;
-      return Array(totalRows)
-        .fill(null)
-        .map((_, index) => {
-          const currentRowCount =
-            index === totalRows - 1 ? baseCount + remainder : baseCount;
-          const row = books.slice(currentIndex, currentIndex + currentRowCount);
-          currentIndex += currentRowCount;
-          return row;
-        });
-    } else {
-      return Array(Math.ceil(books.length / BOOKS_PER_ROW))
-        .fill(null)
-        .map((_, index) => {
-          const start = index * BOOKS_PER_ROW;
-          return books.slice(start, start + BOOKS_PER_ROW);
-        });
-    }
-  }, [bookState.books]);
+  }, [isLoading]);
 
   useEffect(() => {
     if (isGuideOpen) {
@@ -239,22 +133,76 @@ const BookCasePage = () => {
     setIsDragging(false);
   };
 
-  const handleDeleteBooks = useCallback((deletedIds: string[]) => {
-    setBookState((prev) => ({
-      ...prev,
-      books: prev.books.filter(
-        (book) => !deletedIds.includes(book.id.toString()),
-      ),
-      dataListItems: prev.dataListItems.filter(
-        (item) => !deletedIds.includes(item.id),
-      ),
-      totalCount: prev.totalCount - deletedIds.length,
-    }));
-  }, []);
+  const handleDeleteBooks = (deletedIds: string[]) => {
+    // books 업데이트
+    setBooks((prevBooks) =>
+      prevBooks.filter((book) => !deletedIds.includes(book.id.toString())),
+    );
+
+    // dataListItems 업데이트
+    setDataListItems((prevItems) =>
+      prevItems.filter((item) => !deletedIds.includes(item.id)),
+    );
+
+    // 전체 카운트 업데이트
+    setTotalCount((prev) => prev - deletedIds.length);
+  };
+
+  const bookCaseRows =
+    books.length <= 45 ? 3 : Math.ceil(books.length / BOOKS_PER_ROW);
+
+  const handleBookAdd = (newBook: BookCaseListType) => {
+    setBooks((prevBooks) => [...prevBooks, newBook]);
+    setDataListItems((prevItems) => [
+      ...prevItems,
+      {
+        id: newBook.id.toString(),
+        title: newBook.title,
+        author: newBook.author,
+        publisher: newBook.publisher,
+        released_year: newBook.publishedDate,
+        imageUrl: newBook.imageUrl,
+      },
+    ]);
+    setTotalCount((prev) => prev + 1);
+  };
 
   if (isLoading) {
     return <Loading />;
   }
+
+  // 책을 각 줄에 분배하는 함수
+  const distributeBooks = () => {
+    if (books.length <= 45) {
+      // 45권 이하일 때는 3줄에 균등 분배
+      const totalRows = 3;
+      const baseCount = Math.floor(books.length / totalRows);
+      const remainder = books.length - baseCount * totalRows;
+
+      let currentIndex = 0;
+      return Array(totalRows)
+        .fill(null)
+        .map((_, index) => {
+          // 마지막 줄에 나머지 책들을 모두 추가
+          const currentRowCount =
+            index === totalRows - 1 ? baseCount + remainder : baseCount;
+
+          const row = books.slice(currentIndex, currentIndex + currentRowCount);
+          currentIndex += currentRowCount;
+          return row;
+        });
+    } else {
+      // 45권 초과시 15권씩 분배
+      return Array(bookCaseRows)
+        .fill(null)
+        .map((_, index) => {
+          const start = index * BOOKS_PER_ROW;
+          return books.slice(start, start + BOOKS_PER_ROW);
+        });
+    }
+  };
+
+  const bookRows = distributeBooks();
 
   return (
     <div
@@ -273,9 +221,9 @@ const BookCasePage = () => {
       onTouchEnd={handleDragEnd}>
       {bookRows.map((rowBooks, index) => (
         <BookCaseList
-          key={`row-${index}`}
+          key={index}
           books={rowBooks}
-          showEmptyMessage={bookState.books.length === 0 && index === 1}
+          showEmptyMessage={books.length === 0 && index === 1}
         />
       ))}
       <ToolBoxButton
@@ -289,11 +237,7 @@ const BookCasePage = () => {
           type='BOOK'
           onClose={() => setIsModalOpen(false)}
           onSelect={() => {}}
-<<<<<<< Updated upstream
           onSuccess={async (item) => {
-=======
-          onSuccess={(item) => {
->>>>>>> Stashed changes
             const newBook = {
               id: parseInt(item.id),
               title: item.title,
@@ -304,7 +248,6 @@ const BookCasePage = () => {
               genreNames: item.genres || [],
               page: 0,
             };
-<<<<<<< Updated upstream
 
             try {
               // UI 업데이트 (낙관적 업데이트)
@@ -333,26 +276,6 @@ const BookCasePage = () => {
               setTotalCount((prev) => prev - 1);
               showToast('책 추가에 실패했습니다.', 'error');
             }
-=======
-            setBookState((prev) => ({
-              ...prev,
-              books: [...prev.books, newBook],
-              dataListItems: [
-                ...prev.dataListItems,
-                {
-                  id: item.id,
-                  title: item.title,
-                  author: item.author,
-                  publisher: item.publisher,
-                  released_year: new Date(item.date)
-                    .toISOString()
-                    .split('T')[0],
-                  imageUrl: item.imageUrl,
-                },
-              ],
-              totalCount: prev.totalCount + 1,
-            }));
->>>>>>> Stashed changes
           }}
         />
       )}
@@ -368,15 +291,14 @@ const BookCasePage = () => {
       {isListOpen && (
         <ModalBackground onClose={() => setIsListOpen(false)}>
           <DataList
-            datas={bookState.dataListItems}
+            datas={dataListItems}
             type='book'
             onDelete={handleDeleteBooks}
-            hasMore={bookState.books.length < bookState.totalCount}
-            isLoading={isLoading || isSearching}
-            fetchMore={handleFetchMore}
+            hasMore={false}
+            isLoading={isLoading}
+            fetchMore={() => {}}
             userId={Number(userId)}
-            count={bookState.totalCount}
-            setSearchInput={setSearchInput}
+            count={totalCount}
           />
         </ModalBackground>
       )}

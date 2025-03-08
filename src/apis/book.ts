@@ -1,8 +1,6 @@
-import axios from 'axios';
 import axiosInstance from './axiosInstance';
 import { BookType, ReviewType } from '@/types/book';
 
-const ALADIN_KEY = import.meta.env.VITE_ALADIN_KEY;
 const API_URL = 'api';
 
 export const bookAPI = {
@@ -14,29 +12,19 @@ export const bookAPI = {
    */
   searchAladinBooks: async (keyword: string) => {
     const params = {
-      ttbkey: ALADIN_KEY,
-      Query: keyword,
-      QueryType: 'Keyword',
-      MaxResults: 10,
+      keyword,
+      queryType: 'Keyword',
+      maxResults: 10,
       start: 1,
-      SearchTarget: 'Book',
-      output: 'JS',
-      Version: '20131101',
-      Cover: 'Big',
+      searchTarget: 'Book',
+      cover: 'Big',
     };
 
     try {
-      const response = await axios.get('/api/aladin/ttb/api/ItemSearch.aspx', {
+      const response = await axiosInstance.get('/api/aladin/search', {
         params,
-        headers: {
-          Accept: 'application/json, text/plain, */*',
-          'Content-Type': 'application/json;charset=utf-8',
-        },
       });
 
-      if (response.data && typeof response.data === 'string') {
-        return JSON.parse(response.data);
-      }
       return response.data;
     } catch (error) {
       console.error('알라딘 API 호출 오류:', error);
