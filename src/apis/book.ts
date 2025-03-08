@@ -21,7 +21,7 @@ export const bookAPI = {
     };
 
     try {
-      const response = await axios.get('https://www.aladin.co.kr/ttb/api/ItemSearch.aspx', {
+      const response = await axiosInstance.get('/api/aladin/search', {
         params,
       });
 
