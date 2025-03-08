@@ -9,8 +9,10 @@ import ModalBackground from '@components/ModalBackground';
 import { BookCaseListType } from '@/types/book';
 import Loading from '@components/Loading';
 import AnimationGuide from '@components/AnimationGuide';
+import { useToastStore } from '@/store/useToastStore';
 
 const BookCasePage = () => {
+  const { showToast } = useToastStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isListOpen, setIsListOpen] = useState(false);
   const [books, setBooks] = useState<BookCaseListType[]>([]);
@@ -235,17 +237,45 @@ const BookCasePage = () => {
           type='BOOK'
           onClose={() => setIsModalOpen(false)}
           onSelect={() => {}}
-          onSuccess={(item) => {
-            handleBookAdd({
+          onSuccess={async (item) => {
+            const newBook = {
               id: parseInt(item.id),
               title: item.title,
-              author: item.author,
-              publisher: item.publisher,
+              author: item.author || '',
+              publisher: item.publisher || '',
               publishedDate: new Date(item.date).toISOString().split('T')[0],
               imageUrl: item.imageUrl,
-              genreNames: item.genres,
+              genreNames: item.genres || [],
               page: 0,
-            });
+            };
+
+            try {
+              // UI 업데이트 (낙관적 업데이트)
+              setBooks((prevBooks) => [...prevBooks, newBook]);
+              setDataListItems((prevItems) => [
+                ...prevItems,
+                {
+                  id: newBook.id.toString(),
+                  title: newBook.title,
+                  author: newBook.author,
+                  publisher: newBook.publisher,
+                  released_year: newBook.publishedDate,
+                  imageUrl: newBook.imageUrl,
+                },
+              ]);
+              setTotalCount((prev) => prev + 1);
+              setIsModalOpen(false);
+            } catch (error) {
+              // 실패시 UI 롤백
+              setBooks((prevBooks) =>
+                prevBooks.filter((book) => book.id !== newBook.id),
+              );
+              setDataListItems((prevItems) =>
+                prevItems.filter((item) => item.id !== newBook.id.toString()),
+              );
+              setTotalCount((prev) => prev - 1);
+              showToast('책 추가에 실패했습니다.', 'error');
+            }
           }}
         />
       )}
