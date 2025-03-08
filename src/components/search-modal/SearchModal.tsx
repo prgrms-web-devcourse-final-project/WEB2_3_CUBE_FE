@@ -53,6 +53,7 @@ export const SearchModal = ({
               value={query}
               onChange={handleSearch}
               placeholder='어떤 것이든 검색해보세요!'
+              mainColor='#2656CD' // 검색창 아웃라인
             />
             {isLoading && <div className='text-gray-400'>검색 중...</div>}
             {error && <div className='text-gray-400'>{error}</div>}

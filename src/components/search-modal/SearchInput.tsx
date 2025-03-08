@@ -31,7 +31,7 @@ export const SearchInput = ({
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         placeholder={placeholder}
-        className={`w-full px-5 py-2.5 rounded-lg ${bgColor} placeholder-[#8B888A]/70 outline-none`}
+        className={`w-full px-5 py-2.5 rounded-lg ${bgColor} placeholder-[#8B888A]/70 outline-none outline-[#2656CD]/60`}
       />
       <button className='absolute right-3 top-1/2 transform -translate-y-1/2'>
         <img
