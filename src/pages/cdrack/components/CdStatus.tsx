@@ -49,7 +49,7 @@ export default function CdStatus({
       duration: newItem.duration,
       releaseDate: newItem.date,
     };
-    const pageLength = cdRackDatas.data.length;
+    const pageLength = cdRackDatas?.data.length;
 
     if (pageLength === 15) return;
     setcdRackDatas((prev) => ({
