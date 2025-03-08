@@ -114,7 +114,7 @@ export const ReviewContent = ({
       <div className='gap-3 mt-8 item-middle'>
         <button
           onClick={onEdit}
-          className='px-4 py-2 text-sm transition-colors rounded-full hover:opacity-80'
+          className='px-4 py-2 text-sm transition-colors rounded-full hover:opacity-80 font-medium'
           style={{
             backgroundColor: `${colors.secondary}20`,
             color: colors.secondary,
@@ -123,7 +123,7 @@ export const ReviewContent = ({
         </button>
         <button
           onClick={onDelete}
-          className='px-4 py-2 text-sm transition-colors rounded-full hover:opacity-80'
+          className='px-4 py-2 text-sm transition-colors rounded-full hover:opacity-80 font-medium'
           style={{
             backgroundColor: `${colors.secondary}20`,
             color: colors.secondary,
