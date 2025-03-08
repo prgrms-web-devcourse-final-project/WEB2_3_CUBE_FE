@@ -22,6 +22,17 @@
 
   --animate-slideTitle: slideTitle linear infinite;
 
+  --animate-slowSpin: slowSpin 1.5s linear infinite;
+
+  @keyframes slowSpin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
   @keyframes slideTitle {
     0% {
       transform: translateX(100%); /* 화면 오른쪽에서 시작 */
@@ -84,11 +95,12 @@
 
   /* 드래그 애니메이션 */
   .animate-drag {
-    animation: drag 2s ease-in-out infinite
+    animation: drag 2s ease-in-out infinite;
   }
 
   @keyframes drag {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateX(-20px);
     }
     50% {

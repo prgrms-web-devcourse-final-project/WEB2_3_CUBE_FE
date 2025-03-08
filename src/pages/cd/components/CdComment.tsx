@@ -38,11 +38,11 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
     },
     onMutate: async () => {
       // 낙관적 업데이트 전에 사용자 목록 쿼리를 취소해 잠재적인 충돌 방지!
-      await queryClient.cancelQueries({ queryKey: ['cdComments'] });
+      await queryClient.cancelQueries({ queryKey: [`cdComments ${myCdId}`] });
 
       // 캐시된 데이터(사용자 목록) 가져오기!
       const previousComments = queryClient.getQueryData<CdComment[]>([
-        'cdComments',
+        `cdComments ${myCdId}`,
       ]);
       const tempId = Date.now();
 
@@ -59,7 +59,7 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
       // 낙관적 업데이트
       if (previousComments) {
         queryClient.setQueryData<CdComment[]>(
-          ['cdComments'],
+          [`cdComments ${myCdId}`],
           [...previousComments, newComment],
         );
       }
@@ -68,20 +68,17 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
       if (commentInputRef.current) {
         commentInputRef.current.value = '';
       }
-
-      // 각 콜백의 context로 전달할 데이터 반환!
-
       return { previousComments };
     },
     onError: (error, newComment, context) => {
       // console.error('onError', error, newComment, context);
       // 변이 실패 시, 낙관적 업데이트 결과를 이전 사용자 목록으로 되돌리기!
       if (context) {
-        queryClient.setQueryData(['cdComments'], context.previousComments);
+        queryClient.setQueryData(
+          [`cdComments ${myCdId}`],
+          context.previousComments,
+        );
       }
-    },
-    onSettled(data, error, newComment, context) {
-      // console.log('onSettled', data, error, newComment, context);
     },
   });
 
@@ -112,6 +109,7 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
 
   // 댓글 작성
   const handleSubmitComment = useCallback(async () => {
+    if (commentInputRef.current.value.trim() === '') return;
     mutate({
       timestamp: commentTime,
       content: commentInputRef.current.value,
@@ -133,7 +131,7 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
           />
         </button>
 
-        <div className='flex flex-col gap-6 justify-end items-end px-7 py-14 w-full h-full'>
+        <div className='flex flex-col gap-6 justify-end items-end px-7 pt-14 pb-6 w-full h-full'>
           {/* 댓글 목록 */}
           <ul className='flex overflow-hidden flex-col gap-4 justify-end items-end'>
             {/* 댓글  */}
@@ -161,7 +159,7 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
           </ul>
 
           {/* 댓글 입력 창 */}
-          <form className='w-full h-[104px] bg-[#FFFFFF33] border-2 border-[#FFFFFF80] rounded-[14px] relative '>
+          <form className='w-full  h-[104px] bg-[#FFFFFF33] border-2 border-[#FFFFFF80] rounded-[14px] relative '>
             <textarea
               ref={commentInputRef}
               className='w-full h-full p-5  resize-none rounded-[14px] outline-none text-white'
