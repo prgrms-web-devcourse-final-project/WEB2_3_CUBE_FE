@@ -89,9 +89,10 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
       return;
     }
     // 현재 시간대에 해당하는 댓글들 필터링
-    const exactTimeComments = (cdComments || []).filter(
-      (comment) => comment.timestamp === commentTime,
-    );
+    const exactTimeComments = Array.isArray(cdComments)
+      ? cdComments.filter((comment) => comment.timestamp === commentTime)
+      : [];
+
     if (exactTimeComments.length > 0) {
       // 이미 표시된 댓글은 중복 표시하지 않도록 처리
       setCurrentComments((prev) => {
