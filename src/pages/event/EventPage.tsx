@@ -25,6 +25,8 @@ export default function EventPage() {
   const [showResult, setShowResult] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  console.log(eventInfo);
+
   // 현재 시간이 이벤트 열리는 시간보다 크거나 같을경우 true
   const isEventInProgress =
     new Date(eventInfo?.eventTime).getTime() + 9 * 60 * 60 * 1000 <= Date.now();
@@ -43,7 +45,7 @@ export default function EventPage() {
         setShowResult(true);
       } catch (error) {
         showToast(
-          error.response?.data.message || '알 수 없는 오류가 발생했습니다.',
+          error?.response?.data.message || '알 수 없는 오류가 발생했습니다.',
           'error',
         );
         setShowResult(false);
