@@ -56,7 +56,7 @@ export default function RankingModal({ onClose }) {
           alt='랭킹 닫기'
         />
         {/* 랭킹 컨텐츠 */}
-        <div className='flex flex-col items-center gap-6 @2xl:gap-6'>
+        <div className='flex flex-col items-center gap-5'>
           {rankingData.length < 3 ? (
             <div className='flex flex-col items-center justify-center mt-30 '>
             <p className='text-[#4B6BBA] text-sm @2xl:text-base font-medium'>
