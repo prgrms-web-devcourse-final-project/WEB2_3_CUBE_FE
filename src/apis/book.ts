@@ -81,6 +81,8 @@ export const bookAPI = {
    * const firstPage = await bookAPI.getBookCaseList(1, 10);
    * // 두 번째 페이지부터 조회
    * const nextPage = await bookAPI.getBookCaseList(1, 10, 2);
+   * // 검색어로 조회
+   * const searchResult = await bookAPI.getBookCaseList(1, 10, undefined, "해리포터");
    */
   getBookCaseList: async (
     userId: number,
