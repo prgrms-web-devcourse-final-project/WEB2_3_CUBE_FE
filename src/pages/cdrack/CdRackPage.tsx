@@ -6,13 +6,7 @@ import Loading from '@components/Loading';
 import CdStatus from './components/CdStatus';
 
 export default function CdRackPage() {
-  const [cdRackInfo, setCDRackInfo] = useState<CDRackInfo>({
-    data: [],
-    nextCursor: 0,
-    firstMyCdId: 0,
-    lastMyCdId: 0,
-    totalCount: 0,
-  });
+  const [cdRackInfo, setCDRackInfo] = useState<CDRackInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [cursor, setCursor] = useState(0);
   const [cursorHistory, setCursorHistory] = useState<number[]>([0]);
