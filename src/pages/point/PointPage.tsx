@@ -1,6 +1,8 @@
 import { useUserStore } from '@/store/useUserStore';
 import { getPointBalance, getPointHistory } from '@apis/point';
 import receipt from '@assets/point/receipt.svg';
+import coin from '@assets/point/coin.svg';
+
 import LayeredButton from '@components/LayeredButton';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -56,8 +58,6 @@ export default function PointPage() {
   const fetchPointsHistory = async (cursor: number) => {
     const result = await getPointHistory(5, cursor);
 
-    // console.log(result);
-
     const history = result.history;
 
     // 날짜별로 묶어서 배열화
@@ -95,10 +95,10 @@ export default function PointPage() {
         onClick={handleClickOutside}
         className='fixed inset-0 z-10 flex items-center justify-center'>
         {/* 영수증 */}
-        <div className='relative w-[501px] h-[760px]'>
+        <div className='relative w-[501px] h-[660px]'>
           <div
             style={{ backgroundImage: `url(${receipt})` }}
-            className='w-full h-full bg-contain bg-no-repeat bg-center flex flex-col items-center px-8'>
+            className='w-full h-full bg-contain bg-no-repeat bg-center flex flex-col items-center px-12 '>
             <h1 className='mt-10 text-[#3E507D] text-[30px] font-bold'>
               Point Receipt
             </h1>
@@ -111,12 +111,19 @@ export default function PointPage() {
               />
             </div>
 
-            <div className='mb-8 w-full px-4'>
-              <div className='flex justify-between items-center mb-4 pr-4'>
+            <div className='mb-8 w-full px-8 '>
+              <div className='flex justify-between items-center mb-4 '>
                 <p className='text-[#162C63] text-[16px]'>포인트 잔고</p>
-                <p className='text-[#162C63] text-[16px]'>
-                  {pointBalance.toLocaleString('ko-KR')}P
-                </p>
+
+                <div className='flex items-center gap-2'>
+                  <img
+                    src={coin}
+                    alt='코인 이미지'
+                  />
+                  <p className='text-[#162C63] text-[16px]'>
+                    {pointBalance.toLocaleString('ko-KR')}P
+                  </p>
+                </div>
               </div>
 
               <div className='flex flex-col items-center gap-2'>
