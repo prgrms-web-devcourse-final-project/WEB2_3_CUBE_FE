@@ -74,7 +74,7 @@ const HousemateModal = ({
 
       <ul
         ref={listRef}
-        className='flex flex-col gap-6 px-4 mt-4 overflow-y-auto h-[calc(80vh-280px)]'>
+        className='flex flex-col gap-6 px-4 mt-4 overflow-y-auto h-[calc(80vh-280px)] scrollbar scrollbar-pink'>
         {isLoading ? (
           <div className='flex flex-col gap-6'>
             {Array.from({ length: 5 }).map((_, index) => (

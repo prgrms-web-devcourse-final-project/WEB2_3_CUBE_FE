@@ -28,3 +28,11 @@
 .point-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari */
 }
+
+.scrollbar-pink::-webkit-scrollbar-thumb {
+  background: #F9E9F0;
+  border-radius: 6px; /* 스크롤바 둥근 테두리 */
+  width: 13px;
+  height: 25px;
+}
+
