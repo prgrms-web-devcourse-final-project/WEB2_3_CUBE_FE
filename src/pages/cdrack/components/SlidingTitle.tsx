@@ -31,7 +31,6 @@ export default function SlidingTitle({
       setIsAnimating(false);
     };
   }, [text, width]);
-  console.log(width, isAnimating);
 
   return (
     <div
