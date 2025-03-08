@@ -13,7 +13,7 @@ const PointHistory = forwardRef<HTMLDivElement, PointHistoryProps>(
 
     return (
       <section
-        className='translate-y-10 w-full h-[440px] overflow-y-auto  point-scrollbar 
+        className='translate-y-10 w-full h-[370px] overflow-y-auto  point-scrollbar 
         border-t-2 border-b-2 border-dashed border-[#B7C7EA] relative
       flex flex-col gap-11 py-5'>
         {/* 날짜별 적립, 차감 */}
