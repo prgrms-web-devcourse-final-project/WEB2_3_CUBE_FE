@@ -117,7 +117,7 @@ const BookReviewDisplay = ({
 
   return (
     <div
-      className='overflow-y-auto overflow-x-hidden relative h-full'
+      className='overflow-y-auto overflow-x-hidden relative h-full scrollbar'
       style={{ scrollBehavior: 'smooth' }}>
       <BookHeader
         title={displayData.title}

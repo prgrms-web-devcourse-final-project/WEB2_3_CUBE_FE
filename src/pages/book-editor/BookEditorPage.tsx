@@ -172,8 +172,8 @@ const BookEditorPage = ({
   return (
     <section className='flex overflow-x-hidden w-full h-screen'>
       {/* 에디터 영역 */}
-      <article className='w-1/2 h-full p-8 overflow-y-auto bg-[#FDFEFF] scrollbar-none'>
-        <div className='flex overflow-auto flex-col gap-8 px-14 py-12 scrollbar-none'>
+      <article className='w-1/2 h-full p-8 overflow-y-auto bg-[#FDFEFF] scrollbar-hide scrollbar'>
+        <div className='flex overflow-auto flex-col gap-8 px-14 py-12'>
           {/* 제목 입력 영역 */}
           <input
             type='text'

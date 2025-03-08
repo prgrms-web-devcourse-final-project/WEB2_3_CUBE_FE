@@ -31,7 +31,7 @@ export const BookHeader = ({
     </h1>
     <ul className='flex flex-col items-end justify-start gap-2 shrink-0'>
       <li
-        className='text-xl font-semibold'
+        className='text-lg font-semibold'
         style={{ color: colors.primary }}>
         목차
       </li>
