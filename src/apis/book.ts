@@ -26,7 +26,7 @@ export const bookAPI = {
     };
 
     try {
-      const response = await axios.get('/api/aladin/ttb/api/ItemSearch.aspx', {
+      const response = await axios.get('https://www.aladin.co.kr/ttb/api/ItemSearch.aspx', {
         params,
         headers: {
           Accept: 'application/json, text/plain, */*',
