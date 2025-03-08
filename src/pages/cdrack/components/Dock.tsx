@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef, useState } from 'react';
+import React, { forwardRef, useMemo, useState } from 'react';
 import show_next_cd from '@assets/cd/show-next-cd.svg';
 import show_prev_cd from '@assets/cd/show-prev-cd.svg';
 import show_cd_list from '@assets/cd/show-cd-list.svg';
@@ -21,22 +21,28 @@ const Dock = React.memo(
     ) => {
       const [isDockOpen, setIsDockOpen] = useState(false);
 
-      const isNoPrev = useRef(
-        cdRackInfo?.data[0]?.myCdId === cdRackInfo?.firstMyCdId,
-      );
-      const isNoNext = useRef(
-        cdRackInfo?.data[cdRackInfo?.data?.length - 1]?.myCdId ===
-          cdRackInfo?.lastMyCdId,
+      const isNoPrev = useMemo(
+        () =>
+          cdRackInfo?.data?.length
+            ? cdRackInfo.data[0]?.myCdId === cdRackInfo.firstMyCdId
+            : false,
+        [cdRackInfo],
       );
 
+      const isNoNext = useMemo(
+        () =>
+          cdRackInfo?.data?.length
+            ? cdRackInfo.data[cdRackInfo.data.length - 1]?.myCdId ===
+              cdRackInfo.lastMyCdId
+            : false,
+        [cdRackInfo],
+      );
       // 슬라이드 위치 변경
       const handleSlideChange = (index: number) => {
-        const swiper = (ref as React.RefObject<SwiperRef>).current?.swiper;
-
-        if (swiper) {
-          swiper.slideTo(index); // 슬라이드 이동
-          swiper.update(); // 업데이트 호출하여 coverflow 효과 재적용
-        }
+        const swiper = (ref as React.RefObject<SwiperRef>)?.current?.swiper;
+        if (!swiper) return;
+        swiper.slideTo(index);
+        swiper.update();
       };
 
       return (
@@ -63,10 +69,10 @@ const Dock = React.memo(
                     onClick={() => onPrevPage()}
                     className='h-full overflow-hidden'
                     animate={{
-                      opacity: isNoPrev?.current ? 0.15 : 1,
-                      pointerEvents: isNoPrev?.current ? 'none' : 'auto',
+                      opacity: isNoPrev ? 0.15 : 1,
+                      pointerEvents: isNoPrev ? 'none' : 'auto',
                     }}
-                    disabled={isNoPrev?.current}>
+                    disabled={isNoPrev}>
                     <img
                       className='w-13 h-13'
                       src={show_prev_cd}
@@ -113,10 +119,10 @@ const Dock = React.memo(
                     className='h-full overflow-hidden'
                     whileHover={{ translateX: 5 }}
                     animate={{
-                      opacity: isNoNext?.current ? 0.15 : 1,
-                      pointerEvents: isNoNext?.current ? 'none' : 'auto',
+                      opacity: isNoNext ? 0.15 : 1,
+                      pointerEvents: isNoNext ? 'none' : 'auto',
                     }}
-                    disabled={isNoNext?.current}>
+                    disabled={isNoNext}>
                     <img
                       className='w-13 h-13'
                       src={show_next_cd}
