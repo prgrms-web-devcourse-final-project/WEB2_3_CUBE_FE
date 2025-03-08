@@ -8,6 +8,7 @@ import { bookAPI } from '@apis/book';
 import ModalBackground from '@components/ModalBackground';
 import { BookCaseListType } from '@/types/book';
 import Loading from '@components/Loading';
+import AnimationGuide from '@components/AnimationGuide';
 
 const BookCasePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,6 +17,8 @@ const BookCasePage = () => {
   const [dataListItems, setDataListItems] = useState<DataListInfo[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [isGuideOpen, setIsGuideOpen] = useState(true);
+
   const BOOKS_PER_ROW = 15;
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -89,6 +92,16 @@ const BookCasePage = () => {
       });
     }
   }, [isLoading]);
+
+  useEffect(() => {
+    if (isGuideOpen) {
+      const timer = setTimeout(() => {
+        setIsGuideOpen(false);
+      }, 2500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isGuideOpen]);
 
   const handleDragStart = (clientX: number, clientY: number) => {
     setIsDragging(true);
@@ -234,6 +247,14 @@ const BookCasePage = () => {
               page: 0,
             });
           }}
+        />
+      )}
+
+      {isGuideOpen && (
+        <AnimationGuide
+          titleText='책장 추가'
+          subText='책장에 책을 추가할 수 있습니다.'
+          onClose={() => setIsGuideOpen(false)}
         />
       )}
 
