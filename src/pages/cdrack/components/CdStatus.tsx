@@ -32,8 +32,10 @@ export default function CdStatus({
   const myUserId = useUserStore().user.userId;
   const userId = Number(useParams().userId);
 
-  const activeTrack = cdRackDatas?.data.find(
-    (track: CDInfo) => track.myCdId === cdRackDatas?.data[activeIndex].myCdId,
+  console.log(cdRackDatas);
+
+  const activeTrack = cdRackDatas?.data?.find(
+    (track: CDInfo) => track.myCdId === cdRackDatas?.data[activeIndex]?.myCdId,
   );
 
   useEffect(() => {
@@ -65,7 +67,7 @@ export default function CdStatus({
     <div className='flex h-full flex-col gap-19 items-center'>
       {/* 상단 정보 */}
 
-      {cdRackDatas?.data.length > 0 ? (
+      {cdRackDatas?.data?.length > 0 ? (
         <>
           <div className='text-center mt-20 '>
             <span className='text-white  opacity-70   text-[14px] xl:text-[16px] 2xl:text-xl'>
@@ -103,7 +105,7 @@ export default function CdStatus({
       {/* Dock  */}
       <Dock
         ref={swiperRef}
-        isEmpty={cdRackDatas?.data.length > 0 ? false : true}
+        isEmpty={cdRackDatas?.data?.length > 0 ? false : true}
         cdRackInfo={cdRackDatas}
         activeIndex={activeIndex}
         onPrevPage={onPrevPage}

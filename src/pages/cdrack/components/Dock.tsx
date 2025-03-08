@@ -22,10 +22,10 @@ const Dock = React.memo(
       const [isDockOpen, setIsDockOpen] = useState(false);
 
       const isNoPrev = useRef(
-        cdRackInfo?.data[0].myCdId === cdRackInfo?.firstMyCdId,
+        cdRackInfo?.data[0]?.myCdId === cdRackInfo?.firstMyCdId,
       );
       const isNoNext = useRef(
-        cdRackInfo?.data[cdRackInfo?.data.length - 1].myCdId ===
+        cdRackInfo?.data[cdRackInfo?.data?.length - 1]?.myCdId ===
           cdRackInfo?.lastMyCdId,
       );
 
@@ -63,10 +63,10 @@ const Dock = React.memo(
                     onClick={() => onPrevPage()}
                     className='h-full overflow-hidden'
                     animate={{
-                      opacity: isNoPrev.current ? 0.15 : 1,
-                      pointerEvents: isNoPrev.current ? 'none' : 'auto',
+                      opacity: isNoPrev?.current ? 0.15 : 1,
+                      pointerEvents: isNoPrev?.current ? 'none' : 'auto',
                     }}
-                    disabled={isNoPrev.current}>
+                    disabled={isNoPrev?.current}>
                     <img
                       className='w-13 h-13'
                       src={show_prev_cd}
@@ -75,7 +75,7 @@ const Dock = React.memo(
                   </motion.button>
 
                   <ul className='flex justify-center items-center gap-2  xl:gap-4  2xl:gap-6  w-full h-full'>
-                    {cdRackInfo?.data.map((data: CDInfo, index: number) => (
+                    {cdRackInfo?.data?.map((data: CDInfo, index: number) => (
                       <motion.li
                         onClick={() => handleSlideChange(index)}
                         key={index}
@@ -96,7 +96,6 @@ const Dock = React.memo(
                             border: '2px solid white',
                             borderRadius: '6.4px',
                             boxShadow: '0 4px 10px rgba(255, 255, 255, 0.2)', // 기본 아이템에 흰색 그림자
-                            // boxShadow: '0 4px 10px rgba(255, 0, 0, 0.3)', // 활성화된 아이템에 빨간색 그림자
                           }
                         }>
                         <img
@@ -114,10 +113,10 @@ const Dock = React.memo(
                     className='h-full overflow-hidden'
                     whileHover={{ translateX: 5 }}
                     animate={{
-                      opacity: isNoNext.current ? 0.15 : 1,
-                      pointerEvents: isNoNext.current ? 'none' : 'auto',
+                      opacity: isNoNext?.current ? 0.15 : 1,
+                      pointerEvents: isNoNext?.current ? 'none' : 'auto',
                     }}
-                    disabled={isNoNext.current}>
+                    disabled={isNoNext?.current}>
                     <img
                       className='w-13 h-13'
                       src={show_next_cd}
