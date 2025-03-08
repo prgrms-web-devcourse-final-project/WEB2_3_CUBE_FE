@@ -25,11 +25,11 @@ export default function EventPage() {
   const [showResult, setShowResult] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  console.log(eventInfo);
+
   // 현재 시간이 이벤트 열리는 시간보다 크거나 같을경우 true
   const isEventInProgress =
     new Date(eventInfo?.eventTime).getTime() + 9 * 60 * 60 * 1000 <= Date.now();
-
-  // console.log(isEventInProgress);
 
   // 이벤트 정보 조회 API 이벤트 열리는 시간 받아오기
   const handleJoinEvent = () => {
@@ -95,10 +95,13 @@ export default function EventPage() {
         )}
 
         <div
-          className={`absolute bottom-23 right-33 `}
+          className={`absolute bottom-23 right-33  ${
+            !eventInfo.id && 'pointer-events-none'
+          }`}
           onClick={handleJoinEvent}>
           <LayeredButton
             theme='red'
+            disabled={!eventInfo.id}
             className={`py-8 px-9 rounded-[10px] font-bold `}>
             {isEventInProgress ? '포인트 받기' : '이벤트 준비중'}
           </LayeredButton>
