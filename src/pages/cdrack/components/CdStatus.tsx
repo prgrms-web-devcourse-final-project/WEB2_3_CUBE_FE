@@ -10,7 +10,7 @@ import { useUserStore } from '@/store/useUserStore';
 import { useParams } from 'react-router-dom';
 import TypingText from '@components/TypingText';
 
-interface NotEmptyStatusProps {
+interface CdStatusProps {
   cdRackInfo: CDRackInfo;
   onPrevPage: () => void;
   onNextPage: (cursor: number) => void;
@@ -20,7 +20,7 @@ export default function CdStatus({
   cdRackInfo,
   onPrevPage,
   onNextPage,
-}: NotEmptyStatusProps) {
+}: CdStatusProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isSearchModalOpen, setIsSerarchModalOpen] = useState(false);
 
@@ -93,7 +93,7 @@ export default function CdStatus({
             className='h-[250px] text-[40px] font-bold text-white  text-center pt-46 mb-12'
           />
           <img
-            className='max-w-[472px] max-h-[472px] shrink-0 drop-shadow-book aspect-square m-auto hover:animate-spin'
+            className='max-w-[472px] max-h-[472px] shrink-0 drop-shadow-book aspect-square m-auto hover:animate-slowSpin '
             src={cd}
             alt='cd 실사 이미지'
           />
