@@ -32,8 +32,6 @@ export default function CdStatus({
   const myUserId = useUserStore().user.userId;
   const userId = Number(useParams().userId);
 
-  console.log(cdRackDatas);
-
   const activeTrack = cdRackDatas?.data?.find(
     (track: CDInfo) => track.myCdId === cdRackDatas?.data[activeIndex]?.myCdId,
   );
