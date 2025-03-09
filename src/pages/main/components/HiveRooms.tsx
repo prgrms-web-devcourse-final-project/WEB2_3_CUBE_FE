@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RoomLighting } from '../../../components/room-models/RoomLighting';
 import HiveRoomModel from './HiveRoomModel';
@@ -12,47 +12,83 @@ export default function HiveRooms({ myUserId }: HiveRoomsProps) {
   const { rooms } = useRooms(30, myUserId);
   const positionedRooms = useHexagonGrid(rooms, 0, 0);
   const [hoveredRoom, setHoveredRoom] = useState<number | null>(null);
+  const [clickedRoom, setClickedRoom] = useState<number | null>(null);
   const navigate = useNavigate();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  const [isDragging, setIsDragging] = useState(false);
+  const [startPos, setStartPos] = useState<{ x: number; y: number } | null>(null);
+  const dragThreshold = 4;
+
+  const handleMouseDown = useCallback((e: MouseEvent) => {
+    if (e.button === 0) {
+      setStartPos({ x: e.clientX, y: e.clientY });
+      setClickedRoom(hoveredRoom);
+      setIsDragging(false);
+      if (canvasRef.current) canvasRef.current.style.cursor = "grab";
+    }
+  }, [hoveredRoom, canvasRef]);
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (startPos && canvasRef.current) {
+      const dx = e.clientX - startPos.x;
+      const dy = e.clientY - startPos.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance > dragThreshold && !isDragging) {
+        setIsDragging(true);
+        canvasRef.current.style.cursor = "grabbing";
+        console.log("Dragging detected, distance:", distance);
+      }
+    }
+  }, [startPos, isDragging, dragThreshold, canvasRef]);
+
+  const handleMouseUp = useCallback((e: MouseEvent) => {
+    if (e.button === 0 && startPos && canvasRef.current) {
+
+      if (!isDragging && clickedRoom !== null) {
+        const room = rooms[clickedRoom];
+        if (room?.userId) {
+          navigate(`/room/${room.userId}`);
+        }
+      } else {
+        console.log("Drag detected, no navigation");
+      }
+
+      setIsDragging(false);
+      setStartPos(null);
+      canvasRef.current.style.cursor = "default";
+    }
+  }, [clickedRoom, isDragging, navigate, rooms, startPos, canvasRef]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    let isRightMouseDown = false;
-
-    const handleMouseDown = (e: MouseEvent) => {
-      if (e.button === 2) { 
-        isRightMouseDown = true;
-        canvas.style.cursor = 'grab';
-      }
-    };
-
-    const handleMouseMove = () => {
-      if (isRightMouseDown) {
-        canvas.style.cursor = 'grabbing';
-      }
-    };
-
-    const handleMouseUp = (e: MouseEvent) => {
-      if (e.button === 2) { 
-        isRightMouseDown = false;
-        canvas.style.cursor = 'default';
-      }
-    };
-
-    canvas.addEventListener('mousedown', handleMouseDown);
-    canvas.addEventListener('mousemove', handleMouseMove);
-    canvas.addEventListener('mouseup', handleMouseUp);
-    canvas.addEventListener('contextmenu', (e) => e.preventDefault()); 
+    canvas.addEventListener("mousedown", handleMouseDown);
+    canvas.addEventListener("mousemove", handleMouseMove);
+    canvas.addEventListener("mouseup", handleMouseUp);
+    canvas.addEventListener("contextmenu", (e) => e.preventDefault());
 
     return () => {
-      canvas.removeEventListener('mousedown', handleMouseDown);
-      canvas.removeEventListener('mousemove', handleMouseMove);
-      canvas.removeEventListener('mouseup', handleMouseUp);
-      canvas.removeEventListener('contextmenu', (e) => e.preventDefault());
+      canvas.removeEventListener("mousedown", handleMouseDown);
+      canvas.removeEventListener("mousemove", handleMouseMove);
+      canvas.removeEventListener("mouseup", handleMouseUp);
+      canvas.removeEventListener("contextmenu", (e) => e.preventDefault());
     };
-  }, []);
+  }, [handleMouseDown, handleMouseMove, handleMouseUp]);
+
+  const handlePointerOver = useCallback((index: number) => {
+    if (!isDragging) {
+      setHoveredRoom(index);
+    }
+  }, [isDragging]);
+
+  const handlePointerOut = useCallback(() => {
+    if (!isDragging) {
+      setHoveredRoom(null);
+    }
+  }, [isDragging]);
 
   return (
     <div className='w-full h-screen relative'>
@@ -72,9 +108,9 @@ export default function HiveRooms({ myUserId }: HiveRoomsProps) {
           <group
             key={index}
             position={position}
-            onPointerOver={() => setHoveredRoom(index)}
-            onPointerOut={() => setHoveredRoom(null)}
-            onClick={() => navigate(`/room/${room.userId}`)}>
+            onPointerOver={() => handlePointerOver(index)}
+            onPointerOut={handlePointerOut}
+            >
             <HiveRoomModel
               room={room}
               position={position}
@@ -86,8 +122,8 @@ export default function HiveRooms({ myUserId }: HiveRoomsProps) {
           enableZoom={true}
           enablePan={true}
           minDistance={5}
-          maxDistance={18}
-          mouseButtons={{ RIGHT: THREE.MOUSE.PAN }}
+          maxDistance={14}
+          mouseButtons={{ LEFT: THREE.MOUSE.PAN }}
         />
       </Canvas>
       <div

@@ -101,7 +101,6 @@ export default function Guestbook({ onClose, ownerName, ownerId }: GuestbookProp
         <section className='guest-book flex-col items-center pt-10 @2xl:pt-15 px-13 @2xl:px-16'>
           {/* 방명록 컨텐츠 */}
           <span className='flex gap-2 font-bold text-3xl @2xl:text-4xl @2xl:my-3'>
-            {/*todo: 방 userId -> 닉네임으로 수정 */}
             <p className='text-[#4983EF]'>{ownerName}</p>
             <p className='text-[#3E507D]'>님의 방명록</p>
           </span>
