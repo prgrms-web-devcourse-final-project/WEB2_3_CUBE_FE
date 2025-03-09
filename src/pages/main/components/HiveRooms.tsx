@@ -86,7 +86,7 @@ export default function HiveRooms({ myUserId }: HiveRoomsProps) {
           enableZoom={true}
           enablePan={true}
           minDistance={5}
-          maxDistance={18}
+          maxDistance={14}
           mouseButtons={{ RIGHT: THREE.MOUSE.PAN }}
         />
       </Canvas>

@@ -29,3 +29,30 @@ interface RoomModelProps {
   roomId: number;
   furnitures: { furnitureType: FurnitureType; isVisible: boolean }[]; 
 };
+
+type Position = [number, number, number];
+interface RoomPosition {
+  position: Position;
+  room: Room;
+}
+
+interface Expansion {
+  directionIndex: number;
+  dir: Position;
+  side: string;
+}
+interface ExpandRingParams {
+  expansion: Expansion;
+  previousRing: number[];
+  result: RoomPosition[];
+  visited: Set<string>;
+  rooms: RoomData[];
+  roomIndex: number;
+  placedInRing: number;
+  positionsInRing: number;
+}
+
+interface ExpandRingResult {
+  roomIndex: number;
+  placedInRing: number;
+}
