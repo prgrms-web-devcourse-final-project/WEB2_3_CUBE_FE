@@ -44,7 +44,7 @@ export default function MainPage() {
       <AnimatePresence>
         {isGuideOpen && 
         <AnimationGuide 
-          titleText={'마우스 오른쪽 버튼으로 드래그하고'} 
+          titleText={'마우스 왼쪽 버튼으로 드래그하고'} 
           subText={'휠로 줌 인/아웃을 해보세요!'}
           onClose={() => setIsGuideOpen(false)}
         />
