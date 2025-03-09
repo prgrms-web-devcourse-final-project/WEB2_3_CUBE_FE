@@ -17,10 +17,11 @@ export default function Guestbook({ onClose, ownerName, ownerId }: GuestbookProp
   const fetchGuestbookData = useCallback(async (page: number) => {
     try {
       const response = await guestbookAPI.getGuestbook(ownerId, page, 2);
-      setGuestbookData(response.guestbook);
-      setTotalPage(response.pagination.totalPages);
+      setGuestbookData(response.guestbook || []);
+      setTotalPage(response.pagination?.totalPages);
     } catch (error) {
       console.error('방명록 조회 중 오류:', error);
+      setGuestbookData([]);
     }
   }, [ownerId]); 
 
@@ -38,14 +39,13 @@ export default function Guestbook({ onClose, ownerName, ownerId }: GuestbookProp
         guestMessage,
       );
       showToast('방명록 등록 완료! 멋진 한마디, 잘 전달되었어요!', 'success');
-      setGuestbookData(response.guestbook);
-      setTotalPage(response.pagination.totalPages);
-
+      setGuestbookData(response.guestbook || []);
+      setTotalPage(response.pagination?.totalPages);
       setCurrentPage(1);
     } catch (error) {
       console.error('방명록 등록 중 오류 발생:', error);
       showToast('방명록을 등록하는 데 실패했어요. 다시 시도해 주세요!', 'error');
-
+      setGuestbookData([]);
     }
   };
 
