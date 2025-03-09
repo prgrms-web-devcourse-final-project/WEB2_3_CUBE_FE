@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef, useState } from 'react';
+import React, { forwardRef, useMemo, useState } from 'react';
 import show_next_cd from '@assets/cd/show-next-cd.svg';
 import show_prev_cd from '@assets/cd/show-prev-cd.svg';
 import show_cd_list from '@assets/cd/show-cd-list.svg';
@@ -21,22 +21,28 @@ const Dock = React.memo(
     ) => {
       const [isDockOpen, setIsDockOpen] = useState(false);
 
-      const isNoPrev = useRef(
-        cdRackInfo?.data[0]?.myCdId === cdRackInfo?.firstMyCdId,
-      );
-      const isNoNext = useRef(
-        cdRackInfo?.data[cdRackInfo?.data.length - 1]?.myCdId ===
-          cdRackInfo?.lastMyCdId,
+      const isNoPrev = useMemo(
+        () =>
+          cdRackInfo?.data?.length
+            ? cdRackInfo.data[0]?.myCdId === cdRackInfo.firstMyCdId
+            : false,
+        [cdRackInfo],
       );
 
+      const isNoNext = useMemo(
+        () =>
+          cdRackInfo?.data?.length
+            ? cdRackInfo.data[cdRackInfo.data.length - 1]?.myCdId ===
+              cdRackInfo.lastMyCdId
+            : false,
+        [cdRackInfo],
+      );
       // 슬라이드 위치 변경
       const handleSlideChange = (index: number) => {
-        const swiper = (ref as React.RefObject<SwiperRef>).current?.swiper;
-
-        if (swiper) {
-          swiper.slideTo(index); // 슬라이드 이동
-          swiper.update(); // 업데이트 호출하여 coverflow 효과 재적용
-        }
+        const swiper = (ref as React.RefObject<SwiperRef>)?.current?.swiper;
+        if (!swiper) return;
+        swiper.slideTo(index);
+        swiper.update();
       };
 
       return (
@@ -63,10 +69,10 @@ const Dock = React.memo(
                     onClick={() => onPrevPage()}
                     className='h-full overflow-hidden'
                     animate={{
-                      opacity: isNoPrev.current ? 0.15 : 1,
-                      pointerEvents: isNoPrev.current ? 'none' : 'auto',
+                      opacity: isNoPrev ? 0.15 : 1,
+                      pointerEvents: isNoPrev ? 'none' : 'auto',
                     }}
-                    disabled={isNoPrev.current}>
+                    disabled={isNoPrev}>
                     <img
                       className='w-13 h-13'
                       src={show_prev_cd}
@@ -75,7 +81,7 @@ const Dock = React.memo(
                   </motion.button>
 
                   <ul className='flex justify-center items-center gap-2  xl:gap-4  2xl:gap-6  w-full h-full'>
-                    {cdRackInfo.data.map((data: CDInfo, index: number) => (
+                    {cdRackInfo?.data?.map((data: CDInfo, index: number) => (
                       <motion.li
                         onClick={() => handleSlideChange(index)}
                         key={index}
@@ -96,7 +102,6 @@ const Dock = React.memo(
                             border: '2px solid white',
                             borderRadius: '6.4px',
                             boxShadow: '0 4px 10px rgba(255, 255, 255, 0.2)', // 기본 아이템에 흰색 그림자
-                            // boxShadow: '0 4px 10px rgba(255, 0, 0, 0.3)', // 활성화된 아이템에 빨간색 그림자
                           }
                         }>
                         <img
@@ -110,14 +115,14 @@ const Dock = React.memo(
 
                   {/* 이후 cd목록 버튼 */}
                   <motion.button
-                    onClick={() => onNextPage(cdRackInfo.nextCursor)}
+                    onClick={() => onNextPage(cdRackInfo?.nextCursor)}
                     className='h-full overflow-hidden'
                     whileHover={{ translateX: 5 }}
                     animate={{
-                      opacity: isNoNext.current ? 0.15 : 1,
-                      pointerEvents: isNoNext.current ? 'none' : 'auto',
+                      opacity: isNoNext ? 0.15 : 1,
+                      pointerEvents: isNoNext ? 'none' : 'auto',
                     }}
-                    disabled={isNoNext.current}>
+                    disabled={isNoNext}>
                     <img
                       className='w-13 h-13'
                       src={show_next_cd}

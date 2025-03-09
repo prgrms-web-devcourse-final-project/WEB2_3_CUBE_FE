@@ -4,27 +4,6 @@ import path from 'path';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  server: {
-    proxy: {
-      '/api/aladin': {
-        target: 'http://www.aladin.co.kr',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/aladin/, ''),
-        configure: (proxy, options) => {
-          proxy.on('proxyReq', (proxyReq, req, res) => {
-            proxyReq.setHeader('Accept', 'application/json, text/plain, */*');
-            proxyReq.setHeader(
-              'Content-Type',
-              'application/json;charset=utf-8',
-            );
-          });
-          proxy.on('proxyRes', (proxyRes, req, res) => {
-            proxyRes.headers['content-type'] = 'application/json;charset=utf-8';
-          });
-        },
-      },
-    },
-  },
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {

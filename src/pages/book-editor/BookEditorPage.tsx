@@ -168,7 +168,6 @@ const BookEditorPage = ({
     }
   };
 
-
   return (
     <section className='flex overflow-x-hidden w-full h-screen'>
       {/* 에디터 영역 */}
@@ -185,9 +184,9 @@ const BookEditorPage = ({
             style={{
               borderBottomWidth: '2px',
               borderBottomColor: `${
-                BOOK_THEME[reviewFields.theme].secondary
+                BOOK_THEME[reviewFields.theme ?? 'BLUE'].secondary
               }33`,
-              color: BOOK_THEME[reviewFields.theme].primary,
+              color: BOOK_THEME[reviewFields.theme ?? 'BLUE'].primary,
             }}
           />
 
@@ -250,10 +249,10 @@ const BookEditorPage = ({
                   backgroundColor:
                     !isValidReview() || isSubmitting
                       ? undefined
-                      : BOOK_THEME[reviewFields.theme].primary,
+                      : BOOK_THEME[reviewFields.theme ?? 'BLUE'].primary,
                   color:
                     document.activeElement === document.querySelector(':active')
-                      ? BOOK_THEME[reviewFields.theme].primary
+                      ? BOOK_THEME[reviewFields.theme ?? 'BLUE'].primary
                       : 'white',
                 }}>
                 {isSubmitting ? '저장 중...' : '저장하기'}

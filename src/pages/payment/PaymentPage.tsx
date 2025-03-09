@@ -21,6 +21,7 @@ const PaymentPage = () => {
   );
   const [paymentWidget, setPaymentWidget] = useState<any>(null);
 
+  
   useEffect(() => {
     const initializePaymentWidget = async () => {
       const widget = await loadPaymentWidget(TOSS_CLIENT_KEY, CUSTOMER_KEY);

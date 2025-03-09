@@ -41,6 +41,8 @@ jobs:
           echo "VITE_KAKAO_REDIRECT_URI=${{ secrets.VITE_KAKAO_REDIRECT_URI }}" >> .env
           echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> .env
           echo "VITE_AUTH_URL=${{ secrets.VITE_AUTH_URL }}" >> .env
+          echo "VITE_TOSS_CLIENT_KEY=${{ secrets.VITE_TOSS_CLIENT_KEY }}" >> .env
+          echo "VITE_TOSS_CUSTOMER_KEY=${{ secrets.VITE_TOSS_CUSTOMER_KEY }}" >> .env
 
       - name: Install dependencies
         run: pnpm install # package-lock.json을 업데이트 및 의존성 설치
