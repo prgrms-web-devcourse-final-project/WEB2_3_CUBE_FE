@@ -102,10 +102,11 @@ export const ReviewContent = ({
         className='mt-8 prose-sm prose'
         style={{ color: colors.secondary }}
         dangerouslySetInnerHTML={{
-          __html: reviewData.freeform.replace(
-            /<(h[2-5])>/g,
-            (_, tag) => `<${tag} id="heading-$1">`,
-          ),
+          __html:
+            reviewData.freeform?.replace(
+              /<(h[2-5])>/g,
+              (_, tag) => `<${tag} id="heading-$1">`,
+            ) || '',
         }}
       />
     )}

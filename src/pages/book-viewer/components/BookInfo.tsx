@@ -20,7 +20,7 @@ export const BookInfo = ({
       <span
         className='text-xl font-medium'
         style={{ color: `${colors.primary}` }}>
-        {publishedDate.split('-')[0]}
+        {publishedDate?.split('-')[0]}
       </span>
       <div className='flex items-end w-full gap-4'>
         <h2
