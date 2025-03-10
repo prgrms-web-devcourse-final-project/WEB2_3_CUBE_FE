@@ -27,7 +27,7 @@ export default function CdStatus({
   const [newItem, setNewItem] = useState(null);
   const [cdRackDatas, setcdRackDatas] = useState<CDRackInfo>(cdRackInfo);
 
-  const [slideWidth, setSlideWidth] = useState<number | null>(null);
+  const [slideWidth, setSlideWidth] = useState<number>(0);
   const swiperRef = useRef<SwiperRef | null>(null);
   const myUserId = useUserStore().user.userId;
   const userId = Number(useParams().userId);

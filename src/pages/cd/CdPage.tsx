@@ -13,7 +13,7 @@ export default function CdPage() {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  const [cdPlaying, setCdPlaying] = useState(true);
+  const [cdPlaying, setCdPlaying] = useState(false);
 
   const [cdTime, setCdTime] = useState(0);
 
@@ -53,7 +53,7 @@ export default function CdPage() {
       {/* 플레이어 */}
       <CdPlayer
         cdInfo={cdInfo}
-        onOffCdPlay={setCdPlaying}
+        onCdPlaying={setCdPlaying}
         onCdTime={setCdTime}
       />
     </div>
