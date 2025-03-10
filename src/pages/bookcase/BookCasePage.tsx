@@ -283,7 +283,7 @@ const BookCasePage = () => {
       {isGuideOpen && (
         <AnimationGuide
           titleText='드래그로 책장을 이동할 수 있습니다.'
-          subText='마우스나 트랙패드를 이용해 책장을 이동해보세요.'
+          subText='마우스를 이용해 책장을 이동해보세요.'
           onClose={() => setIsGuideOpen(false)}
         />
       )}

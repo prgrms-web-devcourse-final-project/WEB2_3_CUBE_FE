@@ -67,7 +67,7 @@ export const ReviewContent = ({
             section.scrollIntoView({ behavior: 'smooth' });
           }
         }}
-        className='gap-2 px-6 py-3 text-xl border-2 rounded-full item-middle'
+        className='gap-2 px-5 py-2 text-lg border-2 rounded-full item-middle'
         style={{
           borderColor: colors.primary,
           color: colors.primary,

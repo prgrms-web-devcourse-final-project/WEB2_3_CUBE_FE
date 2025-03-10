@@ -57,13 +57,13 @@ const BookCaseList = ({ books, showEmptyMessage }: BookCaseListProps) => {
             <img
               src={book.imageUrl}
               alt={book.title}
-              className='object-cover w-full h-full rounded-2xl'
+              className='object-cover w-full h-full rounded-2xl select-none pointer-events-none'
             />
-            <div className='absolute bottom-0 w-full p-2.5 pl-4 bg-white rounded-b-2xl h-15'>
-              <p className='text-[#2656CD] font-medium truncate'>
+            <div className='absolute bottom-0 w-full p-2.5 pl-4 bg-white rounded-b-2xl h-15 select-none'>
+              <p className='text-[#2656CD] font-medium truncate pointer-events-none'>
                 {truncateTitle(book.title, BOOK_TITLE_MAX_LENGTH)}
               </p>
-              <p className='text-xs text-[#2656CD]/70 font-medium'>
+              <p className='text-xs text-[#2656CD]/70 font-medium pointer-events-none'>
                 {truncateTitle(book.author, BOOK_AUTHOR_MAX_LENGTH)}
               </p>
             </div>
@@ -74,19 +74,21 @@ const BookCaseList = ({ books, showEmptyMessage }: BookCaseListProps) => {
             key={book.id}
             onClick={() => handleBookClick(book.id)}
             className='relative text-white bg-white rounded-2xl transition-transform duration-300 transform cursor-pointer w-18 h-70 drop-shadow-book hover:-rotate-6 hover:scale-105 hover:-translate-y-4'>
-            <div className='flex flex-col justify-between items-center pt-4 pb-14 w-full h-full text-center'>
-              <h3 className='text-lg font-medium mb-2 text-[#2656CD] writing-vertical'>
+            <div className='flex flex-col justify-between items-center pt-4 pb-14 w-full h-full text-center select-none'>
+              <h3 className='text-lg font-medium mb-2 text-[#2656CD] writing-vertical pointer-events-none'>
                 {truncateTitle(book.title, BOOK_TITLE_COLUMN_MAX_LENGTH)}
               </h3>
-              <p className='text-sm text-[#2656CD]/70 writing-vertical'>
+              <p className='text-sm text-[#2656CD]/70 writing-vertical pointer-events-none'>
                 {truncateTitle(book.author, BOOK_AUTHOR_COLUMN_MAX_LENGTH)}
               </p>
             </div>
-            <div className='absolute bottom-0 w-full p-2.5 text-center rounded-b-2xl book-gradient h-15'>
-              <p className='text-xs text-[#2656CD]'>
+            <div className='absolute bottom-0 w-full p-2.5 text-center rounded-b-2xl book-gradient h-15 select-none'>
+              <p className='text-xs text-[#2656CD] pointer-events-none'>
                 {book.publishedDate.split('.')[0]}
               </p>
-              <p className='font-bold text-[#2656CD]'>{book.publisher}</p>
+              <p className='font-bold text-[#2656CD] pointer-events-none'>
+                {book.publisher}
+              </p>
             </div>
           </li>
         ),
