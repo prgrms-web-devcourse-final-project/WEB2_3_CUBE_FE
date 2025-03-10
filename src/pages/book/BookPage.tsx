@@ -61,9 +61,14 @@ const BookPage = () => {
             });
             setHasReview(true);
           }
-        } catch (error: any) {
-          // 404는 서평이 없는 경우로 처리
-          if (error.response?.status === 404) {
+        } catch (error) {
+          if (
+            error?.response?.status === 200 ||
+            error?.response?.status === 201
+          ) {
+            // 성공 케이스는 위의 if (review) 블록에서 처리됨
+            setHasReview(true);
+          } else {
             setHasReview(false);
             // URL에 userId가 없고(내 서평이고) 작성 페이지가 아닌 경우에만 리다이렉트
             if (!userId && !isEditMode) {
@@ -71,10 +76,10 @@ const BookPage = () => {
               navigate(`/book/${bookId}?mode=edit`, { replace: true });
               return;
             }
-          } else {
-            console.error('서평 조회 중 오류 발생:', error);
-            showToast('서평 조회에 실패했습니다.', 'error');
-            setHasReview(false);
+            if (error.response?.status !== 404) {
+              console.error('서평 조회 중 오류 발생:', error);
+              showToast('서평 조회에 실패했습니다.', 'error');
+            }
           }
         }
       } catch (error) {
