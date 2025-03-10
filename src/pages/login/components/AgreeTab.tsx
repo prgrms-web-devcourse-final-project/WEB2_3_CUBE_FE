@@ -35,7 +35,7 @@ export default function AgreeTab({ agreement, onChangeAgreement }) {
         <span>이용약관 동의가 필요합니다.</span>
       </div>
 
-      <div className='flex flex-col gap-5 px-31 mt-14 mb-10 '>
+      <div className='flex flex-col gap-7 px-31 mt-10 mb-10 '>
         {/* 서비스 이용 약관 */}
         <AgreeItem
           agreementInfo={agreement[0]}
@@ -53,14 +53,14 @@ export default function AgreeTab({ agreement, onChangeAgreement }) {
       {/* 모두 동의 버튼 */}
       <button
         onClick={handleCheckAll}
-        className='item-middle gap-2 absolute bottom-8 left-1/2 transform -translate-x-1/2 rounded-[80px] bg-[#162C63]  cursor-pointer
-shadow-[0px_4px_4px_0px_rgba(78,122,207,0.15)] py-4 px-21  hover:opacity-80 transition-200'>
+        className='item-middle gap-2 absolute bottom-12 left-1/2 transform -translate-x-1/2 rounded-[80px] bg-[#162C63]  cursor-pointer
+shadow-[0px_4px_4px_0px_rgba(78,122,207,0.15)] px-16 py-4 2xl:px-21  hover:opacity-80 transition-200'>
         <img
-          className='w-7 h-7'
+          className='w-5 h-5 2xl:w-7 2xl:h-7'
           src={check_logo}
           alt='체크 로고'
         />
-        <span className='text-2xl font-bold text-white'>모두 동의</span>
+        <span className='text-lg 2xl:text-2xl font-bold text-white'>모두 동의</span>
       </button>
     </div>
   );
