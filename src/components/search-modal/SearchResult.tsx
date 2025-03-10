@@ -36,20 +36,14 @@ export const SearchResult = ({
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
   const theme = SEARCH_THEME[type];
-  const { user } = useUserStore();
   const { showToast } = useToastStore();
 
   const handleAdd = async (item: SearchItemType) => {
     try {
-      if (!user?.userId) {
-        showToast('로그인이 필요한 서비스입니다.', 'error');
-        return;
-      }
-
-      if (!userId) {
-        showToast('잘못된 접근입니다.', 'error');
-        return;
-      }
+      // if (!userId) {
+      //   showToast('잘못된 접근입니다.', 'error');
+      //   return;
+      // }
 
       if (type === 'BOOK') {
         const bookData: BookType = {
@@ -98,7 +92,14 @@ export const SearchResult = ({
         };
 
         // CD를 추가할 수 없는 경우
-        if (!youtubeUrl || !duration || item.genres.length === 0) {
+        if (
+          !youtubeUrl ||
+          !duration ||
+          !cdData.title ||
+          !cdData.artist ||
+          !cdData.album ||
+          !cdData.releaseDate
+        ) {
           setIsAlertModalOpen(true);
           return;
         }
@@ -111,7 +112,7 @@ export const SearchResult = ({
         showToast('랙에 cd가 추가되었어요!', 'success');
         onClose();
       }
-    } catch (error: any) {
+    } catch (error) {
       // console.log(error.response?.data?.response);
 
       if (
