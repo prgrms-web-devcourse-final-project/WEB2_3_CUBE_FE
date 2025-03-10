@@ -60,21 +60,23 @@ export default function EditTemplate({
   return (
     <>
       <form className='flex flex-col gap-14 overflow-auto h-full  '>
-        <button
-          type='button'
-          onClick={onToggleEdit}
-          className=' absolute top-4 right-20 2xl:right-24 rounded-[10px]  text-[10px] 2xl:text-[12px] font-semibold
+        <div className='flex items-center gap-2 absolute top-4 right-4 '>
+          <button
+            type='button'
+            onClick={onToggleEdit}
+            className='  2xl:right-24 rounded-[10px]  text-[10px] 2xl:text-[12px] font-semibold
           bg-white text-[#162C63] drop-shadow-logo xl:px-6 xl:py-2.5  px-4 py-1.5  hover:opacity-80'>
-          취소
-        </button>
+            취소
+          </button>
 
-        <button
-          type='button'
-          onClick={templateData ? handleUpdateTemplate : handleSubmitTemplate}
-          className='absolute top-4 right-4 rounded-[10px] text-[10px] 2xl:text-[12px] font-semibold
+          <button
+            type='button'
+            onClick={templateData ? handleUpdateTemplate : handleSubmitTemplate}
+            className=' rounded-[10px] text-[10px] 2xl:text-[12px] font-semibold
           bg-white text-[#162C63] drop-shadow-logo xl:px-6 xl:py-2.5  px-4 py-1.5 hover:opacity-80'>
-          저장
-        </button>
+            저장
+          </button>
+        </div>
 
         <section className='flex flex-col justify-around items-center gap-14  overflow-auto h-full pr-3 scrollbar'>
           <article className='w-full max-w-[395px]'>
