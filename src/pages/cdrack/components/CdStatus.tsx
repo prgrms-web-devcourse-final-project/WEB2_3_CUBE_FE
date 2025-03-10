@@ -73,13 +73,13 @@ export default function CdStatus({
   }, [newItem]);
 
   return (
-    <div className='flex h-full flex-col gap-19 items-center'>
+    <div className='flex h-full flex-col gap-10 2xl:gap-12 items-center relative w-full'>
       {/* 상단 정보 */}
 
       {cdRackDatas?.data?.length > 0 ? (
         <>
           <div className='text-center mt-20 '>
-            <span className='text-white  opacity-70   text-[14px] xl:text-[16px] 2xl:text-xl'>
+            <span className='text-white  opacity-70 text-sm xl:text-[16px] 2xl:text-xl'>
               {activeTrack?.artist} | {activeTrack?.releaseDate.split('-')[0]}
             </span>
             <SlidingTitle
@@ -98,13 +98,13 @@ export default function CdStatus({
           />
         </>
       ) : (
-        <div>
+        <div className='relative w-full min-h-full'>
           <TypingText
             text='  꽂을 CD가 없네요...'
-            className='h-[200px] text-[40px] font-bold text-white  text-center pt-37 mb-15 '
+            className='absolute top-40 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[30px] font-bold text-white text-center'
           />
           <img
-            className='max-w-[472px] max-h-[472px] shrink-0 drop-shadow-book aspect-square m-auto hover:animate-slowSpin '
+            className='absolute top-100 2xl:top-110 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-90 h-90 2xl:w-[472px] 2xl:h-[472px] shrink-0 drop-shadow-book aspect-square m-auto hover:animate-slowSpin '
             src={cd}
             alt='cd 실사 이미지'
           />
@@ -124,7 +124,7 @@ export default function CdStatus({
       {myUserId === userId && (
         <div
           onClick={() => setIsSerarchModalOpen((prev) => !prev)}
-          className='hover:animate-pulse fixed bottom-17 right-15 z-[5] bg-[#FFFFFF33] backdrop-blur-[35px] rounded-full w-16 h-16 cursor-pointer 
+          className='hover:animate-pulse fixed bottom-21 right-21 z-[5] bg-[#FFFFFF33] backdrop-blur-[35px] rounded-full w-16 h-16 cursor-pointer 
        item-middle border-2 border-[#FFFFFFB2]'>
           <img
             className='w-5 h-5'
