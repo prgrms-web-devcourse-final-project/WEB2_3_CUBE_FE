@@ -29,7 +29,7 @@ export default function GuestbookMessage({
 
       onDelete();
     } catch (error) {
-      // console.log('삭제 중 오류 발생', error);
+      console.log('삭제 중 오류 발생', error);
       showToast('삭제하지 못했어요. 다시 시도해 주세요!', 'error');
     }
   };

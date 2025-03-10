@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-
+import exProfile from '@assets/rank/exProfile.png';
 interface RecommendedUsersProps {
   users: RecommendedUser[];
 }
@@ -19,7 +19,7 @@ export const RecommendedUsers = ({ users }: RecommendedUsersProps) => {
             to={`/profile/${user.userId}`}
             className='flex items-center gap-3 p-4 bg-[#4E7ACF]/5 rounded-lg hover:bg-[#4E7ACF]/10 transition-colors'>
             <img
-              src={user.profileImage}
+              src={user.profileImage || exProfile}
               alt={`${user.nickname}님의 프로필`}
               className='w-12 h-12 rounded-full object-cover'
             />

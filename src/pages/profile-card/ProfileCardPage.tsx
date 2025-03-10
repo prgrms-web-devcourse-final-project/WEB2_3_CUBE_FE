@@ -13,6 +13,7 @@ import ProfileButtons from './components/ProfileButtons';
 import { useToastStore } from '@/store/useToastStore';
 import Loading from '@components/Loading';
 import { getPointBalance } from '@/apis/point';
+import exProfile from '@assets/rank/exProfile.png';
 
 const ProfileCardPage = () => {
   const { userId } = useParams();
@@ -138,7 +139,7 @@ const ProfileCardPage = () => {
       <UserProfileSection
         profile={{
           nickname: profile.nickname,
-          profileImage: profile.profileImage,
+          profileImage: profile.profileImage || exProfile,
           bio: profile.bio,
         }}
       />
