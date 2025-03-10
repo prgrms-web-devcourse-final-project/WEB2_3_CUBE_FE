@@ -95,15 +95,15 @@ export default function PointPage() {
         onClick={handleClickOutside}
         className='fixed inset-0 z-10 flex items-center justify-center'>
         {/* 영수증 */}
-        <div className='relative w-[501px] h-[660px]'>
+        <div className='relative w-[501px] h-[630px]'>
           <div
             style={{ backgroundImage: `url(${receipt})` }}
             className='w-full h-full bg-contain bg-no-repeat bg-center flex flex-col items-center px-12 '>
             <h1 className='mt-10 text-[#3E507D] text-[30px] font-bold'>
-              Point Receipt
+              POINT RECEIPT
             </h1>
 
-            <div className='flex-1 w-full px-10'>
+            <div className='flex-1 w-full px-12'>
               <PointHistory
                 data={data}
                 isFetching={isFetching}
@@ -111,16 +111,17 @@ export default function PointPage() {
               />
             </div>
 
-            <div className='mb-8 w-full px-10 '>
-              <div className='flex justify-between items-center mb-4 '>
-                <p className='text-[#162C63] text-[16px]'>포인트 잔고</p>
+            <div className='mb-8 w-full px-12 '>
+              <div className='flex justify-between items-center mb-6 '>
+                <p className='text-[#162C63] font-medium text-sm'>포인트 잔고</p>
 
-                <div className='flex items-center gap-2'>
+                <div className='flex items-center gap-1'>
                   <img
                     src={coin}
                     alt='코인 이미지'
+                    className='w-4 h-4'
                   />
-                  <p className='text-[#162C63] text-[16px]'>
+                  <p className='text-[#162C63] text-sm font-medium'>
                     {pointBalance.toLocaleString('ko-KR')}P
                   </p>
                 </div>
@@ -130,7 +131,7 @@ export default function PointPage() {
                 <LayeredButton
                   theme='blue'
                   containerClassName='w-fit'
-                  className='text-[18px] font-bold w-[202px] h-[50px] py-1.5'
+                  className='font-bold w-[160px] h-[40px] py-1.5'
                   disabled={isLoading}
                   onClick={() => navigate('/payment')}>
                   포인트 충전하기
