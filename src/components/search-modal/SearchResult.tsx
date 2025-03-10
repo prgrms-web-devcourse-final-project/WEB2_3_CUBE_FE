@@ -55,10 +55,19 @@ export const SearchResult = ({
           genreNames: item.genres,
           page: 0,
         };
-        await bookAPI.addBookToMyBook(bookData, user.userId);
+        const response = await bookAPI.addBookToMyBook(bookData, user.userId);
         onClose();
         showToast('책장에 책이 추가되었어요!', 'success');
-        onSuccess?.(item);
+        onSuccess?.({
+          ...item,
+          id: response.id.toString(),
+          title: response.title,
+          author: response.author,
+          publisher: response.publisher,
+          date: response.publishedDate,
+          imageUrl: response.imageUrl,
+          genres: response.genreNames,
+        });
       } else if (type === 'CD') {
         // CD 추가 요청 로직
 
