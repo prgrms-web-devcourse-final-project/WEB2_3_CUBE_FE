@@ -30,7 +30,7 @@ const CdTemplate = React.memo(() => {
   return (
     <div
       className='w-[32%]  text-white rounded-3xl border-2   border-[#FCF7FD]
-     bg-[#3E507D1A] backdrop-blur-lg shadow-box h-full pl-12 pr-8 py-15  relative  '>
+     bg-[#3E507D1A] backdrop-blur-lg shadow-box h-full pl-12 pr-5 py-15  relative  '>
       {isEdit ? (
         <EditTemplate
           templateData={templateData}

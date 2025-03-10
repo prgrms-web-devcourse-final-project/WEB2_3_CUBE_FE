@@ -11,7 +11,6 @@ import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { useUserStore } from '@/store/useUserStore';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToastStore } from '@/store/useToastStore';
-import { is } from '@react-three/fiber/dist/declarations/src/core/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 
 interface DataListProps {

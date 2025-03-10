@@ -54,10 +54,10 @@ export default function NotEditTemplate({
   return (
     <>
       {userId === myUserId && (
-        <>
+        <div className='flex items-center gap-2 absolute top-4 right-4'>
           <button
             onClick={onToggleEdit}
-            className=' absolute top-4 right-20 2xl:right-24 rounded-[10px]  text-[10px] 2xl:text-[12px] font-semibold
+            className='  rounded-[10px]  text-[10px] 2xl:text-[12px] font-semibold
          bg-white text-[#162C63]  2xl:px-6 2xl:py-2.5  px-4 py-1.5  hover:opacity-80'>
             수정
           </button>
@@ -65,11 +65,11 @@ export default function NotEditTemplate({
           <button
             type='button'
             onClick={handleDeleteTemplate}
-            className='absolute top-4 right-4 rounded-[10px] text-[10px] 2xl:text-[12px] font-semibold
+            className=' rounded-[10px] text-[10px] 2xl:text-[12px] font-semibold
          bg-white text-[#162C63]   2xl:px-6 2xl:py-2.5  px-4 py-1.5 hover:opacity-80'>
             삭제
           </button>
-        </>
+        </div>
       )}
 
       <section className='flex flex-col justify-around items-center gap-14  overflow-auto h-full pr-3 scrollbar'>
