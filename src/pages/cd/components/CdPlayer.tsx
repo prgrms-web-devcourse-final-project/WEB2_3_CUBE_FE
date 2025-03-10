@@ -13,11 +13,11 @@ import { getCdRack, getCdRackSearch } from '@apis/cd';
 
 export default function CdPlayer({
   cdInfo,
-  onOffCdPlay,
+  onCdPlaying,
   onCdTime,
 }: {
   cdInfo: CDInfo;
-  onOffCdPlay: (value: boolean) => void;
+  onCdPlaying: (value: boolean) => void;
   onCdTime: (value: number) => void;
 }) {
   const VOLUME = 10;
@@ -51,9 +51,6 @@ export default function CdPlayer({
   const progressBarRef = useRef(null);
   const tooltipRef = useRef(null);
 
-  // Youtube 컴포넌트 상태가 변화할때 발생하는 이벤트 객체
-  const [cdStateChangeEvent, setCdStateChangeEvent] = useState(null);
-
   // cd 재생시간 관리
   const [cdPlayer, setCdPlayer] = useState({
     progress: 0,
@@ -61,21 +58,21 @@ export default function CdPlayer({
     duration: 0,
   });
 
+  // Youtube 컴포넌트 상태가 변화할때 발생하는 이벤트 객체
+  const [cdStateChangeEvent, setCdStateChangeEvent] = useState(null);
+
   const videoId = useMemo(() => {
     const match = cdInfo.youtubeUrl.match(/[?&]v=([^&]+)/);
     return match ? match[1] : '';
   }, [cdInfo.youtubeUrl]);
 
-  const opts = useMemo(
-    () => ({
-      height: '0',
-      width: '0',
-      playerVars: {
-        autoplay: 1,
-      },
-    }),
-    [],
-  );
+  const opts = {
+    height: '0',
+    width: '0',
+    // playerVars: {
+    //   autoplay: 1,
+    // },
+  };
 
   // 시간 포맷팅 함수
   const formatTime = (time: number) => {
@@ -100,7 +97,7 @@ export default function CdPlayer({
 
   // ----------------함수----------------------
 
-  // 검색에 대한 cd목록 가져오기
+  // 편집 목록 리스트를 열었을때 검색에 대한 cd목록 가져오기
   const fetchCdSearchData = async () => {
     try {
       const result = searchInput
@@ -238,19 +235,17 @@ export default function CdPlayer({
   );
   const handleOnOffCd = useCallback(
     (event?: YouTubeEvent<number>) => {
-      if (!event) return;
-
-      if (event.data === 2 || event.data === 0 || event.data === null) {
-        event.target?.playVideo(); // event.target이 없을 수도 있으니 ? 붙여줌
-        setCdReady((prev) => ({ ...prev, isPlaying: true }));
-        onOffCdPlay(true);
-      } else if (event.data === 1) {
+      if (event.data === 1) {
         event.target?.pauseVideo();
         setCdReady((prev) => ({ ...prev, isPlaying: false }));
-        onOffCdPlay(false);
+        onCdPlaying(false);
+      } else {
+        event.target?.playVideo();
+        setCdReady((prev) => ({ ...prev, isPlaying: true }));
+        onCdPlaying(true);
       }
     },
-    [onOffCdPlay],
+    [onCdPlaying],
   );
 
   const handleToggleLoop = useCallback(() => {
@@ -259,47 +254,48 @@ export default function CdPlayer({
   }, [cdReady.isLooping]);
 
   // YouTube 이벤트 핸들러 메모이제이션
-  const handleYouTubeReady = useCallback(
-    (e: YouTubeEvent<any>) => {
-      e.target.setVolume(cdReady.volume);
-      e.target.playVideo();
-      setCdStateChangeEvent(e);
-      setCdReady((prev) => ({
-        ...prev,
-        isPlaying: true,
-        volume: VOLUME,
-        previousVolume: VOLUME,
-        isMuted: e.target.playerInfo.muted,
-      }));
-      setCdPlayer((prev) => ({
-        ...prev,
-        duration: e.target.getDuration(),
-      }));
-    },
-    [cdReady.volume],
-  );
+  const handleYouTubeReady = (e: YouTubeEvent<any>) => {
+    // 볼륨 설정은 유지
+    e.target.setVolume(cdReady.volume);
+    // 무조건 일시정지 상태로 시작
+    e.target.pauseVideo();
+    setCdStateChangeEvent(e);
+    setCdReady((prev) => ({
+      ...prev,
+      isPlaying: false,
+      volume: VOLUME,
+      previousVolume: VOLUME,
+      isMuted: e.target.playerInfo.muted,
+    }));
 
-  const handleYouTubeStateChange = useCallback(
-    (e: YouTubeEvent<number>) => {
-      if (e.data === 0) {
-        if (cdReady.isLooping) {
-          onOffCdPlay(true);
-          setTimeout(() => {
-            e.target.seekTo(0);
-            e.target.playVideo();
-          }, 100);
-        } else {
-          setCdReady((prev) => ({
-            ...prev,
-            isPlaying: false,
-          }));
-          onOffCdPlay(false);
-        }
+    setCdPlayer((prev) => ({
+      ...prev,
+      duration: e.target.getDuration(),
+    }));
+  };
+
+  const handleYouTubeStateChange = (e: YouTubeEvent<number>) => {
+    // 영상이 끝났을 때 (e.data === 0)
+    if (e.data === 0) {
+      if (cdReady.isLooping) {
+        // 무한반복 설정되어 있으면 처음으로 돌아가서 다시 재생
+        onCdPlaying(true);
+        setTimeout(() => {
+          e.target.seekTo(0);
+          e.target.playVideo();
+        }, 100);
+      } else {
+        // 무한반복 설정이 꺼져있으면 일시정지 상태로
+        setCdReady((prev) => ({
+          ...prev,
+          isPlaying: false,
+        }));
+        onCdPlaying(false);
       }
-      setCdStateChangeEvent(e);
-    },
-    [cdReady.isLooping],
-  );
+    }
+    setCdStateChangeEvent(e);
+  };
+
   return (
     <>
       <YouTube
@@ -398,8 +394,8 @@ export default function CdPlayer({
             </div>
           </article>
 
-          {/* 중앙 그룹: 재생 버튼과 시간 - 왼쪽으로 조정 */}
-          <article className='flex flex-col items-center ] '>
+          {/* 중앙 그룹: 재생 버튼*/}
+          <article className='flex flex-col items-center  pl-12 '>
             <button onClick={() => handleOnOffCd(cdStateChangeEvent)}>
               <img
                 className='w-13 h-13'
