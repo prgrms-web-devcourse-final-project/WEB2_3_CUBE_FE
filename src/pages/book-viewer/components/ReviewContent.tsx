@@ -1,7 +1,7 @@
 import { BookReviewData } from '@/types/book';
 import { BOOK_THEME, BookThemeType } from '@/constants/bookTheme';
 import scrollDownIcon from '@assets/book/scroll-down-icon.svg';
-
+import { formatToKoreanDateTime } from '@/utils/dateFormat';
 interface ReviewField {
   key: keyof BookReviewData;
   title: string;
@@ -58,7 +58,7 @@ export const ReviewContent = ({
       <p
         className='text-sm '
         style={{ color: `${colors.primary}80` }}>
-        {reviewData.writeDateTime}
+        {formatToKoreanDateTime(reviewData.writeDateTime)}
       </p>
       <button
         onClick={() => {
@@ -67,7 +67,7 @@ export const ReviewContent = ({
             section.scrollIntoView({ behavior: 'smooth' });
           }
         }}
-        className='gap-2 px-5 py-2 text-lg border-2 rounded-full item-middle'
+        className='gap-2 px-5 py-1.5 text-lg border-2 rounded-full item-middle'
         style={{
           borderColor: colors.primary,
           color: colors.primary,

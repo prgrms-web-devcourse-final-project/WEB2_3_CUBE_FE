@@ -65,3 +65,23 @@ export const getRelativeTimeString = (dateString: string) => {
   if (diffMonth < 12) return `${diffMonth}달 전`;
   return `${diffYear}년 전`;
 };
+
+/**
+ * ISO 타임스탬프를 'YYYY년 MM월 DD일 오전/오후 H시 M분' 형식으로 변환
+ * UTC+9 (한국 시간대)로 변환하여 출력
+ */
+export const formatToKoreanDateTime = (dateString: string) => {
+  const date = new Date(dateString);
+  const kstDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+
+  const year = kstDate.getFullYear();
+  const month = String(kstDate.getMonth() + 1).padStart(2, '0');
+  const day = String(kstDate.getDate()).padStart(2, '0');
+  const hours = kstDate.getHours();
+  const minutes = String(kstDate.getMinutes()).padStart(2, '0');
+
+  const period = hours < 12 ? '오전' : '오후';
+  const displayHours = hours <= 12 ? hours : hours - 12;
+
+  return `${year}년 ${month}월 ${day}일 ${period} ${displayHours}시 ${minutes}분`;
+};
