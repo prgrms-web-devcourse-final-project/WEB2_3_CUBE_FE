@@ -32,7 +32,7 @@ const ProfileCardPage = () => {
     // 포인트 잔액 조회
     const fetchPointBalance = async () => {
       try {
-        const response = await getPointBalance();
+        const response = await getPointBalance(Number(userId));
         setPointBalance(response.balance);
       } catch (error) {
         console.error('포인트 잔액 조회 실패:', error);
