@@ -2,11 +2,9 @@ import BookReviewDisplay from './components/BookReviewDisplay';
 import NotFoundPage from '@pages/NotFoundPage';
 import tempIMG from '@assets/book/temp.jpg';
 import { BookReviewData } from '@/types/book';
-import { truncateTitle } from '@/utils/truncate';
 import { twMerge } from 'tailwind-merge';
-
-const BOOK_TITLE_MAX_LENGTH = 15;
-const BOOK_AUTHOR_MAX_LENGTH = 20;
+import { Link } from 'react-router-dom';
+import logo from '@/assets/header/header-logo.svg';
 
 interface BookViewerPageProps {
   reviewData: BookReviewData | null;
@@ -18,9 +16,16 @@ const BookViewerPage = ({ reviewData, bookId }: BookViewerPageProps) => {
 
   return (
     <section className='flex w-full h-screen overflow-auto'>
+      <Link
+        to='/'
+        className='fixed top-10 left-21 z-50'>
+        <img
+          src={logo}
+          alt='logo'
+        />
+      </Link>
       <figure className='w-1/2 h-full p-4'>
         <ul className='w-full h-full rounded-2xl overflow-hidden relative'>
-
           <BookCoverList className='h-[30%]' />
           <BookCoverList className='h-[40%]'>
             <div className='flex items-center justify-center relative w-68 h-90'>

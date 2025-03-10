@@ -1,4 +1,6 @@
 import { useNavigate } from 'react-router-dom';
+import exProfile from '@assets/rank/exProfile.png';
+
 
 interface RecommendedUserListItemProps {
   user: RecommendedUser;
@@ -17,7 +19,7 @@ const RecommendedUserListItem = ({ user }: RecommendedUserListItemProps) => {
       className='flex flex-col items-center w-[80px] h-[100px] py-4 bg-[#FCF7FD] shadow-md rounded-[10px] mb-1 cursor-pointer hover:bg-[#FCF7FD]/80 transition-colors'>
       <div className='w-10 h-10 mb-2 shrink-0'>
         <img
-          src={user.profileImage}
+          src={user.profileImage || exProfile}
           alt={`${user.nickname}님의 프로필`}
           className='w-full h-full rounded-full bg-[#E8F0FE] object-cover'
         />

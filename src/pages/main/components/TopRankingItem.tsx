@@ -4,6 +4,7 @@ import silverMedal from '@assets//rank//silver-medal.svg';
 import blueFoot from '@assets/rank/blue-footprint.svg';
 import pinkFoot from '@assets/rank/pink-footprint.svg';
 import { Link } from 'react-router-dom';
+import exProfile from '@assets/rank/exProfile.png';
 
 const medalImages = {
   1: goldMedal,
@@ -50,7 +51,7 @@ export default function TopRankingItem({ user }) {
             ${
               user.rank === 1 ? 'w-9 h-9 @2xl:w-12 @2xl:h-12' : 'w-7.5 h-7.5 @2xl:w-10  @2xl:h-10'
             } rounded-full`}
-            src={user.profileImage}
+            src={user.profileImage || exProfile}
             alt={user.nickname}
           />
           <p

@@ -6,9 +6,6 @@ import { useInfiniteScroll } from '../../../../hooks/useInfiniteScroll';
 import { useHousemates } from '../hooks/useHousemates';
 import { HousemateItem } from './components/HousemateItem';
 import HousemateSkeletonItem from './components/HousemateSkeletonItem';
-import { useState, useEffect } from 'react';
-import { housemateAPI } from '@apis/housemate';
-import { useUserStore } from '@/store/useUserStore';
 
 type TabType = 'followers' | 'following';
 
@@ -28,7 +25,6 @@ const HousemateModal = ({
   onClose,
   buttonRef,
 }: HousemateModalProps) => {
-  const user = useUserStore((state) => state.user);
 
   const {
     searchValue,
@@ -77,7 +73,7 @@ const HousemateModal = ({
         className='flex flex-col gap-6 px-4 mt-4 overflow-y-auto h-[calc(80vh-280px)] scrollbar scrollbar-pink'>
         {isLoading ? (
           <div className='flex flex-col gap-6'>
-            {Array.from({ length: 5 }).map((_, index) => (
+            {Array.from({ length: 10 }).map((_, index) => (
               <HousemateSkeletonItem key={index} />
             ))}
           </div>

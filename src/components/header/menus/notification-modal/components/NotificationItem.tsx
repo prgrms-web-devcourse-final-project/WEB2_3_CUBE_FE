@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { formatToKoreanFullDate } from '@/utils/dateFormat';
 import { NotificationMessage } from './NotificationMessage';
 import { useUserStore } from '@/store/useUserStore';
-
+import exProfile from '@assets/rank/exProfile.png';
 interface NotificationItemProps {
   notification: Notification;
   onRead: (id: number) => void;
@@ -58,7 +58,7 @@ export const NotificationItem = memo(
           className='gap-2 item-middle'>
           {notification.type !== 'EVENT' && (
             <img
-              src={notification.senderProfileImage}
+              src={notification.senderProfileImage || exProfile}
               alt={`${notification.senderNickName}님의 프로필`}
               className='object-cover w-10 h-10 rounded-full cursor-pointer hover:opacity-80'
               onClick={handleProfileClick}

@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import copyIcon from '@assets/profile-card/copy-icon.svg';
-
+import exProfile from '@assets/rank/exProfile.png';
 interface ProfileImageEditProps {
   imageUrl: string;
   onImageChange: (file: File) => void;
@@ -35,7 +35,7 @@ export const ProfileImageEdit = ({
         className='hidden'
       />
       <img
-        src={imageUrl}
+        src={imageUrl || exProfile}
         alt='사용자 프로필'
         className='object-cover w-32 h-32 rounded-full'
       />
