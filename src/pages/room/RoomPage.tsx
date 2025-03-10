@@ -1,9 +1,10 @@
 import { themeData } from '@constants/roomTheme';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { roomAPI } from '../../apis/room';
 import { rankAPI } from '../../apis/ranking';
+import { roomAPI } from '../../apis/room';
+import Loading from '../../components/Loading';
 import { ANIMATION_VARIANTS } from '../../constants/animation';
 import { SIGN_VARIANTS } from '../../constants/sign';
 import { useToastStore } from '../../store/useToastStore';
@@ -16,6 +17,7 @@ import ThemeSetting from './components/ThemeSetting';
 export default function RoomPage() {
   const { showToast } = useToastStore();
   const { userId } = useParams<{ userId: string }>();
+  const [isModelLoading, setIsModelLoading] = useState(true);
   const [roomData, setRoomData] = useState<RoomData>(null);
   const [activeSettings, setActiveSettings] = useState<string | null>(null);
   const [resetDockMenuState, setResetDockMenuState] = useState(false);
@@ -34,15 +36,15 @@ export default function RoomPage() {
 
   const user = useUserStore((state) => state.user);
 
-  const recordVisit = async (visitorId:number, hostId:number) =>{
+  const recordVisit = async (visitorId: number, hostId: number) => {
     try {
       await rankAPI.visitByUserId(visitorId, hostId);
-    } catch (error){
-      console.error('방문 기록 실패:',error);
+    } catch (error) {
+      console.error('방문 기록 실패:', error);
     }
-  }
+  };
 
-  const fetchRoomData = async (id:number) => {
+  const fetchRoomData = async (id: number) => {
     try {
       const roomData: RoomData = await roomAPI.getRoomById(id);
       if (roomData) {
@@ -66,15 +68,20 @@ export default function RoomPage() {
     if (!userId) return;
 
     const loadRoom = async () => {
-      if(user && Number(userId) !== user.userId){
+      if (user && Number(userId) !== user.userId) {
         await recordVisit(user.userId, Number(userId));
       }
-      await fetchRoomData(Number(userId))
+      await fetchRoomData(Number(userId));
     };
 
     loadRoom();
   }, [userId, user]);
-  
+
+  const handleModelLoaded = () => {
+    setTimeout(() => {
+      setIsModelLoading(false);
+    }, 300); 
+  };
 
   const handleThemeChange = (newTheme: 'BASIC' | 'FOREST' | 'MARINE') => {
     setSelectedTheme(newTheme);
@@ -87,7 +94,7 @@ export default function RoomPage() {
         roomData.userId,
         selectedTheme,
       );
-      
+
       showToast('테마가 업데이트됐어요! 새로운 느낌, 어떠세요?', 'success');
     } catch (error) {
       console.error('방 테마 변경 실패:', error);
@@ -144,14 +151,14 @@ export default function RoomPage() {
   };
 
   const handleCloseSettings = () => {
-    if (activeSettings === 'theme'&& selectedTheme !== roomData?.theme) {
+    if (activeSettings === 'theme' && selectedTheme !== roomData?.theme) {
       handleSaveTheme();
     }
     setActiveSettings(null);
   };
 
   const handleModalOutsideClick = () => {
-    if (activeSettings === 'theme'&& selectedTheme !== roomData?.theme) {
+    if (activeSettings === 'theme' && selectedTheme !== roomData?.theme) {
       handleSaveTheme();
     }
     setActiveSettings(null);
@@ -161,6 +168,7 @@ export default function RoomPage() {
 
   return (
     <main className='overflow-hidden relative w-full min-h-screen main-background'>
+      <AnimatePresence>{isModelLoading && <Loading />}</AnimatePresence>
       {roomData && (
         <>
           <RoomModel
@@ -170,6 +178,7 @@ export default function RoomPage() {
             modelPath={themeData[selectedTheme]?.modelPath}
             activeSettings={activeSettings}
             furnitures={visibleFurnitures}
+            onModelLoaded={handleModelLoaded}
           />
           {/* 표지판 */}
           {user && userId !== String(user?.userId) && (

@@ -19,6 +19,7 @@ export default function RoomModel({
   ownerId,
   roomId,
   furnitures,
+  onModelLoaded,
 }: RoomModelProps) {
   const { scene } = useGLTF(modelPath) as GLTFResult;
   const { items } = useRoomItems({ roomId, furnitures });
@@ -42,6 +43,12 @@ export default function RoomModel({
       });
     }
   }, [scene]);
+
+  useEffect(() => {
+    if (scene && items.every((item) => item)) {
+      onModelLoaded?.();
+    }
+  }, [scene, items, onModelLoaded]);
 
   const fetchPointBalance = async () => {
     try {
