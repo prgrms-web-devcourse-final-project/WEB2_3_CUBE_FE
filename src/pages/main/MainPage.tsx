@@ -1,5 +1,5 @@
 import { AnimatePresence } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useUserStore } from '../../store/useUserStore';
 import AnimationGuide from '../../components/AnimationGuide';
 import RankingModal from './components/RankingModal';
@@ -10,17 +10,21 @@ import HiveRooms from './components/HiveRooms';
 export default function MainPage() {
   const [isRankingOpen, setIsRankingOpen] = useState(false);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const hasShownGuide = useRef(false);
   const user = useUserStore((state) => state.user);
 
-  const handleLoadingComplete = () => {
-    setIsGuideOpen(true);
-  };
+  const handleLoadingComplete = useCallback(() => {
+    if (!hasShownGuide.current) {
+      setIsGuideOpen(true);
+      hasShownGuide.current = true; 
+    }
+  }, []);
 
   useEffect(() => {
     if(isGuideOpen){
       const timer = setTimeout(() => {
         setIsGuideOpen(false);
-      }, 2500);
+      }, 2300);
       
       return () => clearTimeout(timer);
     }

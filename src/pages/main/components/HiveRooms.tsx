@@ -94,19 +94,16 @@ export default function HiveRooms({ myUserId, onLoadingComplete }: HiveRoomsProp
       if (prev.has(roomId)) return prev; 
       const newSet = new Set(prev);
       newSet.add(roomId);
-      if (newSet.size === rooms.length && rooms.length > 0) {
-        setIsLoading(false); 
-        if (onLoadingComplete) onLoadingComplete();
-      }
       return newSet;
     });
-  }, [rooms.length, onLoadingComplete]);
+  }, []);
 
   useEffect(() => {
     if (loadedRooms.size === rooms.length && rooms.length > 0) {
       setIsLoading(false);
+      if (onLoadingComplete) onLoadingComplete();
     }
-  }, [loadedRooms, rooms.length]);
+  }, [loadedRooms, rooms.length, onLoadingComplete]);
 
   return (
     <div className='w-full h-screen relative'>
