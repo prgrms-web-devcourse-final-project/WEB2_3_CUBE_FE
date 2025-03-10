@@ -69,8 +69,13 @@ export const getRelativeTimeString = (dateString: string) => {
 /**
  * ISO 타임스탬프를 'YYYY년 MM월 DD일 오전/오후 H시 M분' 형식으로 변환
  * UTC+9 (한국 시간대)로 변환하여 출력
+ * dateString이 없을 경우 빈 문자열 반환
  */
-export const formatToKoreanDateTime = (dateString: string) => {
+export const formatToKoreanDateTime = (
+  dateString: string | null | undefined,
+) => {
+  if (!dateString) return '';
+
   const date = new Date(dateString);
   const kstDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
 
