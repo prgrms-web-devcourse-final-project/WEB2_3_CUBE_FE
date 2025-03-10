@@ -2,7 +2,7 @@ import { Center, useGLTF } from '@react-three/drei';
 import { useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 
-export default function HiveRoomModel({ room, position }: HiveRoomModelProps) {
+export default function HiveRoomModel({ room, position, onModelLoaded }: HiveRoomModelProps) {
   const { scene: originalScene } = useGLTF(room.modelPath) as GLTFResult;
 
   const scene = useMemo(() => {
@@ -29,7 +29,9 @@ export default function HiveRoomModel({ room, position }: HiveRoomModelProps) {
     const box = new THREE.Box3().setFromObject(scene);
     const center = new THREE.Vector3();
     box.getCenter(center);
-  }, [scene, room.roomId, position]);
+
+    onModelLoaded(room.roomId);
+  }, [scene, room.roomId, position, onModelLoaded]);
 
   return (
       <Center>

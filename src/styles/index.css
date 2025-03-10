@@ -3,6 +3,7 @@
 @import './scroll.css';
 @import './swiper.css';
 @import './range.css';
+@import './loading.css';
 
 * {
   font-family: 'Pretendard Variable', Pretendard, -apple-system,

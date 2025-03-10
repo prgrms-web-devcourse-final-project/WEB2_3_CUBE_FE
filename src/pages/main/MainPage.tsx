@@ -9,8 +9,12 @@ import HiveRooms from './components/HiveRooms';
 
 export default function MainPage() {
   const [isRankingOpen, setIsRankingOpen] = useState(false);
-  const [isGuideOpen, setIsGuideOpen] = useState(true);
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
   const user = useUserStore((state) => state.user);
+
+  const handleLoadingComplete = () => {
+    setIsGuideOpen(true);
+  };
 
   useEffect(() => {
     if(isGuideOpen){
@@ -25,7 +29,7 @@ export default function MainPage() {
   return (
     <main className='@container main-background w-full min-h-screen relative overflow-hidden'>
       {/* 메인 벌집 구조의 방 */}
-      <HiveRooms myUserId={user?.userId} />
+      <HiveRooms myUserId={user?.userId} onLoadingComplete={handleLoadingComplete} />
 
       {/* 하단 버튼 */}
       <RankMenu onOpen={() => setIsRankingOpen(true)} />

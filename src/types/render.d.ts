@@ -28,6 +28,7 @@ interface RoomModelProps {
   ownerId: number;
   roomId: number;
   furnitures: { furnitureType: FurnitureType; isVisible: boolean }[]; 
+  onModelLoaded?: () => void;
 };
 
 type Position = [number, number, number];

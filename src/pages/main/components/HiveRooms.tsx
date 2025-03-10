@@ -7,10 +7,13 @@ import { RoomLighting } from '../../../components/room-models/RoomLighting';
 import HiveRoomModel from './HiveRoomModel';
 import useHexagonGrid from '../hooks/useHexagonGrid';
 import useRooms from '../hooks/useRooms';
+import Loading from '../../../components/Loading';
 
-export default function HiveRooms({ myUserId }: HiveRoomsProps) {
+export default function HiveRooms({ myUserId, onLoadingComplete }: HiveRoomsProps) {
   const { rooms } = useRooms(30, myUserId);
   const positionedRooms = useHexagonGrid(rooms, 0, 0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadedRooms, setLoadedRooms] = useState(new Set());
   const [hoveredRoom, setHoveredRoom] = useState<number | null>(null);
   const [clickedRoom, setClickedRoom] = useState<number | null>(null);
   const navigate = useNavigate();
@@ -38,7 +41,6 @@ export default function HiveRooms({ myUserId }: HiveRoomsProps) {
       if (distance > dragThreshold && !isDragging) {
         setIsDragging(true);
         canvasRef.current.style.cursor = "grabbing";
-        console.log("Dragging detected, distance:", distance);
       }
     }
   }, [startPos, isDragging, dragThreshold, canvasRef]);
@@ -51,10 +53,7 @@ export default function HiveRooms({ myUserId }: HiveRoomsProps) {
         if (room?.userId) {
           navigate(`/room/${room.userId}`);
         }
-      } else {
-        console.log("Drag detected, no navigation");
       }
-
       setIsDragging(false);
       setStartPos(null);
       canvasRef.current.style.cursor = "default";
@@ -90,8 +89,28 @@ export default function HiveRooms({ myUserId }: HiveRoomsProps) {
     }
   }, [isDragging]);
 
+  const handleModelLoaded = useCallback((roomId: string) => {
+    setLoadedRooms((prev) => {
+      if (prev.has(roomId)) return prev; 
+      const newSet = new Set(prev);
+      newSet.add(roomId);
+      if (newSet.size === rooms.length && rooms.length > 0) {
+        setIsLoading(false); 
+        if (onLoadingComplete) onLoadingComplete();
+      }
+      return newSet;
+    });
+  }, [rooms.length, onLoadingComplete]);
+
+  useEffect(() => {
+    if (loadedRooms.size === rooms.length && rooms.length > 0) {
+      setIsLoading(false);
+    }
+  }, [loadedRooms, rooms.length]);
+
   return (
     <div className='w-full h-screen relative'>
+      {isLoading && <Loading />}
       <Canvas
         ref={canvasRef}
         camera={{ position: [0, 4, 10], fov: 25 }}
@@ -114,6 +133,7 @@ export default function HiveRooms({ myUserId }: HiveRoomsProps) {
             <HiveRoomModel
               room={room}
               position={position}
+              onModelLoaded={handleModelLoaded}
             />
           </group>
         ))}
