@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 
-import check_logo from '@assets/datalist/check-logo.svg';
-import toggle_up from '@assets/login/toggle-up.svg';
+import checkLogo from '@assets/datalist/check-logo.svg';
+import toggleDown from '@assets/login/toggle-down.svg';
 
 export default function AgreeItem({
   agreementInfo,
@@ -25,7 +25,7 @@ export default function AgreeItem({
             {agreementInfo.isChecked && (
               <img
                 className='absolute w-3.5 h-3.5'
-                src={check_logo}
+                src={checkLogo}
               />
             )}
           </label>
@@ -41,7 +41,7 @@ export default function AgreeItem({
             className={`w-11 h-11 cursor-pointer transition-transform duration-200 ease-in-out ${
               agreementInfo.isExpanded ? 'rotate-180' : 'rotate-0'
             }`}
-            src={toggle_up}
+            src={toggleDown}
             alt='토글 버튼'
           />
         </button>
