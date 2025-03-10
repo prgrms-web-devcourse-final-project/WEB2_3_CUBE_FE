@@ -149,7 +149,8 @@ const getArtistsGenres = async (artistId: string, token: string) => {
       },
     },
   );
-  return response.data.genres || [];
+  // 장르는 3개만
+  return response.data.genres.slice(0, 3) || [];
 };
 
 /**

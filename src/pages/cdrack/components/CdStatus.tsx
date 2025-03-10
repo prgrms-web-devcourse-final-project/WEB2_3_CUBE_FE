@@ -53,7 +53,6 @@ export default function CdStatus({
       ? cdRackDatas.data.length
       : 0;
 
-    if (pageLength === 15) return;
     setcdRackDatas((prev) => {
       const prevData = prev ?? {
         data: [],
@@ -62,13 +61,19 @@ export default function CdStatus({
         nextCursor: 0,
         totalCount: 0,
       };
-      return {
-        ...prevData,
-        data: [...prevData.data, newCdDatas],
-        nextCursor: newCdDatas.myCdId,
-        lastMyCdId: newCdDatas.myCdId,
-        totalCount: prevData.totalCount + 1,
-      };
+      return pageLength === 10
+        ? {
+            ...prevData,
+            lastMyCdId: newCdDatas.myCdId,
+            totalCount: prevData.totalCount + 1,
+          }
+        : {
+            ...prevData,
+            data: [...prevData.data, newCdDatas],
+            nextCursor: newCdDatas.myCdId,
+            lastMyCdId: newCdDatas.myCdId,
+            totalCount: prevData.totalCount + 1,
+          };
     });
   }, [newItem]);
 
