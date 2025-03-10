@@ -1,21 +1,17 @@
-import backgroundIMG from '@/assets/roome-background-img.png';
-import logo from '@/assets/header-logo.svg';
-import TypingText from './TypingText';
+import loding from '@assets/loading.svg';
 
 const Loading = () => {
   return (
     <div
-      className='gap-4 w-full h-screen item-row object-cover no-repeat'
-      style={{ backgroundImage: `url(${backgroundIMG})` }}>
-      <img
-        src={logo}
-        alt='logo'
-        className='w-80'
-      />
-      <TypingText
-        text='Loading...'
-        className='text-2xl font-medium text-white'
-      />
+      className='w-full h-screen bg-[#1E3675]/80 backdrop-blur-xs flex place-content-center relative z-99 '
+    >
+      <div className="container">
+      <img src={loding} alt="loading" className="box box-1 w-30 h-30" />
+        <div className="box"></div>
+        <div className="box"></div>
+        <div className="box"></div>
+        <div className="box"></div>
+      </div>
     </div>
   );
 };
