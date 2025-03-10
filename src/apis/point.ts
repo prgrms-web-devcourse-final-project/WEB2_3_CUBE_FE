@@ -17,7 +17,7 @@ export const getPointHistory = async (size: number, cursor: number) => {
 /**
  * @returns
  */
-export const getPointBalance = async () => {
-  const response = await axiosInstance.get(`/${API_URL}/points/balance`);
+export const getPointBalance = async (userId:number) => {
+  const response = await axiosInstance.get(`/${API_URL}/points/balance?userId=${userId}`);
   return response.data;
 };

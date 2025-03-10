@@ -45,7 +45,7 @@ export default function RoomModel({
 
   const fetchPointBalance = async () => {
     try {
-      const { balance } = await getPointBalance();
+      const { balance } = await getPointBalance(ownerId);
       setPointBalance(balance);
     } catch (error) {
       console.error('포인트 잔고 조회 실패:', error);
@@ -76,7 +76,7 @@ export default function RoomModel({
     isHovering: boolean,
     position?: [number, number, number],
   ) => {
-    if (itemType === 'PIGGY_BANK' && ownerId === user?.userId) {
+    if (itemType === 'PIGGY_BANK') {
       setIsPiggyHovered(isHovering);
       if (isHovering) {
         fetchPointBalance();

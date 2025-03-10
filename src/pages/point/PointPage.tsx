@@ -40,14 +40,14 @@ export default function PointPage() {
   useEffect(() => {
     const fetchPointBalance = async () => {
       try {
-        const { balance } = await getPointBalance();
+        const { balance } = await getPointBalance(userId);
         setPointBalance(balance);
       } catch (error) {
         console.error(error);
       }
     };
     fetchPointBalance();
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -103,7 +103,7 @@ export default function PointPage() {
               Point Receipt
             </h1>
 
-            <div className='flex-1 w-full px-8'>
+            <div className='flex-1 w-full px-10'>
               <PointHistory
                 data={data}
                 isFetching={isFetching}
@@ -111,7 +111,7 @@ export default function PointPage() {
               />
             </div>
 
-            <div className='mb-8 w-full px-8 '>
+            <div className='mb-8 w-full px-10 '>
               <div className='flex justify-between items-center mb-4 '>
                 <p className='text-[#162C63] text-[16px]'>포인트 잔고</p>
 
