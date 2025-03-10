@@ -240,6 +240,7 @@ const BookCasePage = () => {
           type='BOOK'
           onClose={() => setIsModalOpen(false)}
           onSelect={() => {}}
+          userId={userId}
           onSuccess={async (item) => {
             const newBook = {
               id: parseInt(item.id),
