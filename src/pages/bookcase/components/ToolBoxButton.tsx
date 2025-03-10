@@ -15,7 +15,7 @@ const ToolBoxButton = ({
   isDisabled,
 }: ToolBoxButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [hasSelectedSetting, setHasSelectedSetting] = useState(false);
+  const hasSelectedSetting = useRef(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -32,10 +32,10 @@ const ToolBoxButton = ({
   }, []);
 
   const getMainButtonBackground = () => {
-    if (!hasSelectedSetting) {
+    if (!hasSelectedSetting.current) {
       return 'bg-white';
     }
-    if (!isOpen && hasSelectedSetting) {
+    if (!isOpen && hasSelectedSetting.current) {
       return 'bg-white';
     }
     return 'bg-transparent hover:bg-white/50';
@@ -84,7 +84,7 @@ const ToolBoxButton = ({
 
           <button
             className={`bottom-menu-icon group absolute bottom-[74px] ${
-              hasSelectedSetting
+              hasSelectedSetting.current
                 ? 'bg-white'
                 : isDisabled
                 ? 'bg-gray-200 cursor-not-allowed'
