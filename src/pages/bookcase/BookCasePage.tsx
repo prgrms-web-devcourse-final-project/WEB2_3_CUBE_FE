@@ -153,22 +153,6 @@ const BookCasePage = () => {
   const bookCaseRows =
     books.length <= 45 ? 3 : Math.ceil(books.length / BOOKS_PER_ROW);
 
-  const handleBookAdd = (newBook: BookCaseListType) => {
-    setBooks((prevBooks) => [...prevBooks, newBook]);
-    setDataListItems((prevItems) => [
-      ...prevItems,
-      {
-        id: newBook.id.toString(),
-        title: newBook.title,
-        author: newBook.author,
-        publisher: newBook.publisher,
-        released_year: newBook.publishedDate,
-        imageUrl: newBook.imageUrl,
-      },
-    ]);
-    setTotalCount((prev) => prev + 1);
-  };
-
   if (isLoading) {
     return <Loading />;
   }

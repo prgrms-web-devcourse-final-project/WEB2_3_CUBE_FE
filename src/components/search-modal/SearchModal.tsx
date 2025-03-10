@@ -76,6 +76,7 @@ export const SearchModal = ({
               onSelect={onSelect}
               onClose={onClose}
               onSuccess={onSuccess}
+              userId={userId}
             />
           </div>
         </div>

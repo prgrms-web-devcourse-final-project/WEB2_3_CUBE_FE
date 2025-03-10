@@ -83,7 +83,7 @@ const ToolBoxButton = ({
           </button>
 
           <button
-            className={`bottom-menu-icon group absolute bottom-[68px] ${
+            className={`bottom-menu-icon group absolute bottom-[74px] ${
               hasSelectedSetting
                 ? 'bg-white'
                 : isDisabled

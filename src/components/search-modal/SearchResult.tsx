@@ -46,6 +46,11 @@ export const SearchResult = ({
         return;
       }
 
+      if (!userId) {
+        showToast('잘못된 접근입니다.', 'error');
+        return;
+      }
+
       if (type === 'BOOK') {
         const bookData: BookType = {
           isbn: item.id,
