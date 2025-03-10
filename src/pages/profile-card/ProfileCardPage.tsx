@@ -32,7 +32,7 @@ const ProfileCardPage = () => {
     // 포인트 잔액 조회
     const fetchPointBalance = async () => {
       try {
-        const response = await getPointBalance();
+        const response = await getPointBalance(Number(userId));
         setPointBalance(response.balance);
       } catch (error) {
         console.error('포인트 잔액 조회 실패:', error);
@@ -40,10 +40,8 @@ const ProfileCardPage = () => {
       }
     };
 
-    if (user?.userId === Number(userId)) {
       fetchPointBalance();
-    }
-  }, [userId, navigate, updateProfile, user?.userId]);
+  }, [userId, navigate, updateProfile]);
 
   const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -112,20 +110,18 @@ const ProfileCardPage = () => {
   return (
     <ProfileCardLayout onClickOutside={handleClickOutside}>
       {/* 포인트 */}
-      {isMyProfile && (
-        <button
-          onClick={() => navigate(`/point/${userId}`)}
-          className='flex items-center gap-2 bg-[#B5B5B5]/10 rounded-full px-3 py-1.5 absolute top-10 left-10'>
-          <img
-            src={pointIcon}
-            alt='사용자 현재 포인트'
-            className='w-4 h-4'
-          />
-          <span className='text-[#162C63] text-xs'>
-            {pointBalance.toLocaleString('ko-KR')}P
-          </span>
-        </button>
-      )}
+      <button
+        onClick={() => navigate(`/point/${userId}`)}
+        className='flex items-center gap-2 bg-[#B5B5B5]/10 rounded-full px-3 py-1.5 absolute top-10 left-10'>
+        <img
+          src={pointIcon}
+          alt='사용자 현재 포인트'
+          className='w-4 h-4'
+        />
+        <span className='text-[#162C63] text-xs'>
+          {pointBalance.toLocaleString('ko-KR')}P
+        </span>
+      </button>
 
       {/* 공유 버튼 */}
       <button

@@ -46,7 +46,7 @@ const HiddenMenu = ({ isOpen }: HiddenMenuProps) => {
               <button
                 onClick={handleLogout}
                 type='button'
-                className='w-full py-3 flex items-center justify-center gap-2 text-[#2E4D99]/50 hover:text-[#2E4D99] group transition-colors'>
+                className='w-full py-3 flex items-center justify-center gap-1 text-[#2E4D99]/50 hover:text-[#2E4D99] group transition-colors select-none'>
                 <svg
                   width='24'
                   height='24'
