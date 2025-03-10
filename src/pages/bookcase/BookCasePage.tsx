@@ -10,9 +10,11 @@ import { BookCaseListType } from '@/types/book';
 import Loading from '@components/Loading';
 import AnimationGuide from '@components/AnimationGuide';
 import { useToastStore } from '@/store/useToastStore';
+import { useUserStore } from '@/store/useUserStore';
 
 const BookCasePage = () => {
   const { showToast } = useToastStore();
+  const { user } = useUserStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isListOpen, setIsListOpen] = useState(false);
   const [books, setBooks] = useState<BookCaseListType[]>([]);
@@ -232,6 +234,7 @@ const BookCasePage = () => {
       <ToolBoxButton
         onAddBook={() => setIsModalOpen(true)}
         onOpenList={() => setIsListOpen(true)}
+        isDisabled={user?.userId !== Number(userId)}
       />
 
       {isModalOpen && (
