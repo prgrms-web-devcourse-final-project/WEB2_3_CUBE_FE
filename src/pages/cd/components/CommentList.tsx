@@ -15,7 +15,7 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
   const [currentInput, setCurrentInput] = useState('');
   const [cdComments, setCdComments] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPage = useRef<number>(null);
+  const totalPage = useRef<number>(1);
   const [isSearching, setIsSearching] = useState(false);
   const debouncedQuery = useDebounce(currentInput, 500);
   const myCdId = Number(useParams().cdId);
@@ -26,17 +26,13 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
   // 작성자이거나 방주인일 경우에만 삭제 가능
   const isAccessible = useCallback(
     (commentUerId: number) => userId === myUserId || myUserId === commentUerId,
-    [],
+    [userId, myUserId],
   );
-
-  // console.log(cdComments);
 
   useEffect(() => {
     const fetchCdComments = async () => {
       try {
-        if (currentInput !== debouncedQuery) {
-          setIsSearching(true);
-        }
+        setIsSearching(true);
         const result =
           currentInput === ''
             ? await getCdComment(myCdId, currentPage, 5)
@@ -68,7 +64,9 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
     const previousComments = [...cdComments];
 
     try {
-      setCdComments(cdComments.filter((comments) => comments.id !== commentId));
+      setCdComments((prevComments) =>
+        prevComments.filter((comment) => comment.id !== commentId),
+      );
       await deleteCdComment(myCdId, commentId);
     } catch (error) {
       setCdComments(previousComments);
@@ -113,8 +111,8 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
                       isBook={false}
                     />
                   ))
-              ) : cdComments.length > 0 ? (
-                cdComments.map((comment) => (
+              ) : cdComments?.length > 0 ? (
+                cdComments?.map((comment) => (
                   <li
                     key={comment.id}
                     className={`flex justify-between items-center bg-[#F7F1FA80] rounded-[12px]  `}>
@@ -152,7 +150,7 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
             </ul>
 
             {/* 페이지네이션 */}
-            {cdComments.length > 0 && (
+            {cdComments?.length > 0 && (
               <Pagination
                 currentPage={currentPage}
                 totalPage={totalPage.current}

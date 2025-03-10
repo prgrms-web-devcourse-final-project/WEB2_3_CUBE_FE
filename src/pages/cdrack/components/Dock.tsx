@@ -52,7 +52,7 @@ const Dock = React.memo(
               className='fixed bottom-10 left-30 z-[5] h-[122px] rounded-2xl border-2 border-[#fff] bg-[#FFFFFF33] backdrop-blur-[20px] overflow-hidden'
               animate={{
                 width: isDockOpen ? 'auto' : 0,
-                maxWidth: isDockOpen ? '85vw' : 0,
+                maxWidth: isDockOpen ? '85vw' : '0vw',
                 opacity: isDockOpen ? 1 : 0,
               }}>
               {isEmpty ? (

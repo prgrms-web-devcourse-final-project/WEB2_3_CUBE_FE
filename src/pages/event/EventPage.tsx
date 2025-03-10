@@ -82,7 +82,7 @@ export default function EventPage() {
             <TypingText
               speed={150}
               pauseTime={1200}
-              text={'큰거온다...'}
+              text='아직 이벤트가 없어요!'
               className='h-[250px] text-[35px] font-bold text-white  text-center pt-20 '
             />
           </div>

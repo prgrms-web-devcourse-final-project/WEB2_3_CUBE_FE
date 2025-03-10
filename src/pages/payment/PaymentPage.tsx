@@ -21,7 +21,6 @@ const PaymentPage = () => {
   );
   const [paymentWidget, setPaymentWidget] = useState<any>(null);
 
-  
   useEffect(() => {
     const initializePaymentWidget = async () => {
       const widget = await loadPaymentWidget(TOSS_CLIENT_KEY, CUSTOMER_KEY);
@@ -69,19 +68,23 @@ const PaymentPage = () => {
     <ProfileCardLayout
       containerClassName='w-[1200px] h-[800px]'
       backgroundClassName='w-[1200px] h-[800px]'
-      className='w-[1200px] h-[800px] overflow-y-auto scrollbar'>
-      <h1 className='mb-4 text-[40px] font-bold text-[#162C63]'>포인트 충전</h1>
+      className='w-[1200px] h-[800px] overflow-y-auto scrollbar justify-between'>
+      <div className='flex flex-col gap-4 w-full itemss-center'>
+        <h1 className='mb-4 text-[40px] font-bold text-[#162C63] text-center'>
+          포인트 충전
+        </h1>
 
-      <ul className='flex gap-4 mb-4 w-full'>
-        {PAYMENT_OPTIONS.map((option) => (
-          <PaymentOptionCard
-            key={option.points}
-            option={option}
-            isSelected={selectedOption?.points === option.points}
-            onSelect={setSelectedOption}
-          />
-        ))}
-      </ul>
+        <ul className='flex gap-4 mb-4 w-full'>
+          {PAYMENT_OPTIONS.map((option) => (
+            <PaymentOptionCard
+              key={option.points}
+              option={option}
+              isSelected={selectedOption?.points === option.points}
+              onSelect={setSelectedOption}
+            />
+          ))}
+        </ul>
+      </div>
 
       {selectedOption && (
         <div className='mt-8 w-full item-row gap-8'>
@@ -89,15 +92,17 @@ const PaymentPage = () => {
             <div id='payment-widget' />
             <div id='agreement' />
           </div>
-          <LayeredButton
-            theme='red'
-            containerClassName='w-fit'
-            className='px-40 w-full text-white bg-blue-500 rounded-lg hover:bg-blue-600'
-            onClick={handlePayment}>
-            {selectedOption.amount.toLocaleString()}원 결제하기
-          </LayeredButton>
         </div>
       )}
+      <LayeredButton
+        theme={selectedOption ? 'red' : 'blue'}
+        containerClassName='w-fit'
+        className='px-40 w-full text-white bg-blue-500 rounded-lg hover:bg-blue-600'
+        onClick={handlePayment}>
+        {selectedOption
+          ? `${selectedOption.amount.toLocaleString()}원 결제하기`
+          : '결제할 항목을 선택해주세요'}
+      </LayeredButton>
     </ProfileCardLayout>
   );
 };
