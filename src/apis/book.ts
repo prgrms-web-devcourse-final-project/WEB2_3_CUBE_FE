@@ -107,7 +107,7 @@ export const bookAPI = {
    */
   addBookToMyBook: async (book: BookType, userId: number) => {
     const response = await axiosInstance.post(
-      `${API_URL}/mybooks?userId=${userId}`,
+      `/${API_URL}/mybooks?userId=${userId}`,
       book,
     );
     return response.data;
