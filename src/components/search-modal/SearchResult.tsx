@@ -20,6 +20,7 @@ interface SearchResultProps {
   onSelect: (item?: SearchItemType) => void;
   onClose: () => void;
   onSuccess?: (item: SearchItemType) => void;
+  userId?: string;
 }
 
 export const SearchResult = ({
@@ -30,6 +31,7 @@ export const SearchResult = ({
   onSelect,
   onClose,
   onSuccess,
+  userId,
 }: SearchResultProps) => {
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
@@ -44,6 +46,11 @@ export const SearchResult = ({
         return;
       }
 
+      if (!userId) {
+        showToast('잘못된 접근입니다.', 'error');
+        return;
+      }
+
       if (type === 'BOOK') {
         const bookData: BookType = {
           isbn: item.id,
@@ -55,10 +62,22 @@ export const SearchResult = ({
           genreNames: item.genres,
           page: 0,
         };
-        await bookAPI.addBookToMyBook(bookData, user.userId);
+        const response = await bookAPI.addBookToMyBook(
+          bookData,
+          Number(userId),
+        );
         onClose();
         showToast('책장에 책이 추가되었어요!', 'success');
-        onSuccess?.(item);
+        onSuccess?.({
+          ...item,
+          id: response.id.toString(),
+          title: response.title,
+          author: response.author,
+          publisher: response.publisher,
+          date: response.publishedDate,
+          imageUrl: response.imageUrl,
+          genres: response.genreNames,
+        });
       } else if (type === 'CD') {
         // CD 추가 요청 로직
 

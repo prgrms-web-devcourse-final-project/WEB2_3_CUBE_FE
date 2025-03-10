@@ -13,6 +13,7 @@ interface SearchModalProps {
   type: 'CD' | 'BOOK';
   onSelect: (item?: SearchItemType) => void;
   onSuccess?: (item: SearchItemType) => void;
+  userId?: string;
 }
 
 export const SearchModal = ({
@@ -21,6 +22,7 @@ export const SearchModal = ({
   type,
   onSelect,
   onSuccess,
+  userId,
 }: SearchModalProps) => {
   const { query, setQuery, results, isLoading, error } = useSearch(type);
   const [selectedItem, setSelectedItem] = React.useState<SearchItemType | null>(
@@ -74,6 +76,7 @@ export const SearchModal = ({
               onSelect={onSelect}
               onClose={onClose}
               onSuccess={onSuccess}
+              userId={userId}
             />
           </div>
         </div>

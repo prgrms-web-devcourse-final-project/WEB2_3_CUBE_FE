@@ -30,7 +30,7 @@ const HiddenMenu = ({ isOpen }: HiddenMenuProps) => {
           <ul className='overflow-hidden px-5 py-4 text-lg bg-white rounded-xl shadow-lg'>
             <li>
               <Link
-                to='/'
+                to={`/room/${user?.userId}`}
                 className='inline-block w-full px-4 py-3 text-center border-b border-gray-100 text-[#2E4D99]/50 hover:text-[#2E4D99] transition-colors'>
                 나의 룸
               </Link>

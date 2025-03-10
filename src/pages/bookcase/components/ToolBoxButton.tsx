@@ -6,11 +6,16 @@ import BookListIcon from './BookListIcon';
 interface ToolBoxButtonProps {
   onAddBook: () => void;
   onOpenList: () => void;
+  isDisabled?: boolean;
 }
 
-const ToolBoxButton = ({ onAddBook, onOpenList }: ToolBoxButtonProps) => {
+const ToolBoxButton = ({
+  onAddBook,
+  onOpenList,
+  isDisabled,
+}: ToolBoxButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [hasSelectedSetting, setHasSelectedSetting] = useState(false);
+  const hasSelectedSetting = useRef(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,10 +32,10 @@ const ToolBoxButton = ({ onAddBook, onOpenList }: ToolBoxButtonProps) => {
   }, []);
 
   const getMainButtonBackground = () => {
-    if (!hasSelectedSetting) {
+    if (!hasSelectedSetting.current) {
       return 'bg-white';
     }
-    if (!isOpen && hasSelectedSetting) {
+    if (!isOpen && hasSelectedSetting.current) {
       return 'bg-white';
     }
     return 'bg-transparent hover:bg-white/50';
@@ -78,19 +83,24 @@ const ToolBoxButton = ({ onAddBook, onOpenList }: ToolBoxButtonProps) => {
           </button>
 
           <button
-            className={`bottom-menu-icon group absolute bottom-[68px] ${
-              hasSelectedSetting
+            className={`bottom-menu-icon group absolute bottom-[74px] ${
+              hasSelectedSetting.current
                 ? 'bg-white'
+                : isDisabled
+                ? 'bg-gray-200 cursor-not-allowed'
                 : 'bg-transparent hover:bg-white/50'
             }`}
-            onClick={onAddBook}>
+            onClick={onAddBook}
+            disabled={isDisabled}>
             <AddBookIcon
-              fill='white'
-              className='group-hover:fill-[#73A1F7] transition-colors'
+              fill={isDisabled ? 'lightgray' : 'white'}
+              className={`${
+                !isDisabled && 'group-hover:fill-[#73A1F7]'
+              } transition-colors`}
             />
             {/* 툴팁 */}
             <span className='absolute right-full mr-4 w-max bg-white text-[#162C63] text-xs font-semibold rounded-full px-4 py-[10px] opacity-0 group-hover:opacity-100 transition-opacity'>
-              도서 추가하기
+              {isDisabled ? '다른 사용자의 책장입니다' : '도서 추가하기'}
             </span>
           </button>
         </div>

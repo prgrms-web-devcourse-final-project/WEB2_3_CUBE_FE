@@ -10,9 +10,11 @@ import { BookCaseListType } from '@/types/book';
 import Loading from '@components/Loading';
 import AnimationGuide from '@components/AnimationGuide';
 import { useToastStore } from '@/store/useToastStore';
+import { useUserStore } from '@/store/useUserStore';
 
 const BookCasePage = () => {
   const { showToast } = useToastStore();
+  const { user } = useUserStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isListOpen, setIsListOpen] = useState(false);
   const [books, setBooks] = useState<BookCaseListType[]>([]);
@@ -151,22 +153,6 @@ const BookCasePage = () => {
   const bookCaseRows =
     books.length <= 45 ? 3 : Math.ceil(books.length / BOOKS_PER_ROW);
 
-  const handleBookAdd = (newBook: BookCaseListType) => {
-    setBooks((prevBooks) => [...prevBooks, newBook]);
-    setDataListItems((prevItems) => [
-      ...prevItems,
-      {
-        id: newBook.id.toString(),
-        title: newBook.title,
-        author: newBook.author,
-        publisher: newBook.publisher,
-        released_year: newBook.publishedDate,
-        imageUrl: newBook.imageUrl,
-      },
-    ]);
-    setTotalCount((prev) => prev + 1);
-  };
-
   if (isLoading) {
     return <Loading />;
   }
@@ -232,6 +218,7 @@ const BookCasePage = () => {
       <ToolBoxButton
         onAddBook={() => setIsModalOpen(true)}
         onOpenList={() => setIsListOpen(true)}
+        isDisabled={user?.userId !== Number(userId)}
       />
 
       {isModalOpen && (
@@ -240,6 +227,7 @@ const BookCasePage = () => {
           type='BOOK'
           onClose={() => setIsModalOpen(false)}
           onSelect={() => {}}
+          userId={userId}
           onSuccess={async (item) => {
             const newBook = {
               id: parseInt(item.id),
