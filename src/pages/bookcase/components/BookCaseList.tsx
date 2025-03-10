@@ -29,7 +29,7 @@ const BookCaseList = ({ books, showEmptyMessage }: BookCaseListProps) => {
 
   if (showEmptyMessage) {
     return (
-      <ul className='w-[5300px] h-[420px] bg-[#D1E5F1] shadow-[inset_0px_4px_20px_5px_rgba(30,146,215,0.20)] flex items-end gap-14 px-20 justify-center'>
+      <ul className='w-[5300px] h-[400px] bg-[#D1E5F1] shadow-[inset_0px_4px_20px_5px_rgba(30,146,215,0.20)] flex items-end gap-14 px-20 justify-center'>
         <div className='flex relative justify-center items-center w-full'>
           <div className='text-center'>
             <li className='text-2xl text-white rounded-2xl cursor-pointer w-50 h-70 book-gradient drop-shadow-book item-middle'>
@@ -46,7 +46,7 @@ const BookCaseList = ({ books, showEmptyMessage }: BookCaseListProps) => {
   }
 
   return (
-    <ul className='w-[5300px] h-[420px] bg-[#D1E5F1] shadow-[inset_0px_4px_20px_5px_rgba(30,146,215,0.20)] flex items-end gap-14 px-20 justify-center'>
+    <ul className='w-[5300px] h-[400px] bg-[#D1E5F1] shadow-[inset_0px_4px_20px_5px_rgba(30,146,215,0.20)] flex items-end gap-14 px-20 justify-center'>
       {books.map((book) =>
         // 이미지 있을 때 (가로 책)
         book.imageUrl ? (

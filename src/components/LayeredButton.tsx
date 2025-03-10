@@ -70,7 +70,7 @@ const LayeredButton = ({
         onTouchStart={() => setIsPressed(true)}
         onTouchEnd={() => setIsPressed(false)}
         {...props}>
-        <span>{children}</span>
+        <span className='select-none'>{children}</span>
       </button>
     </div>
   );

@@ -207,7 +207,7 @@ const BookCasePage = () => {
   return (
     <div
       ref={containerRef}
-      className='overflow-auto w-full h-screen bg-white select-none cursor-grab active:cursor-grabbing scrollbar-none'
+      className='overflow-auto w-full h-screen bg-[#D1E5F1] shadow-[inset_0px_4px_20px_5px_rgba(30,146,215,0.20)] select-none cursor-grab active:cursor-grabbing scrollbar-none'
       onMouseDown={(e) => handleDragStart(e.pageX, e.pageY)}
       onMouseMove={(e) => handleDragMove(e.pageX, e.pageY)}
       onMouseUp={handleDragEnd}
@@ -219,13 +219,16 @@ const BookCasePage = () => {
         handleDragMove(e.touches[0].clientX, e.touches[0].clientY)
       }
       onTouchEnd={handleDragEnd}>
-      {bookRows.map((rowBooks, index) => (
-        <BookCaseList
-          key={index}
-          books={rowBooks}
-          showEmptyMessage={books.length === 0 && index === 1}
-        />
-      ))}
+      <div className='w-full min-h-[1300px]'>
+        {bookRows.map((rowBooks, index) => (
+          <BookCaseList
+            key={index}
+            books={rowBooks}
+            showEmptyMessage={books.length === 0 && index === 1}
+          />
+        ))}
+      </div>
+
       <ToolBoxButton
         onAddBook={() => setIsModalOpen(true)}
         onOpenList={() => setIsListOpen(true)}
