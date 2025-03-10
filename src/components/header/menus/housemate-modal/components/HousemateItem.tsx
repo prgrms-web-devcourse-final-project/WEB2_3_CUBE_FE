@@ -1,6 +1,6 @@
 import rightIcon from '@/assets/housemate-right-icon.svg';
 import { useNavigate } from 'react-router-dom';
-
+import exProfile from '@assets/rank/exProfile.png';
 interface HousemateItemProps {
   userId: number;
   nickname: string;
@@ -33,10 +33,7 @@ export const HousemateItem = ({
         aria-label='프로필 정보'
         className='gap-2 item-middle'>
         <img
-          src={
-            profileImage ||
-            'https://i.pinimg.com/736x/cc/5d/07/cc5d07daf1f1872eeebbfc1998b3adad.jpg'
-          }
+          src={profileImage || exProfile}
           alt='profile'
           className='object-cover w-10 h-10 rounded-full'
         />
