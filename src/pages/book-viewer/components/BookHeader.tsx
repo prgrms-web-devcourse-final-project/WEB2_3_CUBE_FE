@@ -21,7 +21,7 @@ export const BookHeader = ({
   colors,
   reviewData,
 }: BookHeaderProps) => (
-  <div className='py-12 item-between px-14'>
+  <div className='py-12 flex justify-between items-start px-14 w-full'>
     <h1
       className={`mb-8 font-semibold transition-all duration-300 ${
         title?.length > 10 ? 'text-4xl' : 'text-6xl'
