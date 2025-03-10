@@ -23,7 +23,8 @@ export const ProfileActions = ({
       await profileAPI.withdraw();
       navigate('/login');
     } catch (error) {
-      showToast('회원 탈퇴에 실패했어요. 잠시 후 다시 시도해주세요.', error);
+      showToast('회원 탈퇴에 실패했어요. 잠시 후 다시 시도해주세요.', 'error');
+      console.error(error);
     }
   };
 
