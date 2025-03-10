@@ -19,11 +19,11 @@ export const Toast = () => {
       shadow-md
     `}>
       <img
-        src={style.icon}
+        src={style?.icon}
         alt={`${type} 알림 아이콘`}
-        className={`w-5 h-5 ${style.iconColor}`}
+        className={`w-5 h-5 ${style?.iconColor}`}
       />
-      <span className={`${style.textColor} font-semibold`}>{message}</span>
+      <span className={`${style?.textColor} font-semibold`}>{message}</span>
     </div>
   );
 };

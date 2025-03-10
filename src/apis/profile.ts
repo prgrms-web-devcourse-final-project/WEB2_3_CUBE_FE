@@ -128,15 +128,13 @@ export const profileAPI = {
     if (webSocketService.isConnected()) {
       webSocketService.disconnect(true);
     }
-  
 
-    const { data } = await axiosInstance.delete(`${API_URL}/auth/withdraw`);
+    const { data } = await axiosInstance.delete(`/${API_URL}/auth/withdraw`);
 
     localStorage.removeItem('user-storage');
     cookies.remove('accessToken', { path: '/' });
     cookies.remove('refreshToken', { path: '/' });
 
     return data;
-
   },
 };
