@@ -8,6 +8,7 @@ import { ProfileImageEdit } from './components/ProfileImageEdit';
 import { ProfileForm } from './components/ProfileForm';
 import { ProfileActions } from './components/ProfileActions';
 import { useToastStore } from '@/store/useToastStore';
+import exProfile from '@assets/rank/exProfile.png';
 
 interface FormData {
   nickname: string;
@@ -51,7 +52,7 @@ const ProfileCardEditPage = () => {
         setFormData({
           nickname: profile.nickname || '',
           bio: profile.bio || '',
-          profileImage: profile.profileImage || '',
+          profileImage: profile.profileImage || exProfile,
           musicGenres: profile.musicGenres || [],
           bookGenres: profile.bookGenres || [],
         });

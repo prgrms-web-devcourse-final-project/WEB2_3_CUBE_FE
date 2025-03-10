@@ -9,8 +9,6 @@ import { useEffect } from 'react';
 import { notificationAPI } from '@apis/notification';
 import { useUserStore } from '@/store/useUserStore';
 
-type TabType = 'pendingRead' | 'viewed';
-
 interface NotificationModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -93,7 +91,7 @@ const NotificationModal = ({
         className='overflow-y-auto max-h-[calc(100vh-400px)] flex flex-col gap-6 px-4 scrollbar'>
         {isLoading ? (
           <div className='flex flex-col gap-6'>
-            {Array.from({ length: 5 }).map((_, index) => (
+            {Array.from({ length: 10 }).map((_, index) => (
               <NotificationSkeletonItem key={`skeleton-${index}`} />
             ))}
           </div>
