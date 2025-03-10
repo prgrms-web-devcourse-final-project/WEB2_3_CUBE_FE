@@ -31,7 +31,7 @@ export default function CdRackPage() {
       try {
         setIsLoading(true);
 
-        const result = await getCdRack(userId, 15, cursor);
+        const result = await getCdRack(userId, 10, cursor);
         setCDRackInfo(result);
       } catch (error) {
         console.error('cd 목록을 가져오는데 실패했습니다:', error);

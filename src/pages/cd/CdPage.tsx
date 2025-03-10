@@ -5,10 +5,11 @@ import CdComment from './components/CdComment';
 import CdPlayer from './components/CdPlayer';
 import { useEffect, useState } from 'react';
 import { getCdInfo } from '@apis/cd';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Loading from '@components/Loading';
 
 export default function CdPage() {
+  const navigate = useNavigate();
   const [cdInfo, setCdInfo] = useState<CDInfo | null>(null);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -20,12 +21,26 @@ export default function CdPage() {
   const myCdId = Number(useParams().cdId);
   const userId = Number(useParams().userId);
 
+  // 뒤로가기시 cd 렉페이지로 이동
+  useEffect(() => {
+    window.history.pushState(null, '', window.location.href);
+
+    const handleBackButton = () => {
+      navigate(`/cdrack/${userId}`, { replace: true });
+    };
+    window.addEventListener('popstate', handleBackButton);
+
+    return () => {
+      window.removeEventListener('popstate', handleBackButton);
+    };
+  }, []);
+
   useEffect(() => {
     const fetchCdInfo = async () => {
       try {
         const result = await getCdInfo(myCdId, userId);
-
         setCdInfo(result);
+        setCdPlaying(false);
       } catch (error) {
         console.error(error);
       } finally {

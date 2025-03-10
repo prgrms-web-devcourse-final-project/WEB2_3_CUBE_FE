@@ -4,7 +4,6 @@ import { truncateTitle } from '@utils/truncate';
 
 const AUTHOR_MAX_LENGTH = 8;
 
-
 export default function EditStatusItem({
   data,
   isBook,
@@ -33,7 +32,11 @@ export default function EditStatusItem({
           {/* 체크 박스 */}
           <input
             type='checkbox'
-            style={isSelected ? { backgroundColor: mainColor } : {}}
+            style={
+              isSelected
+                ? { backgroundColor: mainColor, borderColor: mainColor }
+                : {}
+            }
             checked={isSelected}
             onChange={onSelect}
             className={classNames(
