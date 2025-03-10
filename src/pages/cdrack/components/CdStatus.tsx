@@ -54,13 +54,22 @@ export default function CdStatus({
       : 0;
 
     if (pageLength === 15) return;
-    setcdRackDatas((prev) => ({
-      ...prev,
-      data: [...(prev.data || []), newCdDatas],
-      nextCursor: newCdDatas.myCdId,
-      lastMyCdId: newCdDatas.myCdId,
-      totalCount: prev.totalCount + 1,
-    }));
+    setcdRackDatas((prev) => {
+      const prevData = prev ?? {
+        data: [],
+        firstMyCdId: 0,
+        lastMyCdId: 0,
+        nextCursor: 0,
+        totalCount: 0,
+      };
+      return {
+        ...prevData,
+        data: [...prevData.data, newCdDatas],
+        nextCursor: newCdDatas.myCdId,
+        lastMyCdId: newCdDatas.myCdId,
+        totalCount: prevData.totalCount + 1,
+      };
+    });
   }, [newItem]);
 
   return (
@@ -89,10 +98,10 @@ export default function CdStatus({
           />
         </>
       ) : (
-        <div className=' h-full '>
+        <div>
           <TypingText
             text='  꽂을 CD가 없네요...'
-            className='h-[250px] text-[40px] font-bold text-white  text-center pt-46 mb-12'
+            className='h-[200px] text-[40px] font-bold text-white  text-center pt-37 mb-15 '
           />
           <img
             className='max-w-[472px] max-h-[472px] shrink-0 drop-shadow-book aspect-square m-auto hover:animate-slowSpin '
