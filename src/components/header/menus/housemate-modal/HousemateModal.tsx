@@ -25,12 +25,11 @@ const HousemateModal = ({
   onClose,
   buttonRef,
 }: HousemateModalProps) => {
-
   const {
     searchValue,
     setSearchValue,
     activeTab,
-    setActiveTab,
+    handleTabChange,
     housemates,
     isLoading,
     error,
@@ -56,7 +55,7 @@ const HousemateModal = ({
       <TabMenu<TabType>
         activeTab={activeTab}
         tabs={TABS}
-        onTabChange={setActiveTab}
+        onTabChange={handleTabChange}
         modalType='housemate'
       />
 
@@ -73,7 +72,7 @@ const HousemateModal = ({
         className='flex flex-col gap-6 px-4 mt-4 overflow-y-auto h-[calc(80vh-280px)] scrollbar scrollbar-pink'>
         {isLoading ? (
           <div className='flex flex-col gap-6'>
-            {Array.from({ length: 10 }).map((_, index) => (
+            {Array.from({ length: 8 }).map((_, index) => (
               <HousemateSkeletonItem key={index} />
             ))}
           </div>

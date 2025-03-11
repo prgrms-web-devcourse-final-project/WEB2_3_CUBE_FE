@@ -35,7 +35,7 @@ export default function EditStatusItem({
             style={
               isSelected
                 ? { backgroundColor: mainColor, borderColor: mainColor }
-                : {}
+                : { borderColor: mainColor }
             }
             checked={isSelected}
             onChange={onSelect}
@@ -45,7 +45,7 @@ export default function EditStatusItem({
           />
           {isSelected && (
             <img
-              className='absolute  w-2.5 h-2.5  '
+              className='absolute  w-2.5 h-2.5'
               src={check_logo}
             />
           )}

@@ -32,7 +32,7 @@ const BookCaseList = ({ books, showEmptyMessage }: BookCaseListProps) => {
       <ul className='w-[5300px] h-[400px] bg-[#D1E5F1] shadow-[inset_0px_4px_20px_5px_rgba(30,146,215,0.20)] flex items-end gap-14 px-20 justify-center'>
         <div className='flex relative justify-center items-center w-full'>
           <div className='text-center'>
-            <li className='text-2xl text-white rounded-2xl cursor-pointer w-50 h-70 book-gradient drop-shadow-book item-middle'>
+            <li className='text-2xl text-white rounded-2xl w-50 h-70 book-gradient drop-shadow-book item-middle select-none cursor-default'>
               ｡°(っ°´o`°ｃ)°｡
               <div className='absolute bottom-0 w-full bg-white rounded-b-2xl h-13'></div>
             </li>

@@ -17,7 +17,8 @@ export const useHousemates = (isOpen: boolean) => {
   const [searchValue, setSearchValue] = useState('');
   const [activeTab, setActiveTab] = useState<TabType>('followers');
   const [housemates, setHousemates] = useState<Housemate[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [nextCursor, setNextCursor] = useState<number>(0);
   const [hasMore, setHasMore] = useState(true);
@@ -50,7 +51,9 @@ export const useHousemates = (isOpen: boolean) => {
 
   // API 호출 로직
   const fetchHousemates = async (cursor?: number) => {
-    if (!user) return;
+    if (!user || isFetching) return;
+    setIsFetching(true);
+
     if (cursor === 0) {
       setIsLoading(true);
     }
@@ -82,28 +85,42 @@ export const useHousemates = (isOpen: boolean) => {
       setError('하우스메이트 목록을 불러오는데 실패했습니다.');
       console.error('하우스메이트 조회 에러:', err);
     } finally {
-      setIsLoading(false);
+      setIsFetching(false);
+      if (cursor === 0) {
+        setIsLoading(false);
+      }
     }
   };
 
-  // 탭 변경 시 초기화
+  const handleTabChange = (tab: TabType) => {
+    setActiveTab(tab);
+    setHousemates([]);
+    setNextCursor(0);
+    setHasMore(true);
+    setIsLoading(true);
+    fetchHousemates(0);
+  };
+
+  // 모달이 열릴 때만 데이터 로드
   useEffect(() => {
     if (isOpen) {
       setHousemates([]);
       setNextCursor(0);
       setHasMore(true);
-      fetchHousemates();
+      setIsLoading(true);
+      fetchHousemates(0);
     }
-  }, [activeTab, isOpen]);
+  }, [isOpen]);
 
   // 검색어 변경 시 초기화 및 API 호출
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (isOpen) {
+      if (isOpen && searchValue !== '') {
         setHousemates([]);
         setNextCursor(0);
         setHasMore(true);
-        fetchHousemates();
+        setIsLoading(true);
+        fetchHousemates(0);
       }
     }, 300);
 
@@ -114,7 +131,7 @@ export const useHousemates = (isOpen: boolean) => {
     searchValue,
     setSearchValue,
     activeTab,
-    setActiveTab,
+    handleTabChange,
     housemates,
     isLoading,
     error,

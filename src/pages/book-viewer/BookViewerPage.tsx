@@ -18,7 +18,7 @@ const BookViewerPage = ({ reviewData, bookId }: BookViewerPageProps) => {
     <section className='flex w-full h-screen overflow-auto'>
       <Link
         to='/'
-        className='fixed top-10 left-21 z-50'>
+        className='fixed top-12 left-21 z-50'>
         <img
           src={logo}
           alt='logo'
