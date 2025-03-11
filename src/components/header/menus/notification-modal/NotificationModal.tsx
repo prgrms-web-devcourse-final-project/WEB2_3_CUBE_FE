@@ -88,7 +88,7 @@ const NotificationModal = ({
 
       <ul
         ref={listRef}
-        className='overflow-y-auto max-h-[calc(100vh-400px)] flex flex-col gap-6 px-4 scrollbar'>
+        className='flex flex-col gap-6 px-4 mt-4 overflow-y-auto h-[calc(80vh-280px)] scrollbar'>
         {isLoading ? (
           <div className='flex flex-col gap-6'>
             {Array.from({ length: 10 }).map((_, index) => (
