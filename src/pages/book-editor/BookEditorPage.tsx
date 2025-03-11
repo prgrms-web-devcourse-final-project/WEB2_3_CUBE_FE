@@ -173,6 +173,7 @@ const BookEditorPage = ({
           <input
             type='text'
             maxLength={25}
+            required
             placeholder='제목을 입력해주세요...'
             value={reviewFields.title}
             onChange={(e) => handleFieldChange('title')(e.target.value)}

@@ -218,7 +218,7 @@ const BookCasePage = () => {
       <ToolBoxButton
         onAddBook={() => setIsModalOpen(true)}
         onOpenList={() => setIsListOpen(true)}
-        isDisabled={user?.userId !== Number(userId)}
+        isOtherUserBookcase={user?.userId !== Number(userId)}
       />
 
       {isModalOpen && (
