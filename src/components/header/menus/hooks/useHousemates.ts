@@ -92,7 +92,16 @@ export const useHousemates = (isOpen: boolean) => {
     }
   };
 
-  // 탭 변경 시 초기화
+  const handleTabChange = (tab: TabType) => {
+    setActiveTab(tab);
+    setHousemates([]);
+    setNextCursor(0);
+    setHasMore(true);
+    setIsLoading(true);
+    fetchHousemates(0);
+  };
+
+  // 모달이 열릴 때만 데이터 로드
   useEffect(() => {
     if (isOpen) {
       setHousemates([]);
@@ -101,12 +110,12 @@ export const useHousemates = (isOpen: boolean) => {
       setIsLoading(true);
       fetchHousemates(0);
     }
-  }, [activeTab, isOpen]);
+  }, [isOpen]);
 
   // 검색어 변경 시 초기화 및 API 호출
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (isOpen) {
+      if (isOpen && searchValue !== '') {
         setHousemates([]);
         setNextCursor(0);
         setHasMore(true);
@@ -122,7 +131,7 @@ export const useHousemates = (isOpen: boolean) => {
     searchValue,
     setSearchValue,
     activeTab,
-    setActiveTab,
+    handleTabChange,
     housemates,
     isLoading,
     error,

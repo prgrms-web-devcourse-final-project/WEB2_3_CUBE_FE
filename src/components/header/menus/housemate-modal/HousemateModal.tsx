@@ -25,12 +25,11 @@ const HousemateModal = ({
   onClose,
   buttonRef,
 }: HousemateModalProps) => {
-
   const {
     searchValue,
     setSearchValue,
     activeTab,
-    setActiveTab,
+    handleTabChange,
     housemates,
     isLoading,
     error,
@@ -56,7 +55,7 @@ const HousemateModal = ({
       <TabMenu<TabType>
         activeTab={activeTab}
         tabs={TABS}
-        onTabChange={setActiveTab}
+        onTabChange={handleTabChange}
         modalType='housemate'
       />
 
