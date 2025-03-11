@@ -91,7 +91,7 @@ const NotificationModal = ({
         className='flex flex-col gap-6 px-4 mt-4 overflow-y-auto h-[calc(80vh-280px)] scrollbar'>
         {isLoading ? (
           <div className='flex flex-col gap-6'>
-            {Array.from({ length: 10 }).map((_, index) => (
+            {Array.from({ length: 8 }).map((_, index) => (
               <NotificationSkeletonItem key={`skeleton-${index}`} />
             ))}
           </div>
