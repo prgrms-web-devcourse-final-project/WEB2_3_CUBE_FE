@@ -9,8 +9,6 @@ interface PointHistoryProps {
 
 const PointHistory = forwardRef<HTMLDivElement, PointHistoryProps>(
   ({ data, isFetching }, ref) => {
-    console.log(data?.pages);
-
     return (
       <section
         className='translate-y-5 w-full h-[360px] overflow-y-auto  point-scrollbar 
@@ -31,8 +29,12 @@ const PointHistory = forwardRef<HTMLDivElement, PointHistoryProps>(
                     <li
                       key={point.id}
                       className='flex items-center font-medium w-full'>
-                      <span className='text-sm text-[#3E507D]'>{point.type}</span>
-                      <span className='ml-20 text-[#162C63]'>{PointReason[point.reason]}</span>
+                      <span className='text-sm text-[#3E507D]'>
+                        {point.type}
+                      </span>
+                      <span className='ml-20 text-[#162C63]'>
+                        {PointReason[point.reason]}
+                      </span>
                       <span
                         className={`ml-auto ${
                           point.type === '적립'

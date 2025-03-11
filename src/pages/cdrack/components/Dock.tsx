@@ -8,6 +8,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { deleteCdsFromMyRack } from '@apis/cd';
 import ConfirmModal from '@components/ConfirmModal';
 import { useToastStore } from '@/store/useToastStore';
+import { useUserStore } from '@/store/useUserStore';
+import { useParams } from 'react-router-dom';
 
 interface DockProps {
   isEmpty?: boolean;
@@ -31,7 +33,7 @@ const Dock = React.memo(
       },
       ref,
     ) => {
-      const [isDockOpen, setIsDockOpen] = useState(false);
+      const [isDockOpen, setIsDockOpen] = useState(true);
       const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
       const { showToast } = useToastStore();
 
@@ -51,23 +53,30 @@ const Dock = React.memo(
             : false,
         [cdRackInfo],
       );
+      const { userId: myUserId } = useUserStore().user; // `useMemo` 필요 없음
+      const { userId: parsedUserId } = useParams();
+      const userId = useMemo(() => Number(parsedUserId), [parsedUserId]);
 
+      // DOCK 반응형 너비 지정
       const dockWidth = useMemo(() => {
-        if (!cdRackInfo?.data?.length || !isDockOpen) return 0;
+        if (!isDockOpen) return 0;
         const itemWidth =
           window.innerWidth >= 1536 ? 68 : window.innerWidth >= 1280 ? 60 : 40;
         const gap =
           window.innerWidth >= 1536 ? 24 : window.innerWidth >= 1280 ? 16 : 8;
+        const buttonWidth = 104;
+        const minDockWidth = 200;
+        if (!cdRackInfo?.data?.length) {
+          return minDockWidth;
+        }
         const totalItemsWidth =
           cdRackInfo?.data?.length * itemWidth +
           (cdRackInfo?.data?.length - 1) * gap;
-        const buttonWidth = 104;
+
         const totalWidth = totalItemsWidth + buttonWidth + 16;
 
         return Math.min(totalWidth, window.innerWidth * 0.8);
       }, [cdRackInfo, isDockOpen]);
-
-      console.log(isNoPrev, cdRackInfo);
 
       const handleSlideChange = (index: number) => {
         const swiper = (ref as React.RefObject<SwiperRef>)?.current?.swiper;
@@ -107,12 +116,14 @@ const Dock = React.memo(
 
           await deleteCdsFromMyRack([cdId]);
           setIsConfirmModalOpen(false);
-          showToast(`선택한 CD가 삭제되었습니다.`, 'success');
+          showToast(`선택한 CD가 삭제되었어요!`, 'success');
         } catch (error) {
-          showToast(`CD를 삭제하는데 실패했습니다.`, 'error');
+          showToast(`CD를 삭제하는데 실패했어요.`, 'error');
           setCdRackInfo(previousCdDatas);
         }
       };
+
+      console.log(dockWidth);
 
       return (
         <>
@@ -120,8 +131,8 @@ const Dock = React.memo(
             <motion.div
               className='fixed bottom-1 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[5] rounded-2xl border-2 border-[#fff] bg-[#FFFFFF33] backdrop-blur-[20px] h-[110px]'
               animate={{
-                width: isDockOpen ? 'auto' : 0,
-                // width: isDockOpen ? dockWidth : 0,
+                // width: isDockOpen ? 'auto' : 0,
+                width: isDockOpen ? dockWidth : 0,
                 maxWidth: isDockOpen ? '80vw' : '0vw',
                 opacity: isDockOpen ? 1 : 0,
               }}>
@@ -130,7 +141,7 @@ const Dock = React.memo(
                   <span className='text-white text-lg'>｡°(っ°´o`°ｃ)°｡</span>
                 </div>
               ) : (
-                <div className='relative h-full flex justify-center items-center gap-2  '>
+                <div className=' h-full flex justify-center items-center gap-2  '>
                   {/* 이전 cd목록 버튼 */}
                   <motion.button
                     whileHover={{ translateX: -5 }}
@@ -173,21 +184,23 @@ const Dock = React.memo(
                           }
                         }>
                         <img
-                          className='rounded-[6.4px] aspect-square  w-10 h-10 xl:w-15 xl:h-15  2xl:w-17 2xl:h-17'
+                          className='rounded-[6.4px] aspect-square  w-10 h-10 xl:w-15 xl:h-15 2xl:w-17 2xl:h-17'
                           src={data.coverUrl}
                           alt='CD 이미지'
                         />
                         {/* 휴지통 */}
-                        <div
-                          onClick={() => setIsConfirmModalOpen(true)}
-                          className='absolute top-[-10px] right-[-10px] w-6 h-6 bg-white rounded-full
+                        {myUserId === userId && (
+                          <div
+                            onClick={() => setIsConfirmModalOpen(true)}
+                            className='absolute top-[-10px] right-[-10px] w-6 h-6 bg-white rounded-full
                          flex items-center justify-center  opacity-0  group-hover:opacity-100 all-200-eio '>
-                          <img
-                            src={deleteIcon}
-                            alt=''
-                            className='w-5 h-5'
-                          />
-                        </div>
+                            <img
+                              src={deleteIcon}
+                              alt=''
+                              className='w-5 h-5'
+                            />
+                          </div>
+                        )}
                       </motion.li>
                     ))}
                   </ul>
@@ -195,7 +208,7 @@ const Dock = React.memo(
                   {/* 이후 cd목록 버튼 */}
                   <motion.button
                     onClick={() => onNextPage(cdRackInfo?.nextCursor)}
-                    className='h-full overflow-hidden'
+                    className=' overflow-hidden'
                     whileHover={{ translateX: 5 }}
                     animate={{
                       opacity: isNoNext ? 0.15 : 1,

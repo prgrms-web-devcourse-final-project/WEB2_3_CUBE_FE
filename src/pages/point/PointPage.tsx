@@ -34,7 +34,7 @@ export default function PointPage() {
         return undefined;
       },
       initialPageParam: 0,
-      staleTime: 1000 * 60 * 5, // 5분
+      // staleTime: 1000 * 60 * 5, // 5분
     });
 
   useEffect(() => {
@@ -56,9 +56,12 @@ export default function PointPage() {
   }, [inView, hasNextPage, fetchNextPage]);
 
   const fetchPointsHistory = async (cursor: number) => {
-    const result = await getPointHistory(5, cursor);
+    const result = await getPointHistory(10, 0);
+
+    console.log(result);
 
     const history = result.history;
+    console.log(history);
 
     // 날짜별로 묶어서 배열화
     const filteredByDates = history.reduce(
@@ -72,6 +75,7 @@ export default function PointPage() {
       },
       {},
     );
+
     return { ...result, history: [...Object.entries(filteredByDates)] };
   };
 
@@ -113,7 +117,9 @@ export default function PointPage() {
 
             <div className='mb-8 w-full px-12 '>
               <div className='flex justify-between items-center mb-6 '>
-                <p className='text-[#162C63] font-medium text-sm'>포인트 잔고</p>
+                <p className='text-[#162C63] font-medium text-sm'>
+                  포인트 잔고
+                </p>
 
                 <div className='flex items-center gap-1'>
                   <img
