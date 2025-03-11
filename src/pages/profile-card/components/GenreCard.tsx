@@ -7,7 +7,7 @@ const GenreCard = ({ title, genres }: GenreCardProps) => {
           genres.map((genre, index) => (
             <span
               key={`${genre}-${index}`}
-              className='text-xs text-[#3E507D] bg-[#73A1F7]/20 rounded-full px-2 py-1 min-w-15 item-middle font-medium item-middle text-center   '>
+              className='text-xs text-[#3E507D] bg-[#73A1F7]/20 rounded-full px-2 py-1 min-w-15 item-middle font-medium item-middle text-center break-keep'>
               {genre}
             </span>
           ))
