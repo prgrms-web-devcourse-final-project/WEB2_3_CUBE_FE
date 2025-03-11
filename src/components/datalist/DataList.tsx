@@ -179,7 +179,7 @@ export default function DataList({
               `text-4xl font-bold leading-normal text-center`,
               `text-[${mainColor}]`,
             )}>
-            PlayList
+            {isBook ? 'BookList' : 'PlayList'}
           </span>
 
           {/* 총 갯수, 편집 버튼 */}
