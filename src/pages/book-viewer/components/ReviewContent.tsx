@@ -58,7 +58,10 @@ export const ReviewContent = ({
       <p
         className='text-sm '
         style={{ color: `${colors.primary}80` }}>
-        {formatToKoreanDateTime(reviewData.writeDateTime)}
+        {formatToKoreanDateTime(
+          reviewData.writeDateTime ||
+            new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
+        )}
       </p>
       <button
         onClick={() => {
