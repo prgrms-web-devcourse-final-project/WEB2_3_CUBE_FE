@@ -79,6 +79,7 @@ interface TemplateProps {
     } | null,
   ) => void;
   templateData: TemplateData;
+  questions: { question: string; answer?: string }[];
 }
 
 // cd comments

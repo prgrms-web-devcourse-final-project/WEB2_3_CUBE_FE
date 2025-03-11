@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import commentEdit from '@assets/cd/comment-edit.svg';
 import commentSubmit from '@assets/cd/comment-submit.svg';
 import CommentList from './CommentList';
@@ -109,13 +109,25 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
   }, [cdComments, commentTime]);
 
   // 댓글 작성
-  const handleSubmitComment = useCallback(async () => {
-    if (commentInputRef.current.value.trim() === '') return;
-    mutate({
-      timestamp: commentTime,
-      content: commentInputRef.current.value,
-    });
-  }, [mutate, commentTime]);
+  const handleSubmitComment = useCallback(
+    async (e: FormEvent<HTMLFormElement> | null) => {
+      if (e) e.preventDefault();
+
+      if (commentInputRef.current.value.trim() === '') return;
+      mutate({
+        timestamp: commentTime,
+        content: commentInputRef.current.value,
+      });
+    },
+    [mutate, commentTime],
+  );
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmitComment(null);
+    }
+  };
 
   return (
     <>
@@ -160,16 +172,18 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
           </ul>
 
           {/* 댓글 입력 창 */}
-          <form className='w-full  h-[104px] bg-[#FFFFFF33] border-2 border-[#FFFFFF80] rounded-[14px] relative '>
+          <form
+            onSubmit={handleSubmitComment}
+            className='w-full  h-[104px] bg-[#FFFFFF33] border-2 border-[#FFFFFF80] rounded-[14px] relative '>
             <textarea
               ref={commentInputRef}
               className='w-full h-full p-5  resize-none rounded-[14px] outline-none text-white'
-              placeholder='댓글을 입력해주세요 φ(゜▽゜*)♪'></textarea>
+              placeholder='댓글을 입력해주세요 φ(゜▽゜*)♪'
+              onKeyDown={(e) => handleKeyDown(e)}></textarea>
 
             <button
-              type='button'
+              type='submit'
               disabled={isPending}
-              onClick={handleSubmitComment}
               className='absolute right-4 bottom-5 hover:opacity-50'>
               <img
                 src={commentSubmit}

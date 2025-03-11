@@ -10,6 +10,7 @@ import { useDebounce } from '@hooks/useDebounce';
 import SkeletonItem from '@components/SkeletonItem';
 import { useUserStore } from '@/store/useUserStore';
 import { motion } from 'framer-motion';
+import { useToastStore } from '@/store/useToastStore';
 
 const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
   const [currentInput, setCurrentInput] = useState('');
@@ -22,6 +23,7 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
 
   const myUserId = useUserStore((state) => state.user).userId;
   const userId = Number(useParams().userId);
+  const { showToast } = useToastStore();
 
   // 작성자이거나 방주인일 경우에만 삭제 가능
   const isAccessible = useCallback(
@@ -68,6 +70,7 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
         prevComments.filter((comment) => comment.id !== commentId),
       );
       await deleteCdComment(myCdId, commentId);
+      showToast('댓글이 삭제되었어요!', 'success');
     } catch (error) {
       setCdComments(previousComments);
       console.error(error);

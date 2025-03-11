@@ -16,16 +16,16 @@ export default function MainPage() {
   const handleLoadingComplete = useCallback(() => {
     if (!hasShownGuide.current) {
       setIsGuideOpen(true);
-      hasShownGuide.current = true; 
+      hasShownGuide.current = true;
     }
   }, []);
 
   useEffect(() => {
-    if(isGuideOpen){
+    if (isGuideOpen) {
       const timer = setTimeout(() => {
         setIsGuideOpen(false);
       }, 2300);
-      
+
       return () => clearTimeout(timer);
     }
   }, [isGuideOpen]);
@@ -33,7 +33,10 @@ export default function MainPage() {
   return (
     <main className='@container main-background w-full min-h-screen relative overflow-hidden'>
       {/* 메인 벌집 구조의 방 */}
-      <HiveRooms myUserId={user?.userId} onLoadingComplete={handleLoadingComplete} />
+      <HiveRooms
+        myUserId={user?.userId}
+        onLoadingComplete={handleLoadingComplete}
+      />
 
       {/* 하단 버튼 */}
       <RankMenu onOpen={() => setIsRankingOpen(true)} />
@@ -50,15 +53,14 @@ export default function MainPage() {
 
       {/* 드래그 가이드 */}
       <AnimatePresence>
-        {isGuideOpen && 
-        <AnimationGuide 
-          titleText={'마우스 왼쪽 버튼으로 드래그하고'} 
-          subText={'휠로 줌 인/아웃을 해보세요!'}
-          onClose={() => setIsGuideOpen(false)}
-        />
-        }
+        {isGuideOpen && (
+          <AnimationGuide
+            titleText={'마우스 왼쪽 버튼으로 드래그하고'}
+            subText={'휠로 줌 인/아웃을 해보세요!'}
+            onClose={() => setIsGuideOpen(false)}
+          />
+        )}
       </AnimatePresence>
-
     </main>
   );
 }

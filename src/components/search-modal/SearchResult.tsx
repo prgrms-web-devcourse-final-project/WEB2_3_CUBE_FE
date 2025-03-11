@@ -116,6 +116,7 @@ export const SearchResult = ({
       // console.log(error.response?.data?.response);
 
       if (
+        // 이건 정해진 문구라 못바꿈
         error.response?.data?.message ===
           '책장에 더 이상 책을 추가할 수 없습니다. 책장을 업그레이드 해주세요.' ||
         error.response?.data?.message === 'CD 랙의 저장 용량을 초과하였습니다.'
@@ -123,7 +124,7 @@ export const SearchResult = ({
         setIsUpgradeModalOpen(true);
       } else {
         showToast(
-          error.response?.data?.message || '오류가 발생했습니다.',
+          error.response?.data?.message || '오류가 발생했어요.',
           'error',
         );
       }
@@ -148,7 +149,7 @@ export const SearchResult = ({
     } catch (error: unknown) {
       const apiError = error as ApiError;
       console.error('업그레이드 실패:', apiError);
-      showToast('업그레이드에 실패했습니다.', 'error');
+      showToast('업그레이드에 실패했어요.', 'error');
     }
   };
 
