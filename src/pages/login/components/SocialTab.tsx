@@ -12,21 +12,21 @@ export default function SocialTab() {
   const [naverImage, setNaverImage] = useState(naver);
 
   const handleKakaoLogin = () => {
-    window.location.href = `${
-      import.meta.env.VITE_AUTH_URL
-    }/oauth2/authorization/kakao`;
+    window.location.replace(
+      `${import.meta.env.VITE_API_URL}/oauth2/authorization/kakao`,
+    );
   };
 
   const handleNaverLogin = () => {
-    window.location.href = `${
-      import.meta.env.VITE_AUTH_URL
-    }/oauth2/authorization/naver`;
+    window.location.replace(
+      `${import.meta.env.VITE_API_URL}/oauth2/authorization/naver`,
+    );
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = `${
-      import.meta.env.VITE_AUTH_URL
-    }/oauth2/authorization/google`;
+    window.location.replace(
+      `${import.meta.env.VITE_API_URL}/oauth2/authorization/google`,
+    );
   };
   return (
     <div className='flex flex-col  items-center rounded-3xl h-full bg-[#FCF7FD66] backdrop-blur-lg'>
@@ -55,7 +55,7 @@ export default function SocialTab() {
             src={kakaoImage}
             alt='카카오로 로그인'
           />
-          <span className='font-semibold' >카카오로 시작하기</span>
+          <span className='font-semibold'>카카오로 시작하기</span>
         </button>
         <button
           onClick={handleNaverLogin}
@@ -80,7 +80,7 @@ export default function SocialTab() {
             src={google}
             alt='구글로 로그인'
           />
-          <span className='font-semibold ' >Google로 시작하기</span>
+          <span className='font-semibold '>Google로 시작하기</span>
         </button>
       </div>
     </div>

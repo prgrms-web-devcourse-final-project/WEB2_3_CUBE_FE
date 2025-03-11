@@ -5,10 +5,11 @@ import pauseSong from '@assets/cd/pause-icon.svg';
 import playSong from '@assets/cd/play-icon.svg';
 import sufflesong from '@assets/cd/shuffle-icon.svg';
 import cdList from '@assets/cd/music-list-icon.svg';
+import homeIcon from '@assets/cd/home-icon.svg';
 import ModalBackground from '@components/ModalBackground';
 import DataList from '@components/datalist/DataList';
 import YouTube, { YouTubeEvent } from 'react-youtube';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getCdRack, getCdRackSearch } from '@apis/cd';
 
 export default function CdPlayer({
@@ -20,7 +21,8 @@ export default function CdPlayer({
   onCdPlaying: (value: boolean) => void;
   onCdTime: (value: number) => void;
 }) {
-  const VOLUME = 10;
+  const VOLUME = 10; // 기본 볼륨
+  const navigate = useNavigate();
   const [isCdListOpen, setIsCdListOpen] = useState(false);
   const [cdRackInfo, setCdRackInfo] = useState<CdDataListInfo>({
     data: [],
@@ -414,6 +416,14 @@ export default function CdPlayer({
                 className='w-8'
                 src={sufflesong}
                 alt='cd 무한재생 버튼'
+              />
+            </button>
+
+            <button onClick={() => navigate('/')}>
+              <img
+                className='w-8'
+                src={homeIcon}
+                alt='홈으로가기 버튼'
               />
             </button>
 

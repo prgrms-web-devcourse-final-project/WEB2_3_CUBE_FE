@@ -22,7 +22,7 @@ const Router = () => {
   return (
     <Routes>
       <Route
-        path='/oauth/callback'
+        path='/login/callback'
         element={<Redirection />}
       />
       {/* 헤더가 필요한 페이지 */}

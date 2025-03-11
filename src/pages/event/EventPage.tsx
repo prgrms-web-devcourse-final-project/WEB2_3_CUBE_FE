@@ -36,14 +36,11 @@ export default function EventPage() {
     const joinEvent = async () => {
       try {
         await addEventJoin(eventInfo?.id);
-        showToast(
-          `${eventInfo?.rewardPoints} 포인트를 획득했습니다!`,
-          'success',
-        );
+        showToast(`${eventInfo?.rewardPoints} 포인트를 획득했어요!`, 'success');
         setShowResult(true);
       } catch (error) {
         showToast(
-          error?.response?.data.message || '알 수 없는 오류가 발생했습니다.',
+          error?.response?.data.message || '알 수 없는 오류가 발생했어요.',
           'error',
         );
         setShowResult(false);
@@ -82,7 +79,9 @@ export default function EventPage() {
             <TypingText
               speed={150}
               pauseTime={1200}
-              text='아직 이벤트가 없어요!'
+              text={
+                eventInfo?.id ? '이벤트가 열렸어요!' : `아직 이벤트가 없어요!`
+              }
               className='h-[250px] text-[35px] font-bold text-white  text-center pt-20 '
             />
           </div>
@@ -96,12 +95,12 @@ export default function EventPage() {
 
         <div
           className={`absolute bottom-23 right-33  ${
-            !eventInfo.id && 'pointer-events-none'
+            !eventInfo?.id && 'pointer-events-none'
           }`}
           onClick={handleJoinEvent}>
           <LayeredButton
             theme='red'
-            disabled={!eventInfo.id}
+            disabled={!eventInfo?.id}
             className={`py-8 px-9 rounded-[10px] font-bold `}>
             {isEventInProgress ? '포인트 받기' : '이벤트 준비중'}
           </LayeredButton>

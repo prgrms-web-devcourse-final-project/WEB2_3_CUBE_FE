@@ -167,14 +167,32 @@ export const searchSpotifyCds = async (
     // spotify api로 검색어와 관련된 기본 정보 가져오기
     const token = await getSpotifyToken();
     const encodedQuery = encodeURIComponent(searchQuery);
-    const url = `https://api.spotify.com/v1/search?q=${encodedQuery}&type=track&market=KR&limit=10`;
+    const url = `https://api.spotify.com/v1/search?q=${encodedQuery}&type=track&market=KR&limit=50`;
     const { data } = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+
+    // 올바른 앨범 이미지, 발매일 필터링
+    const filteredItems = data.tracks.items
+      .filter((music: CDSearch) => {
+        const releaseDate = music.album.release_date;
+        const albumImage =
+          music.album.images?.[0]?.url ||
+          music.album.images?.[1]?.url ||
+          music.album.images?.[2]?.url ||
+          '';
+        return (
+          releaseDate &&
+          /^\d{4}-\d{2}-\d{2}$/.test(releaseDate) &&
+          albumImage !== ''
+        );
+      })
+      .slice(0, 10); // 🎯 필터링 후 10개만 남기기
+
     const searchedCdInfo = await Promise.all(
-      data.tracks.items.map(async (music: CDSearch) => {
+      filteredItems.map(async (music: CDSearch) => {
         const artistId = music.artists[0]?.id;
 
         const genres = artistId
@@ -183,12 +201,11 @@ export const searchSpotifyCds = async (
 
         return {
           id: music.id,
-          title: music.name,
+          title: music.name || 'Unknwn Title',
           artist: music.artists[0]?.name || 'Unknown Artist',
-          album_title: music.album.name,
+          album_title: music.album.name || 'Unknown Album',
           date: music.album.release_date,
-          imageUrl:
-            music.album.images?.[0]?.url || music.album.images?.[1]?.url || '',
+          imageUrl: music.album.images?.[0]?.url || '',
           type: 'CD' as const,
           genres: genres,
         };

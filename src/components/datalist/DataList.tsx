@@ -109,7 +109,7 @@ export default function DataList({
   const handleDelete = async () => {
     try {
       if (selectedIds.length === 0) {
-        showToast('삭제할 항목을 선택해주세요.', 'error');
+        showToast('삭제할 항목을 선택해주세요!', 'error');
         return;
       }
 
@@ -134,11 +134,11 @@ export default function DataList({
       setIsEdit(false); // 편집 모드 종료
 
       // 성공 메시지
-      showToast(`선택한 ${isBook ? '책' : 'CD'}이 삭제되었습니다.`, 'success');
+      showToast(`선택한 ${isBook ? '책' : 'CD'}이 삭제되었어요!`, 'success');
     } catch (error: any) {
       console.error('삭제 중 오류가 발생했습니다:', error);
       showToast(
-        error.response?.data?.message || '삭제 중 오류가 발생했습니다.',
+        error.response?.data?.message || '삭제 중 오류가 발생했어요.',
         'error',
       );
     }
