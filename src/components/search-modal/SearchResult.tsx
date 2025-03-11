@@ -200,6 +200,7 @@ export const SearchResult = ({
           <img
             src={addIcon}
             alt='add'
+            className='select-none'
           />
         </button>
       </div>
