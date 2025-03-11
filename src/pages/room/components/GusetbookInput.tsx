@@ -38,7 +38,7 @@ export default function GusetbookInput({ onSubmitMessage }) {
   return (
     <form
       ref={formRef}
-      className='@container flex items-start w-full gap-2 @2xl:mb-4'
+      className='@container flex items-start w-full mb-0 gap-2'
       aria-label='방명록 작성'
       onSubmit={handleSubmit}>
       <label

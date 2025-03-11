@@ -48,7 +48,7 @@ export default function GuestbookMessage({
   };
 
   return (
-    <div className='@container w-full flex flex-col gap-2 @2xl:gap-6 mt-4 mb-2 @2xl:mb-8 max-h-80 min-h-[300px] '>
+    <div className='@container w-full flex flex-col gap-2 2xl:gap-4 mt-3 mb-3 2xl:mb-3 3xl:mb-8 max-h-80 min-h-[300px]'>
       {/* 방명록 글 0개일 경우 */}
       {messages.length === 0 ? (
         <div className='flex flex-col justify-center items-center text-gray-500/50 h-74 @xl:h-96 font-medium'>
