@@ -5,11 +5,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Suspense, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getPointBalance } from '../../../apis/point';
+import Furnitures from '../../../components/room-models/Furnitures';
 import { RoomLighting } from '../../../components/room-models/RoomLighting';
 import { CAMERA_CONFIG } from '../../../constants/sceneSetting';
 import { useUserStore } from '../../../store/useUserStore';
 import { useRoomItems } from '../hooks/useRoomItems';
-import Furnitures from '../../../components/room-models/Furnitures';
 import Guestbook from './Guestbook';
 
 export default function RoomModel({
@@ -105,6 +105,13 @@ export default function RoomModel({
           shadows
           camera={CAMERA_CONFIG}>
           <RoomLighting />
+          <directionalLight
+            position={[10, 30,10]}
+            intensity={1.5}
+            castShadow
+            shadow-mapSize-width={1024}
+            shadow-mapSize-height={1024}
+          />
           <Suspense fallback={null}>
             <mesh>
               <Center>
@@ -128,8 +135,7 @@ export default function RoomModel({
                 {item.type === 'PIGGY_BANK' &&
                   isPiggyHovered &&
                   pointBalance !== null &&
-                  piggyPosition &&
-                  (
+                  piggyPosition && (
                     <Html
                       position={[
                         piggyPosition[0] + 1.4,
