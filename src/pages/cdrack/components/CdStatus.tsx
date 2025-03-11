@@ -61,7 +61,7 @@ export default function CdStatus({
         nextCursor: 0,
         totalCount: 0,
       };
-      return pageLength === 10
+      return pageLength >= 10
         ? {
             ...prevData,
             lastMyCdId: newCdDatas.myCdId,
@@ -71,6 +71,8 @@ export default function CdStatus({
             ...prevData,
             data: [...prevData.data, newCdDatas],
             nextCursor: newCdDatas.myCdId,
+            firstMyCdId:
+              pageLength === 0 ? newCdDatas.myCdId : prevData?.firstMyCdId,
             lastMyCdId: newCdDatas.myCdId,
             totalCount: prevData.totalCount + 1,
           };
@@ -121,6 +123,7 @@ export default function CdStatus({
         ref={swiperRef}
         isEmpty={cdRackDatas?.data?.length > 0 ? false : true}
         cdRackInfo={cdRackDatas}
+        setCdRackInfo={setcdRackDatas}
         activeIndex={activeIndex}
         onPrevPage={onPrevPage}
         onNextPage={onNextPage}
