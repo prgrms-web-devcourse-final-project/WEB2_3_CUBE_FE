@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { housemateAPI } from '@/apis/housemate';
 import { useUserStore } from '@/store/useUserStore';
 
@@ -50,56 +50,69 @@ export const useHousemates = (isOpen: boolean) => {
   }, []);
 
   // API 호출 로직
-  const fetchHousemates = async (cursor?: number) => {
-    if (!user || isFetching) return;
-    setIsFetching(true);
-
-    if (cursor === 0) {
-      setIsLoading(true);
-    }
-    setError(null);
-
-    try {
-      const response = await (activeTab === 'followers'
-        ? housemateAPI.getFollowers(cursor || 0, 20, searchValue)
-        : housemateAPI.getFollowing(cursor || 0, 20, searchValue));
+  const fetchHousemates = useCallback(
+    async (cursor?: number, currentTab?: TabType) => {
+      if (!user || isFetching) return;
+      setIsFetching(true);
 
       if (cursor === 0) {
-        setHousemates(response.housemates || []);
-      } else {
-        setHousemates((prev) => [...prev, ...(response.housemates || [])]);
+        setIsLoading(true);
       }
+      setError(null);
 
-      const statuses = response.housemates.reduce(
-        (acc, housemate) => ({
-          ...acc,
-          [housemate.userId]: housemate.status,
-        }),
-        {},
+      const tab = currentTab || activeTab;
+      console.log('현재 activeTab:', tab);
+      console.log(
+        '호출할 API:',
+        tab === 'followers' ? 'getFollowers' : 'getFollowing',
       );
-      setUserStatuses((prev) => ({ ...prev, ...statuses }));
 
-      setNextCursor(response.nextCursor);
-      setHasMore(response.hasNext);
-    } catch (err) {
-      setError('하우스메이트 목록을 불러오는데 실패했습니다.');
-      console.error('하우스메이트 조회 에러:', err);
-    } finally {
-      setIsFetching(false);
-      if (cursor === 0) {
-        setIsLoading(false);
+      try {
+        const response = await (tab === 'followers'
+          ? housemateAPI.getFollowers(cursor || 0, 20, searchValue)
+          : housemateAPI.getFollowing(cursor || 0, 20, searchValue));
+
+        if (cursor === 0) {
+          setHousemates(response.housemates || []);
+        } else {
+          setHousemates((prev) => [...prev, ...(response.housemates || [])]);
+        }
+
+        const statuses = response.housemates.reduce(
+          (acc, housemate) => ({
+            ...acc,
+            [housemate.userId]: housemate.status,
+          }),
+          {},
+        );
+        setUserStatuses((prev) => ({ ...prev, ...statuses }));
+
+        setNextCursor(response.nextCursor);
+        setHasMore(response.hasNext);
+      } catch (err) {
+        setError('하우스메이트 목록을 불러오는데 실패했습니다.');
+        console.error('하우스메이트 조회 에러:', err);
+      } finally {
+        setIsFetching(false);
+        if (cursor === 0) {
+          setIsLoading(false);
+        }
       }
-    }
-  };
+    },
+    [activeTab, searchValue, user, isFetching],
+  );
 
-  const handleTabChange = (tab: TabType) => {
-    setActiveTab(tab);
-    setHousemates([]);
-    setNextCursor(0);
-    setHasMore(true);
-    setIsLoading(true);
-    fetchHousemates(0);
-  };
+  const handleTabChange = useCallback(
+    (tab: TabType) => {
+      setActiveTab(tab);
+      setHousemates([]);
+      setNextCursor(0);
+      setHasMore(true);
+      setIsLoading(true);
+      fetchHousemates(0, tab);
+    },
+    [fetchHousemates],
+  );
 
   // 모달이 열릴 때만 데이터 로드
   useEffect(() => {
@@ -108,7 +121,7 @@ export const useHousemates = (isOpen: boolean) => {
       setNextCursor(0);
       setHasMore(true);
       setIsLoading(true);
-      fetchHousemates(0);
+      fetchHousemates(0, activeTab);
     }
   }, [isOpen]);
 
@@ -120,7 +133,7 @@ export const useHousemates = (isOpen: boolean) => {
         setNextCursor(0);
         setHasMore(true);
         setIsLoading(true);
-        fetchHousemates(0);
+        fetchHousemates(0, activeTab);
       }
     }, 300);
 
