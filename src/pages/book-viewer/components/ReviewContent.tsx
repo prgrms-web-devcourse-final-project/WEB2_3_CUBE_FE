@@ -60,7 +60,7 @@ export const ReviewContent = ({
         style={{ color: `${colors.primary}80` }}>
         {formatToKoreanDateTime(
           reviewData.writeDateTime ||
-            new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
+            new Date(new Date().getTime() + 9 * 60 * 60 * 1000).toISOString(),
         )}
       </p>
       <button
