@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useMemo, useState } from 'react';
+import React, { forwardRef, useMemo, useState } from 'react';
 import show_next_cd from '@assets/cd/show-next-cd.svg';
 import show_prev_cd from '@assets/cd/show-prev-cd.svg';
 import show_cd_list from '@assets/cd/show-cd-list.svg';
@@ -7,11 +7,13 @@ import { SwiperRef } from 'swiper/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { deleteCdsFromMyRack } from '@apis/cd';
 import ConfirmModal from '@components/ConfirmModal';
+import { useToastStore } from '@/store/useToastStore';
 
 interface DockProps {
   isEmpty?: boolean;
   cdRackInfo?: CDRackInfo;
   activeIndex?: number;
+  setCdRackInfo: (cd: CDRackInfo) => void;
   onPrevPage?: () => void;
   onNextPage?: (cursor: number) => void;
 }
@@ -19,48 +21,53 @@ interface DockProps {
 const Dock = React.memo(
   forwardRef<SwiperRef, DockProps>(
     (
-      { isEmpty = true, cdRackInfo, activeIndex, onPrevPage, onNextPage },
+      {
+        isEmpty = true,
+        cdRackInfo,
+        activeIndex,
+        onPrevPage,
+        onNextPage,
+        setCdRackInfo,
+      },
       ref,
     ) => {
       const [isDockOpen, setIsDockOpen] = useState(false);
       const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-      const [cdRackDatas, setCdRackDatas] = useState(cdRackInfo);
+      const { showToast } = useToastStore();
 
       const isNoPrev = useMemo(
         () =>
-          cdRackDatas?.data?.length
-            ? cdRackDatas.data[0]?.myCdId === cdRackDatas.firstMyCdId
+          cdRackInfo?.data?.length
+            ? cdRackInfo.data[0]?.myCdId === cdRackInfo.firstMyCdId
             : false,
-        [cdRackDatas],
+        [cdRackInfo],
       );
 
       const isNoNext = useMemo(
         () =>
-          cdRackDatas?.data?.length
-            ? cdRackDatas.data[cdRackDatas.data.length - 1]?.myCdId ===
-              cdRackDatas.lastMyCdId
+          cdRackInfo?.data?.length
+            ? cdRackInfo.data[cdRackInfo.data.length - 1]?.myCdId ===
+              cdRackInfo.lastMyCdId
             : false,
-        [cdRackDatas],
+        [cdRackInfo],
       );
 
-      // const dockWidth = useMemo(() => {
-      //   if (!cdRackDatas?.data?.length || !isDockOpen) return 0;
-      //   const itemWidth =
-      //     window.innerWidth >= 1536 ? 68 : window.innerWidth >= 1280 ? 60 : 40;
-      //   const gap =
-      //     window.innerWidth >= 1536 ? 24 : window.innerWidth >= 1280 ? 16 : 8;
-      //   const totalItemsWidth =
-      //     cdRackDatas?.data?.length * itemWidth +
-      //     (cdRackDatas?.data?.length - 1) * gap;
-      //   const buttonWidth = 104;
-      //   const totalWidth = totalItemsWidth + buttonWidth + 16;
+      const dockWidth = useMemo(() => {
+        if (!cdRackInfo?.data?.length || !isDockOpen) return 0;
+        const itemWidth =
+          window.innerWidth >= 1536 ? 68 : window.innerWidth >= 1280 ? 60 : 40;
+        const gap =
+          window.innerWidth >= 1536 ? 24 : window.innerWidth >= 1280 ? 16 : 8;
+        const totalItemsWidth =
+          cdRackInfo?.data?.length * itemWidth +
+          (cdRackInfo?.data?.length - 1) * gap;
+        const buttonWidth = 104;
+        const totalWidth = totalItemsWidth + buttonWidth + 16;
 
-      //   return Math.min(totalWidth, window.innerWidth * 0.8);
-      // }, [cdRackDatas, isDockOpen]);
+        return Math.min(totalWidth, window.innerWidth * 0.8);
+      }, [cdRackInfo, isDockOpen]);
 
-      useEffect(() => {
-        setCdRackDatas(cdRackInfo);
-      }, [cdRackInfo]);
+      console.log(isNoPrev, cdRackInfo);
 
       const handleSlideChange = (index: number) => {
         const swiper = (ref as React.RefObject<SwiperRef>)?.current?.swiper;
@@ -70,17 +77,40 @@ const Dock = React.memo(
       };
 
       const handleDeleteCd = async (cdId: number) => {
-        const previousCdDatas = cdRackDatas;
+        const previousCdDatas = cdRackInfo;
         try {
-          setCdRackDatas((prev) => ({
-            ...prev,
-            data: cdRackDatas?.data?.filter((data) => data.myCdId !== cdId),
-          }));
+          const updatedData = cdRackInfo?.data?.filter(
+            (item) => item.myCdId !== cdId,
+          );
+
+          const newFirstMyCdId =
+            cdId === cdRackInfo?.firstMyCdId
+              ? updatedData.length > 0
+                ? updatedData[0].myCdId
+                : null
+              : cdRackInfo?.firstMyCdId;
+
+          const newLastMyCdId =
+            cdId === cdRackInfo?.lastMyCdId
+              ? updatedData.length > 0
+                ? updatedData[updatedData.length - 1].myCdId
+                : null
+              : cdRackInfo?.lastMyCdId;
+
+          setCdRackInfo({
+            ...cdRackInfo,
+            data: updatedData,
+            firstMyCdId: newFirstMyCdId,
+            lastMyCdId: newLastMyCdId,
+            totalCount: cdRackInfo?.totalCount - 1,
+          });
+
           await deleteCdsFromMyRack([cdId]);
           setIsConfirmModalOpen(false);
+          showToast(`선택한 CD가 삭제되었습니다.`, 'success');
         } catch (error) {
-          console.error(error);
-          setCdRackDatas(previousCdDatas);
+          showToast(`CD를 삭제하는데 실패했습니다.`, 'error');
+          setCdRackInfo(previousCdDatas);
         }
       };
 
@@ -91,7 +121,7 @@ const Dock = React.memo(
               className='fixed bottom-1 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[5] rounded-2xl border-2 border-[#fff] bg-[#FFFFFF33] backdrop-blur-[20px] h-[110px]'
               animate={{
                 width: isDockOpen ? 'auto' : 0,
-                // width: isDockOpen ? dockWidth : 'auto',
+                // width: isDockOpen ? dockWidth : 0,
                 maxWidth: isDockOpen ? '80vw' : '0vw',
                 opacity: isDockOpen ? 1 : 0,
               }}>
@@ -119,7 +149,7 @@ const Dock = React.memo(
                   </motion.button>
 
                   <ul className='flex justify-center items-center gap-2 xl:gap-4 2xl:gap-6 h-full w-full'>
-                    {cdRackDatas?.data?.map((data: CDInfo, index: number) => (
+                    {cdRackInfo?.data?.map((data: CDInfo, index: number) => (
                       <motion.li
                         onClick={() => handleSlideChange(index)}
                         key={index}
@@ -164,7 +194,7 @@ const Dock = React.memo(
 
                   {/* 이후 cd목록 버튼 */}
                   <motion.button
-                    onClick={() => onNextPage(cdRackDatas?.nextCursor)}
+                    onClick={() => onNextPage(cdRackInfo?.nextCursor)}
                     className='h-full overflow-hidden'
                     whileHover={{ translateX: 5 }}
                     animate={{
@@ -202,7 +232,7 @@ const Dock = React.memo(
             <ConfirmModal
               onClose={() => setIsConfirmModalOpen(false)}
               onConfirm={() =>
-                handleDeleteCd(cdRackDatas?.data[activeIndex]?.myCdId)
+                handleDeleteCd(cdRackInfo?.data[activeIndex]?.myCdId)
               }
               title='cd를 삭제하실건가요?'
               subTitle='템플릿과 댓글도 전부 사라집니다.'
