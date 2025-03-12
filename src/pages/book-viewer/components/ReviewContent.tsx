@@ -37,7 +37,7 @@ const ReviewSection = ({
       {title}
     </h2>
     <p
-      className='text-lg'
+      className='text-lg whitespace-pre-wrap'
       style={{ color: colors.secondary }}>
       {content}
     </p>
