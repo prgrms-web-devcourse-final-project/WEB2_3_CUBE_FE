@@ -64,7 +64,7 @@ export default function CdPlayer({
   const [cdStateChangeEvent, setCdStateChangeEvent] = useState(null);
 
   const videoId = useMemo(() => {
-    const match = cdInfo.youtubeUrl.match(/[?&]v=([^&]+)/);
+    const match = cdInfo?.youtubeUrl.match(/[?&]v=([^&]+)/);
     return match ? match[1] : '';
   }, [cdInfo.youtubeUrl]);
 
@@ -353,7 +353,7 @@ export default function CdPlayer({
             {/* 앨범 이미지 */}
             <img
               className='block h-full aspect-square'
-              src={cdInfo.coverUrl}
+              src={cdInfo?.coverUrl}
               alt='CD 앨범 이미지'
             />
 
@@ -397,10 +397,10 @@ export default function CdPlayer({
           </article>
 
           {/* 중앙 그룹: 재생 버튼*/}
-          <article className='flex flex-col items-center  pl-12 '>
+          <article className='flex flex-col items-center  pl-11 '>
             <button onClick={() => handleOnOffCd(cdStateChangeEvent)}>
               <img
-                className='w-13 h-13'
+                className='w-11 h-11'
                 src={cdReady.isPlaying ? pauseSong : playSong}
                 alt='노래 일시정지 버튼'
               />
