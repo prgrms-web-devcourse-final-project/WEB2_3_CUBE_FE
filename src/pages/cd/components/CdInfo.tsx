@@ -6,7 +6,7 @@ export const CdInfo = React.memo(
   ({ cdInfo, cdPlaying }: { cdInfo: CDInfo; cdPlaying: boolean }) => {
     const textLength = cdInfo?.title.length;
     return (
-      <section className='w-[36%] h-full  flex flex-col gap-10 items-center '>
+      <section className='w-[36%] h-full flex flex-col gap-10 items-center justify-between pt-20 '>
         <article className='text-white flex flex-col gap-1.5 text-center '>
           <span className='2xl:text-2xl  text-xl font-semibold opacity-70'>
             {cdInfo?.artist}
