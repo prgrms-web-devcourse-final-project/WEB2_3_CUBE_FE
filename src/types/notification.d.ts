@@ -1,6 +1,6 @@
 interface Notification {
   notificationId: number;
-  type: 'GUESTBOOK' | 'MUSIC_COMMENT' | 'EVENT' | 'HOUSE_MATE';
+  type: 'GUESTBOOK' | 'MUSIC_COMMENT' | 'EVENT' | 'HOUSE_MATE' | 'POINT';
   senderId: number;
   senderNickName: string;
   senderProfileImage: string;

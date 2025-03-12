@@ -63,7 +63,7 @@ export const BaseModal = ({
             ease: 'easeOut',
           }}
           style={{
-            width: '440px',
+            width: '420px',
             height: '80vh',
             right: modalPosition,
             top: modalType === 'housemate' ? '80px' : '40px',
@@ -75,7 +75,7 @@ export const BaseModal = ({
             animate={{ backdropFilter: 'blur(8px)' }}
             transition={{ duration: 0.3 }}>
             <div
-              className={`w-full h-full ${theme.bgColor} p-11 rounded-2xl overflow-hidden`}>
+              className={`w-full h-full ${theme.bgColor} p-9 rounded-2xl overflow-hidden`}>
               <CloseButton onClose={onClose} />
               <h2 className={`text-2xl font-bold ${theme.titleColor} mb-6`}>
                 {title}

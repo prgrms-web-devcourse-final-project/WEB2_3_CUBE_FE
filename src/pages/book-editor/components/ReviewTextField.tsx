@@ -1,4 +1,5 @@
 import { BookThemeType, BOOK_THEME } from '@/constants/bookTheme';
+import { useEffect, useRef } from 'react';
 
 interface ReviewTextFieldProps {
   title: string;
@@ -16,6 +17,20 @@ const ReviewTextField = ({
   theme = 'BLUE',
 }: ReviewTextFieldProps) => {
   const colors = BOOK_THEME[theme];
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // 텍스트 입력시 높이 자동 조절
+  const adjustHeight = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    }
+  };
+
+  useEffect(() => {
+    adjustHeight();
+  }, [value]);
 
   return (
     <div>
@@ -32,15 +47,26 @@ const ReviewTextField = ({
         {title}
       </h2>
       <textarea
+        ref={textareaRef}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => {
+          onChange(e.target.value);
+          adjustHeight();
+        }}
         placeholder={placeholder}
-        className='w-full h-24 p-4 rounded-lg resize-none focus:outline-none themed-textarea'
+        className='w-full min-h-[96px] p-4 rounded-lg resize-none focus:outline-none themed-textarea scrollbar-hide'
         style={{
           backgroundColor: `${colors.background}60`,
           borderWidth: '2px',
           borderColor: `${colors.secondary}50`,
           color: colors.secondary,
+          whiteSpace: 'pre-wrap',
+          overflow: 'hidden',
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
+          msOverflowStyle: 'none',
+          scrollbarWidth: 'none',
         }}
       />
     </div>
