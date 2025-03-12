@@ -123,12 +123,43 @@ const BookEditorPage = ({
     };
 
   const isValidReview = () => {
-    // 최소 1개 이상의 필드가 입력되었는지 확인
-    return Object.values(reviewFields).some((value) => value.trim() !== '');
+    // 제목은 필수
+    if (!reviewFields.title.trim()) {
+      return false;
+    }
+
+    // 인상 깊은 구절, 감정, 계기, 대화 주제, 자유 형식 중 하나는 필수
+    const hasRequiredField = [
+      reviewFields.quote,
+      reviewFields.emotion,
+      reviewFields.reason,
+      reviewFields.discussion,
+      reviewFields.freeform,
+    ].some((field) => field.trim() !== '');
+
+    return hasRequiredField;
   };
 
   const handleSave = async () => {
     if (!bookId || isSubmitting) return;
+
+    if (!reviewFields.title.trim()) {
+      showToast('제목을 입력해주세요.', 'error');
+      return;
+    }
+
+    if (
+      ![
+        reviewFields.quote,
+        reviewFields.emotion,
+        reviewFields.reason,
+        reviewFields.discussion,
+        reviewFields.freeform,
+      ].some((field) => field.trim() !== '')
+    ) {
+      showToast('최소 1개 이상의 내용을 입력해주세요.', 'error');
+      return;
+    }
 
     try {
       setIsSubmitting(true);
@@ -155,7 +186,6 @@ const BookEditorPage = ({
       // 공통 처리 로직
       localStorage.removeItem(`draft-review-${bookId}`);
       navigate(`/book/${bookId}`, { replace: true });
-      
     } catch (error) {
       console.error('서평 저장 중 오류 발생:', error);
       showToast('서평 저장에 실패했습니다.', 'error');

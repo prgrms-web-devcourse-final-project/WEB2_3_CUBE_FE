@@ -36,12 +36,19 @@ export const NotificationItem = memo(
         case 'EVENT':
           navigate(`/event`);
           break;
+        case 'POINT':
+          navigate(`/point/${user.userId}`);
+          break;
         default:
           break;
       }
     };
 
     const handleProfileClick = (e: React.MouseEvent) => {
+      // EVENT나 POINT 타입인 경우 프로필 클릭을 무시
+      if (notification.type === 'EVENT' || notification.type === 'POINT') {
+        return;
+      }
       e.stopPropagation();
       onClose();
       navigate(`/profile/${notification.senderId}`);
@@ -60,7 +67,11 @@ export const NotificationItem = memo(
             <img
               src={notification.senderProfileImage || exProfile}
               alt={`${notification.senderNickName}님의 프로필`}
-              className='object-cover w-10 h-10 rounded-full cursor-pointer hover:opacity-80'
+              className={`object-cover w-10 h-10 rounded-full ${
+                ['EVENT', 'POINT'].includes(notification.type)
+                  ? ''
+                  : 'cursor-pointer hover:opacity-80'
+              }`}
               onClick={handleProfileClick}
             />
           )}
