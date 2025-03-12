@@ -43,8 +43,8 @@
 |<img src="https://avatars.githubusercontent.com/u/155376060?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/165476198?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/96560273?v=4" width="150" height="150"/>|
 |:-:|:-:|:-:|
 |권윤슬<br/>[@miseullang](https://github.com/miseullang)|최보아 <br/>[@swallowedB](https://github.com/swallowedB)|김현우<br/>[@Hyuunw00](https://github.com/Hyuunw00)|
-| Team-Lead | Design-Lead | Clerk |
-| 도서 페이지 <br> 프로필 카드 <br> 결제 페이지 <br> 알림/친구목록 | 메인 페이지 <br> 룸 페이지 <br> 랭킹 <br> 방명록 | 로그인 <br> 음악 페이지 <br> 포인트 <br> 이벤트 |
+| Team-Lead | Design | Clerk |
+| 도서 페이지 <br> 프로필 카드 <br> 결제 페이지 <br> 알림/친구목록 | 메인/룸 페이지 <br> 방명록 <br> 랭킹 <br> 로딩/가이드 애니메이션 | 로그인 <br> 음악 페이지 <br> 포인트 <br> 이벤트 |
 
 <br />
 
