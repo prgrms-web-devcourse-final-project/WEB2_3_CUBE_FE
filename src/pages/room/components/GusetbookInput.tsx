@@ -43,7 +43,7 @@ export default function GusetbookInput({ onSubmitMessage }) {
       onSubmit={handleSubmit}>
       {/* 글자 수 표시 */}
       <div
-        className={`absolute bottom-2 right-25 text-xs @xl:text-sm ${
+        className={`absolute bottom-2 right-25 @xl:right-31 text-xs @xl:text-sm ${
           guestMessage.length === 180 ? 'text-[#CE317A]' : 'text-gray-500/70'
         }`}>
         {guestMessage.length} / 180
