@@ -26,6 +26,9 @@
   <img src="https://skillicons.dev/icons?i=react,ts,tailwind,threejs" />
   <img src="https://github.com/user-attachments/assets/f7d7593a-aac1-4a7b-961e-6bc66171df3b" width="50px" />
   <img src="https://github.com/user-attachments/assets/9e0815e0-ec6a-457d-9ea2-7365bd887b5b" width="50px" />
+  <img src="https://github.com/user-attachments/assets/8006a7df-dbe0-4a9c-8436-fd8dbab2bdc8" width="50px" />
+  <img src="https://github.com/user-attachments/assets/64344e16-f943-44ef-be67-257dcca718fd" width="50px" />
+  <img src="https://github.com/user-attachments/assets/c2c596cf-2f71-4680-86ed-a3b735c62152" width="50px" />
 </p>
 
 ### ETC
@@ -40,10 +43,13 @@
 |<img src="https://avatars.githubusercontent.com/u/155376060?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/165476198?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/96560273?v=4" width="150" height="150"/>|
 |:-:|:-:|:-:|
 |권윤슬<br/>[@miseullang](https://github.com/miseullang)|최보아 <br/>[@swallowedB](https://github.com/swallowedB)|김현우<br/>[@Hyuunw00](https://github.com/Hyuunw00)|
-
-
+| Team-Lead | Design-Lead | Clerk |
+| 도서 페이지 <br> 프로필 카드 <br> 결제 페이지 <br> 알림/친구목록 | 메인 페이지 <br> 룸 페이지 <br> 랭킹 <br> 방명록 | 로그인 <br> 음악 페이지 <br> 포인트 <br> 이벤트 |
 
 <br />
+
+## 주요 기능
+
 <hr />
 
 <div align='center'>
