@@ -29,9 +29,9 @@ export default function PreferenceSettingCard({
         />
       )}
       <article
-        className={`@container w-full h-full rounded-2xl bg-[#FCF7FD] p-11 flex place-content-center`}>
+        className={`@container w-full h-full rounded-2xl bg-[#FCF7FD] p-10 flex place-content-center`}>
         {/* 선택 카드 내용 */}
-        <div className='flex flex-row items-center gap-7 @sm:gap-12'>
+        <div className='flex flex-row items-center gap-9 @sm:gap-12'>
           <img
             src={thumbnail}
             className='w-24 @xs:w-34 drop-shadow-logo'
