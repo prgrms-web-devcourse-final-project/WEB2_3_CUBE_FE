@@ -38,9 +38,16 @@ export default function GusetbookInput({ onSubmitMessage }) {
   return (
     <form
       ref={formRef}
-      className='@container flex items-start w-full mb-0 gap-2'
+      className='@container flex items-start w-full mb-0 gap-2 relative'
       aria-label='방명록 작성'
       onSubmit={handleSubmit}>
+      {/* 글자 수 표시 */}
+      <div
+        className={`absolute bottom-2 right-25 text-xs @xl:text-sm ${
+          guestMessage.length === 180 ? 'text-[#CE317A]' : 'text-gray-500/70'
+        }`}>
+        {guestMessage.length} / 180
+      </div>
       <label
         htmlFor='guestMessage'
         className='sr-only'>
@@ -50,7 +57,7 @@ export default function GusetbookInput({ onSubmitMessage }) {
         id='guestMessage'
         name='guestMessage'
         aria-required='true'
-        className={`inputBase flex-grow h-20 @xl:h-28 p-3 @xl:p-5 resize-none overflow-y-auto`}
+        className={`inputBase flex-grow h-20 @xl:h-28 p-3 @xl:p-5 resize-none overflow-y-auto scrollbar`}
         placeholder='당신의 흔적을 남겨보세요 φ(゜▽゜*)♪'
         maxLength={180}
         value={guestMessage}
