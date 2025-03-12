@@ -4,7 +4,6 @@ import kakao from '@assets/login/kakao-logo.svg';
 import kakao_hover from '@assets/login/kakao-hover.svg';
 import naver from '@assets/login/naver-logo.svg';
 import naver_hover from '@assets/login/naver-hover.svg';
-
 import google from '@assets/login/google-logo.svg';
 
 export default function SocialTab() {

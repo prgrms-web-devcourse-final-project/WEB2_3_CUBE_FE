@@ -60,8 +60,8 @@ export default function EditTemplate({
 
   return (
     <>
-      <form className='flex flex-col gap-14 overflow-auto h-full w-[90%] pt-15 pb-10  '>
-        <div className='flex items-center gap-2 absolute top-4 right-4 '>
+      <form className=' overflow-auto h-full w-full px-7 py-13   '>
+        <div className='flex items-center gap-2 absolute top-5 right-6 '>
           <button
             type='button'
             onClick={onToggleEdit}
@@ -79,17 +79,18 @@ export default function EditTemplate({
           </button>
         </div>
 
-        <section className='flex flex-col justify-around items-center gap-14  overflow-auto h-full pr-3 scrollbar scrollbar-white'>
+        <section className='flex flex-col justify-between items-center gap-14  overflow-auto h-full pr-3 pb-4 scrollbar scrollbar-white'>
           {questions.map((q, index) => (
             <article
               key={index}
-              className='w-full max-w-[395px]'>
-              <h3 className='  text-base  lg:text-lg  2xl:text-xl min-w-[200px]  font-bold border-b-2 border-[#FFFFFF33] pb-4 mb-5 '>
+              className='w-full max-w-[395px] flex flex-col gap-5'>
+              <h3 className='  text-base  lg:text-lg  2xl:text-xl min-w-[200px]  font-bold border-b-2 border-[#FFFFFF33] pb-3 '>
                 {q.question}
               </h3>
               <textarea
                 ref={setTextAreaRef(index)}
-                name='motive'
+                name={`comment ${index + 1}`}
+                maxLength={40}
                 defaultValue={`${q.answer || ''}`}
                 className='text-[16px] w-full h-[120px] text-white/70 resize-none rounded-[14px] bg-[#EDE6EE4D] 
             drop-shadow-logo border-2 border-white outline-0 px-5 py-4  '

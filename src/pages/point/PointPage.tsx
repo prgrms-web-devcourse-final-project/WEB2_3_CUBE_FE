@@ -25,16 +25,21 @@ export default function PointPage() {
     useInfiniteQuery({
       queryKey: ['points', userId],
       queryFn: async ({ pageParam }) => {
-        return fetchPointsHistory(pageParam);
+        return pageParam.dayCursor
+          ? fetchPointsHistory(pageParam?.itemCursor, pageParam.dayCursor)
+          : fetchPointsHistory(pageParam?.itemCursor);
       },
       getNextPageParam: (lastPage) => {
-        if (lastPage.nextCursor > lastPage.lastId) {
-          return lastPage.nextCursor;
+        if (lastPage.nextItemCursor > lastPage.lastId) {
+          return {
+            itemCursor: lastPage.nextItemCursor,
+            dayCursor: lastPage.nextDayCursor,
+          };
         }
         return undefined;
       },
-      initialPageParam: 0,
-      // staleTime: 1000 * 60 * 5, // 5분
+      initialPageParam: { itemCursor: 0, dayCursor: '' },
+      staleTime: 1000 * 60 * 1, // 1분
     });
 
   useEffect(() => {
@@ -55,28 +60,11 @@ export default function PointPage() {
     }
   }, [inView, hasNextPage, fetchNextPage]);
 
-  const fetchPointsHistory = async (cursor: number) => {
-    const result = await getPointHistory(10, 0);
-
-    console.log(result);
-
-    const history = result.history;
-    console.log(history);
-
-    // 날짜별로 묶어서 배열화
-    const filteredByDates = history.reduce(
-      (prev: PointHistory, cur: PointHistory) => {
-        const dateKey = cur.dateTime.split(' ')[0];
-        if (!prev[dateKey]) {
-          prev[dateKey] = [];
-        }
-        prev[dateKey].push(cur);
-        return prev;
-      },
-      {},
-    );
-
-    return { ...result, history: [...Object.entries(filteredByDates)] };
+  const fetchPointsHistory = async (itemCursor: number, dayCursor?: string) => {
+    const result = dayCursor
+      ? await getPointHistory(30, itemCursor, dayCursor)
+      : await getPointHistory(30, itemCursor);
+    return result;
   };
 
   if (userId !== myUserId) {
@@ -99,23 +87,21 @@ export default function PointPage() {
         onClick={handleClickOutside}
         className='fixed inset-0 z-10 flex items-center justify-center'>
         {/* 영수증 */}
-        <div className='relative w-[501px] h-[630px]'>
+        <div className='relative w-[501px] h-[730px]'>
           <div
             style={{ backgroundImage: `url(${receipt})` }}
-            className='w-full h-full bg-contain bg-no-repeat bg-center flex flex-col items-center px-12 '>
+            className='w-full h-full bg-contain bg-no-repeat bg-center flex flex-col items-center  gap-10 '>
             <h1 className='mt-10 text-[#3E507D] text-[30px] font-bold'>
-              POINT RECEIPT
+              Point Receipt
             </h1>
 
-            <div className='flex-1 w-full px-12'>
-              <PointHistory
-                data={data}
-                isFetching={isFetching}
-                ref={ref}
-              />
-            </div>
+            <PointHistory
+              data={data}
+              isFetching={isFetching}
+              ref={ref}
+            />
 
-            <div className='mb-8 w-full px-12 '>
+            <div className='mb-8 w-[70%]'>
               <div className='flex justify-between items-center mb-6 '>
                 <p className='text-[#162C63] font-medium text-sm'>
                   포인트 잔고

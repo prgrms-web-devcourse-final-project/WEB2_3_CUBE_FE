@@ -39,9 +39,9 @@ export default function NotEditTemplate({
       />
     );
   return (
-    <section className='flex flex-col gap-14 overflow-auto h-full w-[90%] pt-15 pb-10'>
+    <section className='overflow-auto h-full w-full px-7  pb-13 '>
       {userId === myUserId && (
-        <div className='flex items-center gap-2 absolute top-4 right-4'>
+        <div className='flex items-center gap-2 absolute top-5  right-6'>
           <button
             onClick={onToggleEdit}
             className='  rounded-md  text-[10px] 2xl:text-[12px] font-semibold
@@ -59,15 +59,15 @@ export default function NotEditTemplate({
         </div>
       )}
 
-      <section className='flex flex-col justify-around items-center gap-14  overflow-auto h-full pr-3  pb-10  scrollbar scrollbar-white'>
+      <section className='flex flex-col justify-around items-center overflow-auto h-full  scrollbar scrollbar-white'>
         {questions.map((q, index) => (
           <article
             key={index}
-            className='w-full '>
-            <h3 className='text-base lg:text-lg 2xl:text-xl min-w-[200px]  font-bold border-b-2 border-[#FFFFFF33] pb-4 mb-3 '>
+            className='w-full flex flex-col gap-5'>
+            <h3 className='text-base lg:text-lg 2xl:text-xl min-w-[200px]  font-bold border-b-2 border-[#FFFFFF33] pb-3  '>
               {q.question}
             </h3>
-            <p className='text-sm 2xl:text-base w-full text-white/70  drop-shadow-logo  '>
+            <p className=' overflow-auto scrollbar scrollbar-white  text-sm 2xl:text-base w-full text-white/70  drop-shadow-logo  '>
               {q.answer}
             </p>
           </article>

@@ -16,5 +16,6 @@ interface Points {
 }
 
 interface FilteredHistory {
-  history: ['string', PointHistory[]];
+  date: string;
+  items: PointHistory[];
 }
