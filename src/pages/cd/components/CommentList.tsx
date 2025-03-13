@@ -91,7 +91,7 @@ const CommentList = React.memo(({ onClose }: { onClose: () => void }) => {
           className='w-[662px] h-[690px] rounded-3xl border-2 border-[#FCF7FD] shadow-box  backdrop-blur-[15px] p-4  '>
           <div className='w-full  h-full bg-[#FCF7FD] rounded-[16px]  backdrop-blur-[15px] py-10 px-27'>
             <h1 className='text-[#7838AF]  text-2xl font-bold text-center mb-7'>
-              댓글 목록 편집
+              댓글 목록
             </h1>
 
             {/*  입력 창 */}
