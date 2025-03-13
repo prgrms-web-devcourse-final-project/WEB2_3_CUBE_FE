@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import commentEdit from '@assets/cd/comment-edit.svg';
 import commentSubmit from '@assets/cd/comment-submit.svg';
 import CommentList from './CommentList';
@@ -39,10 +39,8 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
       return result;
     },
     onMutate: async () => {
-      // 낙관적 업데이트 전에 사용자 목록 쿼리를 취소해 잠재적인 충돌 방지!
       await queryClient.cancelQueries({ queryKey: [`cdComments ${myCdId}`] });
 
-      // 캐시된 데이터(사용자 목록) 가져오기!
       const previousComments = queryClient.getQueryData<CdComment[]>([
         `cdComments ${myCdId}`,
       ]);
@@ -67,19 +65,21 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
       }
       // 현재 보여지는 댓글 목록에도 즉시 추가 (중요!)
       setCurrentComments((prevComments) => [...prevComments, newComment]);
-      if (commentInputRef.current) {
-        commentInputRef.current.value = '';
-      }
+
       return { previousComments };
     },
     onError: (error, newComment, context) => {
       // console.error('onError', error, newComment, context);
-      // 변이 실패 시, 낙관적 업데이트 결과를 이전 사용자 목록으로 되돌리기!
       if (context) {
         queryClient.setQueryData(
           [`cdComments ${myCdId}`],
           context.previousComments,
         );
+      }
+    },
+    onSettled(data, error, variables, context) {
+      if (commentInputRef.current) {
+        commentInputRef.current.value = '';
       }
     },
   });
@@ -181,7 +181,7 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
               ref={commentInputRef}
               className='w-full h-full p-5  resize-none rounded-[14px] outline-none text-white'
               placeholder='댓글을 입력해주세요 φ(゜▽゜*)♪'
-              onKeyDown={(e) => handleKeyDown(e)}></textarea>
+              onKeyDown={handleKeyDown}></textarea>
 
             <button
               type='submit'
