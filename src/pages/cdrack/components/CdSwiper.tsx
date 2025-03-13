@@ -115,7 +115,10 @@ const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
                   <li
                     className='w-17 py-2 rounded-full bg-[#FFFFFF1A] backdrop-blur-lg flex items-center justify-center'
                     key={index}>
-                    <span className={`${genre.length > 5 ? 'text-xs' : 'text-sm'} text-white w-full text-center`}>
+                    <span
+                      className={`${
+                        genre.length > 5 ? 'text-xs' : 'text-sm'
+                      } text-white w-full text-center`}>
                       {genre}
                     </span>
                   </li>
