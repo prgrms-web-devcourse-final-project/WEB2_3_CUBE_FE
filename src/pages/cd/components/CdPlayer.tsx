@@ -100,7 +100,7 @@ export default function CdPlayer({
   // ----------------함수----------------------
 
   // 편집 목록 리스트를 열었을때 검색에 대한 cd목록 가져오기
-  const fetchCdSearchData = async () => {
+  const fetchSearchCdData = async () => {
     try {
       const result = searchInput
         ? await getCdRackSearch(userId, searchInput, 7, cursor)
@@ -132,11 +132,8 @@ export default function CdPlayer({
   };
   useEffect(() => {
     setCursor(0);
+    fetchSearchCdData();
   }, [searchInput]);
-
-  useEffect(() => {
-    fetchCdSearchData();
-  }, [searchInput, cursor]);
 
   // 재생 시간 업데이트 함수
   useEffect(() => {
