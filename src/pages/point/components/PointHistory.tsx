@@ -32,7 +32,7 @@ const PointHistory = forwardRef<HTMLDivElement, PointHistoryProps>(
                       <span className='text-sm text-[#3E507D]'>
                         {point.type}
                       </span>
-                      <span className='ml-30 text-[#162C63]'>
+                      <span className='ml-20 text-[#162C63]'>
                         {PointReason[point.reason]}
                       </span>
                       <span

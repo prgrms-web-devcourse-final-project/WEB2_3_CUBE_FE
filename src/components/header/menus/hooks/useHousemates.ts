@@ -61,11 +61,11 @@ export const useHousemates = (isOpen: boolean) => {
       setError(null);
 
       const tab = currentTab || activeTab;
-      console.log('현재 activeTab:', tab);
-      console.log(
-        '호출할 API:',
-        tab === 'followers' ? 'getFollowers' : 'getFollowing',
-      );
+      // console.log('현재 activeTab:', tab);
+      // console.log(
+      //   '호출할 API:',
+      //   tab === 'followers' ? 'getFollowers' : 'getFollowing',
+      // );
 
       try {
         const response = await (tab === 'followers'
