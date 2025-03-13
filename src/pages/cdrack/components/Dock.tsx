@@ -123,8 +123,6 @@ const Dock = React.memo(
         }
       };
 
-      console.log(dockWidth);
-
       return (
         <>
           <AnimatePresence>
