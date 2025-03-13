@@ -29,7 +29,7 @@ export const BookInfo = ({
           {bookTitle}
         </h2>
         <span
-          className='text-lg font-medium'
+          className='text-lg font-medium flex-shrink-0'
           style={{ color: colors.primary }}>
           {author}
         </span>
