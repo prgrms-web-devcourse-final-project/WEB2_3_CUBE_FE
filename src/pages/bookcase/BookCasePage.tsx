@@ -265,7 +265,7 @@ const BookCasePage = () => {
                 prevItems.filter((item) => item.id !== newBook.id.toString()),
               );
               setTotalCount((prev) => prev - 1);
-              showToast('책 추가에 실패했습니다.', 'error');
+              showToast('책 추가에 실패했습니다 ꌩ-ꌩ', 'error');
             }
           }}
         />

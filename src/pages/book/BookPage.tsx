@@ -72,19 +72,22 @@ const BookPage = () => {
             setHasReview(false);
             // URL에 userId가 없고(내 서평이고) 작성 페이지가 아닌 경우에만 리다이렉트
             if (!userId && !isEditMode) {
-              showToast('조회된 서평이 없어 작성 페이지로 이동합니다.', 'info');
+              showToast(
+                '아직 서평이 없어요! 첫 서평을 작성해주세요 ( 灬´ ˘ `灬 )',
+                'info',
+              );
               navigate(`/book/${bookId}?mode=edit`, { replace: true });
               return;
             }
             if (error.response?.status !== 404) {
               console.error('서평 조회 중 오류 발생:', error);
-              showToast('서평 조회에 실패했습니다.', 'error');
+              showToast('서평 조회에 실패했습니다 ꌩ-ꌩ', 'error');
             }
           }
         }
       } catch (error) {
         console.error('도서 정보 조회 중 오류 발생:', error);
-        showToast('도서 정보 조회에 실패했습니다.', 'error');
+        showToast('도서 정보 조회에 실패했습니다 ꌩ-ꌩ', 'error');
         setHasReview(false);
       } finally {
         setIsLoading(false);
@@ -116,7 +119,7 @@ const BookPage = () => {
 
   // 다른 사람의 서평인데 서평이 없는 경우
   if (!hasReview && userId) {
-    showToast('작성된 서평이 없습니다.', 'error');
+    showToast('아직 작성된 서평이 없네요... ʕ ´•̥ ᴥ•̥`ʔ', 'error');
     navigate(-1);
     return null; // 리다이렉트 전에 빈 화면 표시
   }

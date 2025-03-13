@@ -43,6 +43,12 @@ const FreeformEditor = ({
   });
 
   useEffect(() => {
+    if (editor && value !== editor.getHTML()) {
+      editor.commands.setContent(value);
+    }
+  }, [value, editor]);
+
+  useEffect(() => {
     return () => {
       editor?.destroy();
     };
