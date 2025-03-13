@@ -269,9 +269,23 @@ const BookEditorPage = ({
                 임시저장
               </button>
               <button
-                disabled={!isValidReview() || isSubmitting}
-                onClick={handleSave}
-                className='px-7 py-2 text-white transition-colors disabled:bg-gray-400 hover:opacity-80 active:bg-white drop-shadow-logo rounded-[10px]'
+                onClick={() => {
+                  if (!isValidReview()) {
+                    showToast(
+                      '제목이나 내용을 깜빡한 것 같아요! ʕ ´•̥̥̥ ᴥ•̥̥̥`ʔ',
+                      'error',
+                    );
+                    return;
+                  }
+                  if (!isSubmitting) {
+                    handleSave();
+                  }
+                }}
+                className={`px-7 py-2 text-white transition-colors rounded-[10px] drop-shadow-logo hover:opacity-80 active:bg-white ${
+                  !isValidReview() || isSubmitting
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : ''
+                }`}
                 style={{
                   backgroundColor:
                     !isValidReview() || isSubmitting
