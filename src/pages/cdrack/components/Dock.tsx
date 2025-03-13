@@ -55,7 +55,7 @@ const Dock = React.memo(
       );
       const { userId: myUserId } = useUserStore().user; // `useMemo` 필요 없음
       const { userId: parsedUserId } = useParams();
-      const userId = useMemo(() => Number(parsedUserId), [parsedUserId]);
+      const userId = Number(parsedUserId);
 
       // DOCK 반응형 너비 지정
       const dockWidth = useMemo(() => {
@@ -141,25 +141,25 @@ const Dock = React.memo(
                   <span className='text-white text-lg'>｡°(っ°´o`°ｃ)°｡</span>
                 </div>
               ) : (
-                <div className=' h-full flex justify-center items-center gap-2  '>
+                <div className='  flex justify-between items-center  w-full  h-full '>
                   {/* 이전 cd목록 버튼 */}
                   <motion.button
                     whileHover={{ translateX: -5 }}
                     onClick={() => onPrevPage()}
-                    className='h-full overflow-hidden '
+                    className='w-13 h-13 flex items-center justify-center shrink-0'
                     animate={{
                       opacity: isNoPrev ? 0.15 : 1,
                       pointerEvents: isNoPrev ? 'none' : 'auto',
                     }}
                     disabled={isNoPrev}>
                     <img
-                      className='w-13 h-13'
+                      className='w-13 h-13 '
                       src={show_prev_cd}
                       alt='이전 cd 목록 보여주는 아이콘'
                     />
                   </motion.button>
 
-                  <ul className='flex justify-center items-center gap-2 xl:gap-4 2xl:gap-6 h-full w-full'>
+                  <ul className='flex justify-center items-center gap-2 xl:gap-4 2xl:gap-6  h-full w-auto'>
                     {cdRackInfo?.data?.map((data: CDInfo, index: number) => (
                       <motion.li
                         onClick={() => handleSlideChange(index)}
@@ -184,7 +184,7 @@ const Dock = React.memo(
                           }
                         }>
                         <img
-                          className='rounded-[6.4px] aspect-square  w-10 h-10 xl:w-15 xl:h-15 2xl:w-17 2xl:h-17'
+                          className='rounded-[6.4px] aspect-square object-cover w-10 h-10 xl:w-15 xl:h-15 2xl:w-17 2xl:h-17'
                           src={data.coverUrl}
                           alt='CD 이미지'
                         />
@@ -208,7 +208,7 @@ const Dock = React.memo(
                   {/* 이후 cd목록 버튼 */}
                   <motion.button
                     onClick={() => onNextPage(cdRackInfo?.nextCursor)}
-                    className=' overflow-hidden'
+                    className='w-13 h-13 flex items-center justify-center shrink-0'
                     whileHover={{ translateX: 5 }}
                     animate={{
                       opacity: isNoNext ? 0.15 : 1,

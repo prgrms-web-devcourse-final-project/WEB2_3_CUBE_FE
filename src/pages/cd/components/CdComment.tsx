@@ -1,4 +1,4 @@
-import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import commentEdit from '@assets/cd/comment-edit.svg';
 import commentSubmit from '@assets/cd/comment-submit.svg';
 import CommentList from './CommentList';
@@ -12,11 +12,13 @@ import { motion } from 'framer-motion';
 export default function CdComment({ commentTime }: { commentTime: number }) {
   const [isCommentListOpen, setIsCommentListOpen] = useState(false);
   const commentInputRef = useRef<HTMLTextAreaElement | null>(null);
+  const formRef = useRef<HTMLFormElement | null>(null);
   const queryClient = useQueryClient();
+
+  const [currentComments, setCurrentComments] = useState<CdComment[]>([]); // 현재 보여지는 댓글목록(상태로 관리안해도된다는 조언?)
 
   const user = useUserStore((state) => state.user);
   const myCdId = Number(useParams().cdId);
-  const [currentComments, setCurrentComments] = useState<CdComment[]>([]); // 현재 보여지는 댓글목록
 
   // 전체 댓글 목록 캐싱
   const { data: cdComments } = useQuery<CdComment[]>({
@@ -109,23 +111,22 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
   }, [cdComments, commentTime]);
 
   // 댓글 작성
-  const handleSubmitComment = useCallback(
-    async (e: FormEvent<HTMLFormElement> | null) => {
-      if (e) e.preventDefault();
+  const handleSubmitComment = async (e?: React.FormEvent<HTMLFormElement>) => {
+    if (e) e.preventDefault();
 
-      if (commentInputRef.current.value.trim() === '') return;
-      mutate({
-        timestamp: commentTime,
-        content: commentInputRef.current.value,
-      });
-    },
-    [mutate, commentTime],
-  );
+    if (commentInputRef.current.value.trim() === '' || isPending) return;
+    mutate({
+      timestamp: commentTime,
+      content: commentInputRef.current.value,
+    });
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSubmitComment(null);
+      formRef.current?.dispatchEvent(
+        new Event('submit', { cancelable: true, bubbles: true }),
+      );
     }
   };
 
@@ -173,6 +174,7 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
 
           {/* 댓글 입력 창 */}
           <form
+            ref={formRef}
             onSubmit={handleSubmitComment}
             className='w-full  h-[104px] bg-[#FFFFFF33] border-2 border-[#FFFFFF80] rounded-[14px] relative '>
             <textarea
@@ -184,6 +186,7 @@ export default function CdComment({ commentTime }: { commentTime: number }) {
             <button
               type='submit'
               disabled={isPending}
+              onClick={() => handleSubmitComment()}
               className='absolute right-4 bottom-5 hover:opacity-50'>
               <img
                 src={commentSubmit}
