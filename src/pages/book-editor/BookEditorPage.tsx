@@ -71,7 +71,7 @@ const BookEditorPage = ({
   // 수동 임시저장
   const handleTempSave = () => {
     autoSave();
-    showToast('임시저장되었습니다.', 'success');
+    showToast('임시저장 완료!', 'success');
   };
 
   // 5초마다 자동저장
@@ -107,7 +107,10 @@ const BookEditorPage = ({
         }
       } catch (error) {
         console.error('서평 조회 중 오류 발생:', error);
-        showToast('작성된 서평이 없어 작성 페이지로 이동합니다.', 'success');
+        showToast(
+          '아직 서평이 없어요! 첫 서평을 작성해주세요 ( 灬´ ˘ `灬 )',
+          'success',
+        );
       }
     };
 
@@ -143,24 +146,6 @@ const BookEditorPage = ({
   const handleSave = async () => {
     if (!bookId || isSubmitting) return;
 
-    if (!reviewFields.title.trim()) {
-      showToast('제목을 입력해주세요.', 'error');
-      return;
-    }
-
-    if (
-      ![
-        reviewFields.quote,
-        reviewFields.emotion,
-        reviewFields.reason,
-        reviewFields.discussion,
-        reviewFields.freeform,
-      ].some((field) => field.trim() !== '')
-    ) {
-      showToast('최소 1개 이상의 내용을 입력해주세요.', 'error');
-      return;
-    }
-
     try {
       setIsSubmitting(true);
 
@@ -177,10 +162,10 @@ const BookEditorPage = ({
       // API 호출 (수정 또는 새로 작성)
       if (isEditMode) {
         await bookAPI.updateReview(bookId, reviewData);
-        showToast('서평이 수정되었습니다.', 'success');
+        showToast('서평 수정 완료!', 'success');
       } else {
         await bookAPI.addReview(bookId, reviewData);
-        showToast('서평이 등록되었습니다.', 'success');
+        showToast('서평 등록 완료!', 'success');
       }
 
       // 공통 처리 로직
@@ -188,7 +173,7 @@ const BookEditorPage = ({
       navigate(`/book/${bookId}`, { replace: true });
     } catch (error) {
       console.error('서평 저장 중 오류 발생:', error);
-      showToast('서평 저장에 실패했습니다.', 'error');
+      showToast('서평 저장에 실패했습니다 ꌩ-ꌩ', 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -269,9 +254,23 @@ const BookEditorPage = ({
                 임시저장
               </button>
               <button
-                disabled={!isValidReview() || isSubmitting}
-                onClick={handleSave}
-                className='px-7 py-2 text-white transition-colors disabled:bg-gray-400 hover:opacity-80 active:bg-white drop-shadow-logo rounded-[10px]'
+                onClick={() => {
+                  if (!isValidReview()) {
+                    showToast(
+                      '제목이나 내용을 깜빡한 것 같아요! ʕ ´•̥̥̥ ᴥ•̥̥̥`ʔ',
+                      'error',
+                    );
+                    return;
+                  }
+                  if (!isSubmitting) {
+                    handleSave();
+                  }
+                }}
+                className={`px-7 py-2 text-white transition-colors rounded-[10px] drop-shadow-logo hover:opacity-80 active:bg-white ${
+                  !isValidReview() || isSubmitting
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : ''
+                }`}
                 style={{
                   backgroundColor:
                     !isValidReview() || isSubmitting

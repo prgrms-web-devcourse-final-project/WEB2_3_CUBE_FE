@@ -83,7 +83,7 @@ const BookReviewDisplay = ({
 
   const handleEdit = () => {
     if (!isMyReview) {
-      showToast('작성된 서평이 없습니다.', 'error');
+      showToast('아직 작성된 서평이 없네요... ʕ ´•̥ ᴥ•̥`ʔ', 'error');
       return;
     }
     navigate(`/book/${urlBookId}?mode=edit`);
@@ -93,17 +93,17 @@ const BookReviewDisplay = ({
     if (!urlBookId) return;
 
     if (!isMyReview) {
-      showToast('작성된 서평이 없습니다.', 'error');
+      showToast('아직 작성된 서평이 없네요... ʕ ´•̥ ᴥ•̥`ʔ', 'error');
       return;
     }
 
     try {
       await bookAPI.deleteReview(urlBookId);
-      showToast('서평이 삭제되었습니다.', 'success');
+      showToast('서평이 삭제되었어요!', 'success');
       navigate(`/bookCase/${user.userId}`);
     } catch (error) {
       console.error('서평 삭제 중 오류 발생:', error);
-      showToast('서평 삭제에 실패했습니다.', 'error');
+      showToast('서평 삭제에 실패했습니다 ꌩ-ꌩ', 'error');
     } finally {
       setIsDeleteModalOpen(false);
     }

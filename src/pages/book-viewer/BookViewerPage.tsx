@@ -28,7 +28,7 @@ const BookViewerPage = ({ reviewData, bookId }: BookViewerPageProps) => {
         <ul className='w-full h-full rounded-2xl overflow-hidden relative'>
           <BookCoverList className='h-[30%]' />
           <BookCoverList className='h-[40%]'>
-            <div className='flex items-center justify-center relative w-[15vw] h-[22vw] min-w-[200px] min-h-[267px]'>
+            <div className='flex items-center justify-center relative w-[11.5vw] h-[16vw] min-w-[200px] min-h-[267px]'>
               <img
                 src={reviewData.imageUrl || tempIMG}
                 alt={reviewData.title}
