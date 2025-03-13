@@ -24,18 +24,18 @@ export default function EventPage() {
   const [eventInfo, setEventInfo] = useState<EventInfo | null>(null);
   const [showResult, setShowResult] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  console.log(eventInfo);
-
-  // 현재 시간이 이벤트 열리는 시간보다 크거나 같을경우 true
-  const isEventInProgress =
-    new Date(eventInfo?.eventTime).getTime() + 9 * 60 * 60 * 1000 <= Date.now();
+  const [joinStatus, setJoinStatus] = useState<'idle' | 'joining' | 'joined'>(
+    'idle',
+  );
 
   // 이벤트 정보 조회 API 이벤트 열리는 시간 받아오기
   const handleJoinEvent = () => {
     const joinEvent = async () => {
+      if (joinStatus !== 'idle') return;
+      setJoinStatus('joining');
       try {
         await addEventJoin(eventInfo?.id);
+        setJoinStatus('joined');
         showToast(`${eventInfo?.rewardPoints} 포인트를 획득했어요!`, 'success');
         setShowResult(true);
       } catch (error) {
@@ -44,6 +44,7 @@ export default function EventPage() {
           'error',
         );
         setShowResult(false);
+        setJoinStatus('idle');
       }
     };
     joinEvent();
@@ -100,9 +101,15 @@ export default function EventPage() {
           onClick={handleJoinEvent}>
           <LayeredButton
             theme='red'
-            disabled={!eventInfo?.id}
+            disabled={!eventInfo?.id || joinStatus !== 'idle' || isLoading}
             className={`py-8 px-9 rounded-[10px] font-bold `}>
-            {isEventInProgress ? '포인트 받기' : '이벤트 준비중'}
+            {eventInfo?.id
+              ? joinStatus === 'idle'
+                ? '참여하기'
+                : joinStatus === 'joining'
+                ? '참여중...'
+                : '참여 완료'
+              : '준비중...'}
           </LayeredButton>
         </div>
       </div>
