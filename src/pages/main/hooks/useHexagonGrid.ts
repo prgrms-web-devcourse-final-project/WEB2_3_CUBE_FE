@@ -34,16 +34,18 @@ function expandRing(
   if (placedInRing >= positionsInRing || roomIndex >= rooms.length)
     return { roomIndex, placedInRing };
 
-  const baseIndex = previousRing[directionIndex % previousRing.length];
-  const basePos = result[baseIndex].position;
-  const [dx, dy, dz] = dir;
-  const newPos: Position = [basePos[0] + dx, basePos[1] + dy, basePos[2] + dz];
-  const posKey = `${newPos[0]},${newPos[1]},${newPos[2]}`;
+  for (let i = 0; i < previousRing.length; i++) {
+    const baseIndex = previousRing[(directionIndex + i) % previousRing.length];
+    const basePos = result[baseIndex].position;
+    const [dx, dy, dz] = dir;
+    const newPos: Position = [basePos[0] + dx, basePos[1] + dy, basePos[2] + dz];
+    const posKey = `${newPos[0]},${newPos[1]},${newPos[2]}`;
 
-  if (!visited.has(posKey) && newPos[0] + newPos[1] + newPos[2] === 0) {
-    visited.add(posKey);
-    result.push({ position: newPos, room: rooms[roomIndex] });
-    return { roomIndex: roomIndex + 1, placedInRing: placedInRing + 1 };
+    if (!visited.has(posKey) && newPos[0] + newPos[1] + newPos[2] === 0) {
+      visited.add(posKey);
+      result.push({ position: newPos, room: rooms[roomIndex] });
+      return { roomIndex: roomIndex + 1, placedInRing: placedInRing + 1 };
+    }
   }
   return { roomIndex, placedInRing };
 }
