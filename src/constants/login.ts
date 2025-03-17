@@ -136,5 +136,5 @@ RoomE(이하 "회사")는 다음의 목적을 위하여 개인정보를 처리�
       `,
   },
 ];
-export const ACCESS_MAX_AGE = 3540; // 실제로는 1분남았을때 만료 예정
+export const ACCESS_MAX_AGE = 600;
 export const REFRESH_MAX_AGE = 1209600;
