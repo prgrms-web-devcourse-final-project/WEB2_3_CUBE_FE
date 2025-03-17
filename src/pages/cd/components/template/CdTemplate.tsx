@@ -3,12 +3,13 @@ import NotEditTemplate from './NotEditTemplate';
 import EditTemplate from './EditTemplate';
 import { getCdTemplate } from '@apis/cd';
 import { useParams } from 'react-router-dom';
-import Loading from '@components/Loading';
 
 const CdTemplate = React.memo(() => {
   const [isEdit, setIsEdit] = useState(false);
   const [templateData, setTemplateData] = useState<TemplateData>(null);
   const myCdId = Number(useParams().cdId);
+
+  // console.log('cdTemplate'); 리렌더링 안됨
 
   const questions = [
     { question: '이 노래를 듣게 된 계기', answer: templateData?.comment1 },
