@@ -50,7 +50,7 @@
 
 ## 주요 기능
 
-<img src="https://github.com/user-attachments/assets/f3c1da76-001f-4b17-a663-098ebab5fd51" alt="로그인" width="300" height="200">
+
 
 <hr />
 
