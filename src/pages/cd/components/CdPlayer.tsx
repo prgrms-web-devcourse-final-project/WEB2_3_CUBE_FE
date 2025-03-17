@@ -14,12 +14,12 @@ import { getCdRack, getCdRackSearch } from '@apis/cd';
 
 export default function CdPlayer({
   cdInfo,
-  onCdPlaying,
-  onCdTime,
+  setCdPlaying,
+  setCurrentTime,
 }: {
   cdInfo: CDInfo;
-  onCdPlaying: (value: boolean) => void;
-  onCdTime: (value: number) => void;
+  setCdPlaying: (value: boolean) => void;
+  setCurrentTime: (value: number) => void;
 }) {
   const VOLUME = 10; // 기본 볼륨
   const navigate = useNavigate();
@@ -142,7 +142,7 @@ export default function CdPlayer({
         try {
           const current = cdStateChangeEvent.target.getCurrentTime();
           const total = cdStateChangeEvent.target.getDuration();
-          onCdTime(Math.floor(current));
+          setCurrentTime(Math.floor(current));
           setCdPlayer((prev) => ({
             ...prev,
             currentTime: current,
@@ -237,14 +237,14 @@ export default function CdPlayer({
       if (event.data === 1) {
         event.target?.pauseVideo();
         setCdReady((prev) => ({ ...prev, isPlaying: false }));
-        onCdPlaying(false);
+        setCdPlaying(false);
       } else {
         event.target?.playVideo();
         setCdReady((prev) => ({ ...prev, isPlaying: true }));
-        onCdPlaying(true);
+        setCdPlaying(true);
       }
     },
-    [onCdPlaying],
+    [setCdPlaying],
   );
 
   const handleToggleLoop = useCallback(() => {
@@ -278,7 +278,7 @@ export default function CdPlayer({
     if (e.data === 0) {
       if (cdReady.isLooping) {
         // 무한반복 설정되어 있으면 처음으로 돌아가서 다시 재생
-        onCdPlaying(true);
+        setCdPlaying(true);
         setTimeout(() => {
           e.target.seekTo(0);
           e.target.playVideo();
@@ -289,7 +289,7 @@ export default function CdPlayer({
           ...prev,
           isPlaying: false,
         }));
-        onCdPlaying(false);
+        setCdPlaying(false);
       }
     }
     setCdStateChangeEvent(e);

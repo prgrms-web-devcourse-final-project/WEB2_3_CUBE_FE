@@ -5,6 +5,8 @@ import React from 'react';
 export const CdInfo = React.memo(
   ({ cdInfo, cdPlaying }: { cdInfo: CDInfo; cdPlaying: boolean }) => {
     const textLength = cdInfo?.title.length;
+    // console.log('cdInfo'); props의 상태가 변할때만 리렌더링
+
     return (
       <section className='w-[36%] h-full flex flex-col gap-10 items-center justify-between pt-20 '>
         <article className='text-white flex flex-col gap-1.5 text-center '>
