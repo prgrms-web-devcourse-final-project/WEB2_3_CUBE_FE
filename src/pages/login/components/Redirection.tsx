@@ -21,7 +21,6 @@ export default function Redirection() {
     try {
       await loginAPI(token);
       window.location.replace('/');
-      // navigate('/', { replace: true });
     } catch (error) {
       console.error(error);
       setError('로그인에 실패했습니다');
