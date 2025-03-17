@@ -63,7 +63,12 @@ const Router = () => {
           path='/payment/refund'
           element={<RefundPage />}
         />
+        <Route
+          path='/event'
+          element={<EventPage />}
+        />
       </Route>
+
       {/* 내 서평 보기/작성/수정 */}
       <Route
         path='/book/:bookId'
@@ -81,10 +86,6 @@ const Router = () => {
       <Route
         path='*'
         element={<NotFoundPage />}
-      />
-      <Route
-        path='/event'
-        element={<EventPage />}
       />
       <Route
         path='/login'
