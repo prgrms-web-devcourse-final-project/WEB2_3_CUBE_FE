@@ -3,7 +3,7 @@ import { Swiper, SwiperRef, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
-import { Mousewheel, EffectCoverflow, Virtual } from 'swiper/modules';
+import { Mousewheel, EffectCoverflow } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -85,9 +85,8 @@ const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
           modifier: 2,
           slideShadows: false,
         }}
-        virtual
         mousewheel={true}
-        modules={[EffectCoverflow, Mousewheel, Virtual]}
+        modules={[EffectCoverflow, Mousewheel]}
         onSlideChange={(swiper) => {
           const activeIndex = swiper.realIndex;
           onActiveTrackId(activeIndex);
