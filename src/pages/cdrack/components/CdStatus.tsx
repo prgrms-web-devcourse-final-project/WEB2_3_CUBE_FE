@@ -12,12 +12,14 @@ import TypingText from '@components/TypingText';
 
 interface CdStatusProps {
   cdRackInfo: CDRackInfo;
+  setCdRackInfo: (value: CDRackInfo) => void;
   onPrevPage: () => void;
   onNextPage: (cursor: number) => void;
 }
 
 export default function CdStatus({
   cdRackInfo,
+  setCdRackInfo,
   onPrevPage,
   onNextPage,
 }: CdStatusProps) {
@@ -25,17 +27,17 @@ export default function CdStatus({
   const [isSearchModalOpen, setIsSerarchModalOpen] = useState(false);
 
   const [newItem, setNewItem] = useState(null);
-  const [cdRackDatas, setcdRackDatas] = useState<CDRackInfo>(cdRackInfo);
 
   const [slideWidth, setSlideWidth] = useState<number>(0);
   const swiperRef = useRef<SwiperRef | null>(null);
   const myUserId = useUserStore().user.userId;
   const userId = Number(useParams().userId);
 
-  const activeTrack = cdRackDatas?.data?.find(
-    (track: CDInfo) => track.myCdId === cdRackDatas?.data[activeIndex]?.myCdId,
+  const activeTrack = cdRackInfo?.data?.find(
+    (track: CDInfo) => track.myCdId === cdRackInfo?.data[activeIndex]?.myCdId,
   );
 
+  // 낙관적 업데이트 적용 코드
   useEffect(() => {
     if (!newItem) return;
     const newCdDatas = {
@@ -49,11 +51,11 @@ export default function CdStatus({
       duration: newItem.duration,
       releaseDate: newItem.date,
     };
-    const pageLength = Array.isArray(cdRackDatas?.data)
-      ? cdRackDatas.data.length
+    const pageLength = Array.isArray(cdRackInfo?.data)
+      ? cdRackInfo.data.length
       : 0;
 
-    setcdRackDatas((prev) => {
+    setCdRackInfo((prev: CDRackInfo) => {
       const prevData = prev ?? {
         data: [],
         firstMyCdId: 0,
@@ -81,9 +83,7 @@ export default function CdStatus({
 
   return (
     <div className='flex h-full flex-col gap-10 2xl:gap-12 items-center relative w-full'>
-      {/* 상단 정보 */}
-
-      {cdRackDatas?.data?.length > 0 ? (
+      {cdRackInfo?.data?.length > 0 ? (
         <>
           <div className='text-center mt-20 '>
             <span className='text-white  opacity-70 text-sm xl:text-[16px] 2xl:text-xl'>
@@ -94,10 +94,9 @@ export default function CdStatus({
               width={slideWidth}
             />
           </div>
-          {/* Swiper */}
           <CdSwiper
             ref={swiperRef}
-            cdRackDatas={cdRackDatas?.data}
+            cdRackDatas={cdRackInfo?.data}
             onActiveTrackId={(activeIndex: number) =>
               setActiveIndex(activeIndex)
             }
@@ -118,12 +117,11 @@ export default function CdStatus({
         </div>
       )}
 
-      {/* Dock  */}
       <Dock
         ref={swiperRef}
-        isEmpty={cdRackDatas?.data?.length > 0 ? false : true}
-        cdRackInfo={cdRackDatas}
-        setCdRackInfo={setcdRackDatas}
+        isEmpty={cdRackInfo?.data?.length > 0 ? false : true}
+        cdRackInfo={cdRackInfo}
+        setCdRackInfo={setCdRackInfo}
         activeIndex={activeIndex}
         onPrevPage={onPrevPage}
         onNextPage={onNextPage}
@@ -142,7 +140,6 @@ export default function CdStatus({
         </div>
       )}
 
-      {/* 검색 모달 */}
       {isSearchModalOpen && (
         <SearchModal
           title='CD 랙에 담을 음악 찾기'
