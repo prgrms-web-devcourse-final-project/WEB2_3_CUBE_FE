@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Dock from './Dock';
 import CdSwiper from './CdSwiper';
 import { SwiperRef } from 'swiper/react';
@@ -33,8 +33,13 @@ export default function CdStatus({
   const myUserId = useUserStore().user.userId;
   const userId = Number(useParams().userId);
 
-  const activeTrack = cdRackInfo?.data?.find(
-    (track: CDInfo) => track.myCdId === cdRackInfo?.data[activeIndex]?.myCdId,
+  const activeTrack = useMemo(
+    () =>
+      cdRackInfo?.data?.find(
+        (track: CDInfo) =>
+          track.myCdId === cdRackInfo?.data[activeIndex]?.myCdId,
+      ),
+    [cdRackInfo, activeIndex],
   );
 
   useEffect(() => {
