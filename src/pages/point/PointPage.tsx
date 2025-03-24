@@ -6,7 +6,7 @@ import coin from '@assets/point/coin.svg';
 import LayeredButton from '@components/LayeredButton';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 import PointHistory from './components/PointHistory';
@@ -60,12 +60,14 @@ export default function PointPage() {
     }
   }, [inView, hasNextPage, fetchNextPage]);
 
-  const fetchPointsHistory = async (itemCursor: number, dayCursor?: string) => {
-    const result = dayCursor
-      ? await getPointHistory(30, itemCursor, dayCursor)
-      : await getPointHistory(30, itemCursor);
-    return result;
-  };
+  const fetchPointsHistory = useCallback(
+    async (itemCursor: number, dayCursor?: string) => {
+      return dayCursor
+        ? await getPointHistory(20, itemCursor, dayCursor)
+        : await getPointHistory(20, itemCursor);
+    },
+    [],
+  );
 
   if (userId !== myUserId) {
     navigate(`/profile/${userId}`);
@@ -95,11 +97,17 @@ export default function PointPage() {
               Point Receipt
             </h1>
 
-            <PointHistory
-              data={data}
-              isFetching={isFetching}
-              ref={ref}
-            />
+            {isLoading ? (
+              <div className='w-full h-[400px] flex items-center justify-center'>
+                <p className='text-gray-500 animate-pulse'>로딩 중...</p>
+              </div>
+            ) : (
+              <PointHistory
+                data={data}
+                isFetching={isFetching}
+                ref={ref}
+              />
+            )}
 
             <div className='mb-8 w-[70%]'>
               <div className='flex justify-between items-center mb-6 '>
@@ -114,7 +122,7 @@ export default function PointPage() {
                     className='w-4 h-4'
                   />
                   <p className='text-[#162C63] text-sm font-medium'>
-                    {pointBalance.toLocaleString('ko-KR')}P
+                    {pointBalance ? pointBalance.toLocaleString('ko-KR') : '0'}
                   </p>
                 </div>
               </div>

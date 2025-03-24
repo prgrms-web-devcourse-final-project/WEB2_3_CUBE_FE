@@ -1,54 +1,31 @@
 import backgroundIMG from '@/assets/roome-background-img.png';
-import CdTemplate from './components/CdTemplate';
+import CdTemplate from './components/template/CdTemplate';
 import CdInfo from './components/CdInfo';
-import CdComment from './components/CdComment';
+import CdComment from './components/comments/CdComment';
 import CdPlayer from './components/CdPlayer';
 import { useEffect, useState } from 'react';
-import { getCdInfo } from '@apis/cd';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Loading from '@components/Loading';
+import { useFetchCdInfo } from '@hooks/cd/useFetchCdInfo';
 
 export default function CdPage() {
   const navigate = useNavigate();
-  const [cdInfo, setCdInfo] = useState<CDInfo | null>(null);
 
-  const [isLoading, setIsLoading] = useState(true);
-
-  const [cdPlaying, setCdPlaying] = useState(false);
-
-  const [cdTime, setCdTime] = useState(0);
-
-  const myCdId = Number(useParams().cdId);
-  const userId = Number(useParams().userId);
+  const [currentTime, setCurrentTime] = useState(0);
+  const { cdInfo, isCdPlaying, isLoading, userId, setIsCdPlaying } =
+    useFetchCdInfo();
 
   // 뒤로가기시 cd 렉페이지로 이동
   useEffect(() => {
-    window.history.pushState(null, '', window.location.href);
-
+    // window.history.pushState(null, '', window.location.href);
     const handleBackButton = () => {
       navigate(`/cdrack/${userId}`, { replace: true });
     };
     window.addEventListener('popstate', handleBackButton);
-
     return () => {
       window.removeEventListener('popstate', handleBackButton);
     };
   }, []);
-
-  useEffect(() => {
-    const fetchCdInfo = async () => {
-      try {
-        const result = await getCdInfo(myCdId, userId);
-        setCdInfo(result);
-        setCdPlaying(false);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchCdInfo();
-  }, [myCdId, userId]);
 
   if (isLoading) return <Loading />;
 
@@ -61,15 +38,15 @@ export default function CdPage() {
         <CdTemplate />
         <CdInfo
           cdInfo={cdInfo}
-          cdPlaying={cdPlaying}
+          cdPlaying={isCdPlaying}
         />
-        <CdComment commentTime={cdTime} />
+        <CdComment currentTime={currentTime} />
       </div>
       {/* 플레이어 */}
       <CdPlayer
         cdInfo={cdInfo}
-        onCdPlaying={setCdPlaying}
-        onCdTime={setCdTime}
+        setCdPlaying={setIsCdPlaying}
+        setCurrentTime={setCurrentTime}
       />
     </div>
   );
