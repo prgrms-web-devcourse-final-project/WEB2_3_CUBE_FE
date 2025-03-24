@@ -110,7 +110,6 @@ const CdSwiper = forwardRef<SwiperRef, CdSwiperProps>(
                 className='poster rounded-[10px]'
                 src={data.coverUrl}
                 alt='앨범 이미지'
-                loading='lazy'
               />
               {/* 장르 */}
               <ul className='flex absolute bottom-9 left-1/2 transform -translate-x-1/2 justify-center items-center gap-5'>
