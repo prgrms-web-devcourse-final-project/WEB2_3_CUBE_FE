@@ -2,11 +2,11 @@ import backgroundIMG from '@/assets/roome-background-img.png';
 import CdTemplate from './components/template/CdTemplate';
 import CdInfo from './components/CdInfo';
 import CdComment from './components/comments/CdComment';
-import CdPlayer from './components/CdPlayer';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Loading from '@components/Loading';
 import { useFetchCdInfo } from '@hooks/cd/useFetchCdInfo';
+import CdPlayer from './components/player/CdPlayer';
 
 export default function CdPage() {
   const navigate = useNavigate();

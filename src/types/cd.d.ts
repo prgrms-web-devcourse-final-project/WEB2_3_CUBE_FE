@@ -1,5 +1,5 @@
 interface CDRackInfo {
-  data: CDInfo[];
+  data: CDInfo[] | DataListInfo[];
   nextCursor: number;
   totalCount: number;
   firstMyCdId: number;
