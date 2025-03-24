@@ -37,6 +37,16 @@ export default function CdStatus({
     (track: CDInfo) => track.myCdId === cdRackInfo?.data[activeIndex]?.myCdId,
   );
 
+  useEffect(() => {
+    if (cdRackInfo?.data && cdRackInfo?.data[0]?.coverUrl) {
+      const preloadLink = document.createElement('link');
+      preloadLink.rel = 'preload';
+      preloadLink.as = 'image';
+      preloadLink.href = cdRackInfo?.data[0]?.coverUrl;
+      document.head.appendChild(preloadLink);
+    }
+  }, [cdRackInfo]);
+
   // 낙관적 업데이트 적용 코드
   useEffect(() => {
     if (!newItem) return;
