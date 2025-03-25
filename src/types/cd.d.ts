@@ -98,3 +98,17 @@ interface CdCommentPost {
   timestamp: number;
   content: string;
 }
+
+interface CdReady {
+  isPlaying: boolean;
+  isLooping: boolean;
+  volume: number;
+  previousVolume: number;
+  isMuted: boolean;
+}
+
+interface CdPlayer {
+  progress: number;
+  currentTime: number;
+  duration: number;
+}
