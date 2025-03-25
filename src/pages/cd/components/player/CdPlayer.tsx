@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import ModalBackground from '@components/ModalBackground';
 import DataList from '@components/datalist/DataList';
@@ -48,22 +48,22 @@ export default function CdPlayer({
   // CD 플레이어 상태
   const {
     cdReady,
-    setCdReady,
     cdPlayer,
-    setCdPlayer,
     progressStyle,
     volumeProgressStyle,
+    setCdReady,
+    setCdPlayer,
   } = useCdPlayerState(VOLUME);
 
   // YouTube 이벤트 핸들러
   const { cdStateChangeEvent, handleYouTubeReady, handleYouTubeStateChange } =
     useYouTubeEvents(
       cdReady,
+      VOLUME,
       setCdReady,
       setCdPlayer,
       setCdPlaying,
       setCurrentTime,
-      VOLUME,
     );
 
   // Youtube 컨트롤 관련 함수들
@@ -82,10 +82,18 @@ export default function CdPlayer({
     setCdPlaying,
   );
 
+  const handleCloseModal = useCallback(() => {
+    setIsCdListOpen(false);
+  }, []);
+
+  const handleFetchMoreDatas = useCallback(() => {
+    setCursor(cdRackInfo.nextCursor);
+  }, [cdRackInfo]);
+
   return (
     <>
       {isCdListOpen && (
-        <ModalBackground onClose={() => setIsCdListOpen(false)}>
+        <ModalBackground onClose={handleCloseModal}>
           <DataList
             setSearchInput={setSearchInput}
             totalCount={cdRackInfo.totalCount}
@@ -93,7 +101,7 @@ export default function CdPlayer({
             type='cd'
             hasMore={cdRackInfo.nextCursor <= lastMyCdId.current}
             isLoading={isLoading}
-            fetchMore={() => setCursor(cdRackInfo.nextCursor)}
+            fetchMore={handleFetchMoreDatas}
             userId={userId}
           />
         </ModalBackground>

@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
+import { YouTubeEvent } from 'react-youtube';
 
 export function useYouTubeEvents(
-  cdReady,
-  setCdReady,
-  setCdPlayer,
-  setCdPlaying,
-  setCurrentTime,
-  initialVolume,
+  cdReady: CdReady,
+  initialVolume: number,
+  setCdReady: React.Dispatch<React.SetStateAction<CdReady>>,
+  setCdPlayer: React.Dispatch<React.SetStateAction<CdPlayer>>,
+  setCdPlaying: (value: boolean) => void,
+  setCurrentTime: (value: number) => void,
 ) {
   // Youtube 컴포넌트 상태가 변화할때 발생하는 이벤트 객체
-
-  const [cdStateChangeEvent, setCdStateChangeEvent] = useState(null);
+  const [cdStateChangeEvent, setCdStateChangeEvent] =
+    useState<YouTubeEvent | null>(null);
 
   // YouTube 준비 완료 이벤트 핸들러
   const handleYouTubeReady = (e) => {
@@ -18,18 +19,22 @@ export function useYouTubeEvents(
     e.target.pauseVideo();
 
     setCdStateChangeEvent(e);
-    setCdReady((prev) => ({
-      ...prev,
-      isPlaying: false,
-      volume: initialVolume,
-      previousVolume: initialVolume,
-      isMuted: e.target.playerInfo.muted,
-    }));
+    setCdReady(
+      (prev: CdReady): CdReady => ({
+        ...prev,
+        isPlaying: false,
+        volume: initialVolume,
+        previousVolume: initialVolume,
+        isMuted: e.target.playerInfo.muted,
+      }),
+    );
 
-    setCdPlayer((prev) => ({
-      ...prev,
-      duration: e.target.getDuration(),
-    }));
+    setCdPlayer(
+      (prev: CdPlayer): CdPlayer => ({
+        ...prev,
+        duration: e.target.getDuration(),
+      }),
+    );
   };
 
   // YouTube 상태 변경 이벤트 핸들러

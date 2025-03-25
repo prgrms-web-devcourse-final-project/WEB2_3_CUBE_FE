@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 
 export function useCdPlayerState(initialVolume: number) {
   // CD 상태 관리
-  const [cdReady, setCdReady] = useState({
+  const [cdReady, setCdReady] = useState<CdReady>({
     isPlaying: false,
     isLooping: true,
     volume: initialVolume,
@@ -11,7 +11,7 @@ export function useCdPlayerState(initialVolume: number) {
   });
 
   // 재생 시간 관리
-  const [cdPlayer, setCdPlayer] = useState({
+  const [cdPlayer, setCdPlayer] = useState<CdPlayer>({
     progress: 0,
     currentTime: 0,
     duration: 0,

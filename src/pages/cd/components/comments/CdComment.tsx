@@ -1,20 +1,14 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import CommentListModal from './CommentListModal';
 import VisibleCommentList from './VisibleCommentList';
-import CdCommentForm from './CdCommentForm';
 import CommentListButton from './CommentListButton';
-import { useQueryAllCdComments } from '@hooks/cd/useQueryAllCdComments';
 
 export default function CdComment({ currentTime }: { currentTime: number }) {
   const [isCommentListOpen, setIsCommentListOpen] = useState(false);
 
-  const { cdComments } = useQueryAllCdComments();
-
-  const visibleCdComments = Array.isArray(cdComments)
-    ? cdComments.filter((comment) => comment.timestamp <= currentTime)
-    : [];
-
-  // console.log(currentTime, 'rerender!');
+  const handleCloseModal = useCallback(() => {
+    setIsCommentListOpen(false);
+  }, []);
 
   return (
     <>
@@ -23,15 +17,10 @@ export default function CdComment({ currentTime }: { currentTime: number }) {
         <CommentListButton setCommentListOpen={setIsCommentListOpen} />
         <div className='flex flex-col gap-6 justify-end items-end px-7 pt-14 pb-6 w-full h-full'>
           {/* 댓글 목록 */}
-          <VisibleCommentList visibleCdComments={visibleCdComments} />
-
-          {/* 댓글 입력 창 */}
-          <CdCommentForm currentTime={currentTime} />
+          <VisibleCommentList currentTime={currentTime} />
         </div>
       </div>
-      {isCommentListOpen && (
-        <CommentListModal onClose={() => setIsCommentListOpen(false)} />
-      )}
+      {isCommentListOpen && <CommentListModal onClose={handleCloseModal} />}
     </>
   );
 }

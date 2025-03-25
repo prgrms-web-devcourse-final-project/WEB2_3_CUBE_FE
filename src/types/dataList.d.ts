@@ -15,3 +15,16 @@ interface CdDataListInfo {
   firstMyCdId: number;
   lastMyCdId: number;
 }
+
+interface DataListProps {
+  datas: DataListInfo[];
+  type: string;
+  onDelete?: (deletedIds: string[]) => void;
+  hasMore: boolean;
+  isLoading: boolean;
+  fetchMore: () => void;
+  userId: number;
+  totalCount?: number;
+  setSearchInput?: (value: string) => void;
+  count?: number;
+}
