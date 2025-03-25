@@ -1,6 +1,5 @@
 import { getCdRack, getCdRackSearch } from '@apis/cd';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
 
 export const useFetchSearchCdLists = (userId: number) => {
   const [cdRackInfo, setCdRackInfo] = useState<CdDataListInfo>({
@@ -50,8 +49,11 @@ export const useFetchSearchCdLists = (userId: number) => {
   };
   useEffect(() => {
     setCursor(0);
-    fetchSearchCdData();
   }, [searchInput]);
+
+  useEffect(() => {
+    fetchSearchCdData();
+  }, [cursor]);
 
   return {
     cdRackInfo,

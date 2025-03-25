@@ -2,12 +2,12 @@ import { useCallback } from 'react';
 import { YouTubeEvent } from 'react-youtube';
 
 export const useYoutubeControls = (
-  cdReady,
-  cdPlayer,
-  cdStateChangeEvent,
-  setCdReady,
-  setCdPlayer,
-  setCdPlaying,
+  cdReady: CdReady,
+  cdPlayer: CdPlayer,
+  cdStateChangeEvent: YouTubeEvent,
+  setCdReady: React.Dispatch<React.SetStateAction<CdReady>>,
+  setCdPlayer: React.Dispatch<React.SetStateAction<CdPlayer>>,
+  setCdPlaying: (value: boolean) => void,
 ) => {
   const handleChangeTime = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +41,8 @@ export const useYoutubeControls = (
   );
   const handleChangeCdVolume = useCallback(
     (event: YouTubeEvent<number>, volume: string) => {
-      event?.target.setVolume(volume);
+      if (!event) return;
+      event.target.setVolume(volume);
       setCdReady((prev) => ({
         ...prev,
         volume: Number(volume),
@@ -53,6 +54,7 @@ export const useYoutubeControls = (
   );
   const handleOnOffCd = useCallback(
     (event?: YouTubeEvent<number>) => {
+      if (!event) return;
       if (event.data === 1) {
         event.target?.pauseVideo();
         setCdReady((prev) => ({ ...prev, isPlaying: false }));

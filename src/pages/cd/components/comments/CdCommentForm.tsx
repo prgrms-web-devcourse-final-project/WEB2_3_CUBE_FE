@@ -1,8 +1,8 @@
 import { useMutateCdComments } from '@hooks/cd/useMutateCdComments';
-import { useCallback, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import commentSubmit from '@assets/cd/comment-submit.svg';
 
-export default function CdCommentForm({ currentTime }) {
+const CdCommentForm = React.memo(({ currentTime }: { currentTime: number }) => {
   const formRef = useRef<HTMLFormElement | null>(null);
   const commentInputRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -55,4 +55,6 @@ export default function CdCommentForm({ currentTime }) {
       {isError && <p>에러 발생: {error.message}</p>}
     </form>
   );
-}
+});
+
+export default CdCommentForm;
