@@ -382,6 +382,7 @@ export const addCdComment = async (
     `/${API_URL}/my-cd/${myCdId}/comments`,
     commentInfo,
   );
+
   return response.data;
 };
 

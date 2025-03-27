@@ -1,5 +1,5 @@
 import ModalBackground from '@components/ModalBackground';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { SearchInput } from '@components/search-modal/SearchInput';
 import Pagination from '@components/Pagination';
 import { motion } from 'framer-motion';
@@ -10,12 +10,8 @@ const CommentListModal = React.memo(({ onClose }: { onClose: () => void }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentInput, setCurrentInput] = useState('');
 
-  const totalPage = useRef<number>(1);
-
-  const { cdComments, isSearching, setCdComments } = useFetchCdComments(
-    currentPage,
-    currentInput,
-  );
+  const { cdComments, isSearching, setCdComments, totalPage } =
+    useFetchCdComments(currentPage, currentInput);
 
   const handleChangePage = useCallback((page: number) => {
     setCurrentPage(page);

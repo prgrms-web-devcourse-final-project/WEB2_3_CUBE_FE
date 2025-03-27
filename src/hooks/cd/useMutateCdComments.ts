@@ -29,8 +29,6 @@ export const useMutateCdComments = (currentTime: number, commentInputRef) => {
         createdAt: new Date().toISOString(),
       };
 
-      console.log(newComment);
-
       // 낙관적 업데이트
       if (previousComments) {
         queryClient.setQueryData<CdComment[]>(
@@ -52,6 +50,7 @@ export const useMutateCdComments = (currentTime: number, commentInputRef) => {
       }
     },
     onSettled() {
+      // queryClient.invalidateQueries({ queryKey: [`cdComments ${myCdId}`] });
       if (commentInputRef.current) {
         commentInputRef.current.value = '';
       }
