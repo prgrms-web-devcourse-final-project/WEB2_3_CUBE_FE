@@ -45,5 +45,6 @@ export const useFetchCdComments = (
     cdComments,
     isSearching,
     setCdComments,
+    totalPage,
   };
 };
