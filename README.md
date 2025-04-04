@@ -48,7 +48,93 @@
 
 <br />
 
-## 주요 기능
+## 구현한 기능
+
+<table style="min-width: 100% !important; max-width: 830px !important; border-collapse: collapse;">
+  <tr>
+    <td align="center" valign="middle" width="50%">
+      <img src="https://github.com/user-attachments/assets/a35162f1-c221-4e59-b8f3-802f7b76f319" alt="RoomE_login" width="250" />
+      <img src="https://github.com/user-attachments/assets/4878d932-6af1-4124-9ded-7356a4bc6681" alt="RoomE_login" width="250" />
+    </td>
+    <td align="center" valign="middle" width="50%">
+      <p>
+        <strong>✅ 소셜 로그인</strong><br><br>
+        사용자는 3가지 소셜중 하나를 선택해 로그인을 할 수 있습니다. <br><br>
+        로그인하지 않으면 어떠한 페이지에도 접근할 수 없습니다.
+      </p>
+    </td>
+  </tr>
+  
+  <tr>
+    <td align="center" valign="middle" width="50%">
+      <img src="https://github.com/user-attachments/assets/6a8ba22c-929c-43d1-ae61-ec66b73ac762" alt="RoomE_cdrack" width="250" />
+    </td>
+    <td align="center" valign="middle" width="50%">
+      <p>
+        <strong>✅ CD 랙 페이지</strong><br><br>
+        사용자는 자신이 추가한 CD목록을 3D 형태로 볼 수 있습니다. <br><br>
+        호버할 경우, 마우스의 위치에따라 CD의 rotateX, rotateY값이 변합니다.
+      </p>
+    </td>
+  </tr>
+  
+  <tr>
+    <td align="center" valign="middle" width="50%">
+      <img src="https://github.com/user-attachments/assets/580c62fc-2256-4c34-8a71-4a12064de759" alt="RoomE_cdrack_search" width="250">
+    </td>
+    <td align="center" valign="middle" width="50%">
+      <p>
+        <strong>✅ CD 검색 모달</strong><br><br>
+       CD 검색시 외부 API를 활용하여 디바운싱이 적용된 검색 결과 반환합니다.<br><br>
+       CD 추가시 서버에 해당 CD의 videoId, 재생시간을 전달합니다.
+      </p>
+    </td>
+  </tr>
+  
+   <tr>
+    <td align="center" valign="middle" width="50%">
+      <img src="https://github.com/user-attachments/assets/0dbb5094-9272-4ebe-a9be-eb1b4d691d8e" alt="RoomE_cd" width="250">
+      <img src="https://github.com/user-attachments/assets/13a9345c-8fd0-445d-81bf-076fad0bdee2" alt="RoomE_cd" width="250">
+    </td>
+    <td align="center" valign="middle" width="50%">
+      <p>
+        <strong>✅ CD 상세 페이지</strong><br><br>
+       사용자가 CD를 누르면 해당 CD 상세페이지로 이동하며 CD에 감상평, 시간대별 댓글을 달 수 있습니다.<br><br>
+       하단의 CD 플레이어는 CD를 일시정지, 무한반복, 특정 시간대 이동, 다른 CD로 이동할 수 있는 기능을 제공합니다.
+      </p>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="center" valign="middle" width="50%">
+      <img src="https://github.com/user-attachments/assets/c19be69f-7ba7-4c86-8d12-a6bab8be3a42" alt="RoomE_event" width="250">
+      <img src="https://github.com/user-attachments/assets/a44ea88f-83ef-4a05-ba15-5f26e2435e94" alt="RoomE_event" width="250">
+      <img src="https://github.com/user-attachments/assets/f1629d36-0fe9-4e67-b16c-d9e78e2ac858" alt="RoomE_event" width="250">
+    </td>
+    <td align="center" valign="middle" width="50%">
+      <p>
+        <strong>✅ 선착순 이벤트 페이지</strong><br><br>
+       사용자는 특정 시간대마다 열리는 이벤트에 참가할 수 있습니다.<br><br>
+       특정시간대에 이벤트 페이지에 접속해 참가 버튼을 누르면 선착순안에 들어올 경우 포인트를 획득 할 수 있습니다.
+      </p>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="center" valign="middle" width="50%">
+      <img src="https://github.com/user-attachments/assets/e8d9e9ef-8515-45ef-91b8-bc81d4598ba7" alt="RoomE_point" width="250">
+    </td>
+    <td align="center" valign="middle" width="50%">
+      <p>
+        <strong>✅ 포인트 내역 페이지</strong><br><br>
+       사용자는 자신의 포인트 내역을 확인할 수 있습니다.<br><br>
+       포인트를 가지고 다른 테마의 방을 구입하거나 cd, 책 저장 크기를 확장 할 수 있습니다.
+      </p>
+    </td>
+  </tr>
+
+  
+</table>
 
 
 
